@@ -7,6 +7,6 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
-    @GET("/user/read_single.php")
+    @GET("user/read_single.php")
     Call<UserResponse> getUser(@Query("username") String username, @Query("password") String password);
 }

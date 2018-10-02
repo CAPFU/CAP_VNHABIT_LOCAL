@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".RegisterActivity">
 
     <LinearLayout
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="2">
 
         <ImageView
             android:paddingTop="45dp"
@@ -28,7 +28,6 @@
             app:srcCompat="@drawable/habit_logo" />
 
         <EditText
-            android:id="@+id/edUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -42,7 +41,31 @@
             android:textSize="15sp" />
 
         <EditText
-            android:id="@+id/edPassword"
+            android:gravity="center_horizontal"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input_border"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textSize="15sp"
+            android:hint="096 388 423"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/input_border"
+            android:gravity="center_horizontal"
+            android:hint="aka@gmail.com"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:textSize="15sp" />
+
+        <EditText
             android:gravity="center_horizontal"
             android:layout_marginRight="50dp"
             android:layout_marginLeft="50dp"
@@ -58,7 +81,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:paddingTop="30dp"
+        android:paddingTop="15dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -66,7 +89,6 @@
         android:layout_weight="1">
 
         <Button
-            android:id="@+id/btnLogin"
             android:textSize="16sp"
             android:textAllCaps="false"
             android:background="@drawable/button_bg"
@@ -75,11 +97,11 @@
             android:layout_marginLeft="50dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Login"/>
+            android:text="Register"/>
 
         <LinearLayout
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="9dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -107,7 +129,7 @@
             android:orientation="horizontal"
             android:layout_marginRight="50dp"
             android:layout_marginLeft="50dp"
-            android:layout_marginBottom="45dp"
+            android:layout_marginBottom="8dp"
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -140,7 +162,6 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/linkRegister"
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
