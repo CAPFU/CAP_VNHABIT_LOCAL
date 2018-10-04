@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnLogin:
 
                 ApiService mService = ApiUtils.getApiService();
-                mService.getUser("user01", "12345678").enqueue(new Callback<UserResponse>() {
+                mService.getUser(edUsername.getText().toString(), edPassword.getText().toString()).enqueue(new Callback<UserResponse>() {
                     @Override
                     public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                         Toast.makeText(MainActivity.this, "ok " + response.body().getUsername(), Toast.LENGTH_SHORT).show();
