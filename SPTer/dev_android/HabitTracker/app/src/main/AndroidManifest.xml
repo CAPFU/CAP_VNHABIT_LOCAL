@@ -20,7 +20,8 @@
         </activity>
         <activity android:name=".MenuActivity" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".EmptyActivity"></activity>
+        <activity android:name=".EmptyActivity" />
+        <activity android:name=".HabitActivity"></activity>
     </application>
 
 </manifest>
