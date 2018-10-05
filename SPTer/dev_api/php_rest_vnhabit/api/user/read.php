@@ -47,7 +47,7 @@ if ($num > 0) {
     echo json_encode(
         array(
             'result' => '1',
-            'result' => $users_arr
+            'data' => $users_arr
         )
     );
 
@@ -55,8 +55,7 @@ if ($num > 0) {
     // no users
     echo json_encode(
         array(
-            'result' => '0',
-            'message' => 'No Users Found'
+            'result' => '0'
         )
     );
     die();

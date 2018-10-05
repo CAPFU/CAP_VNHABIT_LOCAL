@@ -30,19 +30,17 @@ $user->user_description = $data->user_description;
 
 // Create user
 if ($user->create()) {
-    print_r(json_encode(
+    echo json_encode(
         array(
             'result' => '1',
-            'message' => 'user Created'
         )
-    ));
+    );
 } else {
-    print_r(json_encode(
+    echo json_encode(
         array(
             'result' => '0',
-            'message' => 'user Not Created'
         )
-    ));
+    );
 }
 
 ?>

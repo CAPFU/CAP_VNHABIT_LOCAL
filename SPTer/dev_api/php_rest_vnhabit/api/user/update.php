@@ -33,11 +33,15 @@ $user->user_description = $data->user_description;
 
 if ($user->update()) {
     echo json_encode(
-        array('message' => 'user Updated')
+        array(
+            'result' => '1',
+        )
     );
 } else {
     echo json_encode(
-        array('message' => 'user Not Updated')
+        array(
+            'result' => '0',
+        )
     );
 }
 

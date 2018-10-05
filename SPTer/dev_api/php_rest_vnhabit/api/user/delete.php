@@ -25,14 +25,12 @@ if ($user->delete()) {
     echo json_encode(
         array(
             'result' => '1',
-            'message' => 'user Deleted'
         )
     );
 } else {
     echo json_encode(
         array(
             'result' => '0',
-            'message' => 'user Not Deleted'
         )
     );
 }

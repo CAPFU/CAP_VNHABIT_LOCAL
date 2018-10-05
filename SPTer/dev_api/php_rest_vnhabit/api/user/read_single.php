@@ -37,19 +37,19 @@ if (isset($result)) {
     );
 
     // convert array object to JSON object
-    print_r(json_encode(
+    echo json_encode(
         array(
             'result' => '1',
-            'user' => $user_arr
+            'data' => $user_arr
         )
-    ));
+    );
 } else {
     // no users
-    print_r(json_encode(
+    echo json_encode(
         array(
             'result' => '0'
         )
-    ));
+    );
     die();
 }
 
