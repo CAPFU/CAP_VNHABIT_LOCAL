@@ -1,5 +1,6 @@
 package habit.tracker.habittracker;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -43,6 +44,8 @@ public class MenuActivity extends AppCompatActivity implements MenuRecyclerViewA
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(this, "p: " + position, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "p: " + position, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, EmptyActivity.class);
+        startActivity(intent);
     }
 }
