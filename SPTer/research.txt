@@ -1,6 +1,0 @@
-PHP
-MySQL
-XAMPP
-REST API
-JSON Web Token (JWT)
-Oauth 2.0
