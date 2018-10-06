@@ -24,13 +24,13 @@ $user->user_id = $data->user_id;
 if ($user->delete()) {
     echo json_encode(
         array(
-            'result' => '1',
+            'result' => '1'
         )
     );
 } else {
     echo json_encode(
         array(
-            'result' => '0',
+            'result' => '0'
         )
     );
 }

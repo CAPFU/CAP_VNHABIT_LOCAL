@@ -32,13 +32,13 @@ $user->user_description = $data->user_description;
 if ($user->create()) {
     echo json_encode(
         array(
-            'result' => '1',
+            'result' => '1'
         )
     );
 } else {
     echo json_encode(
         array(
-            'result' => '0',
+            'result' => '0'
         )
     );
 }
