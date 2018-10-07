@@ -1,10 +1,12 @@
 package habit.tracker.habittracker;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import habit.tracker.habittracker.api.ApiUtils;
@@ -17,12 +19,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends BaseActivity implements View.OnClickListener {
 
     Button btnRegister;
-    View linkLogin;
+    TextView linkLogin;
 
     EditText edUsername;
+    EditText edPhone;
     EditText edEmail;
     EditText edPassword;
     EditText edPasswordConfirm;
@@ -36,8 +39,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         btnRegister.setOnClickListener(this);
         linkLogin = findViewById(R.id.link_login);
         linkLogin.setOnClickListener(this);
+        String registerText = getResources().getString(R.string.remind_login);
+        SpannableString content = new SpannableString(registerText);
+        content.setSpan(new UnderlineSpan(), 0, registerText.length(), 0);
+        linkLogin.setText(content);
 
         edUsername = findViewById(R.id.edit_username);
+        edPhone = findViewById(R.id.edit_phone);
         edEmail = findViewById(R.id.edit_email);
         edPassword = findViewById(R.id.edit_password);
         edPasswordConfirm = findViewById(R.id.edit_conf_password);
@@ -49,6 +57,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btn_register:
                 String username = edUsername.getText().toString();
                 String password = edPassword.getText().toString();
+                String phone = edPhone.getText().toString();
                 String email = edEmail.getText().toString();
                 String passwordConf = edPasswordConfirm.getText().toString();
                 User newUser = new User();
@@ -58,32 +67,46 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     public void showError(ValidatorType type, String key) {
                         switch (type) {
                             case EMPTY:
-                                Toast.makeText(RegisterActivity.this, key + " is empty", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, key + " không được rỗng", Toast.LENGTH_SHORT).show();
+                                break;
+                            case PHONE:
+                                Toast.makeText(RegisterActivity.this, key + " không đúng", Toast.LENGTH_SHORT).show();
                                 break;
                             case EMAIL:
-                                Toast.makeText(RegisterActivity.this, key + " is not valid", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, key + " không đúng", Toast.LENGTH_SHORT).show();
                                 break;
-                            case SAME:
-                                Toast.makeText(RegisterActivity.this, key + " is not math", Toast.LENGTH_SHORT).show();
+                            case EQUAL:
+                                Toast.makeText(RegisterActivity.this, key + " không trùng khớp", Toast.LENGTH_SHORT).show();
                                 break;
                         }
                     }
                 });
-                if (!validator.checkEmpty("username", username)
-                        || !validator.checkEmpty("password", password)
-                        || !validator.checkEmpty("email", email)
-                        || !validator.checkEmpty("password confirm", passwordConf)) {
+                if (!validator.checkEmpty("Tên tài khoản", username)
+                        || !validator.checkEmpty("Số điện thoại", phone)
+                        || !validator.checkEmpty("Email", email)
+                        || !validator.checkEmpty("Mật khẩu", password)
+                        || !validator.checkEmpty("Mật khẩu", passwordConf)) {
+                    return;
+                }
+                if (!validator.checkPhone(phone)) {
                     return;
                 }
                 if (!validator.checkEmail(email)) {
                     return;
                 }
-                if (!validator.checkEqual(password, passwordConf, "password")) {
+                if (!validator.checkEqual(password, passwordConf, "Mật khẩu")) {
                     return;
                 }
                 register(newUser);
                 break;
+            case R.id.btn_fb_login:
+                showEmptyScreen();
+                break;
+            case R.id.btn_google_login:
+                showEmptyScreen();
+                break;
             case R.id.link_login:
+                finish();
                 break;
         }
     }
@@ -94,8 +117,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onResponse(Call<UserResult> call, Response<UserResult> response) {
                 if (response.body().getResult().equals("1")) {
-                    Toast.makeText(RegisterActivity.this, "Login with your account", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Tài khoản đã tạo", Toast.LENGTH_LONG).show();
                     finish();
+                } else {
+                    Toast.makeText(RegisterActivity.this, "not ok", Toast.LENGTH_SHORT).show();
                 }
             }
 

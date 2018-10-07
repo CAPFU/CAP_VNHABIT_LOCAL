@@ -25,17 +25,27 @@ public class Validator {
         Pattern pattern = Pattern.compile(regex);
         if(!pattern.matcher(email).matches()){
             mErrorMsgListener.showError(ValidatorType.EMAIL, "email");
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     public boolean checkEqual(String str, String str1, String key) {
-        if (str.equals(str1)) {
-            mErrorMsgListener.showError(ValidatorType.SAME, key);
-            return true;
+        if (!str.equals(str1)) {
+            mErrorMsgListener.showError(ValidatorType.EQUAL, key);
+            return false;
         }
-        return false;
+        return true;
+    }
+
+    public boolean checkPhone(String phone) {
+        final String regex = "^[0][0-9]{10,11}$";
+        Pattern pattern = Pattern.compile(regex);
+        if(!pattern.matcher(phone).matches()){
+            mErrorMsgListener.showError(ValidatorType.EMAIL, "email");
+            return false;
+        }
+        return true;
     }
 
     public interface ErrorMsg {
