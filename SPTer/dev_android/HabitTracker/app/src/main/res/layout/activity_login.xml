@@ -8,91 +8,58 @@
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:paddingStart="55dp"
-    android:paddingEnd="55dp"
-    tools:context=".RegisterActivity">
+    android:paddingStart="40dp"
+    android:paddingEnd="105dp"
+    android:background="@drawable/app_bg"
+    tools:context=".LoginActivity">
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
         android:contentDescription="@string/app_name"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="40dp"
         app:srcCompat="@drawable/app_logo" />
 
     <EditText
         android:id="@+id/edit_username"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:background="@drawable/bg_input"
         android:gravity="center"
         android:hint="@string/username"
         android:textSize="16sp" />
 
     <EditText
-        android:id="@+id/edit_phone"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/bg_input"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:hint="@string/phone"
-        android:focusableInTouchMode="true"
-        android:textSize="16sp" />
-
-    <EditText
-        android:id="@+id/edit_email"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/bg_input"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:hint="@string/email"
-        android:focusableInTouchMode="true"
-        android:textSize="16sp" />
-
-    <EditText
         android:id="@+id/edit_password"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:background="@drawable/bg_input"
         android:gravity="center"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="12dp"
         android:textSize="16sp"
         android:hint="@string/password"
         android:inputType="textPassword" />
 
-    <EditText
-        android:id="@+id/edit_conf_password"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/bg_input"
-        android:gravity="center"
-        android:layout_marginTop="15dp"
-        android:textSize="16sp"
-        android:hint="@string/password_conf"
-        android:focusableInTouchMode="true"
-        android:inputType="textPassword" />
-
     <Button
-        android:id="@+id/btn_register"
+        android:id="@+id/btn_login"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:textSize="18sp"
         android:textAllCaps="false"
         android:background="@drawable/bg_button_blue"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:textColor="#fffd"
-        android:text="@string/register"/>
+        android:text="@string/login"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginBottom="27dp"
         android:orientation="horizontal">
 
         <View
@@ -102,8 +69,10 @@
             android:background="#333" />
 
         <TextView
-            android:text="or with"
+            android:text="@string/or_with"
             android:gravity="center"
+            android:textSize="15sp"
+            android:textColor="#333"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -116,7 +85,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:orientation="horizontal"
         android:gravity="center_horizontal">
 
@@ -142,11 +111,11 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/link_login"
+        android:id="@+id/link_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="40dp"
         android:paddingBottom="5dp"
         android:textSize="14sp"
         android:textColor="#333"
