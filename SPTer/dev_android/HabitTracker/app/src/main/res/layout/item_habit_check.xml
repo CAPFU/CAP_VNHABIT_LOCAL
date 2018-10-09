@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:gravity="center"
+    android:id="@+id/rl_habit"
+    android:background="@drawable/bg_border1"
     android:layout_margin="7dp"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"

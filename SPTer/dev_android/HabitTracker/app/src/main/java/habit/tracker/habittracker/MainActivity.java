@@ -23,15 +23,15 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
         setContentView(R.layout.activity_main);
 
         List<MenuItem> data = new ArrayList<>();
-        MenuItem item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_COUNT, "4", "2", "cuốn", 1);
+        MenuItem item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_COUNT, "4", "0", "cuốn", 1);
         data.add(item);
-        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_COUNT, "4", "2", "cuốn", 1);
+        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_COUNT, "4", "0", "cuốn", 1);
         data.add(item);
-        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_CHECK, "4", "2", "cuốn", 1);
+        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_CHECK, "4", "0", "cuốn", 1);
         data.add(item);
-        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_COUNT, "4", "2", "cuốn", 1);
+        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_COUNT, "4", "0", "cuốn", 1);
         data.add(item);
-        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_CHECK, "4", "2", "cuốn", 1);
+        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_CHECK, "4", "0", "cuốn", 1);
         data.add(item);
 
         RecyclerView recyclerView = findViewById(R.id.rvMenu);

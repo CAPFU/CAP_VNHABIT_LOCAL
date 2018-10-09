@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -15,6 +17,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public static final int TYPE_COUNT = 1;
     public static final int TYPE_CHECK = 2;
     public static final int TYPE_ADD = 3;
+    private Context context;
 
     private List<MenuItem> mData;
     private LayoutInflater mInflater;
@@ -23,6 +26,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public MenuRecyclerViewAdapter(Context context, List<MenuItem> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
+        this.context = context;
     }
 
     @Override
@@ -79,13 +83,14 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.tvPeriod.setText(item.getPeriod());
         holder.tvNumber.setText(item.getNumber() + " " + item.getUnit());
         holder.tvCount.setText(item.getCount());
+//        holder.layout.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
     }
 
     private void initLayoutCheck(ViewHolderCheck holder, MenuItem item) {
         holder.tvCategory.setText(item.getCategory());
         holder.tvDescription.setText(item.getDescription());
         holder.tvPeriod.setText(item.getPeriod());
-        if (item.getCount().equals(1)) {
+        if (item.getCount().equals("1")) {
             holder.isCheck = true;
             holder.imgCheck.setImageResource(R.drawable.ck_checked);
         } else if (item.getCount().equals("0")) {
@@ -95,6 +100,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public class ViewHolderCount extends RecyclerView.ViewHolder implements View.OnClickListener {
+        RelativeLayout layout;
         TextView tvCategory;
         TextView tvDescription;
         TextView tvPeriod;
@@ -106,6 +112,8 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         ViewHolderCount(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
+            layout = itemView.findViewById(R.id.rl_habit);
+
             tvCategory = itemView.findViewById(R.id.tv_category);
             tvDescription = itemView.findViewById(R.id.tv_description);
             tvPeriod = itemView.findViewById(R.id.tv_period);
@@ -120,9 +128,15 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         @Override
         public void onClick(View view) {
             if (view.getId() == R.id.btn_plus) {
-
+//                Toast.makeText(context, "btn_plus", Toast.LENGTH_SHORT).show();
+                int num = Integer.parseInt(tvCount.getText().toString());
+                num = num + 1;
+                tvCount.setText(num + "");
             } else if (view.getId() == R.id.btn_minus) {
-
+//                Toast.makeText(context, "btn_minus", Toast.LENGTH_SHORT).show();
+                int num = Integer.parseInt(tvCount.getText().toString());
+                num = num > 0? num - 1: 0;
+                tvCount.setText(num + "");
             } else if (mClickListener != null) {
                 mClickListener.onItemClick(view, getAdapterPosition());
             }

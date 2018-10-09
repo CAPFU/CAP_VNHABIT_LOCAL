@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:gravity="center"
+    android:id="@+id/rl_habit"
+    android:background="@drawable/bg_border1"
     android:layout_margin="7dp"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
-    android:paddingStart="15dp"
-    android:paddingEnd="15dp">
+    android:paddingStart="15dp">
 
     <TextView
         android:id="@+id/tv_category"
@@ -45,12 +46,17 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
+        android:layout_marginTop="-10dp"
+        android:layout_marginBottom="-10dp"
+        android:paddingEnd="15dp"
         android:layout_alignParentEnd="true">
 
         <Button
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:background="@drawable/ic_plus"/>
+            android:background="@drawable/ic_plus"
+            android:focusable="false"
+            android:clickable="false" />
     </LinearLayout>
 
     <TextView
@@ -61,7 +67,7 @@
         android:gravity="center_horizontal"
         android:layout_toStartOf="@+id/btn_plus"
         android:layout_toEndOf="@+id/btn_minus"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:text="2" />
 
     <TextView
@@ -78,13 +84,18 @@
         android:id="@+id/btn_minus"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginTop="-10dp"
+        android:layout_marginBottom="-10dp"
+        android:paddingStart="20dp"
         android:layout_toStartOf="@+id/tv_number"
         android:gravity="center_vertical">
 
         <Button
             android:layout_width="20sp"
             android:layout_height="5dp"
-            android:background="@drawable/ic_minus"/>
+            android:background="@drawable/ic_minus"
+            android:focusable="false"
+            android:clickable="false"/>
     </LinearLayout>
 
 </RelativeLayout>
