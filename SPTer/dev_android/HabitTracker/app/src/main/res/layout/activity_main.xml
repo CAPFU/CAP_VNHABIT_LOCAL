@@ -41,7 +41,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvMenu"
-        android:layout_weight="8"
+        android:layout_weight="10"
         android:layout_width="match_parent"
         android:layout_height="0dp" />
 
@@ -60,11 +60,10 @@
 
         <ImageView
             android:padding="10dp"
-            app:srcCompat="@drawable/check_list"
+            app:srcCompat="@drawable/note"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:alpha="0.4"/>
+            android:layout_height="wrap_content" />
 
         <ImageView
             android:padding="10dp"
@@ -79,7 +78,6 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
-
     </LinearLayout>
 
 </LinearLayout>

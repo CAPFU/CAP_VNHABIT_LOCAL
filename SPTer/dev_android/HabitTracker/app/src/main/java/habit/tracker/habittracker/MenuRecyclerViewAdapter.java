@@ -11,7 +11,11 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerViewAdapter.ViewHolder> {
+public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public static final int TYPE_COUNT = 1;
+    public static final int TYPE_CHECK = 2;
+    public static final int TYPE_ADD = 3;
+
     private List<MenuItem> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
@@ -22,37 +26,147 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
     }
 
     @Override
-    @NonNull
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.menu_item, parent, false);
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MenuItem item = mData.get(position);
-        holder.tvCatagory.setText(item.getName());
-        holder.tvNumber.setText(item.getAmount() + " tasks");
-        holder.imgTask.setImageResource(item.getMenuIc());
-    }
-
-    @Override
     public int getItemCount() {
-        return mData.size();
+        return  mData == null? 0: mData.size() + 1;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView tvCatagory;
-        TextView tvNumber;
-        ImageView imgTask;
+    @Override
+    public int getItemViewType(int position) {
+        if (position == mData.size()) {
+            return TYPE_ADD;
+        } else if (TYPE_COUNT == mData.get(position).getType()) {
+            return TYPE_COUNT;
+        } else if (TYPE_CHECK == mData.get(position).getType()) {
+            return TYPE_CHECK;
+        }
+        return TYPE_COUNT;
+    }
 
-        ViewHolder(View itemView) {
+    @Override
+    @NonNull
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (TYPE_ADD == viewType) {
+            View view = mInflater.inflate(R.layout.item_habit_add, parent, false);
+            return new ViewHolderAdd(view);
+        } else if (TYPE_COUNT == viewType) {
+            View view = mInflater.inflate(R.layout.item_habit_count, parent, false);
+            return new ViewHolderCount(view);
+        } else if (TYPE_CHECK == viewType) {
+            View view = mInflater.inflate(R.layout.item_habit_check, parent, false);
+            return new ViewHolderCheck(view);
+        } else {
+            throw new RuntimeException("unknown view type");
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        switch (holder.getItemViewType()) {
+            case TYPE_ADD:
+                break;
+            case TYPE_COUNT:
+                initLayoutCount((ViewHolderCount) holder, mData.get(position));
+                break;
+            case TYPE_CHECK:
+                initLayoutCheck((ViewHolderCheck) holder, mData.get(position));
+                break;
+        }
+    }
+
+    private void initLayoutCount(ViewHolderCount holder, MenuItem item) {
+        holder.tvCategory.setText(item.getCategory());
+        holder.tvDescription.setText(item.getDescription());
+        holder.tvPeriod.setText(item.getPeriod());
+        holder.tvNumber.setText(item.getNumber() + " " + item.getUnit());
+        holder.tvCount.setText(item.getCount());
+    }
+
+    private void initLayoutCheck(ViewHolderCheck holder, MenuItem item) {
+        holder.tvCategory.setText(item.getCategory());
+        holder.tvDescription.setText(item.getDescription());
+        holder.tvPeriod.setText(item.getPeriod());
+        if (item.getCount().equals(1)) {
+            holder.isCheck = true;
+            holder.imgCheck.setImageResource(R.drawable.ck_checked);
+        } else if (item.getCount().equals("0")) {
+            holder.isCheck = false;
+            holder.imgCheck.setImageResource(R.drawable.ck_unchecked);
+        }
+    }
+
+    public class ViewHolderCount extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView tvCategory;
+        TextView tvDescription;
+        TextView tvPeriod;
+        TextView tvNumber;
+        TextView tvCount;
+        View btnPlus;
+        View btnMinus;
+
+        ViewHolderCount(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-
-            tvCatagory = itemView.findViewById(R.id.tv_catagory);
+            tvCategory = itemView.findViewById(R.id.tv_category);
+            tvDescription = itemView.findViewById(R.id.tv_description);
+            tvPeriod = itemView.findViewById(R.id.tv_period);
             tvNumber = itemView.findViewById(R.id.tv_number);
-            imgTask = itemView.findViewById(R.id.imgTask);
+            tvCount = itemView.findViewById(R.id.tv_count);
+            btnPlus = itemView.findViewById(R.id.btn_plus);
+            btnPlus.setOnClickListener(this);
+            btnMinus = itemView.findViewById(R.id.btn_minus);
+            btnMinus.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == R.id.btn_plus) {
+
+            } else if (view.getId() == R.id.btn_minus) {
+
+            } else if (mClickListener != null) {
+                mClickListener.onItemClick(view, getAdapterPosition());
+            }
+        }
+    }
+
+    public class ViewHolderCheck extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView tvCategory;
+        TextView tvDescription;
+        TextView tvPeriod;
+        ImageView imgCheck;
+        boolean isCheck = false;
+
+        ViewHolderCheck(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+            tvCategory = itemView.findViewById(R.id.tv_category);
+            tvDescription = itemView.findViewById(R.id.tv_description);
+            tvPeriod = itemView.findViewById(R.id.tv_period);
+            imgCheck = itemView.findViewById(R.id.ck_check);
+            imgCheck.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == R.id.ck_check) {
+                if (isCheck) {
+                    isCheck = false;
+                    imgCheck.setImageResource(R.drawable.ck_unchecked);
+                } else {
+                    isCheck = true;
+                    imgCheck.setImageResource(R.drawable.ck_checked);
+                }
+            } else if (mClickListener != null) {
+                mClickListener.onItemClick(view, getAdapterPosition());
+            }
+        }
+    }
+
+    public class ViewHolderAdd extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        ViewHolderAdd(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
         }
 
         @Override

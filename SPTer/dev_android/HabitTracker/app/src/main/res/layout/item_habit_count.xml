@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:gravity="center"
+    android:layout_margin="7dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp">
+
+    <TextView
+        android:id="@+id/tv_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textAllCaps="true"
+        android:text="ĐỌC SÁCH"/>
+
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:textSize="10sp"
+        android:textAllCaps="true"
+        android:text="THÓI QUEN ĐỌC 4 CUỐN SACH TRONG"/>
+
+    <TextView
+        android:id="@+id/tv_period"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/tv_description"
+        android:paddingStart="3sp"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:text="THÁNG NÀY"/>
+
+    <LinearLayout
+        android:id="@+id/btn_plus"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:layout_alignParentEnd="true">
+
+        <Button
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_plus"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_count"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_horizontal"
+        android:layout_toStartOf="@+id/btn_plus"
+        android:layout_toEndOf="@+id/btn_minus"
+        android:textSize="18sp"
+        android:text="2" />
+
+    <TextView
+        android:id="@+id/tv_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="9sp"
+        android:text="/4 cuốn"
+        android:layout_below="@+id/tv_count"
+        android:layout_toStartOf="@+id/btn_plus"
+        android:textAllCaps="true"/>
+
+    <LinearLayout
+        android:id="@+id/btn_minus"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toStartOf="@+id/tv_number"
+        android:gravity="center_vertical">
+
+        <Button
+            android:layout_width="20sp"
+            android:layout_height="5dp"
+            android:background="@drawable/ic_minus"/>
+    </LinearLayout>
+
+</RelativeLayout>

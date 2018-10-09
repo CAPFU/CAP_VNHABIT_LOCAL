@@ -1,37 +1,89 @@
 package habit.tracker.habittracker;
 
 public class MenuItem {
-    private String name;
-    private String amount;
-    private int menuIc;
+    private String category;
+    private String description;
+    private String period;
+    private int type;
+    private String number;
+    private String count;
+    private String unit;
+    private int color;
 
-    public MenuItem(String name, String amount, int ic) {
-        this.name = name;
-        this.amount = amount;
-        this.menuIc = ic;
+    public MenuItem() {}
+
+    public MenuItem(String category, String description, String period, int type, String number, String count, String unit, int color) {
+        this.category = category;
+        this.description = description;
+        this.period = period;
+        this.type = type;
+        this.number = number;
+        this.count = count;
+        this.unit = unit;
+        this.color = color;
     }
 
-    public String getName() {
-        return name;
+    public String getCategory() {
+        return category;
     }
 
-    public String getAmount() {
-        return amount;
+    public String getDescription() {
+        return description;
     }
 
-    public int getMenuIc() {
-        return menuIc;
+    public String getPeriod() {
+        return period;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public int getType() {
+        return type;
     }
 
-    public void setAmount(String amount) {
-        this.amount = amount;
+    public String getNumber() {
+        return number;
     }
 
-    public void setMenuIc(int menuIc) {
-        this.menuIc = menuIc;
+    public String getCount() {
+        return count;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPeriod(String period) {
+        this.period = period;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 }

@@ -1,17 +1,17 @@
 package habit.tracker.habittracker;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import habit.tracker.habittracker.api.model.habit.Habit;
+import static habit.tracker.habittracker.MenuRecyclerViewAdapter.TYPE_CHECK;
+import static habit.tracker.habittracker.MenuRecyclerViewAdapter.TYPE_COUNT;
 
 public class MainActivity extends AppCompatActivity implements MenuRecyclerViewAdapter.ItemClickListener {
 
@@ -22,24 +22,16 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        Habit hb = new Habit();
-        hb.setHabitName("ĐỌC SÁCH");
-        hb.setHabitType("0");
-
-
         List<MenuItem> data = new ArrayList<>();
-        MenuItem item = new MenuItem("PERSONAL", "12", R.drawable.ps);
+        MenuItem item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_COUNT, "4", "2", "cuốn", 1);
         data.add(item);
-        item = new MenuItem("WORK", "12", R.drawable.work);
+        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_COUNT, "4", "2", "cuốn", 1);
         data.add(item);
-        item = new MenuItem("MEET", "12", R.drawable.meet);
+        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_CHECK, "4", "2", "cuốn", 1);
         data.add(item);
-        item = new MenuItem("HOME", "12", R.drawable.home);
+        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_COUNT, "4", "2", "cuốn", 1);
         data.add(item);
-        item = new MenuItem("PRIVATE", "12", R.drawable.privateic);
-        data.add(item);
-        item = new MenuItem("ADD NEW", "", R.drawable.add);
+        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_CHECK, "4", "2", "cuốn", 1);
         data.add(item);
 
         RecyclerView recyclerView = findViewById(R.id.rvMenu);
@@ -51,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
 
     @Override
     public void onItemClick(View view, int position) {
-//        Toast.makeText(this, "p: " + position, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, EmptyActivity.class);
         startActivity(intent);
     }
