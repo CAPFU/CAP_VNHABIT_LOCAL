@@ -9,8 +9,20 @@ include_once '../../models/Model.php';
         private $cols;
         private $params;
         private $colsArr = array(
-            'user_id', 
+            'user_id',
             'username', 
+            'phone', 
+            'password', 
+            'email', 
+            'date_of_birth', 
+            'gender', 
+            'user_icon', 
+            'avatar', 
+            'user_description' 
+        );
+        private $colsArr2 = array(
+            'username', 
+            'phone', 
             'password', 
             'email', 
             'date_of_birth', 
@@ -23,6 +35,7 @@ include_once '../../models/Model.php';
         // user
         public $user_id;
         public $username;
+        public $phone;
         public $password;
         public $email;
         public $date_of_birth;
@@ -34,7 +47,7 @@ include_once '../../models/Model.php';
         public function __construct($db) {
             $this->conn = $db;
             $this->cols = implode(", ", $this->colsArr);
-            $this->params = $this->make_query_param($this->colsArr);
+            $this->params = $this->make_query_param($this->colsArr2);
         }
 
         // Get all User
@@ -75,6 +88,43 @@ include_once '../../models/Model.php';
                 $this->user_id = $row['user_id'];
                 $this->username = $row['username'];
                 $this->password = $row['password'];
+                $this->phone = $row['phone'];
+                $this->email = $row['email'];
+                $this->date_of_birth = $row['date_of_birth'];
+                $this->gender = $row['gender'];
+                $this->user_icon = $row['user_icon'];
+                $this->avatar = $row['avatar'];
+                $this->user_description = $row['user_description'];
+                return $this;
+            } else {
+                return NULL;
+            }
+        }
+
+        public function find_by_username() {
+            // Create query
+            $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . 
+                ' WHERE
+                    username = :username LIMIT 0,1';
+
+            // Prepare statement
+            $stmt = $this->conn->prepare($query);
+
+            // Bind params
+            $stmt->bindParam(":username", $this->username);
+
+            // Execute query
+            $stmt->execute();
+            
+            // get row count
+            $num = $stmt->rowCount();
+            
+            if ($num == 1) {
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->user_id = $row['user_id'];
+                $this->username = $row['username'];
+                $this->password = $row['password'];
+                $this->phone = $row['phone'];
                 $this->email = $row['email'];
                 $this->date_of_birth = $row['date_of_birth'];
                 $this->gender = $row['gender'];
@@ -99,6 +149,7 @@ include_once '../../models/Model.php';
             $this->username = htmlspecialchars(strip_tags($this->username));
             $this->password = htmlspecialchars(strip_tags($this->password));
             $this->email = htmlspecialchars(strip_tags($this->email));
+            $this->phone = htmlspecialchars(strip_tags($this->phone));
             $this->date_of_birth = htmlspecialchars(strip_tags($this->date_of_birth));
             $this->gender = htmlspecialchars(strip_tags($this->gender));
             $this->user_icon = htmlspecialchars(strip_tags($this->user_icon));
@@ -109,6 +160,7 @@ include_once '../../models/Model.php';
             $stmt->bindParam(':username', $this->username);
             $stmt->bindParam(':password', $this->password);
             $stmt->bindParam(':email', $this->email);
+            $stmt->bindParam(':phone', $this->phone);
             $stmt->bindParam(':date_of_birth', $this->date_of_birth);
             $stmt->bindParam(':gender', $this->gender);
             $stmt->bindParam(':user_icon', $this->user_icon);
@@ -136,6 +188,7 @@ include_once '../../models/Model.php';
             $this->user_id = htmlspecialchars(strip_tags($this->user_id));
             $this->username = htmlspecialchars(strip_tags($this->username));
             $this->password = htmlspecialchars(strip_tags($this->password));
+            $this->phone = htmlspecialchars(strip_tags($this->phone));
             $this->email = htmlspecialchars(strip_tags($this->email));
             $this->date_of_birth = htmlspecialchars(strip_tags($this->date_of_birth));
             $this->gender = htmlspecialchars(strip_tags($this->gender));
@@ -147,6 +200,7 @@ include_once '../../models/Model.php';
             $stmt->bindParam(':user_id', $this->user_id);
             $stmt->bindParam(':username', $this->username);
             $stmt->bindParam(':password', $this->password);
+            $stmt->bindParam(':phone', $this->phone);
             $stmt->bindParam(':email', $this->email);
             $stmt->bindParam(':date_of_birth', $this->date_of_birth);
             $stmt->bindParam(':gender', $this->gender);

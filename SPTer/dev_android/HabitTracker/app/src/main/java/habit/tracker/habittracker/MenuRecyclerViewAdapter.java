@@ -150,7 +150,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 num = num > 0? num - 1: 0;
                 tvCount.setText(num + "");
             } else if (mClickListener != null) {
-                mClickListener.onItemClick(view, getAdapterPosition());
+                mClickListener.onItemClick(view, TYPE_COUNT, getAdapterPosition());
             }
         }
     }
@@ -185,7 +185,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     imgCheck.setImageResource(R.drawable.ck_checked);
                 }
             } else if (mClickListener != null) {
-                mClickListener.onItemClick(view, getAdapterPosition());
+                mClickListener.onItemClick(view, TYPE_CHECK, getAdapterPosition());
             }
         }
     }
@@ -200,7 +200,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         @Override
         public void onClick(View view) {
             if (mClickListener != null) {
-                mClickListener.onItemClick(view, getAdapterPosition());
+                mClickListener.onItemClick(view, TYPE_ADD, getAdapterPosition());
             }
         }
     }
@@ -210,6 +210,6 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick(View view, int type, int position);
     }
 }

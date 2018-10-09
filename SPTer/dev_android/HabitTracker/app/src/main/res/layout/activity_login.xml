@@ -15,8 +15,8 @@
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_gravity="center_horizontal"
         android:contentDescription="@string/app_name"
         android:layout_marginTop="60dp"
@@ -26,7 +26,7 @@
     <EditText
         android:id="@+id/edit_username"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="40dp"
         android:background="@drawable/bg_input"
         android:gravity="center"
         android:hint="@string/username"
@@ -35,10 +35,10 @@
     <EditText
         android:id="@+id/edit_password"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="40dp"
         android:background="@drawable/bg_input"
         android:gravity="center"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:textSize="16sp"
         android:hint="@string/password"
         android:inputType="textPassword" />
@@ -58,8 +58,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="27dp"
-        android:layout_marginBottom="27dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal">
 
         <View
@@ -85,7 +85,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="35dp"
         android:orientation="horizontal"
         android:gravity="center_horizontal">
 
@@ -115,8 +115,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_marginTop="40dp"
-        android:paddingBottom="5dp"
+        android:layout_marginTop="35dp"
+        android:paddingBottom="10dp"
         android:textSize="14sp"
         android:textColor="#333"
         android:text="@string/register_account"/>

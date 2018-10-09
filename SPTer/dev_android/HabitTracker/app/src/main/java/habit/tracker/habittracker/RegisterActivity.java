@@ -97,6 +97,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 if (!validator.checkEqual(password, passwordConf, "Mật khẩu")) {
                     return;
                 }
+
+                newUser.setUsername(username);
+                newUser.setPhone(phone);
+                newUser.setEmail(email);
+                newUser.setPassword(password);
                 register(newUser);
                 break;
             case R.id.btn_fb_login:
@@ -117,16 +122,16 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onResponse(Call<UserResult> call, Response<UserResult> response) {
                 if (response.body().getResult().equals("1")) {
-                    Toast.makeText(RegisterActivity.this, "Tài khoản đã tạo", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterActivity.this, "Đăng ký tài khoản thành công", Toast.LENGTH_LONG).show();
                     finish();
                 } else {
-                    Toast.makeText(RegisterActivity.this, "not ok", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Đăng ký không thành công", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<UserResult> call, Throwable t) {
-                Toast.makeText(RegisterActivity.this, "not ok", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "Đăng ký không thành công", Toast.LENGTH_SHORT).show();
             }
         });
     }
