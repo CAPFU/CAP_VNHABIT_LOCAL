@@ -20,9 +20,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:textAllCaps="true"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="10dp"
             android:text="tên thói quen" />
 
         <LinearLayout
@@ -56,16 +56,15 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#ededed"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"/>
+            android:layout_marginBottom="18dp"/>
         <!-- 2 -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:textAllCaps="true"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="15dp"
             android:text="xây dựng hay từ bỏ thói quen" />
 
         <LinearLayout
@@ -103,16 +102,15 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#ededed"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"/>
+            android:layout_marginBottom="18dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:textAllCaps="true"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="15dp"
             android:text="loại mục tiêu" />
 
         <LinearLayout
@@ -161,16 +159,15 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#ededed"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"/>
+            android:layout_marginBottom="18dp"/>
         <!-- 2 -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:textAllCaps="true"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="15dp"
             android:text="cách theo dõi" />
 
         <LinearLayout
@@ -195,6 +192,7 @@
                     android:textAllCaps="true"
                     android:paddingStart="5dp"
                     android:textSize="10sp"
+                    android:textColor="#5fa467"
                     android:text="có/không"/>
             </LinearLayout>
 
@@ -222,6 +220,7 @@
                     android:textAllCaps="true"
                     android:paddingStart="5dp"
                     android:textSize="10sp"
+                    android:textColor="#5fa467"
                     android:text="lần một ngày"/>
             </LinearLayout>
         </LinearLayout>
@@ -230,16 +229,15 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#ededed"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"/>
+            android:layout_marginBottom="18dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:textAllCaps="true"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="15dp"
             android:text="cách đếm habit" />
 
         <LinearLayout
@@ -268,13 +266,13 @@
                 android:textColor="@color/light_brown"
                 android:background="@drawable/bg_button_green"/>
 
-            <EditText
+            <TextView
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_height="20dp"
                 android:layout_marginStart="5dp"
                 android:paddingStart="5dp"
-                android:textSize="11sp"
+                android:textSize="10sp"
                 android:background="@drawable/bg_input1"
                 android:textAllCaps="true"
                 android:text="lần/cái/cuốn..."
@@ -290,16 +288,15 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#ededed"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"/>
+            android:layout_marginBottom="18dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:textAllCaps="true"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="15dp"
             android:text="nhóm habit" />
 
         <RelativeLayout
@@ -330,16 +327,15 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#ededed"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"/>
+            android:layout_marginBottom="18dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:textAllCaps="true"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="15dp"
             android:text="ngày theo dõi trong tuần" />
 
         <LinearLayout
@@ -431,16 +427,15 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#ededed"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"/>
+            android:layout_marginBottom="18dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:textAllCaps="true"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="15dp"
             android:text="thời gian thực hiện" />
 
         <RelativeLayout
@@ -513,6 +508,232 @@
                 android:text="t.bảy 14.12.2018"
                 android:gravity="center_vertical"/>
         </RelativeLayout>
+
+        <!-- 7 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="18dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="65dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textAllCaps="true"
+                android:layout_centerVertical="true"
+                android:text="màu thói quen"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true">
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/bg_circle"/>
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/bg_circle"/>
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/bg_circle"/>
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/bg_circle"/>
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/bg_circle"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true">
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/bg_circle"/>
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/bg_circle"/>
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/bg_circle"/>
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/bg_circle"/>
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/bg_circle"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- 8 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textAllCaps="true"
+            android:layout_marginBottom="10dp"
+            android:text="màu thói quen" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="13dp"
+                        android:layout_height="13dp"
+                        android:src="@drawable/bell"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textAllCaps="true"
+                        android:textColor="#799c4b"
+                        android:paddingStart="5dp"
+                        android:text="7:00 am: nội dung nhắc nhở 1"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="13dp"
+                        android:layout_height="13dp"
+                        android:src="@drawable/bell"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:paddingStart="5dp"
+                        android:textAllCaps="true"
+                        android:textColor="#799c4b"
+                        android:text="7:00 am: nội dung nhắc nhở 2"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="13dp"
+                        android:layout_height="13dp"
+                        android:src="@drawable/bell"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textAllCaps="true"
+                        android:textColor="#799c4b"
+                        android:paddingStart="5dp"
+                        android:text="7:00 am: nội dung nhắc nhở 3"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:textSize="10sp"
+                android:textColor="#799c4b"
+                android:textAllCaps="true"
+                android:text="thêm >"/>
+        </RelativeLayout>
+
+        <!-- 8 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textAllCaps="true"
+            android:layout_marginBottom="10dp"
+            android:text="hãy viết động lực cho thói quen này" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:textSize="11sp"
+            android:paddingStart="7dp"
+            android:background="@drawable/bg_input1"
+            android:layout_marginStart="10dp"
+            android:hint="Động lực của thói quen"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:paddingTop="30dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:textSize="10sp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/bg_button_white"
+                android:text="hủy bỏ"/>
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="20dp"
+                android:textSize="10sp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/bg_button_long_green"
+                android:text="lưu lại"/>
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>
