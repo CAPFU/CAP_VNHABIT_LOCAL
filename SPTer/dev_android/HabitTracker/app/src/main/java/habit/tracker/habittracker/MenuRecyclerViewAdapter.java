@@ -1,7 +1,11 @@
 package habit.tracker.habittracker;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -77,13 +80,21 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
+    private Drawable getBackground(int color) {
+        Drawable mDrawable = ContextCompat.getDrawable(context, R.drawable.bg_shadow);
+        if (mDrawable != null) {
+            mDrawable.setColorFilter(new PorterDuffColorFilter(context.getResources().getColor(color),PorterDuff.Mode.MULTIPLY));
+        }
+        return mDrawable;
+    }
+
     private void initLayoutCount(ViewHolderCount holder, MenuItem item) {
         holder.tvCategory.setText(item.getCategory());
         holder.tvDescription.setText(item.getDescription());
         holder.tvPeriod.setText(item.getPeriod());
         holder.tvNumber.setText(item.getNumber() + " " + item.getUnit());
         holder.tvCount.setText(item.getCount());
-//        holder.layout.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+        holder.layout.setBackground(getBackground(item.getColor()));
     }
 
     private void initLayoutCheck(ViewHolderCheck holder, MenuItem item) {
@@ -97,6 +108,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.isCheck = false;
             holder.imgCheck.setImageResource(R.drawable.ck_unchecked);
         }
+        holder.layout.setBackground(getBackground(item.getColor()));
     }
 
     public class ViewHolderCount extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -144,6 +156,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public class ViewHolderCheck extends RecyclerView.ViewHolder implements View.OnClickListener {
+        RelativeLayout layout;
         TextView tvCategory;
         TextView tvDescription;
         TextView tvPeriod;
@@ -153,6 +166,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         ViewHolderCheck(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
+            layout = itemView.findViewById(R.id.rl_habit);
             tvCategory = itemView.findViewById(R.id.tv_category);
             tvDescription = itemView.findViewById(R.id.tv_description);
             tvPeriod = itemView.findViewById(R.id.tv_period);

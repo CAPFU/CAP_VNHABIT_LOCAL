@@ -1,9 +1,518 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".HabitActivity">
+    android:layout_height="wrap_content">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingStart="13dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        tools:context=".HabitActivity">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:layout_marginBottom="5dp"
+            android:text="tên thói quen" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edit_habit_name"
+                android:layout_width="0dp"
+                android:layout_weight="10"
+                android:layout_height="35dp"
+                android:textSize="11sp"
+                android:background="@drawable/bg_input1"
+                android:paddingStart="7dp"
+                android:hint="Chạy bộ, đọc sách, ghi chép chi tiêu, vv"/>
+            <Button
+                android:id="@+id/btn_suggest_habit"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="18dp"
+                android:layout_marginStart="7dp"
+                android:text="đề xuất"
+                android:textSize="10dp"
+                android:textColor="@color/light_brown"
+                android:background="@drawable/bg_button_green"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ededed"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"/>
+        <!-- 2 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:layout_marginBottom="10dp"
+            android:text="xây dựng hay từ bỏ thói quen" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="20dp"
+                android:text="xây dựng"
+                android:textSize="10dp"
+                android:textColor="@color/light_brown"
+                android:background="@drawable/bg_button_green"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="20dp"
+                android:text="từ bỏ"
+                android:textSize="10dp"
+                android:textColor="@color/light_brown"
+                android:background="@android:color/transparent"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"/>
+        </LinearLayout>
+
+        <!-- 3 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ededed"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:layout_marginBottom="10dp"
+            android:text="loại mục tiêu" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="20dp"
+                android:text="hằng ngày"
+                android:textSize="10dp"
+                android:textColor="@color/light_brown"
+                android:background="@drawable/bg_button_green"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="20dp"
+                android:text="hằng tuần"
+                android:textSize="10dp"
+                android:textColor="@color/light_brown"
+                android:background="@android:color/transparent"/>
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="20dp"
+                android:text="hằng tháng"
+                android:textSize="10dp"
+                android:textColor="@color/light_brown"
+                android:background="@android:color/transparent"/>
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="20dp"
+                android:text="hằng năm"
+                android:textSize="10dp"
+                android:textColor="@color/light_brown"
+                android:background="@android:color/transparent"/>
+        </LinearLayout>
+
+        <!-- 4 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ededed"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"/>
+        <!-- 2 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:layout_marginBottom="10dp"
+            android:text="cách theo dõi" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ck_unchecked"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:paddingStart="5dp"
+                    android:textSize="10sp"
+                    android:text="có/không"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ck_checked"/>
+                <EditText
+                    android:layout_width="40dp"
+                    android:layout_height="20dp"
+                    android:textSize="12sp"
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/bg_input1"
+                    android:text="1"
+                    android:gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:paddingStart="5dp"
+                    android:textSize="10sp"
+                    android:text="lần một ngày"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 4 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ededed"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:layout_marginBottom="5dp"
+            android:text="cách đếm habit" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="20dp"
+                android:text="không đặt"
+                android:textSize="10dp"
+                android:textColor="@color/light_brown"
+                android:background="@android:color/transparent"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="20dp"
+                android:layout_marginStart="20dp"
+                android:text="xây dựng"
+                android:textSize="10dp"
+                android:textColor="@color/light_brown"
+                android:background="@drawable/bg_button_green"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="20dp"
+                android:layout_marginStart="5dp"
+                android:paddingStart="5dp"
+                android:textSize="11sp"
+                android:background="@drawable/bg_input1"
+                android:textAllCaps="true"
+                android:text="lần/cái/cuốn..."
+                android:gravity="center_vertical"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <!-- 5 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ededed"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:layout_marginBottom="5dp"
+            android:text="nhóm habit" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#5fa467"
+                android:textAllCaps="true"
+                android:textSize="10sp"
+                android:text="sức khỏe"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#5fa467"
+                android:textAllCaps="true"
+                android:textSize="10sp"
+                android:layout_alignParentEnd="true"
+                android:text="thêm >"/>
+        </RelativeLayout>
+
+        <!-- 6 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ededed"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:layout_marginBottom="5dp"
+            android:text="ngày theo dõi trong tuần" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:paddingStart="10dp">
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginEnd="20dp"-->
+                <!--android:textColor="#5fa467"-->
+                <!--android:textAllCaps="true"-->
+                <!--android:textSize="14sp"-->
+                <!--android:text="Thứ:"/>-->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                android:padding="5dp"
+                android:gravity="center"
+                android:textColor="@color/light_brown"
+                android:text="hai"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                android:padding="5dp"
+                android:gravity="center"
+                android:background="@drawable/bg_circle"
+                android:textColor="@color/light_brown"
+                android:text="ba"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                android:padding="5dp"
+                android:gravity="center"
+                android:textColor="@color/light_brown"
+                android:text="tư"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:gravity="center"
+                android:background="@drawable/bg_circle"
+                android:textColor="@color/light_brown"
+                android:text="năm"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                android:padding="5dp"
+                android:gravity="center"
+                android:textColor="@color/light_brown"
+                android:text="sáu"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                android:padding="5dp"
+                android:gravity="center"
+                android:textColor="@color/light_brown"
+                android:text="bảy"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                android:padding="5dp"
+                android:gravity="center"
+                android:background="@drawable/bg_circle"
+                android:textColor="@color/light_brown"
+                android:text="cn"/>
+        </LinearLayout>
+
+        <!-- 7 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ededed"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:layout_marginBottom="10dp"
+            android:text="thời gian thực hiện" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="40dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ck_unchecked"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:paddingStart="5dp"
+                    android:textSize="10sp"
+                    android:text="ngày bắt đầu"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="5dp"
+                android:paddingStart="10dp"
+                android:textSize="11sp"
+                android:background="@drawable/bg_input1"
+                android:textAllCaps="true"
+                android:text="vn 07.10.2018"
+                android:gravity="center_vertical"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ck_unchecked"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:paddingStart="5dp"
+                    android:textSize="10sp"
+                    android:text="ngày hoàn thành"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="5dp"
+                android:paddingStart="10dp"
+                android:textSize="11sp"
+                android:background="@drawable/bg_input1"
+                android:textAllCaps="true"
+                android:text="t.bảy 14.12.2018"
+                android:gravity="center_vertical"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+</ScrollView>

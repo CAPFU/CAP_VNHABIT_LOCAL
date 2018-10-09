@@ -23,15 +23,16 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
         setContentView(R.layout.activity_main);
 
         List<MenuItem> data = new ArrayList<>();
-        MenuItem item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_COUNT, "4", "0", "cuốn", 1);
+        MenuItem item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách trong", "tháng này", TYPE_COUNT, "4", "0", "cuốn", R.color.color1);
         data.add(item);
-        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_COUNT, "4", "0", "cuốn", 1);
+        item = new MenuItem("chạy bộ", "chạy bộ 10km trong", "tuần này", TYPE_COUNT, "4", "0", "cuốn", R.color.color2);
         data.add(item);
-        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_CHECK, "4", "0", "cuốn", 1);
+        item = new MenuItem("hít đất", "hít đất 100 cái trong", "hôm nay", TYPE_CHECK, "4", "0", "cuốn", R.color.color3);
         data.add(item);
-        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_COUNT, "4", "0", "cuốn", 1);
+        item = new MenuItem("đưa gia đình đi du lịch", "đưa gia đình đi du lịch trong", "năm nay", TYPE_CHECK, "1", "" +
+                "", "", R.color.color4);
         data.add(item);
-        item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách", "tháng này", TYPE_CHECK, "4", "0", "cuốn", 1);
+        item = new MenuItem("đi mua sắm", "đi mua sắm với vợ trong", "tuần này", TYPE_CHECK, "1", "0", "", R.color.color5);
         data.add(item);
 
         RecyclerView recyclerView = findViewById(R.id.rvMenu);
