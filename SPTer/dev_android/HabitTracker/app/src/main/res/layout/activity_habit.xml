@@ -80,6 +80,7 @@
                 android:paddingStart="7dp"
                 android:hint="Chạy bộ, đọc sách, ghi chép chi tiêu, vv"/>
             <Button
+                android:onClick="showEmpty"
                 android:id="@+id/btn_suggest_habit"
                 android:layout_width="0dp"
                 android:layout_weight="2"
@@ -230,7 +231,7 @@
                     android:id="@+id/g3_ck_check"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/ck_unchecked"/>
+                    android:src="@drawable/ck_checked"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -242,6 +243,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:onClick="showEmpty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
@@ -251,7 +253,7 @@
                     android:id="@+id/g3_ck_count"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/ck_checked"/>
+                    android:src="@drawable/ck_unchecked"/>
                 <EditText
                     android:layout_width="40dp"
                     android:layout_height="20dp"
@@ -301,9 +303,10 @@
                 android:text="không đặt"
                 android:textSize="10dp"
                 android:textColor="@color/light_brown"
-                android:background="@android:color/transparent"/>
+                android:background="@drawable/bg_button_green" />
 
             <Button
+                android:onClick="showEmpty"
                 android:id="@+id/g2_btn_set"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -312,9 +315,11 @@
                 android:text="xây dựng"
                 android:textSize="10dp"
                 android:textColor="@color/light_brown"
-                android:background="@drawable/bg_button_green"/>
+                android:background="@android:color/transparent"
+                />
 
             <TextView
+                android:onClick="showEmpty"
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_height="20dp"
@@ -348,9 +353,11 @@
             android:text="nhóm habit" />
 
         <RelativeLayout
+            android:id="@+id/habit_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="10dp"
+            android:onClick="showEmpty"
             android:gravity="center_vertical">
 
             <TextView
@@ -387,6 +394,7 @@
             android:text="ngày theo dõi trong tuần" />
 
         <LinearLayout
+            android:onClick="showEmpty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -487,6 +495,7 @@
             android:text="thời gian thực hiện" />
 
         <RelativeLayout
+            android:onClick="showEmpty"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:paddingStart="10dp"
@@ -513,6 +522,7 @@
             </LinearLayout>
 
             <TextView
+                android:onClick="showEmpty"
                 android:layout_width="100dp"
                 android:layout_height="20dp"
                 android:layout_alignParentEnd="true"
@@ -544,6 +554,7 @@
             </LinearLayout>
 
             <TextView
+                android:onClick="showEmpty"
                 android:layout_width="100dp"
                 android:layout_height="20dp"
                 android:layout_alignParentEnd="true"
@@ -565,6 +576,7 @@
             android:layout_marginBottom="18dp"/>
 
         <RelativeLayout
+            android:onClick="showEmpty"
             android:layout_width="match_parent"
             android:layout_height="65dp">
 
@@ -655,7 +667,7 @@
             android:text="màu thói quen" />
 
         <RelativeLayout
-            android:id="@+id/reminder"
+            android:onClick="showEmpty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -768,6 +780,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:onClick="cancel"
                 android:layout_width="100dp"
                 android:layout_height="25dp"
                 android:textSize="10sp"
@@ -775,6 +788,7 @@
                 android:background="@drawable/bg_button_white"
                 android:text="hủy bỏ"/>
             <Button
+                android:onClick="showEmpty"
                 android:layout_width="100dp"
                 android:layout_height="25dp"
                 android:layout_marginStart="20dp"
