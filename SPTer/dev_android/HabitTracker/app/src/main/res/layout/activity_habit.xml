@@ -18,6 +18,7 @@
         android:background="@drawable/border_bottom">
 
         <ImageView
+            android:id="@+id/btn_back"
             app:srcCompat="@drawable/arrow_back"
             android:layout_weight="1"
             android:layout_width="0dp"
