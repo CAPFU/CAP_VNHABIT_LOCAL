@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    >
-
+    tools:context=".HabitActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,11 +17,15 @@
         android:background="@drawable/border_bottom">
 
         <ImageView
+            android:onClick="cancel"
             android:id="@+id/btn_back"
             app:srcCompat="@drawable/arrow_back"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:padding="13dp"
+            android:paddingStart="13dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:layout_height="match_parent" />
 
         <TextView
@@ -200,13 +203,13 @@
                 android:background="@android:color/transparent"/>
         </LinearLayout>
 
-        <!-- 4 -->
+        <!-- 5 -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="18dp"/>
-        <!-- 2 -->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -223,6 +226,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/ck_type_check"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical">
@@ -243,6 +247,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ck_type_count"
                 android:onClick="showEmpty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -255,14 +260,17 @@
                     android:layout_height="20dp"
                     android:src="@drawable/ck_unchecked"/>
                 <EditText
+                    android:id="@+id/edit_count"
                     android:layout_width="40dp"
                     android:layout_height="20dp"
                     android:textSize="12sp"
                     android:layout_marginStart="5dp"
                     android:background="@drawable/bg_input1"
                     android:text="1"
+                    android:enabled="false"
                     android:gravity="center"/>
                 <TextView
+                    android:id="@+id/tv_count_unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAllCaps="true"
@@ -296,7 +304,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/g4_btn_noset"
+                android:id="@+id/btn_unit_no"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="20dp"
@@ -307,12 +315,12 @@
 
             <Button
                 android:onClick="showEmpty"
-                android:id="@+id/g2_btn_set"
+                android:id="@+id/btn_unit_set"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="20dp"
                 android:layout_marginStart="20dp"
-                android:text="xây dựng"
+                android:text="thiết lập"
                 android:textSize="10dp"
                 android:textColor="@color/light_brown"
                 android:background="@android:color/transparent"
