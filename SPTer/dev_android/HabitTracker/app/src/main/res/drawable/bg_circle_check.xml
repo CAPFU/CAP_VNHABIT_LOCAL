@@ -10,4 +10,5 @@
             <solid android:color="#f1f1f1" />
         </shape>
     </item>
+    <item android:top="10dp" android:bottom="10dp" android:left="10dp" android:right="10dp" android:drawable="@drawable/ic_pick"/>
 </layer-list>

@@ -12,20 +12,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import habit.tracker.habittracker.common.Validator;
+import habit.tracker.habittracker.common.ValidatorType;
 
 public class HabitActivity extends AppCompatActivity {
+
+    @BindView(R.id.edit_habit_name)
+    TextView tvHabitName;
 
     @BindView(R.id.g1_btn_build)
     Button btnHabitBuild;
     @BindView(R.id.g1_btn_quit)
     Button btnHabitQuit;
-    int buildType = 0;
+    int habitType = 0;
 
-    Button btnWatchMode;
+    View btnWatchMode;
     @BindView(R.id.g2_btn_daily)
     Button btnDaily;
     @BindView(R.id.g2_btn_weekly)
@@ -94,7 +100,32 @@ public class HabitActivity extends AppCompatActivity {
     View color9;
     @BindView(R.id.color10)
     View color10;
+    View habitColor;
+    int[] colors = new int[]{
+            R.color.color1,
+            R.color.color2,
+            R.color.color3,
+            R.color.color4,
+            R.color.color5,
+            R.color.color6,
+            R.color.color7,
+            R.color.color8,
+            R.color.color9,
+            R.color.color10
+    };
 
+    @BindView(R.id.ll_start_date)
+    View mStartDate;
+    @BindView(R.id.ll_end_date)
+    View mEndDate;
+    @BindView(R.id.check_startDate)
+    ImageView chkStartDate;
+    @BindView(R.id.check_endDate)
+    ImageView chkEndDate;
+    boolean[] planDate = new boolean[2];
+
+    @BindView(R.id.btn_save)
+    Button btnSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,16 +134,38 @@ public class HabitActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         btnWatchMode = btnDaily;
-        color1.setBackground(getCircleBackground(R.color.color1));
-        color2.setBackground(getCircleBackground(R.color.color2));
-        color3.setBackground(getCircleBackground(R.color.color3));
-        color4.setBackground(getCircleBackground(R.color.color4));
-        color5.setBackground(getCircleBackground(R.color.color5));
-        color6.setBackground(getCircleBackground(R.color.color6));
-        color7.setBackground(getCircleBackground(R.color.color7));
-        color8.setBackground(getCircleBackground(R.color.color8));
-        color9.setBackground(getCircleBackground(R.color.color9));
-        color10.setBackground(getCircleBackground(R.color.color10));
+        color1.setBackground(getCircleBackground(colors[0]));
+        color2.setBackground(getCircleBackground(colors[1]));
+        color3.setBackground(getCircleBackground(colors[2]));
+        color4.setBackground(getCircleBackground(colors[3]));
+        color5.setBackground(getCircleBackground(colors[4]));
+        color6.setBackground(getCircleBackground(colors[5]));
+        color7.setBackground(getCircleBackground(colors[6]));
+        color8.setBackground(getCircleBackground(colors[7]));
+        color9.setBackground(getCircleBackground(colors[8]));
+        color10.setBackground(getCircleBackground(colors[9]));
+    }
+
+    @OnClick(R.id.btn_save)
+    public void saveHabit(View v) {
+        Validator validator = new Validator();
+        validator.setErrorMsgListener(new Validator.ErrorMsg() {
+            @Override
+            public void showError(ValidatorType type, String key) {
+                switch (type) {
+                    case EMPTY:
+                        Toast.makeText(HabitActivity.this, key + " không được rỗng", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
+        String habitName = tvHabitName.getText().toString();
+        int habitType = this.habitType;
+
+        if (!validator.checkEmpty("Tên thói quen", habitName)){
+            return;
+        }
+
     }
 
     @OnClick({R.id.g1_btn_build, R.id.g1_btn_quit})
@@ -121,11 +174,11 @@ public class HabitActivity extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.g1_btn_build:
                 setWhiteBg(btnHabitQuit);
-                buildType = 0;
+                habitType = 0;
                 break;
             case R.id.g1_btn_quit:
                 setWhiteBg(btnHabitBuild);
-                buildType = 1;
+                habitType = 1;
                 break;
         }
     }
@@ -134,26 +187,20 @@ public class HabitActivity extends AppCompatActivity {
     public void setWatchMode(View view) {
         setWhiteBg(btnWatchMode);
         setGreenBg(view);
+        btnWatchMode = view;
+        watchMode = Integer.parseInt(view.getTag().toString());
         switch (view.getId()) {
             case R.id.g2_btn_daily:
                 tvCountUnit.setText("trong một ngày");
-                btnWatchMode = btnDaily;
-                watchMode = 0;
                 break;
             case R.id.g2_btn_weekly:
                 tvCountUnit.setText("trong một tuần");
-                btnWatchMode = btnWeekly;
-                watchMode = 1;
                 break;
             case R.id.g2_btn_monthly:
                 tvCountUnit.setText("trong một tháng");
-                btnWatchMode = btnMonthly;
-                watchMode = 2;
                 break;
             case R.id.g2_btn_yearly:
                 tvCountUnit.setText("trong một năm");
-                btnWatchMode = btnYearly;
-                watchMode = 3;
                 break;
         }
     }
@@ -199,6 +246,45 @@ public class HabitActivity extends AppCompatActivity {
         watchDate[tag] = !watchDate[tag];
     }
 
+    @OnClick({R.id.ll_start_date, R.id.ll_end_date})
+    public void setStartDate(View v) {
+        if (v.getId() == R.id.ll_start_date) {
+            if (planDate[0]) {
+                uncheck(chkStartDate);
+            } else {
+                check(chkStartDate);
+            }
+            planDate[0] = !planDate[0];
+        } else if (v.getId() == R.id.ll_end_date) {
+            if (planDate[1]) {
+                uncheck(chkEndDate);
+            } else {
+                check(chkEndDate);
+            }
+            planDate[1] = !planDate[1];
+        }
+    }
+
+
+    @OnClick({R.id.color1,
+            R.id.color2,
+            R.id.color4,
+            R.id.color5,
+            R.id.color6,
+            R.id.color7,
+            R.id.color8,
+            R.id.color9,
+            R.id.color10})
+    public void setHabitColor(View v) {
+        int num = Integer.parseInt(v.getTag().toString());
+        pickColor(v, colors[num]);
+        if (habitColor != null) {
+            num = Integer.parseInt(habitColor.getTag().toString());
+            unpickColor(habitColor, colors[num]);
+        }
+        habitColor = v;
+    }
+
     public void setGreenBg(View v) {
         v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_button_green));
     }
@@ -223,6 +309,14 @@ public class HabitActivity extends AppCompatActivity {
         v.setBackground(ContextCompat.getDrawable(this, android.R.color.transparent));
     }
 
+    public void pickColor(View v, int color){
+        v.setBackground(getCircleCheckBackground(color));
+    }
+
+    public void unpickColor(View v, int color){
+        v.setBackground(getCircleBackground(color));
+    }
+
     public void showEmpty(View v) {
         Intent intent = new Intent(HabitActivity.this, EmptyActivity.class);
         HabitActivity.this.startActivity(intent);
@@ -234,6 +328,14 @@ public class HabitActivity extends AppCompatActivity {
 
     private Drawable getCircleBackground(int color) {
         Drawable mDrawable = ContextCompat.getDrawable(this, R.drawable.bg_circle);
+        if (mDrawable != null) {
+            mDrawable.setColorFilter(new PorterDuffColorFilter(this.getResources().getColor(color), PorterDuff.Mode.MULTIPLY));
+        }
+        return mDrawable;
+    }
+
+    private Drawable getCircleCheckBackground(int color) {
+        Drawable mDrawable = ContextCompat.getDrawable(this, R.drawable.bg_circle_check);
         if (mDrawable != null) {
             mDrawable.setColorFilter(new PorterDuffColorFilter(this.getResources().getColor(color), PorterDuff.Mode.MULTIPLY));
         }
