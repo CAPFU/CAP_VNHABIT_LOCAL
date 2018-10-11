@@ -10,6 +10,14 @@
     <color name="color4">#78a5662e</color>
     <color name="color5">#786f457e</color>
     <color name="color6">#78d15e6c</color>
+    <color name="color7">#78893fc1</color>
+    <color name="color8">#78de0639</color>
+    <color name="color9">#780ed9be</color>
+    <color name="color10">#78331199</color>
+
 
     <color name="light_brown">#a77777</color>
+
+    <!-- color picker -->
+
 </resources>

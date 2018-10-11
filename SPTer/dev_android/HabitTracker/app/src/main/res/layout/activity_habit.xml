@@ -262,13 +262,13 @@
                 <EditText
                     android:id="@+id/edit_count"
                     android:layout_width="40dp"
-                    android:layout_height="20dp"
-                    android:textSize="12sp"
+                    android:layout_height="25dp"
+                    android:gravity="center"
                     android:layout_marginStart="5dp"
                     android:background="@drawable/bg_input1"
                     android:text="1"
-                    android:enabled="false"
-                    android:gravity="center"/>
+                    android:textSize="12sp"
+                    android:enabled="false" />
                 <TextView
                     android:id="@+id/tv_count_unit"
                     android:layout_width="wrap_content"
@@ -294,7 +294,7 @@
             android:textSize="15sp"
             android:textAllCaps="true"
             android:layout_marginBottom="15dp"
-            android:text="cách đếm habit" />
+            android:text="cách đếm thói quen" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -304,7 +304,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btn_unit_no"
+                android:id="@+id/btn_no_unit"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="20dp"
@@ -314,30 +314,29 @@
                 android:background="@drawable/bg_button_green" />
 
             <Button
-                android:onClick="showEmpty"
-                android:id="@+id/btn_unit_set"
+                android:id="@+id/btn_set_unit"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="20dp"
                 android:layout_marginStart="20dp"
-                android:text="thiết lập"
                 android:textSize="10dp"
+                android:text="thiết lập"
                 android:textColor="@color/light_brown"
-                android:background="@android:color/transparent"
-                />
+                android:background="@android:color/transparent" />
 
-            <TextView
-                android:onClick="showEmpty"
+            <EditText
+                android:id="@+id/edit_unit"
                 android:layout_width="0dp"
-                android:layout_weight="2"
-                android:layout_height="20dp"
+                android:layout_weight="1"
+                android:layout_height="25dp"
                 android:layout_marginStart="5dp"
                 android:paddingStart="5dp"
+                android:gravity="center_vertical"
                 android:textSize="10sp"
+                android:inputType="textCapCharacters"
+                android:hint="LẦN/CÁI/..."
                 android:background="@drawable/bg_input1"
-                android:textAllCaps="true"
-                android:text="lần/cái/cuốn..."
-                android:gravity="center_vertical"/>
+                android:enabled="false"/>
 
             <View
                 android:layout_width="0dp"
@@ -357,14 +356,15 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:textAllCaps="true"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="10dp"
             android:text="nhóm habit" />
 
         <RelativeLayout
-            android:id="@+id/habit_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:onClick="showEmpty"
             android:gravity="center_vertical">
 
@@ -390,7 +390,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="18dp"/>
 
         <TextView
@@ -402,89 +402,80 @@
             android:text="ngày theo dõi trong tuần" />
 
         <LinearLayout
-            android:onClick="showEmpty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:paddingStart="10dp">
-
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginEnd="20dp"-->
-                <!--android:textColor="#5fa467"-->
-                <!--android:textAllCaps="true"-->
-                <!--android:textSize="14sp"-->
-                <!--android:text="Thứ:"/>-->
+            android:gravity="center">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:textSize="12sp"
-                android:padding="5dp"
+                android:id="@+id/btnMon"
+                android:tag="0"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:textSize="11sp"
                 android:gravity="center"
                 android:textColor="@color/light_brown"
-                android:text="hai"/>
+                android:text="HAI"/>
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:textSize="12sp"
-                android:padding="5dp"
+                android:id="@+id/btnTue"
+                android:tag="1"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:textSize="11sp"
+                android:layout_marginStart="10dp"
                 android:gravity="center"
-                android:background="@drawable/bg_circle"
                 android:textColor="@color/light_brown"
-                android:text="ba"/>
+                android:text="BA"/>
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:textSize="12sp"
-                android:padding="5dp"
+                android:id="@+id/btnWed"
+                android:tag="2"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:textSize="11sp"
+                android:layout_marginStart="10dp"
                 android:gravity="center"
                 android:textColor="@color/light_brown"
-                android:text="tư"/>
+                android:text="TƯ"/>
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:textSize="12sp"
-                android:paddingTop="7dp"
-                android:paddingBottom="7dp"
+                android:id="@+id/btnThu"
+                android:tag="3"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:textSize="11sp"
+                android:layout_marginStart="10dp"
                 android:gravity="center"
-                android:background="@drawable/bg_circle"
                 android:textColor="@color/light_brown"
-                android:text="năm"/>
+                android:text="NĂM"/>
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:textSize="12sp"
-                android:padding="5dp"
+                android:id="@+id/btnFri"
+                android:tag="4"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:textSize="11sp"
+                android:layout_marginStart="10dp"
                 android:gravity="center"
                 android:textColor="@color/light_brown"
-                android:text="sáu"/>
+                android:text="SÁU"/>
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:textSize="12sp"
-                android:padding="5dp"
+                android:id="@+id/btnSat"
+                android:tag="5"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:textSize="11sp"
+                android:layout_marginStart="10dp"
                 android:gravity="center"
                 android:textColor="@color/light_brown"
-                android:text="bảy"/>
+                android:text="BẢY"/>
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:textSize="12sp"
-                android:padding="5dp"
+                android:id="@+id/btnSun"
+                android:tag="6"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:textSize="11sp"
+                android:layout_marginStart="10dp"
                 android:gravity="center"
-                android:background="@drawable/bg_circle"
                 android:textColor="@color/light_brown"
-                android:text="cn"/>
+                android:text="CN"/>
         </LinearLayout>
 
         <!-- 7 -->
@@ -601,26 +592,31 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true">
                 <View
+                    android:id="@+id/color1"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/bg_circle"/>
                 <View
+                    android:id="@+id/color2"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/bg_circle"/>
                 <View
+                    android:id="@+id/color3"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/bg_circle"/>
                 <View
+                    android:id="@+id/color4"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/bg_circle"/>
                 <View
+                    android:id="@+id/color5"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="5dp"
@@ -632,26 +628,31 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true">
                 <View
+                    android:id="@+id/color6"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/bg_circle"/>
                 <View
+                    android:id="@+id/color7"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/bg_circle"/>
                 <View
+                    android:id="@+id/color8"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/bg_circle"/>
                 <View
+                    android:id="@+id/color9"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/bg_circle"/>
                 <View
+                    android:id="@+id/color10"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="5dp"
