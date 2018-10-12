@@ -109,6 +109,7 @@ public class HabitActivity extends AppCompatActivity {
     @BindView(R.id.color10)
     View color10;
     View habitColor;
+    String colorCode;
     int[] colors = new int[]{
             R.color.color1,
             R.color.color2,
@@ -171,21 +172,25 @@ public class HabitActivity extends AppCompatActivity {
             }
         });
         String habitName = tvHabitName.getText().toString();
-        String habitType = this.habitType + "";
+        String habitType = String.valueOf(this.habitType);
         String userId = MySharedPreference.getUserId(this);
         String categoryId;
         String countType = "0";
         String unit = null;
         if (hasCountUnit) {
             countType = "1";
-            unit = tvCountUnit.getText().toString();
+            unit = editUnit.getText().toString();
         }
         String startDate = null;
         String endDate = null;
         String createdDate = null;
-        int num = Integer.parseInt(habitColor.getTag().toString());
-        String color = colors[num] + "";
-        String descroption = editDescription.getText().toString();
+        String color = habitColor.getTag().toString();
+
+        String description = editDescription.getText().toString();
+        if (!validator.checkEmpty("Tên thói quen", habitName)) {
+            return;
+        }
+
         Habit habit = new Habit();
         habit.setHabitName(habitName);
         habit.setHabitType(habitType);
@@ -195,10 +200,7 @@ public class HabitActivity extends AppCompatActivity {
         habit.setEndDate(null);
         habit.setCreatedDate(null);
         habit.setHabitColor(color);
-        habit.setHabitDescription(descroption);
-        if (!validator.checkEmpty("Tên thói quen", habitName)){
-            return;
-        }
+        habit.setHabitDescription(description);
 
         ApiService mService = ApiUtils.getApiService();
         mService.addHabit(habit).enqueue(new Callback<HabitResult>() {
@@ -212,11 +214,9 @@ public class HabitActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<HabitResult> call, Throwable t) {
-
+                Toast.makeText(HabitActivity.this, "not ok", Toast.LENGTH_LONG).show();
             }
         });
-
-
     }
 
     @OnClick({R.id.g1_btn_build, R.id.g1_btn_quit})
@@ -319,6 +319,7 @@ public class HabitActivity extends AppCompatActivity {
 
     @OnClick({R.id.color1,
             R.id.color2,
+            R.id.color3,
             R.id.color4,
             R.id.color5,
             R.id.color6,
@@ -327,12 +328,13 @@ public class HabitActivity extends AppCompatActivity {
             R.id.color9,
             R.id.color10})
     public void setHabitColor(View v) {
-        int num = Integer.parseInt(v.getTag().toString());
-        pickColor(v, colors[num]);
+        int num = 0;
         if (habitColor != null) {
             num = Integer.parseInt(habitColor.getTag().toString());
             unpickColor(habitColor, colors[num]);
         }
+        num = Integer.parseInt(v.getTag().toString());
+        pickColor(v, colors[num]);
         habitColor = v;
     }
 

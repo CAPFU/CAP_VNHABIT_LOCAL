@@ -22,6 +22,19 @@ include_once '../../models/Model.php';
             'habit_color', 
             'habit_description'
         );
+        private $colsArr2 = array(
+            'user_id', 
+            'category_id', 
+            'habit_name', 
+            'habit_type', 
+            'unit', 
+            'count_type', 
+            'start_date', 
+            'end_date', 
+            'created_date', 
+            'habit_color', 
+            'habit_description'
+        );
 
         // habit
         public $habit_id;
@@ -40,7 +53,7 @@ include_once '../../models/Model.php';
         public function __construct($db) {
             $this->conn = $db;
             $this->cols = implode(", ", $this->colsArr);
-            $this->params = $this->make_query_param($this->colsArr);
+            $this->params = $this->make_query_param($this->colsArr2);
         }
 
         // Get all Habit
