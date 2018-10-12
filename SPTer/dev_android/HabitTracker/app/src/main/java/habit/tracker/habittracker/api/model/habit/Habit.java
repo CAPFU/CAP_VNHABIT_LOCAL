@@ -14,12 +14,6 @@ public class Habit {
     @SerializedName("catagory_id")
     @Expose
     private String catagoryId;
-    @SerializedName("schedule_id")
-    @Expose
-    private String scheduleId;
-    @SerializedName("goal_id")
-    @Expose
-    private String goalId;
     @SerializedName("habit_name")
     @Expose
     private String habitName;
@@ -41,9 +35,9 @@ public class Habit {
     @SerializedName("created_date")
     @Expose
     private String createdDate;
-    @SerializedName("habit_icon")
+    @SerializedName("habit_color")
     @Expose
-    private String habitIcon;
+    private String habitColor;
     @SerializedName("habit_description")
     @Expose
     private String habitDescription;
@@ -70,22 +64,6 @@ public class Habit {
 
     public void setCatagoryId(String catagoryId) {
         this.catagoryId = catagoryId;
-    }
-
-    public String getScheduleId() {
-        return scheduleId;
-    }
-
-    public void setScheduleId(String scheduleId) {
-        this.scheduleId = scheduleId;
-    }
-
-    public String getGoalId() {
-        return goalId;
-    }
-
-    public void setGoalId(String goalId) {
-        this.goalId = goalId;
     }
 
     public String getHabitName() {
@@ -144,12 +122,12 @@ public class Habit {
         this.createdDate = createdDate;
     }
 
-    public String getHabitIcon() {
-        return habitIcon;
+    public String getHabitColor() {
+        return habitColor;
     }
 
-    public void setHabitIcon(String habitIcon) {
-        this.habitIcon = habitIcon;
+    public void setHabitColor(String habitIcon) {
+        this.habitColor = habitIcon;
     }
 
     public String getHabitDescription() {

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
 
@@ -127,6 +128,9 @@ public class HabitActivity extends AppCompatActivity {
     @BindView(R.id.btn_save)
     Button btnSave;
 
+    @BindView(R.id.edit_description)
+    EditText editDescription;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,7 +164,31 @@ public class HabitActivity extends AppCompatActivity {
             }
         });
         String habitName = tvHabitName.getText().toString();
-        int habitType = this.habitType;
+        String habitType = this.habitType + "";
+        String userId = MySharedPreference.getUserId(this);
+        String categoryId;
+        String countType = "0";
+        String unit = null;
+        if (hasCountUnit) {
+            countType = "1";
+            unit = tvCountUnit.getText().toString();
+        }
+        String startDate = null;
+        String endDate = null;
+        String createdDate = null;
+        int num = Integer.parseInt(habitColor.getTag().toString());
+        String color = colors[num] + "";
+        String descroption = editDescription.getText().toString();
+        Habit habit = new Habit();
+        habit.setHabitName(habitName);
+        habit.setHabitType(habitType);
+        habit.setUnit(unit);
+        habit.setCountType(countType);
+        habit.setStartDate(null);
+        habit.setEndDate(null);
+        habit.setCreatedDate(null);
+        habit.setHabitColor(color);
+        habit.setHabitDescription(descroption);
 
         if (!validator.checkEmpty("Tên thói quen", habitName)){
             return;

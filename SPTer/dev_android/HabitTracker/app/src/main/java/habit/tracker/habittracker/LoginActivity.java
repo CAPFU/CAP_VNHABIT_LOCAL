@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import habit.tracker.habittracker.api.ApiUtils;
+import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.model.user.UserResponse;
 import habit.tracker.habittracker.api.service.ApiService;
 import habit.tracker.habittracker.common.Validator;
@@ -82,6 +83,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if (response.body().getResult().equals("1")) {
+
+                    User user = response.body().getUser();
+                    MySharedPreference.saveUser(LoginActivity.this, user.getUserId(), user.getUsername());
+
                     Toast.makeText(LoginActivity.this, "Login ok!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     LoginActivity.this.startActivity(intent);
