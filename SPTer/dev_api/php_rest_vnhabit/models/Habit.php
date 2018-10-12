@@ -12,8 +12,6 @@ include_once '../../models/Model.php';
             'habit_id', 
             'user_id', 
             'category_id', 
-            'schedule_id', 
-            'goal_id', 
             'habit_name', 
             'habit_type', 
             'unit', 
@@ -21,7 +19,7 @@ include_once '../../models/Model.php';
             'start_date', 
             'end_date', 
             'created_date', 
-            'habit_icon', 
+            'habit_color', 
             'habit_description'
         );
 
@@ -29,8 +27,6 @@ include_once '../../models/Model.php';
         public $habit_id;
         public $user_id;
         public $category_id;
-        public $schedule_id;
-        public $goal_id;
         public $habit_name;
         public $habit_type;
         public $unit;
@@ -38,7 +34,7 @@ include_once '../../models/Model.php';
         public $start_date;
         public $end_date;
         public $created_date;
-        public $habit_icon;
+        public $habit_color;
         public $habit_description;
 
         public function __construct($db) {
@@ -83,8 +79,6 @@ include_once '../../models/Model.php';
                 $this->habit_id = $row['habit_id'];
                 $this->user_id = $row['user_id'];
                 $this->category_id = $row['category_id'];
-                $this->schedule_id = $row['schedule_id'];
-                $this->goal_id = $row['goal_id'];
                 $this->habit_name = $row['habit_name'];
                 $this->habit_type = $row['habit_type'];
                 $this->unit = $row['unit'];
@@ -92,7 +86,7 @@ include_once '../../models/Model.php';
                 $this->start_date = $row['start_date'];
                 $this->end_date = $row['end_date'];
                 $this->created_date = $row['created_date'];
-                $this->habit_icon = $row['habit_icon'];
+                $this->habit_color = $row['habit_color'];
                 $this->habit_description = $row['habit_description'];
                 return $this;
             } else {
@@ -111,8 +105,6 @@ include_once '../../models/Model.php';
             // Bind data
             $stmt->bindParam(':user_id', $this->user_id);
             $stmt->bindParam(':category_id', $this->category_id);
-            $stmt->bindParam(':schedule_id', $this->schedule_id);
-            $stmt->bindParam(':goal_id', $this->goal_id);
             $stmt->bindParam(':habit_name', $this->habit_name);
             $stmt->bindParam(':habit_type', $this->habit_type);
             $stmt->bindParam(':unit', $this->unit);
@@ -120,7 +112,7 @@ include_once '../../models/Model.php';
             $stmt->bindParam(':start_date', $this->start_date);
             $stmt->bindParam(':end_date', $this->end_date);
             $stmt->bindParam(':created_date', $this->created_date);
-            $stmt->bindParam(':habit_icon', $this->habit_icon);
+            $stmt->bindParam(':habit_color', $this->habit_color);
             $stmt->bindParam(':habit_description', $this->habit_description);
 
             // Execute query
@@ -145,8 +137,6 @@ include_once '../../models/Model.php';
             $stmt->bindParam(':habit_id', $this->habit_id);
             $stmt->bindParam(':user_id', $this->user_id);
             $stmt->bindParam(':category_id', $this->category_id);
-            $stmt->bindParam(':schedule_id', $this->schedule_id);
-            $stmt->bindParam(':goal_id', $this->goal_id);
             $stmt->bindParam(':habit_name', $this->habit_name);
             $stmt->bindParam(':habit_type', $this->habit_type);
             $stmt->bindParam(':unit', $this->unit);
@@ -154,7 +144,7 @@ include_once '../../models/Model.php';
             $stmt->bindParam(':start_date', $this->start_date);
             $stmt->bindParam(':end_date', $this->end_date);
             $stmt->bindParam(':created_date', $this->created_date);
-            $stmt->bindParam(':habit_icon', $this->habit_icon);
+            $stmt->bindParam(':habit_color', $this->habit_color);
             $stmt->bindParam(':habit_description', $this->habit_description);
 
             // Execute query

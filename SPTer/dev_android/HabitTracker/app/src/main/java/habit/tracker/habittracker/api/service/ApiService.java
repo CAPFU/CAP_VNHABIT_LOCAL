@@ -1,5 +1,7 @@
 package habit.tracker.habittracker.api.service;
 
+import habit.tracker.habittracker.api.model.habit.Habit;
+import habit.tracker.habittracker.api.model.habit.HabitResult;
 import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.model.user.UserResponse;
 import habit.tracker.habittracker.api.model.user.UserResult;
@@ -16,6 +18,8 @@ public interface ApiService {
     Call<UserResponse> getUser(@Query("username") String username, @Query("password") String password);
 
     @POST("user/create.php")
-//    @FormUrlEncoded
     Call<UserResult> addUser(@Body User user);
+
+    @POST("habit/create.php")
+    Call<HabitResult> addHabit(@Body Habit habit);
 }

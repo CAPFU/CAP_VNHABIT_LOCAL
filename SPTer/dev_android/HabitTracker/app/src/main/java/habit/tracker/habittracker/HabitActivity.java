@@ -17,9 +17,16 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import habit.tracker.habittracker.api.ApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
+import habit.tracker.habittracker.api.model.habit.HabitResult;
+import habit.tracker.habittracker.api.model.user.UserResponse;
+import habit.tracker.habittracker.api.service.ApiService;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HabitActivity extends AppCompatActivity {
 
@@ -189,10 +196,26 @@ public class HabitActivity extends AppCompatActivity {
         habit.setCreatedDate(null);
         habit.setHabitColor(color);
         habit.setHabitDescription(descroption);
-
         if (!validator.checkEmpty("Tên thói quen", habitName)){
             return;
         }
+
+        ApiService mService = ApiUtils.getApiService();
+        mService.addHabit(habit).enqueue(new Callback<HabitResult>() {
+            @Override
+            public void onResponse(Call<HabitResult> call, Response<HabitResult> response) {
+                if (response.body().getResult().equals("1")) {
+                    Toast.makeText(HabitActivity.this, "Tạo thói quen thành công", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HabitResult> call, Throwable t) {
+
+            }
+        });
+
 
     }
 
