@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 14, 2018 at 10:37 AM
+-- Generation Time: Oct 15, 2018 at 01:52 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -63,31 +63,6 @@ CREATE TABLE `achievement_details` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `category`
---
-
-CREATE TABLE `category` (
-  `category_id` int(11) NOT NULL,
-  `category_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `parrent_id` int(11) DEFAULT NULL,
-  `category_icon` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `category_description` text COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `category`
---
-
-INSERT INTO `category` (`category_id`, `category_name`, `parrent_id`, `category_icon`, `category_description`) VALUES
-(1, 'Sức khỏe', NULL, '', ''),
-(2, 'Tài chính', NULL, '', ''),
-(3, 'Gia đình', NULL, '', ''),
-(4, 'Học', NULL, '', ''),
-(5, 'Mua sắm', NULL, '', '');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `feedback`
 --
 
@@ -113,19 +88,45 @@ CREATE TABLE `goal` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `group`
+--
+
+CREATE TABLE `group` (
+  `group_id` int(11) NOT NULL,
+  `group_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `parrent_id` int(11) DEFAULT NULL,
+  `group_icon` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `group_description` text COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `group`
+--
+
+INSERT INTO `group` (`group_id`, `group_name`, `parrent_id`, `group_icon`, `group_description`) VALUES
+(1, 'Sức khỏe', NULL, '', ''),
+(2, 'Tài chính', NULL, '', ''),
+(3, 'Gia đình', NULL, '', ''),
+(4, 'Học', NULL, '', ''),
+(5, 'Mua sắm', NULL, '', '');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `habit`
 --
 
 CREATE TABLE `habit` (
   `habit_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `category_id` int(11) NOT NULL,
-  `habit_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `habit_type` tinyint(1) NOT NULL,
-  `count_type` tinyint(1) NOT NULL,
-  `unit` text COLLATE utf8mb4_unicode_ci,
-  `goal_number` int(11) DEFAULT NULL,
-  `goal_time` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `group_id` int(11) DEFAULT NULL,
+  `monitor_id` int(11) DEFAULT NULL,
+  `habit_name` text COLLATE utf8mb4_unicode_ci,
+  `habit_target` tinyint(1) DEFAULT '0',
+  `habit_type` tinyint(1) NOT NULL DEFAULT '0',
+  `monitor_type` tinyint(1) NOT NULL DEFAULT '0',
+  `monitor_unit` text COLLATE utf8mb4_unicode_ci,
+  `monitor_number` int(11) DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `created_date` date DEFAULT NULL,
@@ -137,26 +138,30 @@ CREATE TABLE `habit` (
 -- Dumping data for table `habit`
 --
 
-INSERT INTO `habit` (`habit_id`, `user_id`, `category_id`, `habit_name`, `habit_type`, `count_type`, `unit`, `goal_number`, `goal_time`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
-(1, 1, 4, 'đọc sách', 0, 1, 'cuốn', 4, 1, '2018-10-14', '2018-12-31', '2018-10-14', '#78535bfe', 'đọc 4 cuốn sách'),
-(2, 1, 1, 'chạy bộ', 0, 1, 'km', 10, 1, '2018-10-17', '2018-10-26', '2018-10-14', '#78445b77', 'chạy bộ 10km'),
-(3, 1, 1, 'hít đất', 0, 1, 'cái', 100, 0, '2018-10-14', '2018-10-31', '2018-10-14', '#787f8737', 'hít đất 100 cái'),
-(4, 1, 3, 'đưa gia đình đi du lịch', 0, 0, NULL, NULL, 3, '2018-10-14', '2018-10-31', '2018-10-14', '#78a5662e', 'đưa gia đình đi du lịch'),
-(7, 1, 3, 'đi mua sắm', 0, 0, NULL, NULL, 1, '2018-10-14', '2018-10-18', '2018-10-14', '#786f457e', 'đi mua sắm với vợ'),
-(8, 1, 2, 'ghi chép chi tiêu', 0, 0, NULL, NULL, 0, '2018-10-14', '2018-10-31', '2018-10-14', '#78d15e6c', 'hãy ghi chép chi tiêu cá nhân');
+INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
+(1, 1, 4, NULL, 'đọc sách', 1, 0, 1, 'cuốn', 4, '2018-10-14', '2018-12-31', '2018-10-14', '#78535bfe', 'đọc 4 cuốn sách'),
+(2, 1, 1, NULL, 'chạy bộ', 1, 1, 1, 'km', 10, '2018-10-17', '2018-10-26', '2018-10-14', '#78445b77', 'chạy bộ 10km'),
+(3, 1, 1, NULL, 'hít đất', 1, 2, 1, 'cái', 100, '2018-10-14', '2018-10-31', '2018-10-14', '#787f8737', 'hít đất 100 cái'),
+(4, 1, 3, NULL, 'đưa gia đình đi du lịch', 1, 2, 0, NULL, NULL, '2018-10-14', '2018-10-31', '2018-10-14', '#78a5662e', 'đưa gia đình đi du lịch'),
+(7, 1, 3, NULL, 'đi mua sắm', 1, 1, 0, NULL, NULL, '2018-10-14', '2018-10-18', '2018-10-14', '#786f457e', 'đi mua sắm với vợ'),
+(8, 1, 2, NULL, 'ghi chép chi tiêu', 1, 3, 0, NULL, NULL, '2018-10-14', '2018-10-31', '2018-10-14', '#78d15e6c', 'hãy ghi chép chi tiêu cá nhân');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `reminder`
+-- Table structure for table `monitor_date`
 --
 
-CREATE TABLE `reminder` (
-  `reminder_id` int(11) NOT NULL,
+CREATE TABLE `monitor_date` (
+  `monitor_id` int(11) NOT NULL,
   `habit_id` int(11) NOT NULL,
-  `reminder_description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sound` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `reminder_icon` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `mon` tinyint(1) NOT NULL DEFAULT '1',
+  `tue` tinyint(1) NOT NULL DEFAULT '1',
+  `wed` tinyint(1) NOT NULL DEFAULT '1',
+  `thu` tinyint(1) NOT NULL DEFAULT '1',
+  `fri` tinyint(1) DEFAULT '1',
+  `sat` tinyint(1) NOT NULL DEFAULT '1',
+  `sun` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -180,9 +185,8 @@ CREATE TABLE `schedule` (
 CREATE TABLE `tracking` (
   `tracking_id` int(11) NOT NULL,
   `habit_id` int(11) NOT NULL,
-  `result` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `current_date` date NOT NULL,
-  `type_check` int(11) NOT NULL,
+  `type_check` tinyint(1) NOT NULL,
   `type_count` int(11) NOT NULL,
   `tracking_description` text COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -233,12 +237,6 @@ ALTER TABLE `achievement_details`
   ADD KEY `achievement_id` (`achievement_id`);
 
 --
--- Indexes for table `category`
---
-ALTER TABLE `category`
-  ADD PRIMARY KEY (`category_id`);
-
---
 -- Indexes for table `feedback`
 --
 ALTER TABLE `feedback`
@@ -252,18 +250,25 @@ ALTER TABLE `goal`
   ADD PRIMARY KEY (`goal_id`);
 
 --
+-- Indexes for table `group`
+--
+ALTER TABLE `group`
+  ADD PRIMARY KEY (`group_id`);
+
+--
 -- Indexes for table `habit`
 --
 ALTER TABLE `habit`
   ADD PRIMARY KEY (`habit_id`),
   ADD KEY `user_id` (`user_id`),
-  ADD KEY `category_id` (`category_id`);
+  ADD KEY `category_id` (`group_id`),
+  ADD KEY `monitor_id` (`monitor_id`);
 
 --
--- Indexes for table `reminder`
+-- Indexes for table `monitor_date`
 --
-ALTER TABLE `reminder`
-  ADD PRIMARY KEY (`reminder_id`),
+ALTER TABLE `monitor_date`
+  ADD PRIMARY KEY (`monitor_id`),
   ADD KEY `habit_id` (`habit_id`);
 
 --
@@ -297,12 +302,6 @@ ALTER TABLE `achievement`
   MODIFY `achievement_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `category`
---
-ALTER TABLE `category`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
 -- AUTO_INCREMENT for table `feedback`
 --
 ALTER TABLE `feedback`
@@ -315,16 +314,22 @@ ALTER TABLE `goal`
   MODIFY `goal_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `group`
+--
+ALTER TABLE `group`
+  MODIFY `group_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `habit`
 --
 ALTER TABLE `habit`
   MODIFY `habit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `reminder`
+-- AUTO_INCREMENT for table `monitor_date`
 --
-ALTER TABLE `reminder`
-  MODIFY `reminder_id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `monitor_date`
+  MODIFY `monitor_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `schedule`
@@ -342,7 +347,7 @@ ALTER TABLE `tracking`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -368,13 +373,14 @@ ALTER TABLE `feedback`
 --
 ALTER TABLE `habit`
   ADD CONSTRAINT `habit_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-  ADD CONSTRAINT `habit_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`);
+  ADD CONSTRAINT `habit_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`),
+  ADD CONSTRAINT `habit_ibfk_3` FOREIGN KEY (`monitor_id`) REFERENCES `monitor_date` (`monitor_id`);
 
 --
--- Constraints for table `reminder`
+-- Constraints for table `monitor_date`
 --
-ALTER TABLE `reminder`
-  ADD CONSTRAINT `reminder_ibfk_1` FOREIGN KEY (`habit_id`) REFERENCES `habit` (`habit_id`);
+ALTER TABLE `monitor_date`
+  ADD CONSTRAINT `monitor_date_ibfk_1` FOREIGN KEY (`habit_id`) REFERENCES `habit` (`habit_id`);
 
 --
 -- Constraints for table `tracking`
