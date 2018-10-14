@@ -20,7 +20,6 @@ import butterknife.OnClick;
 import habit.tracker.habittracker.api.ApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.habit.HabitResult;
-import habit.tracker.habittracker.api.model.user.UserResponse;
 import habit.tracker.habittracker.api.service.ApiService;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
@@ -30,47 +29,41 @@ import retrofit2.Response;
 
 public class HabitActivity extends AppCompatActivity {
 
-    @BindView(R.id.edit_habit_name)
+    @BindView(R.id.edit_habitName)
     TextView tvHabitName;
 
-    @BindView(R.id.g1_btn_build)
+    @BindView(R.id.btn_TypeBuild)
     Button btnHabitBuild;
-    @BindView(R.id.g1_btn_quit)
+    @BindView(R.id.btn_TypeQuit)
     Button btnHabitQuit;
     int habitType = 0;
 
     View btnWatchMode;
-    @BindView(R.id.g2_btn_daily)
+    @BindView(R.id.btn_TypeDaily)
     Button btnDaily;
-    @BindView(R.id.g2_btn_weekly)
+    @BindView(R.id.btn_TypeWeekly)
     Button btnWeekly;
-    @BindView(R.id.g2_btn_monthly)
+    @BindView(R.id.btn_TypeMonthly)
     Button btnMonthly;
-    @BindView(R.id.g2_btn_yearly)
+    @BindView(R.id.btn_TypeYearly)
     Button btnYearly;
     int watchMode = 0;
 
     @BindView(R.id.tv_count_unit)
     TextView tvCountUnit;
-    @BindView(R.id.ck_type_check)
+    @BindView(R.id.ll_checkDone)
     View ckTypeCheck;
-    @BindView(R.id.ck_type_count)
+    @BindView(R.id.ll_checkCount)
     View ckTypeCount;
-    @BindView(R.id.g3_ck_check)
+    @BindView(R.id.img_checkDone)
     ImageView imgTypeCheck;
-    @BindView(R.id.g3_ck_count)
+    @BindView(R.id.img_checkCount)
     ImageView imgTypeCount;
-    @BindView(R.id.edit_count)
-    EditText editCount;
-    int typeCount = 0;
-
-    @BindView(R.id.btn_no_unit)
-    Button btnNoUnit;
-    @BindView(R.id.btn_set_unit)
-    Button btnSetUnit;
-    @BindView(R.id.edit_unit)
-    EditText editUnit;
-    Boolean hasCountUnit = false;
+    @BindView(R.id.edit_checkNumber)
+    EditText editCheckNumber;
+    @BindView(R.id.edit_countUnit)
+    EditText editCountUnit;
+    int countType = 0;
 
     @BindView(R.id.btnMon)
     TextView btnMon;
@@ -109,8 +102,9 @@ public class HabitActivity extends AppCompatActivity {
     @BindView(R.id.color10)
     View color10;
     View habitColor;
-    String colorCode;
+    String habitColorCode;
     int[] colors = new int[]{
+            R.color.color0,
             R.color.color1,
             R.color.color2,
             R.color.color3,
@@ -119,8 +113,7 @@ public class HabitActivity extends AppCompatActivity {
             R.color.color6,
             R.color.color7,
             R.color.color8,
-            R.color.color9,
-            R.color.color10
+            R.color.color9
     };
 
     @BindView(R.id.ll_start_date)
@@ -166,32 +159,31 @@ public class HabitActivity extends AppCompatActivity {
             public void showError(ValidatorType type, String key) {
                 switch (type) {
                     case EMPTY:
-                        Toast.makeText(HabitActivity.this, key + " không được rỗng", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HabitActivity.this, key + " không được trống", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
         });
-        String habitName = tvHabitName.getText().toString();
-        String habitType = String.valueOf(this.habitType);
         String userId = MySharedPreference.getUserId(this);
+        String habitName = tvHabitName.getText().toString();
+        if (!validator.checkEmpty("Tên thói quen", habitName)) {
+            return;
+        }
+        String habitType = String.valueOf(this.habitType);
         String categoryId;
-        String countType = "0";
+        String countType = String.valueOf(this.countType);
         String unit = null;
-        if (hasCountUnit) {
-            countType = "1";
-            unit = editUnit.getText().toString();
+        if (this.countType == 0) {
+            unit = editCountUnit.getText().toString();
         }
         String startDate = null;
         String endDate = null;
         String createdDate = null;
         String color = habitColor.getTag().toString();
-
         String description = editDescription.getText().toString();
-        if (!validator.checkEmpty("Tên thói quen", habitName)) {
-            return;
-        }
 
         Habit habit = new Habit();
+        habit.setUserId(userId);
         habit.setHabitName(habitName);
         habit.setHabitType(habitType);
         habit.setUnit(unit);
@@ -214,75 +206,60 @@ public class HabitActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<HabitResult> call, Throwable t) {
-                Toast.makeText(HabitActivity.this, "not ok", Toast.LENGTH_LONG).show();
+                Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    @OnClick({R.id.g1_btn_build, R.id.g1_btn_quit})
+    @OnClick({R.id.btn_TypeBuild, R.id.btn_TypeQuit})
     public void setBuildType(View v) {
         setGreenBg(v);
         switch (v.getId()) {
-            case R.id.g1_btn_build:
+            case R.id.btn_TypeBuild:
                 setWhiteBg(btnHabitQuit);
                 habitType = 0;
                 break;
-            case R.id.g1_btn_quit:
+            case R.id.btn_TypeQuit:
                 setWhiteBg(btnHabitBuild);
                 habitType = 1;
                 break;
         }
     }
 
-    @OnClick({R.id.g2_btn_daily, R.id.g2_btn_weekly, R.id.g2_btn_monthly, R.id.g2_btn_yearly})
+    @OnClick({R.id.btn_TypeDaily, R.id.btn_TypeWeekly, R.id.btn_TypeMonthly, R.id.btn_TypeYearly})
     public void setWatchMode(View view) {
         setWhiteBg(btnWatchMode);
         setGreenBg(view);
         btnWatchMode = view;
         watchMode = Integer.parseInt(view.getTag().toString());
         switch (view.getId()) {
-            case R.id.g2_btn_daily:
+            case R.id.btn_TypeDaily:
                 tvCountUnit.setText("trong một ngày");
                 break;
-            case R.id.g2_btn_weekly:
+            case R.id.btn_TypeWeekly:
                 tvCountUnit.setText("trong một tuần");
                 break;
-            case R.id.g2_btn_monthly:
+            case R.id.btn_TypeMonthly:
                 tvCountUnit.setText("trong một tháng");
                 break;
-            case R.id.g2_btn_yearly:
+            case R.id.btn_TypeYearly:
                 tvCountUnit.setText("trong một năm");
                 break;
         }
     }
 
-    @OnClick({R.id.ck_type_check, R.id.ck_type_count})
+    @OnClick({R.id.ll_checkDone, R.id.ll_checkCount})
     public void checkCountType(View view) {
-        if (view.getId() == R.id.ck_type_check) {
+        if (view.getId() == R.id.ll_checkDone) {
             uncheck(imgTypeCount);
             check(imgTypeCheck);
-            editCount.setEnabled(false);
-            typeCount = 0;
-        } else if (view.getId() == R.id.ck_type_count) {
+            editCheckNumber.setEnabled(false);
+            countType = 0;
+        } else if (view.getId() == R.id.ll_checkCount) {
             uncheck(imgTypeCheck);
             check(imgTypeCount);
-            editCount.setEnabled(true);
-            typeCount = 1;
-        }
-    }
-
-    @OnClick({R.id.btn_no_unit, R.id.btn_set_unit})
-    public void setCountUnit(View v) {
-        if (v.getId() == R.id.btn_no_unit) {
-            setWhiteBg(btnSetUnit);
-            setGreenBg(v);
-            editUnit.setEnabled(false);
-            hasCountUnit = false;
-        } else if (v.getId() == R.id.btn_set_unit) {
-            setWhiteBg(btnNoUnit);
-            setGreenBg(v);
-            editUnit.setEnabled(true);
-            hasCountUnit = true;
+            editCheckNumber.setEnabled(true);
+            countType = 1;
         }
     }
 
@@ -328,14 +305,15 @@ public class HabitActivity extends AppCompatActivity {
             R.id.color9,
             R.id.color10})
     public void setHabitColor(View v) {
-        int num = 0;
+        int idx = 0;
         if (habitColor != null) {
-            num = Integer.parseInt(habitColor.getTag().toString());
-            unpickColor(habitColor, colors[num]);
+            idx = Integer.parseInt(habitColor.getTag().toString());
+            unpickColor(habitColor, colors[idx]);
         }
-        num = Integer.parseInt(v.getTag().toString());
-        pickColor(v, colors[num]);
+        idx = Integer.parseInt(v.getTag().toString());
+        pickColor(v, colors[idx]);
         habitColor = v;
+        habitColorCode = getResources().getString(colors[idx]);
     }
 
     public void setGreenBg(View v) {

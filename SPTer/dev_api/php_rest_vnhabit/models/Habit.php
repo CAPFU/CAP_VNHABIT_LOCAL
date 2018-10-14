@@ -14,21 +14,10 @@ include_once '../../models/Model.php';
             'category_id', 
             'habit_name', 
             'habit_type', 
-            'unit', 
             'count_type', 
-            'start_date', 
-            'end_date', 
-            'created_date', 
-            'habit_color', 
-            'habit_description'
-        );
-        private $colsArr2 = array(
-            'user_id', 
-            'category_id', 
-            'habit_name', 
-            'habit_type', 
+            'goal_number',
+            'goal_time',
             'unit', 
-            'count_type', 
             'start_date', 
             'end_date', 
             'created_date', 
@@ -53,7 +42,7 @@ include_once '../../models/Model.php';
         public function __construct($db) {
             $this->conn = $db;
             $this->cols = implode(", ", $this->colsArr);
-            $this->params = $this->make_query_param($this->colsArr2);
+            $this->params = $this->make_query_param($this->colsArr);
         }
 
         // Get all Habit
@@ -71,40 +60,15 @@ include_once '../../models/Model.php';
 
         public function read_by_user() {
             // Create query
-            $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . 
-                ' WHERE
-                    user_id = :user_id 
-                    LIMIT 0,1';
-
+            $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . ' WHERE user_id = :user_id';
             // Prepare statement
             $stmt = $this->conn->prepare($query);
-
             // Bind params
             $stmt->bindParam(":user_id", $this->user_id);
-
             // Execute query
             $stmt->execute();
-            // get row count
-            $num = $stmt->rowCount();
 
-            if ($num == 1) {
-                $row = $stmt->fetch(PDO::FETCH_ASSOC);
-                $this->habit_id = $row['habit_id'];
-                $this->user_id = $row['user_id'];
-                $this->category_id = $row['category_id'];
-                $this->habit_name = $row['habit_name'];
-                $this->habit_type = $row['habit_type'];
-                $this->unit = $row['unit'];
-                $this->count_type = $row['count_type'];
-                $this->start_date = $row['start_date'];
-                $this->end_date = $row['end_date'];
-                $this->created_date = $row['created_date'];
-                $this->habit_color = $row['habit_color'];
-                $this->habit_description = $row['habit_description'];
-                return $this;
-            } else {
-                return NULL;
-            }
+            return $stmt;
         }
 
         // Create Habit

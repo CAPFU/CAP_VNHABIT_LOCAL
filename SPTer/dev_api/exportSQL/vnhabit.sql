@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 10, 2018 at 12:38 AM
+-- Generation Time: Oct 14, 2018 at 10:37 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -21,6 +21,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `vnhabit`
 --
+CREATE DATABASE IF NOT EXISTS `vnhabit` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `vnhabit`;
 
 -- --------------------------------------------------------
 
@@ -67,10 +69,21 @@ CREATE TABLE `achievement_details` (
 CREATE TABLE `category` (
   `category_id` int(11) NOT NULL,
   `category_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `parrent_id` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `parrent_id` int(11) DEFAULT NULL,
   `category_icon` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `category_description` text COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `category`
+--
+
+INSERT INTO `category` (`category_id`, `category_name`, `parrent_id`, `category_icon`, `category_description`) VALUES
+(1, 'Sức khỏe', NULL, '', ''),
+(2, 'Tài chính', NULL, '', ''),
+(3, 'Gia đình', NULL, '', ''),
+(4, 'Học', NULL, '', ''),
+(5, 'Mua sắm', NULL, '', '');
 
 -- --------------------------------------------------------
 
@@ -108,15 +121,29 @@ CREATE TABLE `habit` (
   `user_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   `habit_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `habit_type` bit(11) NOT NULL,
-  `unit` int(11) NOT NULL,
-  `count_type` bit(11) NOT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
-  `created_date` date NOT NULL,
-  `habit_color` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `habit_description` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `habit_type` tinyint(1) NOT NULL,
+  `count_type` tinyint(1) NOT NULL,
+  `unit` text COLLATE utf8mb4_unicode_ci,
+  `goal_number` int(11) DEFAULT NULL,
+  `goal_time` int(11) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `created_date` date DEFAULT NULL,
+  `habit_color` text COLLATE utf8mb4_unicode_ci,
+  `habit_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `habit`
+--
+
+INSERT INTO `habit` (`habit_id`, `user_id`, `category_id`, `habit_name`, `habit_type`, `count_type`, `unit`, `goal_number`, `goal_time`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
+(1, 1, 4, 'đọc sách', 0, 1, 'cuốn', 4, 1, '2018-10-14', '2018-12-31', '2018-10-14', '#78535bfe', 'đọc 4 cuốn sách'),
+(2, 1, 1, 'chạy bộ', 0, 1, 'km', 10, 1, '2018-10-17', '2018-10-26', '2018-10-14', '#78445b77', 'chạy bộ 10km'),
+(3, 1, 1, 'hít đất', 0, 1, 'cái', 100, 0, '2018-10-14', '2018-10-31', '2018-10-14', '#787f8737', 'hít đất 100 cái'),
+(4, 1, 3, 'đưa gia đình đi du lịch', 0, 0, NULL, NULL, 3, '2018-10-14', '2018-10-31', '2018-10-14', '#78a5662e', 'đưa gia đình đi du lịch'),
+(7, 1, 3, 'đi mua sắm', 0, 0, NULL, NULL, 1, '2018-10-14', '2018-10-18', '2018-10-14', '#786f457e', 'đi mua sắm với vợ'),
+(8, 1, 2, 'ghi chép chi tiêu', 0, 0, NULL, NULL, 0, '2018-10-14', '2018-10-31', '2018-10-14', '#78d15e6c', 'hãy ghi chép chi tiêu cá nhân');
 
 -- --------------------------------------------------------
 
@@ -126,10 +153,10 @@ CREATE TABLE `habit` (
 
 CREATE TABLE `reminder` (
   `reminder_id` int(11) NOT NULL,
+  `habit_id` int(11) NOT NULL,
   `reminder_description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `sound` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `reminder_icon` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `habit_id` int(11) NOT NULL
+  `reminder_icon` text COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -186,10 +213,7 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `user_icon`, `avatar`, `user_description`) VALUES
 (1, 'user01', '12345678', '', 'user01@mail.com', '1998-04-25', 0, '', '', 'The first user'),
 (2, 'user02', '87654321', '', 'user02@mail.com', '1985-08-08', 0, '', '', 'The second user'),
-(3, 'user03', 'abc12345', '', 'user03@mail.com', '1995-10-20', 0, '', '', 'a new user'),
-(7, 'ggg', '12345678', '0963446548', 'g@x.com', '0000-00-00', 0, '', '', ''),
-(8, 'tmp', '', '', '', '0000-00-00', 0, '', '', ''),
-(14, 'user6', '12345678', '0965385241', 'ga@fa.com', '0000-00-00', 0, '', '', '');
+(3, 'user03', 'abc12345', '', 'user03@mail.com', '1995-10-20', 0, '', '', 'a new user');
 
 --
 -- Indexes for dumped tables
@@ -276,7 +300,7 @@ ALTER TABLE `achievement`
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `feedback`
@@ -294,7 +318,7 @@ ALTER TABLE `goal`
 -- AUTO_INCREMENT for table `habit`
 --
 ALTER TABLE `habit`
-  MODIFY `habit_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `habit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `reminder`

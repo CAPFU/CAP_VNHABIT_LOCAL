@@ -1,6 +1,7 @@
 package habit.tracker.habittracker;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -17,9 +18,9 @@ import android.widget.TextView;
 import java.util.List;
 
 public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public static final int TYPE_CHECK = 0;
     public static final int TYPE_COUNT = 1;
-    public static final int TYPE_CHECK = 2;
-    public static final int TYPE_ADD = 3;
+    public static final int TYPE_ADD = 2;
     private Context context;
 
     private List<MenuItem> mData;
@@ -80,16 +81,16 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    private Drawable getBackground(int color) {
+    private Drawable getBackground(String color) {
         Drawable mDrawable = ContextCompat.getDrawable(context, R.drawable.bg_shadow);
         if (mDrawable != null) {
-            mDrawable.setColorFilter(new PorterDuffColorFilter(context.getResources().getColor(color),PorterDuff.Mode.MULTIPLY));
+            mDrawable.setColorFilter(new PorterDuffColorFilter(Color.parseColor(color),PorterDuff.Mode.MULTIPLY));
         }
         return mDrawable;
     }
 
     private void initLayoutCount(ViewHolderCount holder, MenuItem item) {
-        holder.tvCategory.setText(item.getCategory());
+        holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
         holder.tvPeriod.setText(item.getPeriod());
         holder.tvNumber.setText(item.getNumber() + " " + item.getUnit());
@@ -98,7 +99,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     private void initLayoutCheck(ViewHolderCheck holder, MenuItem item) {
-        holder.tvCategory.setText(item.getCategory());
+        holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
         holder.tvPeriod.setText(item.getPeriod());
         if (item.getCount().equals("1")) {

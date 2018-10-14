@@ -30,20 +30,17 @@ if ($num > 0) {
         $habit_item = array(
             'habit_id' => $habit_id,
             'user_id' => $user_id,
-            'catagory_id' => $catagory_id,
-            'schedule_id' => $schedule_id,
-            'goal_id' => $goal_id,
+            'category_id' => $category_id,
             'habit_name' => $habit_name,
             'habit_type' => $habit_type,
-            'unit' => $unit,
             'count_type' => $count_type,
+            'unit' => $unit,
             'start_date' => $start_date,
             'end_date' => $end_date,
             'created_date' => $created_date,
-            'habit_icon' => $habit_icon,
+            'habit_color' => $habit_color,
             'habit_description' => $habit_description
         );
-
         // push to "data"
         array_push($habits_arr['data'], $habit_item);
     }

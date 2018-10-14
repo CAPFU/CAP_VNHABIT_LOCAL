@@ -73,7 +73,7 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/edit_habit_name"
+                    android:id="@+id/edit_habitName"
                     android:layout_width="0dp"
                     android:layout_weight="10"
                     android:layout_height="35dp"
@@ -83,7 +83,7 @@
                     android:hint="Chạy bộ, đọc sách, ghi chép chi tiêu, vv"/>
                 <Button
                     android:onClick="showEmpty"
-                    android:id="@+id/btn_suggest_habit"
+                    android:id="@+id/btn_suggestHabit"
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:layout_height="22dp"
@@ -116,7 +116,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/g1_btn_build"
+                    android:id="@+id/btn_TypeBuild"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="25dp"
@@ -126,7 +126,7 @@
                     android:background="@drawable/bg_button_green"/>
 
                 <Button
-                    android:id="@+id/g1_btn_quit"
+                    android:id="@+id/btn_TypeQuit"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="25dp"
@@ -164,7 +164,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/g2_btn_daily"
+                    android:id="@+id/btn_TypeDaily"
                     android:tag="0"
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -175,7 +175,7 @@
                     android:background="@drawable/bg_button_green"/>
 
                 <Button
-                    android:id="@+id/g2_btn_weekly"
+                    android:id="@+id/btn_TypeWeekly"
                     android:tag="1"
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -185,7 +185,7 @@
                     android:textColor="@color/light_brown"
                     android:background="@android:color/transparent"/>
                 <Button
-                    android:id="@+id/g2_btn_monthly"
+                    android:id="@+id/btn_TypeMonthly"
                     android:tag="2"
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -195,7 +195,7 @@
                     android:textColor="@color/light_brown"
                     android:background="@android:color/transparent"/>
                 <Button
-                    android:id="@+id/g2_btn_yearly"
+                    android:id="@+id/btn_TypeYearly"
                     android:tag="3"
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -229,13 +229,13 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/ck_type_check"
+                    android:id="@+id/ll_checkDone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical">
 
                     <ImageView
-                        android:id="@+id/g3_ck_check"
+                        android:id="@+id/img_checkDone"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/ck_checked"/>
@@ -250,102 +250,112 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/ck_type_count"
+                    android:id="@+id/ll_checkCount"
                     android:onClick="showEmpty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="50dp"
+                    android:layout_marginStart="40dp"
                     android:gravity="center_vertical">
 
                     <ImageView
-                        android:id="@+id/g3_ck_count"
+                        android:id="@+id/img_checkCount"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/ck_unchecked"/>
                     <EditText
-                        android:id="@+id/edit_count"
-                        android:layout_width="40dp"
+                        android:id="@+id/edit_checkNumber"
+                        android:layout_width="50dp"
                         android:layout_height="25dp"
                         android:gravity="center"
                         android:layout_marginStart="5dp"
-                        android:background="@drawable/bg_input1"
-                        android:text="1"
                         android:textSize="12sp"
-                        android:enabled="false" />
+                        android:enabled="false"
+                        android:text="1"
+                        android:background="@drawable/bg_input1"/>
+                    <EditText
+                        android:id="@+id/edit_countUnit"
+                        android:layout_width="50dp"
+                        android:layout_height="25dp"
+                        android:gravity="center"
+                        android:layout_marginStart="5dp"
+                        android:textSize="12sp"
+                        android:enabled="false"
+                        android:text="LẦN"
+                        android:background="@drawable/bg_input1"/>
                     <TextView
                         android:id="@+id/tv_count_unit"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
                         android:textAllCaps="true"
                         android:paddingStart="5dp"
                         android:textSize="10sp"
                         android:textColor="#5fa467"
-                        android:text="lần một ngày"/>
+                        android:text="/ một ngày"/>
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- 4 -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="18dp"/>
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:layout_marginBottom="18dp"/>-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:textAllCaps="true"
-                android:layout_marginBottom="15dp"
-                android:text="cách đếm thói quen" />
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="15sp"-->
+                <!--android:textAllCaps="true"-->
+                <!--android:layout_marginBottom="15dp"-->
+                <!--android:text="cách đếm thói quen" />-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:paddingStart="10dp"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:orientation="horizontal">-->
 
-                <Button
-                    android:id="@+id/btn_no_unit"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="25dp"
-                    android:text="không đặt"
-                    android:textSize="10dp"
-                    android:textColor="@color/light_brown"
-                    android:background="@drawable/bg_button_green" />
+                <!--<Button-->
+                    <!--android:id="@+id/btn_no_unit"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:layout_height="25dp"-->
+                    <!--android:text="không đặt"-->
+                    <!--android:textSize="10dp"-->
+                    <!--android:textColor="@color/light_brown"-->
+                    <!--android:background="@drawable/bg_button_green" />-->
 
-                <Button
-                    android:id="@+id/btn_set_unit"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="25dp"
-                    android:layout_marginStart="20dp"
-                    android:textSize="10dp"
-                    android:text="thiết lập"
-                    android:textColor="@color/light_brown"
-                    android:background="@android:color/transparent" />
+                <!--<Button-->
+                    <!--android:id="@+id/btn_set_unit"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:layout_height="25dp"-->
+                    <!--android:layout_marginStart="20dp"-->
+                    <!--android:textSize="10dp"-->
+                    <!--android:text="thiết lập"-->
+                    <!--android:textColor="@color/light_brown"-->
+                    <!--android:background="@android:color/transparent" />-->
 
-                <EditText
-                    android:id="@+id/edit_unit"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="25dp"
-                    android:layout_marginStart="5dp"
-                    android:paddingStart="5dp"
-                    android:gravity="center_vertical"
-                    android:textSize="10sp"
-                    android:inputType="textCapCharacters"
-                    android:hint="LẦN/CÁI/..."
-                    android:background="@drawable/bg_input1"
-                    android:enabled="false"/>
+                <!--<EditText-->
+                    <!--android:id="@+id/edit_unit"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:layout_height="25dp"-->
+                    <!--android:layout_marginStart="5dp"-->
+                    <!--android:paddingStart="5dp"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:textSize="10sp"-->
+                    <!--android:inputType="textCapCharacters"-->
+                    <!--android:hint="LẦN/CÁI/..."-->
+                    <!--android:background="@drawable/bg_input1"-->
+                    <!--android:enabled="false"/>-->
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
-            </LinearLayout>
+                <!--<View-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_weight="1"/>-->
+            <!--</LinearLayout>-->
 
             <!-- 5 -->
             <View
@@ -382,6 +392,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingEnd="10dp"
                     android:textColor="#5fa467"
                     android:textAllCaps="true"
                     android:textSize="10sp"
@@ -533,7 +544,7 @@
                     android:textSize="11sp"
                     android:background="@drawable/bg_input1"
                     android:textAllCaps="true"
-                    android:text="vn 07.10.2018"
+                    android:text="cn 07.10.2018"
                     android:gravity="center_vertical"/>
 
                 <LinearLayout

@@ -1,6 +1,7 @@
 package habit.tracker.habittracker.api.service;
 
 import habit.tracker.habittracker.api.model.habit.Habit;
+import habit.tracker.habittracker.api.model.habit.HabitResponse;
 import habit.tracker.habittracker.api.model.habit.HabitResult;
 import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.model.user.UserResponse;
@@ -22,4 +23,7 @@ public interface ApiService {
 
     @POST("habit/create.php")
     Call<HabitResult> addHabit(@Body Habit habit);
+
+    @GET("habit/read_by_user.php")
+    Call<HabitResponse> getHabit(@Query("user_id") String userId);
 }
