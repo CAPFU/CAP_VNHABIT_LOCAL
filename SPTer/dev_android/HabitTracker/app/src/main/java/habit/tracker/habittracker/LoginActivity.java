@@ -16,12 +16,13 @@ import habit.tracker.habittracker.api.model.user.UserResponse;
 import habit.tracker.habittracker.api.service.ApiService;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
+import habit.tracker.habittracker.data.Database;
+import habit.tracker.habittracker.repository.user.UserEntity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
-
     EditText edUsername;
     EditText edPassword;
     Button btnLogin;
@@ -83,21 +84,37 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if (response.body().getResult().equals("1")) {
+                    User user = response.body().getData();
+                    Database db = new Database(LoginActivity.this);
+                    UserEntity userEntity = new UserEntity();
+                    db.open();
+                    if (user != null) {
+                        userEntity.setUserId(user.getUserId());
+                        userEntity.setUsername(user.getUsername());
+                        userEntity.setEmail(user.getEmail());
+                        userEntity.setPhone(user.getPhone());
+                        userEntity.setGender(user.getGender());
+                        userEntity.setDateOfBirth(user.getDateOfBirth());
+                        userEntity.setPassword(user.getPassword());
+                        userEntity.setUserIcon(user.getUserIcon());
+                        userEntity.setAvatar(user.getAvatar());
+                        userEntity.setUserDescription(user.getUserDescription());
+                        Database.sUserDaoImpl.saveUser(userEntity);
+                        db.close();
+                        MySharedPreference.saveUser(LoginActivity.this, user.getUserId(), user.getUsername());
 
-                    User user = response.body().getUser();
-                    MySharedPreference.saveUser(LoginActivity.this, user.getUserId(), user.getUsername());
-
-                    Toast.makeText(LoginActivity.this, "Login ok!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    LoginActivity.this.startActivity(intent);
+                        Toast.makeText(LoginActivity.this, "Login OK!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        LoginActivity.this.startActivity(intent);
+                    }
                 } else {
-                    Toast.makeText(LoginActivity.this, "Login failed! username or password is not correct!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Login Failed! username or password is not correct.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Login failed! username or password is not correct!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Login Failed! username or password is not correct.", Toast.LENGTH_SHORT).show();
             }
         });
     }

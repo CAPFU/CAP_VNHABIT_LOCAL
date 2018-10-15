@@ -11,13 +11,14 @@ include_once '../../models/Model.php';
         private $colsArr = array(
             'habit_id', 
             'user_id', 
-            'category_id', 
-            'habit_name', 
+            'group_id', 
+            'monitor_id',
+            'habit_name',
+            'habit_target', 
             'habit_type', 
-            'count_type', 
-            'goal_number',
-            'goal_time',
-            'unit', 
+            'monitor_type', 
+            'monitor_unit',
+            'monitor_number',
             'start_date', 
             'end_date', 
             'created_date', 
@@ -28,11 +29,14 @@ include_once '../../models/Model.php';
         // habit
         public $habit_id;
         public $user_id;
-        public $category_id;
+        public $group_id;
+        public $monitor_id;
         public $habit_name;
+        public $habit_target;
         public $habit_type;
-        public $unit;
-        public $count_type;
+        public $monitor_type;
+        public $monitor_unit;
+        public $monitor_number;
         public $start_date;
         public $end_date;
         public $created_date;
@@ -81,11 +85,14 @@ include_once '../../models/Model.php';
 
             // Bind data
             $stmt->bindParam(':user_id', $this->user_id);
-            $stmt->bindParam(':category_id', $this->category_id);
+            $stmt->bindParam(':group_id', $this->group_id);
+            $stmt->bindParam(':monitor_id', $this->monitor_id);
             $stmt->bindParam(':habit_name', $this->habit_name);
+            $stmt->bindParam(':habit_target', $this->habit_target);
             $stmt->bindParam(':habit_type', $this->habit_type);
-            $stmt->bindParam(':unit', $this->unit);
-            $stmt->bindParam(':count_type', $this->count_type);
+            $stmt->bindParam(':monitor_type', $this->monitor_type);
+            $stmt->bindParam(':monitor_unit', $this->monitor_unit);
+            $stmt->bindParam(':monitor_number', $this->monitor_number);
             $stmt->bindParam(':start_date', $this->start_date);
             $stmt->bindParam(':end_date', $this->end_date);
             $stmt->bindParam(':created_date', $this->created_date);
@@ -113,11 +120,14 @@ include_once '../../models/Model.php';
             // Bind data
             $stmt->bindParam(':habit_id', $this->habit_id);
             $stmt->bindParam(':user_id', $this->user_id);
-            $stmt->bindParam(':category_id', $this->category_id);
+            $stmt->bindParam(':group_id', $this->group_id);
+            $stmt->bindParam(':monitor_id', $this->monitor_id);
             $stmt->bindParam(':habit_name', $this->habit_name);
+            $stmt->bindParam(':habit_target', $this->habit_target);
             $stmt->bindParam(':habit_type', $this->habit_type);
-            $stmt->bindParam(':unit', $this->unit);
-            $stmt->bindParam(':count_type', $this->count_type);
+            $stmt->bindParam(':monitor_type', $this->monitor_type);
+            $stmt->bindParam(':monitor_unit', $this->monitor_unit);
+            $stmt->bindParam(':monitor_number', $this->monitor_number);
             $stmt->bindParam(':start_date', $this->start_date);
             $stmt->bindParam(':end_date', $this->end_date);
             $stmt->bindParam(':created_date', $this->created_date);
