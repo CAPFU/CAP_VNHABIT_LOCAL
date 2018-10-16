@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 15, 2018 at 01:52 AM
--- Server version: 10.1.35-MariaDB
--- PHP Version: 7.2.9
+-- Generation Time: 2018 年 10 朁E16 日 10:18
+-- サーバのバージョン： 10.1.36-MariaDB
+-- PHP Version: 7.2.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -27,7 +27,7 @@ USE `vnhabit`;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `about`
+-- テーブルの構造 `about`
 --
 
 CREATE TABLE `about` (
@@ -39,31 +39,7 @@ CREATE TABLE `about` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `achievement`
---
-
-CREATE TABLE `achievement` (
-  `achievement_id` int(11) NOT NULL,
-  `achievement_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `achievement_description` text COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `achievement_details`
---
-
-CREATE TABLE `achievement_details` (
-  `user_id` int(11) NOT NULL,
-  `achievement_id` int(11) NOT NULL,
-  `count` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `feedback`
+-- テーブルの構造 `feedback`
 --
 
 CREATE TABLE `feedback` (
@@ -76,19 +52,7 @@ CREATE TABLE `feedback` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `goal`
---
-
-CREATE TABLE `goal` (
-  `goal_id` int(11) NOT NULL,
-  `goal_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `goal_description` text COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `group`
+-- テーブルの構造 `group`
 --
 
 CREATE TABLE `group` (
@@ -100,7 +64,7 @@ CREATE TABLE `group` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `group`
+-- テーブルのデータのダンプ `group`
 --
 
 INSERT INTO `group` (`group_id`, `group_name`, `parrent_id`, `group_icon`, `group_description`) VALUES
@@ -113,7 +77,7 @@ INSERT INTO `group` (`group_id`, `group_name`, `parrent_id`, `group_icon`, `grou
 -- --------------------------------------------------------
 
 --
--- Table structure for table `habit`
+-- テーブルの構造 `habit`
 --
 
 CREATE TABLE `habit` (
@@ -135,7 +99,7 @@ CREATE TABLE `habit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `habit`
+-- テーブルのデータのダンプ `habit`
 --
 
 INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
@@ -149,7 +113,19 @@ INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_nam
 -- --------------------------------------------------------
 
 --
--- Table structure for table `monitor_date`
+-- テーブルの構造 `level`
+--
+
+CREATE TABLE `level` (
+  `level_id` int(11) NOT NULL,
+  `level_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `level_score` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- テーブルの構造 `monitor_date`
 --
 
 CREATE TABLE `monitor_date` (
@@ -167,19 +143,36 @@ CREATE TABLE `monitor_date` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `schedule`
+-- テーブルの構造 `notification`
 --
 
-CREATE TABLE `schedule` (
-  `schedule_id` int(11) NOT NULL,
-  `schedule_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `schedule_description` text COLLATE utf8mb4_unicode_ci NOT NULL
+CREATE TABLE `notification` (
+  `notification_id` int(11) NOT NULL,
+  `habit_id` int(11) DEFAULT NULL,
+  `notification_time` text COLLATE utf8mb4_unicode_ci,
+  `notification_repeat` text COLLATE utf8mb4_unicode_ci,
+  `notification_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tracking`
+-- テーブルの構造 `reminder`
+--
+
+CREATE TABLE `reminder` (
+  `reminder_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `remind_sound` text COLLATE utf8mb4_unicode_ci,
+  `remind_time` time DEFAULT NULL,
+  `remind_repeat` text COLLATE utf8mb4_unicode_ci,
+  `remind_description` text COLLATE utf8mb4_unicode_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- テーブルの構造 `tracking`
 --
 
 CREATE TABLE `tracking` (
@@ -194,7 +187,7 @@ CREATE TABLE `tracking` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- テーブルの構造 `user`
 --
 
 CREATE TABLE `user` (
@@ -207,34 +200,22 @@ CREATE TABLE `user` (
   `gender` tinyint(1) NOT NULL,
   `user_icon` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `avatar` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `user_description` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `user_description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `level_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `user`
+-- テーブルのデータのダンプ `user`
 --
 
-INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `user_icon`, `avatar`, `user_description`) VALUES
-(1, 'user01', '12345678', '', 'user01@mail.com', '1998-04-25', 0, '', '', 'The first user'),
-(2, 'user02', '87654321', '', 'user02@mail.com', '1985-08-08', 0, '', '', 'The second user'),
-(3, 'user03', 'abc12345', '', 'user03@mail.com', '1995-10-20', 0, '', '', 'a new user');
+INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `user_icon`, `avatar`, `user_description`, `level_id`) VALUES
+(1, 'user01', '12345678', '', 'user01@mail.com', '1998-04-25', 0, '', '', 'The first user', NULL),
+(2, 'user02', '87654321', '', 'user02@mail.com', '1985-08-08', 0, '', '', 'The second user', NULL),
+(3, 'user03', 'abc12345', '', 'user03@mail.com', '1995-10-20', 0, '', '', 'a new user', NULL);
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `achievement`
---
-ALTER TABLE `achievement`
-  ADD PRIMARY KEY (`achievement_id`);
-
---
--- Indexes for table `achievement_details`
---
-ALTER TABLE `achievement_details`
-  ADD PRIMARY KEY (`user_id`,`achievement_id`),
-  ADD KEY `achievement_id` (`achievement_id`);
 
 --
 -- Indexes for table `feedback`
@@ -242,12 +223,6 @@ ALTER TABLE `achievement_details`
 ALTER TABLE `feedback`
   ADD PRIMARY KEY (`feedback_id`),
   ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `goal`
---
-ALTER TABLE `goal`
-  ADD PRIMARY KEY (`goal_id`);
 
 --
 -- Indexes for table `group`
@@ -265,6 +240,12 @@ ALTER TABLE `habit`
   ADD KEY `monitor_id` (`monitor_id`);
 
 --
+-- Indexes for table `level`
+--
+ALTER TABLE `level`
+  ADD PRIMARY KEY (`level_id`);
+
+--
 -- Indexes for table `monitor_date`
 --
 ALTER TABLE `monitor_date`
@@ -272,10 +253,18 @@ ALTER TABLE `monitor_date`
   ADD KEY `habit_id` (`habit_id`);
 
 --
--- Indexes for table `schedule`
+-- Indexes for table `notification`
 --
-ALTER TABLE `schedule`
-  ADD PRIMARY KEY (`schedule_id`);
+ALTER TABLE `notification`
+  ADD PRIMARY KEY (`notification_id`),
+  ADD KEY `habit_id` (`habit_id`);
+
+--
+-- Indexes for table `reminder`
+--
+ALTER TABLE `reminder`
+  ADD PRIMARY KEY (`reminder_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `tracking`
@@ -289,29 +278,18 @@ ALTER TABLE `tracking`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`user_id`),
-  ADD UNIQUE KEY `username` (`username`);
+  ADD UNIQUE KEY `username` (`username`),
+  ADD KEY `level_id` (`level_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `achievement`
---
-ALTER TABLE `achievement`
-  MODIFY `achievement_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `feedback`
 --
 ALTER TABLE `feedback`
   MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `goal`
---
-ALTER TABLE `goal`
-  MODIFY `goal_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `group`
@@ -326,16 +304,28 @@ ALTER TABLE `habit`
   MODIFY `habit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT for table `level`
+--
+ALTER TABLE `level`
+  MODIFY `level_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `monitor_date`
 --
 ALTER TABLE `monitor_date`
   MODIFY `monitor_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `schedule`
+-- AUTO_INCREMENT for table `notification`
 --
-ALTER TABLE `schedule`
-  MODIFY `schedule_id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `notification`
+  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `reminder`
+--
+ALTER TABLE `reminder`
+  MODIFY `reminder_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tracking`
@@ -350,26 +340,17 @@ ALTER TABLE `user`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- Constraints for dumped tables
+-- ダンプしたテーブルの制約
 --
 
 --
--- Constraints for table `achievement_details`
---
-ALTER TABLE `achievement_details`
-  ADD CONSTRAINT `achievement_details_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-  ADD CONSTRAINT `achievement_details_ibfk_2` FOREIGN KEY (`achievement_id`) REFERENCES `achievement` (`achievement_id`),
-  ADD CONSTRAINT `achievement_details_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-  ADD CONSTRAINT `achievement_details_ibfk_4` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
-
---
--- Constraints for table `feedback`
+-- テーブルの制約 `feedback`
 --
 ALTER TABLE `feedback`
   ADD CONSTRAINT `feedback_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
 
 --
--- Constraints for table `habit`
+-- テーブルの制約 `habit`
 --
 ALTER TABLE `habit`
   ADD CONSTRAINT `habit_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
@@ -377,16 +358,34 @@ ALTER TABLE `habit`
   ADD CONSTRAINT `habit_ibfk_3` FOREIGN KEY (`monitor_id`) REFERENCES `monitor_date` (`monitor_id`);
 
 --
--- Constraints for table `monitor_date`
+-- テーブルの制約 `monitor_date`
 --
 ALTER TABLE `monitor_date`
   ADD CONSTRAINT `monitor_date_ibfk_1` FOREIGN KEY (`habit_id`) REFERENCES `habit` (`habit_id`);
 
 --
--- Constraints for table `tracking`
+-- テーブルの制約 `notification`
+--
+ALTER TABLE `notification`
+  ADD CONSTRAINT `notification_ibfk_1` FOREIGN KEY (`habit_id`) REFERENCES `habit` (`habit_id`);
+
+--
+-- テーブルの制約 `reminder`
+--
+ALTER TABLE `reminder`
+  ADD CONSTRAINT `reminder_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
+
+--
+-- テーブルの制約 `tracking`
 --
 ALTER TABLE `tracking`
   ADD CONSTRAINT `tracking_ibfk_1` FOREIGN KEY (`habit_id`) REFERENCES `habit` (`habit_id`);
+
+--
+-- テーブルの制約 `user`
+--
+ALTER TABLE `user`
+  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`level_id`) REFERENCES `level` (`level_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
