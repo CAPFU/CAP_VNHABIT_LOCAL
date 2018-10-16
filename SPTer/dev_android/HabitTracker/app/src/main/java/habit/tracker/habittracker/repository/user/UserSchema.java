@@ -1,7 +1,7 @@
 package habit.tracker.habittracker.repository.user;
 
 public interface UserSchema {
-    String USER_TABLE = "user";
+    String USER_TABLE = "user.vnhb";
     String USER_ID = "user_id";
     String USERNAME = "username";
     String EMAIL = "email";

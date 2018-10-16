@@ -16,7 +16,7 @@ import habit.tracker.habittracker.api.model.user.UserResponse;
 import habit.tracker.habittracker.api.service.ApiService;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
-import habit.tracker.habittracker.data.Database;
+import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.user.UserEntity;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,6 +27,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     EditText edPassword;
     Button btnLogin;
     TextView linkRegister;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (MySharedPreference.getUserId(this) != null) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +114,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         MySharedPreference.saveUser(LoginActivity.this, user.getUserId(), user.getUsername());
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         LoginActivity.this.startActivity(intent);
-//                        Toast.makeText(LoginActivity.this, "Login OK!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Welcome!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(LoginActivity.this, "Login Failed! username or password is not correct.", Toast.LENGTH_SHORT).show();

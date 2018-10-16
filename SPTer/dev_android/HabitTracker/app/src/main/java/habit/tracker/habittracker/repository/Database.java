@@ -1,10 +1,12 @@
-package habit.tracker.habittracker.data;
+package habit.tracker.habittracker.repository;
 
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import habit.tracker.habittracker.repository.habit.HabitDaoImpl;
+import habit.tracker.habittracker.repository.habit.HabitSchema;
 import habit.tracker.habittracker.repository.user.UserDaoImpl;
 import habit.tracker.habittracker.repository.user.UserSchema;
 
@@ -19,6 +21,7 @@ public class Database {
     private final Context mContext;
 
     public static UserDaoImpl sUserDaoImpl;
+    public static HabitDaoImpl sHabitDaoImpl;
 
     public Database(Context context) {
         this.mContext = context;
@@ -29,6 +32,7 @@ public class Database {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         sUserDaoImpl = new UserDaoImpl(db);
+        sHabitDaoImpl = new HabitDaoImpl(db);
         return this;
     }
 
@@ -36,7 +40,7 @@ public class Database {
         dbHelper.close();
     }
 
-    public static class DatabaseHelper extends SQLiteOpenHelper implements UserSchema {
+    public static class DatabaseHelper extends SQLiteOpenHelper implements UserSchema, HabitSchema {
 
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -45,11 +49,13 @@ public class Database {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(CREATE_USER_TABLE);
+            db.execSQL(CREATE_HABIT_TABLE);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int i, int i1) {
             db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + HABIT_TABLE);
             onCreate(db);
         }
     }
