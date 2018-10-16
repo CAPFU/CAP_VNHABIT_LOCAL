@@ -4,7 +4,7 @@ package habit.tracker.habittracker.repository.habit;
  * Created by DatTVT1 on 10/16/2018
  */
 public interface HabitSchema {
-    String HABIT_TABLE = "habit.vnhb";
+    String HABIT_TABLE = "habit";
     String HABIT_ID = "habit_id";
     String USER_ID = "user_id";
     String GROUP_ID = "group_id";
@@ -22,7 +22,7 @@ public interface HabitSchema {
     String HABIT_DESCRIPTION = "habit_description";
 
     String CREATE_HABIT_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + HABIT_TABLE + "("
+            "CREATE TABLE IF NOT EXISTS " + HABIT_TABLE + " ("
                     + HABIT_ID + " INTEGER PRIMARY KEY, "
                     + USER_ID + " TEXT, "
                     + GROUP_ID + " TEXT, "

@@ -11,30 +11,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import habit.tracker.habittracker.api.ApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
-import habit.tracker.habittracker.api.model.habit.HabitResult;
-import habit.tracker.habittracker.api.service.ApiService;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class HabitActivity extends AppCompatActivity {
 
     @BindView(R.id.edit_habitName)
     TextView tvHabitName;
 
-    @BindView(R.id.btn_TypeBuild)
+    @BindView(R.id.btn_TargetBuild)
     Button btnHabitBuild;
-    @BindView(R.id.btn_TypeQuit)
+    @BindView(R.id.btn_TargetQuit)
     Button btnHabitQuit;
     int habitTarget = 0;
 
@@ -65,6 +60,9 @@ public class HabitActivity extends AppCompatActivity {
     EditText editCountUnit;
     int monitorType = 0;
 
+    @BindView(R.id.ll_group)
+    LinearLayout selGroup;
+
     @BindView(R.id.btnMon)
     TextView btnMon;
     @BindView(R.id.btnTue)
@@ -79,7 +77,7 @@ public class HabitActivity extends AppCompatActivity {
     TextView btnSat;
     @BindView(R.id.btnSun)
     TextView btnSun;
-    boolean[] watchDate = new boolean[7];
+    boolean[] monitorDate = new boolean[7];
 
     @BindView(R.id.color1)
     View color1;
@@ -150,6 +148,14 @@ public class HabitActivity extends AppCompatActivity {
         color9.setBackground(getCircleBackground(colors[8]));
         color10.setBackground(getCircleBackground(colors[9]));
         setHabitColor(color1);
+
+        setMonitorDate(btnMon);
+        setMonitorDate(btnTue);
+        setMonitorDate(btnWed);
+        setMonitorDate(btnThu);
+        setMonitorDate(btnFri);
+        setMonitorDate(btnSat);
+        setMonitorDate(btnSun);
     }
 
     @OnClick(R.id.btn_save)
@@ -213,15 +219,15 @@ public class HabitActivity extends AppCompatActivity {
 //        });
     }
 
-    @OnClick({R.id.btn_TypeBuild, R.id.btn_TypeQuit})
-    public void setBuildType(View v) {
+    @OnClick({R.id.btn_TargetBuild, R.id.btn_TargetQuit})
+    public void setHabitTarget(View v) {
         setGreenBg(v);
         switch (v.getId()) {
-            case R.id.btn_TypeBuild:
+            case R.id.btn_TargetBuild:
                 setWhiteBg(btnHabitQuit);
                 habitTarget = 0;
                 break;
-            case R.id.btn_TypeQuit:
+            case R.id.btn_TargetQuit:
                 setWhiteBg(btnHabitBuild);
                 habitTarget = 1;
                 break;
@@ -251,7 +257,7 @@ public class HabitActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.ll_checkDone, R.id.ll_checkCount})
-    public void selectMonitoType(View view) {
+    public void selectMonitorType(View view) {
         if (view.getId() == R.id.ll_checkDone) {
             uncheck(imgTypeCount);
             check(imgTypeCheck);
@@ -265,15 +271,21 @@ public class HabitActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.ll_group)
+    public void selectGroup(View view) {
+        Intent intent = new Intent(this, GroupActivity.class);
+        startActivity(intent);
+    }
+
     @OnClick({R.id.btnMon, R.id.btnTue, R.id.btnWed, R.id.btnThu, R.id.btnFri, R.id.btnSat, R.id.btnSun})
-    public void setWatchDate(View v) {
+    public void setMonitorDate(View v) {
         int tag = Integer.parseInt(v.getTag().toString());
-        if (watchDate[tag]) {
+        if (monitorDate[tag]) {
             uncheckDate(v);
         } else {
             checkDate(v);
         }
-        watchDate[tag] = !watchDate[tag];
+        monitorDate[tag] = !monitorDate[tag];
     }
 
     @OnClick({R.id.ll_start_date, R.id.ll_end_date})

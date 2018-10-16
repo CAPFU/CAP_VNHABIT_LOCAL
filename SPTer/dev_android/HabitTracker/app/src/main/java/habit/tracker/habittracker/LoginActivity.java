@@ -31,7 +31,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onStart() {
         super.onStart();
-
         if (MySharedPreference.getUserId(this) != null) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
@@ -88,7 +87,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
-    private void login(String username, String password) {
+    private void login(final String username, final String password) {
         ApiService mService = ApiUtils.getApiService();
         mService.getUser(username, password).enqueue(new Callback<UserResponse>() {
             @Override
@@ -111,9 +110,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         userEntity.setUserDescription(user.getUserDescription());
                         Database.sUserDaoImpl.saveUser(userEntity);
                         db.close();
-                        MySharedPreference.saveUser(LoginActivity.this, user.getUserId(), user.getUsername());
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        LoginActivity.this.startActivity(intent);
+                        showMainScreen(user.getUserId(), user.getUsername());
                         Toast.makeText(LoginActivity.this, "Welcome!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -123,8 +120,24 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Login Failed! username or password is not correct.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(LoginActivity.this, "Login Failed! username or password is not correct.", Toast.LENGTH_SHORT).show();
+                Database db = new Database(LoginActivity.this);
+                db.open();
+                UserEntity userEntity = Database.sUserDaoImpl.getUser(username, password);
+                db.close();
+                if (userEntity != null) {
+                    showMainScreen(userEntity.getUserId(), userEntity.getUsername());
+                } else {
+                    Toast.makeText(LoginActivity.this, "Login Failed! username or password is not correct.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+    }
+
+    private void showMainScreen(String userId, String username) {
+        MySharedPreference.saveUser(LoginActivity.this, userId, username);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

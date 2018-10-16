@@ -116,7 +116,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btn_TypeBuild"
+                    android:id="@+id/btn_TargetBuild"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="25dp"
@@ -126,7 +126,7 @@
                     android:background="@drawable/bg_button_green"/>
 
                 <Button
-                    android:id="@+id/btn_TypeQuit"
+                    android:id="@+id/btn_TargetQuit"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="25dp"
@@ -373,6 +373,7 @@
                 android:text="nhóm habit" />
 
             <RelativeLayout
+                android:id="@+id/ll_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
@@ -386,7 +387,7 @@
                     android:textColor="#5fa467"
                     android:textAllCaps="true"
                     android:textSize="10sp"
-                    android:text="sức khỏe"/>
+                    android:text="chưa có"/>
 
                 <TextView
                     android:layout_width="wrap_content"

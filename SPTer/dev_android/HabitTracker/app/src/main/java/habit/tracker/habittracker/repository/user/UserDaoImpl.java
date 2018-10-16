@@ -113,7 +113,7 @@ public class UserDaoImpl extends DatabaseContentProvider implements UserDao, Use
     public boolean saveUser(UserEntity userEntity) {
         setContentValue(userEntity);
         try {
-            return super.insert(USER_TABLE, getContentValue()) > 0;
+            return super.replace(USER_TABLE, getContentValue()) > 0;
         } catch (SQLiteConstraintException ex) {
             return false;
         }

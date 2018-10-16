@@ -2,6 +2,7 @@ package habit.tracker.habittracker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,8 @@ import habit.tracker.habittracker.api.ApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.habit.HabitResponse;
 import habit.tracker.habittracker.api.service.ApiService;
+import habit.tracker.habittracker.repository.Database;
+import habit.tracker.habittracker.repository.habit.HabitEntity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,6 +25,8 @@ import retrofit2.Response;
 import static habit.tracker.habittracker.MenuRecyclerViewAdapter.TYPE_ADD;
 
 public class MainActivity extends AppCompatActivity implements MenuRecyclerViewAdapter.ItemClickListener {
+    public static final int CREATE_NEW_HABIT = 0;
+    public static final String HABIT_ID = "HABIT_ID";
 
     List<MenuItem> data = new ArrayList<>();
     MenuRecyclerViewAdapter adapter;
@@ -51,9 +56,14 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
             @Override
             public void onResponse(Call<HabitResponse> call, Response<HabitResponse> response) {
                 if (response.body().getResult().equals("1")) {
+                    Database db = new Database(MainActivity.this);
+                    db.open();
                     List<Habit> res = response.body().getHabit();
+                    List<HabitEntity> entities = new ArrayList<>();
                     for (Habit habit : res) {
-                        MenuItem item = new MenuItem(habit.getHabitName(),
+                        MenuItem item = new MenuItem(
+                                habit.getHabitId(),
+                                habit.getHabitName(),
                                 habit.getHabitDescription(),
                                 habit.getMonitorNumber(),
                                 Integer.parseInt(habit.getMonitorType()),
@@ -62,12 +72,18 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
                                 habit.getMonitorUnit(),
                                 habit.getHabitColor());
                         data.add(item);
+                        entities.add(Database.sHabitDaoImpl.convert(habit));
                     }
                     RecyclerView recyclerView = findViewById(R.id.rvMenu);
                     recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                     adapter = new MenuRecyclerViewAdapter(MainActivity.this, data);
                     adapter.setClickListener(MainActivity.this);
                     recyclerView.setAdapter(adapter);
+                    // update db
+                    for (HabitEntity entity : entities) {
+                        Database.sHabitDaoImpl.saveHabit(entity);
+                    }
+                    db.close();
                 }
             }
 
@@ -81,11 +97,21 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
     @Override
     public void onItemClick(View view, int type, int position) {
         if (TYPE_ADD == type) {
+            Intent intent = new Intent(this, EmptyActivity.class);
+            intent.putExtra(HABIT_ID, data.get(position).getId());
+            startActivityForResult(intent, CREATE_NEW_HABIT);
+        } else {
             Intent intent = new Intent(this, HabitActivity.class);
             startActivity(intent);
-        } else {
-            Intent intent = new Intent(this, EmptyActivity.class);
-            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == CREATE_NEW_HABIT) {
+            if (resultCode == RESULT_OK) {
+
+            }
         }
     }
 }

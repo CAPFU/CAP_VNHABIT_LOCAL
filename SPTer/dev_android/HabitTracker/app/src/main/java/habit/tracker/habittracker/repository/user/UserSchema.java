@@ -1,7 +1,7 @@
 package habit.tracker.habittracker.repository.user;
 
 public interface UserSchema {
-    String USER_TABLE = "user.vnhb";
+    String USER_TABLE = "user";
     String USER_ID = "user_id";
     String USERNAME = "username";
     String EMAIL = "email";
@@ -14,7 +14,7 @@ public interface UserSchema {
     String USER_DESCRIPTION = "user_description";
 
     String CREATE_USER_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + USER_TABLE + "("
+            "CREATE TABLE IF NOT EXISTS " + USER_TABLE + " ("
                     + USER_ID + " INTEGER PRIMARY KEY, "
                     + USERNAME + " TEXT, "
                     + EMAIL + " TEXT, "

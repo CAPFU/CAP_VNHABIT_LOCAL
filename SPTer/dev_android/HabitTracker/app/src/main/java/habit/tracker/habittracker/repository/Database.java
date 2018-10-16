@@ -15,8 +15,8 @@ import habit.tracker.habittracker.repository.user.UserSchema;
  */
 public class Database {
 
-    private static final String DATABASE_NAME = "vnhabit.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final String DATABASE_NAME = "vnhabit";
+    private static final int DATABASE_VERSION = 1;
     private DatabaseHelper dbHelper;
     private final Context mContext;
 
@@ -25,6 +25,14 @@ public class Database {
 
     public Database(Context context) {
         this.mContext = context;
+    }
+    private static Database sInstance;
+
+    public static synchronized Database getInstance(Context context) {
+        if (sInstance == null) {
+            return new Database(context);
+        }
+        return sInstance;
     }
 
     public Database open() throws SQLException {

@@ -1,6 +1,7 @@
 package habit.tracker.habittracker;
 
 public class MenuItem {
+    private String id;
     private String name;
     private String description;
     private String period;
@@ -12,7 +13,8 @@ public class MenuItem {
 
     public MenuItem() {}
 
-    public MenuItem(String name, String description, String period, int type, String number, String count, String unit, String color) {
+    public MenuItem(String id, String name, String description, String period, int type, String number, String count, String unit, String color) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.period = period;
@@ -21,6 +23,10 @@ public class MenuItem {
         this.count = count;
         this.unit = unit;
         this.color = color;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {
@@ -53,6 +59,10 @@ public class MenuItem {
 
     public String getColor() {
         return color;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setName(String name) {

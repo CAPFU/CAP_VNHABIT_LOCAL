@@ -15,6 +15,10 @@ public abstract class DatabaseContentProvider {
         return mDb.insert(tableName, null, values);
     }
 
+    public long replace(String tableName, ContentValues values) {
+        return mDb.replace(tableName, null, values);
+    }
+
     public abstract int delete();
 
     protected abstract <T> T cursorToEntity(Cursor cursor);
