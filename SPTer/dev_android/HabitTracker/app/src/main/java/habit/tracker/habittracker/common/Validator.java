@@ -49,6 +49,19 @@ public class Validator {
         return true;
     }
 
+    public boolean checkNumber(String number, int thre) {
+        final String regex = "^[0-9]+$";
+        Pattern pattern = Pattern.compile(regex);
+        if (number == null || !pattern.matcher(number).matches()){
+            return false;
+        }
+        int num = Integer.parseInt(number);
+        if (num < thre) {
+            return false;
+        }
+        return true;
+    }
+
     public interface ErrorMsg {
         void showError(ValidatorType type, String key);
     }

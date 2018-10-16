@@ -11,27 +11,30 @@ public class Habit {
     @SerializedName("user_id")
     @Expose
     private String userId;
-    @SerializedName("catagory_id")
+    @SerializedName("group_id")
     @Expose
-    private String catagoryId;
+    private String groupId;
+    @SerializedName("monitor_id")
+    @Expose
+    private String monitorId;
     @SerializedName("habit_name")
     @Expose
     private String habitName;
+    @SerializedName("habit_target")
+    @Expose
+    private String habitTarget;
     @SerializedName("habit_type")
     @Expose
     private String habitType;
-    @SerializedName("unit")
+    @SerializedName("monitor_type")
     @Expose
-    private String unit;
-    @SerializedName("goal_number")
+    private String monitorType;
+    @SerializedName("monitor_unit")
     @Expose
-    private String goalNumber;
-    @SerializedName("goal_time")
+    private String monitorUnit;
+    @SerializedName("monitor_number")
     @Expose
-    private String goalTime;
-    @SerializedName("count_type")
-    @Expose
-    private String countType;
+    private String monitorNumber;
     @SerializedName("start_date")
     @Expose
     private String startDate;
@@ -56,32 +59,36 @@ public class Habit {
         return userId;
     }
 
-    public String getCatagoryId() {
-        return catagoryId;
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public String getMonitorId() {
+        return monitorId;
     }
 
     public String getHabitName() {
         return habitName;
     }
 
+    public String getHabitTarget() {
+        return habitTarget;
+    }
+
     public String getHabitType() {
         return habitType;
     }
 
-    public String getUnit() {
-        return unit;
+    public String getMonitorType() {
+        return monitorType;
     }
 
-    public String getGoalNumber() {
-        return goalNumber;
+    public String getMonitorUnit() {
+        return monitorUnit;
     }
 
-    public String getGoalTime() {
-        return goalTime;
-    }
-
-    public String getCountType() {
-        return countType;
+    public String getMonitorNumber() {
+        return monitorNumber;
     }
 
     public String getStartDate() {
@@ -112,32 +119,36 @@ public class Habit {
         this.userId = userId;
     }
 
-    public void setCatagoryId(String catagoryId) {
-        this.catagoryId = catagoryId;
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public void setMonitorId(String monitorId) {
+        this.monitorId = monitorId;
     }
 
     public void setHabitName(String habitName) {
         this.habitName = habitName;
     }
 
+    public void setHabitTarget(String habitTarget) {
+        this.habitTarget = habitTarget;
+    }
+
     public void setHabitType(String habitType) {
         this.habitType = habitType;
     }
 
-    public void setUnit(String unit) {
-        this.unit = unit;
+    public void setMonitorType(String monitorType) {
+        this.monitorType = monitorType;
     }
 
-    public void setGoalNumber(String goalNumber) {
-        this.goalNumber = goalNumber;
+    public void setMonitorUnit(String monitorUnit) {
+        this.monitorUnit = monitorUnit;
     }
 
-    public void setGoalTime(String goalTime) {
-        this.goalTime = goalTime;
-    }
-
-    public void setCountType(String countType) {
-        this.countType = countType;
+    public void setMonitorNumber(String monitorNumber) {
+        this.monitorNumber = monitorNumber;
     }
 
     public void setStartDate(String startDate) {

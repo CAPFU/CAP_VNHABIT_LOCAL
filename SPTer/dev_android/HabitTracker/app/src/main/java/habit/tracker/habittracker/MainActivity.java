@@ -20,8 +20,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static habit.tracker.habittracker.MenuRecyclerViewAdapter.TYPE_ADD;
-import static habit.tracker.habittracker.MenuRecyclerViewAdapter.TYPE_CHECK;
-import static habit.tracker.habittracker.MenuRecyclerViewAdapter.TYPE_COUNT;
 
 public class MainActivity extends AppCompatActivity implements MenuRecyclerViewAdapter.ItemClickListener {
 
@@ -57,11 +55,11 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
                     for (Habit habit : res) {
                         MenuItem item = new MenuItem(habit.getHabitName(),
                                 habit.getHabitDescription(),
-                                habit.getGoalTime(),
-                                Integer.parseInt(habit.getCountType()),
-                                habit.getGoalNumber(),
+                                habit.getMonitorNumber(),
+                                Integer.parseInt(habit.getMonitorType()),
+                                habit.getMonitorNumber(),
                                 "0",
-                                habit.getUnit(),
+                                habit.getMonitorUnit(),
                                 habit.getHabitColor());
                         data.add(item);
                     }

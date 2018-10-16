@@ -102,10 +102,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         Database.sUserDaoImpl.saveUser(userEntity);
                         db.close();
                         MySharedPreference.saveUser(LoginActivity.this, user.getUserId(), user.getUsername());
-
-                        Toast.makeText(LoginActivity.this, "Login OK!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         LoginActivity.this.startActivity(intent);
+//                        Toast.makeText(LoginActivity.this, "Login OK!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(LoginActivity.this, "Login Failed! username or password is not correct.", Toast.LENGTH_SHORT).show();

@@ -36,7 +36,7 @@ public class HabitActivity extends AppCompatActivity {
     Button btnHabitBuild;
     @BindView(R.id.btn_TypeQuit)
     Button btnHabitQuit;
-    int habitType = 0;
+    int habitTarget = 0;
 
     View btnWatchMode;
     @BindView(R.id.btn_TypeDaily)
@@ -47,7 +47,7 @@ public class HabitActivity extends AppCompatActivity {
     Button btnMonthly;
     @BindView(R.id.btn_TypeYearly)
     Button btnYearly;
-    int watchMode = 0;
+    int habitType = 0;
 
     @BindView(R.id.tv_count_unit)
     TextView tvCountUnit;
@@ -63,7 +63,7 @@ public class HabitActivity extends AppCompatActivity {
     EditText editCheckNumber;
     @BindView(R.id.edit_countUnit)
     EditText editCountUnit;
-    int countType = 0;
+    int monitorType = 0;
 
     @BindView(R.id.btnMon)
     TextView btnMon;
@@ -149,6 +149,7 @@ public class HabitActivity extends AppCompatActivity {
         color8.setBackground(getCircleBackground(colors[7]));
         color9.setBackground(getCircleBackground(colors[8]));
         color10.setBackground(getCircleBackground(colors[9]));
+        setHabitColor(color1);
     }
 
     @OnClick(R.id.btn_save)
@@ -166,49 +167,50 @@ public class HabitActivity extends AppCompatActivity {
         });
         String userId = MySharedPreference.getUserId(this);
         String habitName = tvHabitName.getText().toString();
+        String monitorNumber = this.editCheckNumber.getText().toString();
         if (!validator.checkEmpty("Tên thói quen", habitName)) {
             return;
         }
-        String habitType = String.valueOf(this.habitType);
-        String categoryId;
-        String countType = String.valueOf(this.countType);
-        String unit = null;
-        if (this.countType == 0) {
-            unit = editCountUnit.getText().toString();
+        String monitorUnit = null;
+        if (this.monitorType == 1) {
+            monitorUnit = this.editCountUnit.getText().toString();
+            if (!validator.checkEmpty("Đơn vị", habitName)) {
+                return;
+            }
         }
-        String startDate = null;
-        String endDate = null;
-        String createdDate = null;
-        String color = habitColor.getTag().toString();
-        String description = editDescription.getText().toString();
-
+        if (!validator.checkNumber(monitorNumber, 1)) {
+            Toast.makeText(HabitActivity.this, "Số lần phải lớn hon 0", Toast.LENGTH_SHORT).show();
+        }
         Habit habit = new Habit();
         habit.setUserId(userId);
+        habit.setGroupId(null);
         habit.setHabitName(habitName);
-        habit.setHabitType(habitType);
-        habit.setUnit(unit);
-        habit.setCountType(countType);
+        habit.setHabitTarget(String.valueOf(this.habitTarget));
+        habit.setHabitType(String.valueOf(this.habitType));
+        habit.setMonitorType(String.valueOf(this.monitorType));
+        habit.setMonitorUnit(monitorUnit);
+        habit.setMonitorNumber(monitorNumber);
         habit.setStartDate(null);
         habit.setEndDate(null);
         habit.setCreatedDate(null);
-        habit.setHabitColor(color);
-        habit.setHabitDescription(description);
+        habit.setHabitColor(this.habitColorCode);
+        habit.setHabitDescription(this.editDescription.getText().toString());
 
-        ApiService mService = ApiUtils.getApiService();
-        mService.addHabit(habit).enqueue(new Callback<HabitResult>() {
-            @Override
-            public void onResponse(Call<HabitResult> call, Response<HabitResult> response) {
-                if (response.body().getResult().equals("1")) {
-                    Toast.makeText(HabitActivity.this, "Tạo thói quen thành công", Toast.LENGTH_LONG).show();
-                    finish();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<HabitResult> call, Throwable t) {
-                Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
-            }
-        });
+//        ApiService mService = ApiUtils.getApiService();
+//        mService.addHabit(habit).enqueue(new Callback<HabitResult>() {
+//            @Override
+//            public void onResponse(Call<HabitResult> call, Response<HabitResult> response) {
+//                if (response.body().getResult().equals("1")) {
+//                    Toast.makeText(HabitActivity.this, "Tạo thói quen thành công", Toast.LENGTH_LONG).show();
+//                    finish();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<HabitResult> call, Throwable t) {
+//                Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
+//            }
+//        });
     }
 
     @OnClick({R.id.btn_TypeBuild, R.id.btn_TypeQuit})
@@ -217,21 +219,21 @@ public class HabitActivity extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.btn_TypeBuild:
                 setWhiteBg(btnHabitQuit);
-                habitType = 0;
+                habitTarget = 0;
                 break;
             case R.id.btn_TypeQuit:
                 setWhiteBg(btnHabitBuild);
-                habitType = 1;
+                habitTarget = 1;
                 break;
         }
     }
 
     @OnClick({R.id.btn_TypeDaily, R.id.btn_TypeWeekly, R.id.btn_TypeMonthly, R.id.btn_TypeYearly})
-    public void setWatchMode(View view) {
+    public void setHabitType(View view) {
         setWhiteBg(btnWatchMode);
         setGreenBg(view);
         btnWatchMode = view;
-        watchMode = Integer.parseInt(view.getTag().toString());
+        habitType = Integer.parseInt(view.getTag().toString());
         switch (view.getId()) {
             case R.id.btn_TypeDaily:
                 tvCountUnit.setText("trong một ngày");
@@ -249,17 +251,17 @@ public class HabitActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.ll_checkDone, R.id.ll_checkCount})
-    public void checkCountType(View view) {
+    public void selectMonitoType(View view) {
         if (view.getId() == R.id.ll_checkDone) {
             uncheck(imgTypeCount);
             check(imgTypeCheck);
             editCheckNumber.setEnabled(false);
-            countType = 0;
+            monitorType = 0;
         } else if (view.getId() == R.id.ll_checkCount) {
             uncheck(imgTypeCheck);
             check(imgTypeCount);
             editCheckNumber.setEnabled(true);
-            countType = 1;
+            monitorType = 1;
         }
     }
 
