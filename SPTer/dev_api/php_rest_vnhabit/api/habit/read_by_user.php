@@ -18,7 +18,8 @@ $habit = new Habit($db);
 $habit->user_id = isset($_GET['user_id']) ? $_GET['user_id'] : die();
 
 // get habits by user_id
-$result = $habit->read_by_user();
+// $result = $habit->read_by_user();
+$result = $habit->read_join_monitor();
 
 // get row count
 $num = $result->rowCount();
@@ -42,7 +43,14 @@ if ($num > 0) {
             'end_date' => $end_date, 
             'created_date' => $created_date, 
             'habit_color' => $habit_color, 
-            'habit_description' => $habit_description
+            'habit_description' => $habit_description,
+            'mon' => $mon,
+            'tue' => $tue,
+            'wed' => $wed,
+            'thu' => $thu,
+            'fri' => $fri,
+            'sat' => $sat,
+            'sun' => $sun
         );
 
         // push to "data"

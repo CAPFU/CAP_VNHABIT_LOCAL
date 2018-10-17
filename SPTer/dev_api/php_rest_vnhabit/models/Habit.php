@@ -71,7 +71,14 @@ include_once '../../models/Model.php';
             $stmt->bindParam(":user_id", $this->user_id);
             // Execute query
             $stmt->execute();
-
+            return $stmt;
+        }
+    
+        public function read_join_monitor() {
+            $query = 'SELECT * FROM ' . $this->table . ' h LEFT JOIN monitor_date m ON h.monitor_id = m.monitor_id WHERE h.user_id = :user_id';
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(":user_id", $this->user_id);
+            $stmt->execute();
             return $stmt;
         }
 
