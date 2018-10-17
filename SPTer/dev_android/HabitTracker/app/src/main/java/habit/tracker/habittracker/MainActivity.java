@@ -97,12 +97,12 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
     @Override
     public void onItemClick(View view, int type, int position) {
         if (TYPE_ADD == type) {
-            Intent intent = new Intent(this, EmptyActivity.class);
-            intent.putExtra(HABIT_ID, data.get(position).getId());
-            startActivityForResult(intent, CREATE_NEW_HABIT);
-        } else {
             Intent intent = new Intent(this, HabitActivity.class);
             startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, HabitActivity.class);
+            intent.putExtra(HABIT_ID, data.get(position).getId());
+            startActivityForResult(intent, CREATE_NEW_HABIT);
         }
     }
 

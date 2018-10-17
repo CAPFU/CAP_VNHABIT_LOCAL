@@ -1,6 +1,7 @@
 package habit.tracker.habittracker;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -11,9 +12,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,11 +24,23 @@ import butterknife.OnClick;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
+import habit.tracker.habittracker.repository.Database;
+import habit.tracker.habittracker.repository.habit.HabitEntity;
 
 public class HabitActivity extends AppCompatActivity {
+    public static final String TYPE_0 = "0";
+    public static final String TYPE_1 = "1";
+    public static final String TYPE_2 = "2";
+    public static final String TYPE_3 = "3";
+    public static final String TYPE_4 = "4";
+    public static final String TYPE_5 = "5";
+    public static final String TYPE_6 = "6";
+    public static final String TYPE_7 = "7";
+    public static final String TYPE_8 = "8";
+    public static final String TYPE_9 = "9";
 
     @BindView(R.id.edit_habitName)
-    TextView tvHabitName;
+    TextView edHabitName;
 
     @BindView(R.id.btn_TargetBuild)
     Button btnHabitBuild;
@@ -33,7 +48,7 @@ public class HabitActivity extends AppCompatActivity {
     Button btnHabitQuit;
     int habitTarget = 0;
 
-    View btnWatchMode;
+    View btnHabitType;
     @BindView(R.id.btn_TypeDaily)
     Button btnDaily;
     @BindView(R.id.btn_TypeWeekly)
@@ -47,9 +62,9 @@ public class HabitActivity extends AppCompatActivity {
     @BindView(R.id.tv_count_unit)
     TextView tvCountUnit;
     @BindView(R.id.ll_checkDone)
-    View ckTypeCheck;
+    View chkMonitorCheck;
     @BindView(R.id.ll_checkCount)
-    View ckTypeCount;
+    View chkMonitorCount;
     @BindView(R.id.img_checkDone)
     ImageView imgTypeCheck;
     @BindView(R.id.img_checkCount)
@@ -61,7 +76,7 @@ public class HabitActivity extends AppCompatActivity {
     int monitorType = 0;
 
     @BindView(R.id.ll_group)
-    LinearLayout selGroup;
+    View selGroup;
 
     @BindView(R.id.btnMon)
     TextView btnMon;
@@ -113,6 +128,7 @@ public class HabitActivity extends AppCompatActivity {
             R.color.color8,
             R.color.color9
     };
+    List<String> colorsList;
 
     @BindView(R.id.ll_start_date)
     View mStartDate;
@@ -136,19 +152,28 @@ public class HabitActivity extends AppCompatActivity {
         setContentView(R.layout.activity_habit);
         ButterKnife.bind(this);
 
-        btnWatchMode = btnDaily;
-        color1.setBackground(getCircleBackground(colors[0]));
-        color2.setBackground(getCircleBackground(colors[1]));
-        color3.setBackground(getCircleBackground(colors[2]));
-        color4.setBackground(getCircleBackground(colors[3]));
-        color5.setBackground(getCircleBackground(colors[4]));
-        color6.setBackground(getCircleBackground(colors[5]));
-        color7.setBackground(getCircleBackground(colors[6]));
-        color8.setBackground(getCircleBackground(colors[7]));
-        color9.setBackground(getCircleBackground(colors[8]));
-        color10.setBackground(getCircleBackground(colors[9]));
+        colorsList = new ArrayList<>();
+        for (int colorId : colors) {
+            colorsList.add(getResources().getString(colorId));
+        }
+
+        // init habit type: daily
+        btnHabitType = btnDaily;
+
+        // init habit color
+        color1.setBackground(getCircleBackground(colorsList.get(0)));
+        color2.setBackground(getCircleBackground(colorsList.get(1)));
+        color3.setBackground(getCircleBackground(colorsList.get(2)));
+        color4.setBackground(getCircleBackground(colorsList.get(3)));
+        color5.setBackground(getCircleBackground(colorsList.get(4)));
+        color6.setBackground(getCircleBackground(colorsList.get(5)));
+        color7.setBackground(getCircleBackground(colorsList.get(6)));
+        color8.setBackground(getCircleBackground(colorsList.get(7)));
+        color9.setBackground(getCircleBackground(colorsList.get(8)));
+        color10.setBackground(getCircleBackground(colorsList.get(9)));
         setHabitColor(color1);
 
+        // init monitor date
         setMonitorDate(btnMon);
         setMonitorDate(btnTue);
         setMonitorDate(btnWed);
@@ -156,6 +181,85 @@ public class HabitActivity extends AppCompatActivity {
         setMonitorDate(btnFri);
         setMonitorDate(btnSat);
         setMonitorDate(btnSun);
+
+        // load habit from local data
+        initFromSavedHabit();
+    }
+
+    private void initFromSavedHabit() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String habitId = extras.getString(MainActivity.HABIT_ID, null);
+            if (habitId != null) {
+                Database db = new Database(this);
+                db.open();
+                HabitEntity habitEntity = Database.sHabitDaoImpl.getHabit(habitId);
+                if (habitEntity != null) {
+                    // habit name
+                    edHabitName.setText(habitEntity.getHabitName());
+                    // habit target
+                    switch (habitEntity.getHabitTarget()) {
+                        case TYPE_0:
+                            setHabitTarget(btnHabitBuild);
+                            break;
+                        case TYPE_1:
+                            setHabitTarget(btnHabitQuit);
+                            break;
+                    }
+                    // habit type
+                    switch (habitEntity.getHabitType()) {
+                        case TYPE_0:
+                            setHabitType(btnDaily);
+                            break;
+                        case TYPE_1:
+                            setHabitType(btnWeekly);
+                            break;
+                        case TYPE_2:
+                            setHabitType(btnMonthly);
+                            break;
+                        case TYPE_3:
+                            setHabitType(btnYearly);
+                            break;
+                    }
+                    switch (habitEntity.getMonitorType()) {
+                        case TYPE_0:
+                            selectMonitorType(chkMonitorCheck);
+                            break;
+                        case TYPE_1:
+                            selectMonitorType(chkMonitorCount);
+                            break;
+                    }
+                    // habit color
+                    for (int i=0; i < colorsList.size(); i++) {
+                        String code = colorsList.get(i);
+                        // TODO: optimize this
+                        if (habitEntity.getHabitColor().equals(code)) {
+                            switch (code) {
+                                case TYPE_0:
+                                    break;
+                                case TYPE_1:
+                                    break;
+                                case TYPE_2:
+                                    break;
+                                case TYPE_3:
+                                    break;
+                                case TYPE_4:
+                                    break;
+                                case TYPE_5:
+                                    break;
+                                case TYPE_6:
+                                    break;
+                                case TYPE_7:
+                                    break;
+                            }
+                        }
+                    }
+                    // habit description
+                    editDescription.setText(habitEntity.getHabitDescription());
+                }
+                db.close();
+            }
+        }
     }
 
     @OnClick(R.id.btn_save)
@@ -172,7 +276,7 @@ public class HabitActivity extends AppCompatActivity {
             }
         });
         String userId = MySharedPreference.getUserId(this);
-        String habitName = tvHabitName.getText().toString();
+        String habitName = edHabitName.getText().toString();
         String monitorNumber = this.editCheckNumber.getText().toString();
         if (!validator.checkEmpty("Tên thói quen", habitName)) {
             return;
@@ -236,9 +340,9 @@ public class HabitActivity extends AppCompatActivity {
 
     @OnClick({R.id.btn_TypeDaily, R.id.btn_TypeWeekly, R.id.btn_TypeMonthly, R.id.btn_TypeYearly})
     public void setHabitType(View view) {
-        setWhiteBg(btnWatchMode);
+        setWhiteBg(btnHabitType);
         setGreenBg(view);
-        btnWatchMode = view;
+        btnHabitType = view;
         habitType = Integer.parseInt(view.getTag().toString());
         switch (view.getId()) {
             case R.id.btn_TypeDaily:
@@ -322,7 +426,7 @@ public class HabitActivity extends AppCompatActivity {
         int idx = 0;
         if (habitColor != null) {
             idx = Integer.parseInt(habitColor.getTag().toString());
-            unpickColor(habitColor, colors[idx]);
+            unpickColor(habitColor, colorsList.get(idx));
         }
         idx = Integer.parseInt(v.getTag().toString());
         pickColor(v, colors[idx]);
@@ -358,8 +462,8 @@ public class HabitActivity extends AppCompatActivity {
         v.setBackground(getCircleCheckBackground(color));
     }
 
-    public void unpickColor(View v, int color){
-        v.setBackground(getCircleBackground(color));
+    public void unpickColor(View v, String colorCode){
+        v.setBackground(getCircleBackground(colorCode));
     }
 
     public void showEmpty(View v) {
@@ -371,10 +475,10 @@ public class HabitActivity extends AppCompatActivity {
         finish();
     }
 
-    private Drawable getCircleBackground(int color) {
+    private Drawable getCircleBackground(String colorCode) {
         Drawable mDrawable = ContextCompat.getDrawable(this, R.drawable.bg_circle);
         if (mDrawable != null) {
-            mDrawable.setColorFilter(new PorterDuffColorFilter(this.getResources().getColor(color), PorterDuff.Mode.MULTIPLY));
+            mDrawable.setColorFilter(new PorterDuffColorFilter(Color.parseColor(colorCode), PorterDuff.Mode.MULTIPLY));
         }
         return mDrawable;
     }

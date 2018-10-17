@@ -1,6 +1,8 @@
 package habit.tracker.habittracker.repository.habit;
 
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
 import habit.tracker.habittracker.api.model.habit.Habit;
@@ -11,13 +13,38 @@ import habit.tracker.habittracker.repository.DatabaseContentProvider;
  */
 public class HabitDaoImpl extends DatabaseContentProvider implements HabitDao, HabitSchema {
 
+    private Cursor cursor;
+    private ContentValues initialValues;
+
     public HabitDaoImpl(SQLiteDatabase db) {
         super(db);
     }
 
     @Override
+    public HabitEntity getHabit(String habitId) {
+        final String selectionArgs[] = {String.valueOf(habitId)};
+        final String selection = HABIT_ID + " = ?";
+        HabitEntity habitEntity = new HabitEntity();
+        cursor = super.query(HABIT_TABLE, HABIT_COLUMNS, selection, selectionArgs, HABIT_ID);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                habitEntity = cursorToEntity(cursor);
+                cursor.moveToNext();
+            }
+            cursor.close();return habitEntity;
+        }
+        return null;
+    }
+
+    @Override
     public boolean saveHabit(HabitEntity habitEntity) {
-        return false;
+        setContentValue(habitEntity);
+        try {
+            return super.replace(HABIT_TABLE, getContentValue()) > 0;
+        } catch (SQLiteConstraintException ex) {
+            return false;
+        }
     }
 
     @Override
@@ -36,8 +63,56 @@ public class HabitDaoImpl extends DatabaseContentProvider implements HabitDao, H
     }
 
     @Override
-    protected <T> T cursorToEntity(Cursor cursor) {
-        return null;
+    protected HabitEntity cursorToEntity(Cursor cursor) {
+        HabitEntity habitEntity = new HabitEntity();
+        if (cursor != null) {
+            if (cursor.getColumnIndex(HABIT_ID) != -1) {
+                habitEntity.setHabitId(cursor.getString(cursor.getColumnIndexOrThrow(HABIT_ID)));
+            }
+            if (cursor.getColumnIndex(USER_ID) != -1) {
+                habitEntity.setUserId(cursor.getString(cursor.getColumnIndexOrThrow(USER_ID)));
+            }
+            if (cursor.getColumnIndex(GROUP_ID) != -1) {
+                habitEntity.setGroupId(cursor.getString(cursor.getColumnIndexOrThrow(GROUP_ID)));
+            }
+            if (cursor.getColumnIndex(MONITOR_ID) != -1) {
+                habitEntity.setMonitorId(cursor.getString(cursor.getColumnIndexOrThrow(MONITOR_ID)));
+            }
+            if (cursor.getColumnIndex(HABIT_NAME) != -1) {
+                habitEntity.setHabitName(cursor.getString(cursor.getColumnIndexOrThrow(HABIT_NAME)));
+            }
+            if (cursor.getColumnIndex(HABIT_TARGET) != -1) {
+                habitEntity.setHabitTarget(cursor.getString(cursor.getColumnIndexOrThrow(HABIT_TARGET)));
+            }
+            if (cursor.getColumnIndex(HABIT_TYPE) != -1) {
+                habitEntity.setHabitType(cursor.getString(cursor.getColumnIndexOrThrow(HABIT_TYPE)));
+            }
+            if (cursor.getColumnIndex(MONITOR_TYPE) != -1) {
+                habitEntity.setMonitorType(cursor.getString(cursor.getColumnIndexOrThrow(MONITOR_TYPE)));
+            }
+            if (cursor.getColumnIndex(MONITOR_UNIT) != -1) {
+                habitEntity.setMonitorUnit(cursor.getString(cursor.getColumnIndexOrThrow(MONITOR_UNIT)));
+            }
+            if (cursor.getColumnIndex(MONITOR_NUMBER) != -1) {
+                habitEntity.setMonitorNumber(cursor.getString(cursor.getColumnIndexOrThrow(MONITOR_NUMBER)));
+            }
+            if (cursor.getColumnIndex(START_DATE) != -1) {
+                habitEntity.setStartDate(cursor.getString(cursor.getColumnIndexOrThrow(START_DATE)));
+            }
+            if (cursor.getColumnIndex(END_DATE) != -1) {
+                habitEntity.setEndDate(cursor.getString(cursor.getColumnIndexOrThrow(END_DATE)));
+            }
+            if (cursor.getColumnIndex(CREATED_DATE) != -1) {
+                habitEntity.setCreatedDate(cursor.getString(cursor.getColumnIndexOrThrow(CREATED_DATE)));
+            }
+            if (cursor.getColumnIndex(HABIT_COLOR) != -1) {
+                habitEntity.setHabitColor(cursor.getString(cursor.getColumnIndexOrThrow(HABIT_COLOR)));
+            }
+            if (cursor.getColumnIndex(HABIT_DESCRIPTION) != -1) {
+                habitEntity.setHabitDescription(cursor.getString(cursor.getColumnIndexOrThrow(HABIT_DESCRIPTION)));
+            }
+        }
+        return habitEntity;
     }
 
     public HabitEntity convert(Habit habit) {
@@ -60,5 +135,30 @@ public class HabitDaoImpl extends DatabaseContentProvider implements HabitDao, H
             return entity;
         }
         return null;
+    }
+
+    @Override
+    public void setContentValue(HabitEntity habitEntity) {
+        initialValues = new ContentValues();
+        initialValues.put(HABIT_ID, habitEntity.getHabitId());
+        initialValues.put(USER_ID, habitEntity.getUserId());
+        initialValues.put(GROUP_ID, habitEntity.getGroupId());
+        initialValues.put(MONITOR_ID, habitEntity.getMonitorId());
+        initialValues.put(HABIT_NAME, habitEntity.getHabitName());
+        initialValues.put(HABIT_TARGET, habitEntity.getHabitTarget());
+        initialValues.put(HABIT_TYPE, habitEntity.getHabitType());
+        initialValues.put(MONITOR_TYPE, habitEntity.getMonitorType());
+        initialValues.put(MONITOR_UNIT, habitEntity.getMonitorUnit());
+        initialValues.put(MONITOR_NUMBER, habitEntity.getMonitorNumber());
+        initialValues.put(START_DATE, habitEntity.getStartDate());
+        initialValues.put(END_DATE, habitEntity.getEndDate());
+        initialValues.put(CREATED_DATE, habitEntity.getCreatedDate());
+        initialValues.put(HABIT_COLOR, habitEntity.getHabitColor());
+        initialValues.put(HABIT_DESCRIPTION, habitEntity.getHabitDescription());
+    }
+
+    @Override
+    public ContentValues getContentValue() {
+        return initialValues;
     }
 }
