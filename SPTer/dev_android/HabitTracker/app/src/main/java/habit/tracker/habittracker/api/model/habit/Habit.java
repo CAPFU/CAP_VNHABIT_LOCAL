@@ -51,6 +51,28 @@ public class Habit {
     @Expose
     private String habitDescription;
 
+    @SerializedName("mon")
+    @Expose
+    private String mon;
+    @SerializedName("tue")
+    @Expose
+    private String tue;
+    @SerializedName("wed")
+    @Expose
+    private String wed;
+    @SerializedName("thu")
+    @Expose
+    private String thu;
+    @SerializedName("fri")
+    @Expose
+    private String fri;
+    @SerializedName("sat")
+    @Expose
+    private String sat;
+    @SerializedName("sun")
+    @Expose
+    private String sun;
+
     public String getHabitId() {
         return habitId;
     }
@@ -111,6 +133,34 @@ public class Habit {
         return habitDescription;
     }
 
+    public String getMon() {
+        return mon;
+    }
+
+    public String getTue() {
+        return tue;
+    }
+
+    public String getWed() {
+        return wed;
+    }
+
+    public String getThu() {
+        return thu;
+    }
+
+    public String getFri() {
+        return fri;
+    }
+
+    public String getSat() {
+        return sat;
+    }
+
+    public String getSun() {
+        return sun;
+    }
+
     public void setHabitId(String habitId) {
         this.habitId = habitId;
     }
@@ -169,5 +219,33 @@ public class Habit {
 
     public void setHabitDescription(String habitDescription) {
         this.habitDescription = habitDescription;
+    }
+
+    public void setMon(String mon) {
+        this.mon = mon;
+    }
+
+    public void setTue(String tue) {
+        this.tue = tue;
+    }
+
+    public void setWed(String wed) {
+        this.wed = wed;
+    }
+
+    public void setThu(String thu) {
+        this.thu = thu;
+    }
+
+    public void setFri(String fri) {
+        this.fri = fri;
+    }
+
+    public void setSat(String sat) {
+        this.sat = sat;
+    }
+
+    public void setSun(String sun) {
+        this.sun = sun;
     }
 }

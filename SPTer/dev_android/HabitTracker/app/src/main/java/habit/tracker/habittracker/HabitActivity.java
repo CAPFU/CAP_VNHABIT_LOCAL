@@ -138,6 +138,10 @@ public class HabitActivity extends AppCompatActivity {
     ImageView chkStartDate;
     @BindView(R.id.check_endDate)
     ImageView chkEndDate;
+    @BindView(R.id.edit_startDate)
+    TextView tvStartDate;
+    @BindView(R.id.edit_endDate)
+    TextView tvEndDate;
     boolean[] startOrEndDate = new boolean[2];
 
     @BindView(R.id.btn_save)
@@ -157,33 +161,36 @@ public class HabitActivity extends AppCompatActivity {
             colorsList.add(getResources().getString(colorId));
         }
 
-        // init habit type: daily
-        btnHabitType = btnDaily;
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            // load habit from local data
+            initFromSavedHabit();
+        } else {
+            // init habit type: daily
+            btnHabitType = btnDaily;
 
-        // init habit color
-        color1.setBackground(getCircleBackground(colorsList.get(0)));
-        color2.setBackground(getCircleBackground(colorsList.get(1)));
-        color3.setBackground(getCircleBackground(colorsList.get(2)));
-        color4.setBackground(getCircleBackground(colorsList.get(3)));
-        color5.setBackground(getCircleBackground(colorsList.get(4)));
-        color6.setBackground(getCircleBackground(colorsList.get(5)));
-        color7.setBackground(getCircleBackground(colorsList.get(6)));
-        color8.setBackground(getCircleBackground(colorsList.get(7)));
-        color9.setBackground(getCircleBackground(colorsList.get(8)));
-        color10.setBackground(getCircleBackground(colorsList.get(9)));
-        setHabitColor(color1);
+            // init habit color
+            color1.setBackground(getCircleBackground(colorsList.get(0)));
+            color2.setBackground(getCircleBackground(colorsList.get(1)));
+            color3.setBackground(getCircleBackground(colorsList.get(2)));
+            color4.setBackground(getCircleBackground(colorsList.get(3)));
+            color5.setBackground(getCircleBackground(colorsList.get(4)));
+            color6.setBackground(getCircleBackground(colorsList.get(5)));
+            color7.setBackground(getCircleBackground(colorsList.get(6)));
+            color8.setBackground(getCircleBackground(colorsList.get(7)));
+            color9.setBackground(getCircleBackground(colorsList.get(8)));
+            color10.setBackground(getCircleBackground(colorsList.get(9)));
+            setHabitColor(color1);
 
-        // init monitor date
-        setMonitorDate(btnMon);
-        setMonitorDate(btnTue);
-        setMonitorDate(btnWed);
-        setMonitorDate(btnThu);
-        setMonitorDate(btnFri);
-        setMonitorDate(btnSat);
-        setMonitorDate(btnSun);
-
-        // load habit from local data
-        initFromSavedHabit();
+            // init monitor date
+            setMonitorDate(btnMon);
+            setMonitorDate(btnTue);
+            setMonitorDate(btnWed);
+            setMonitorDate(btnThu);
+            setMonitorDate(btnFri);
+            setMonitorDate(btnSat);
+            setMonitorDate(btnSun);
+        }
     }
 
     private void initFromSavedHabit() {
@@ -205,6 +212,37 @@ public class HabitActivity extends AppCompatActivity {
                         case TYPE_1:
                             setHabitTarget(btnHabitQuit);
                             break;
+                    }
+                    // monitor date
+                    if (habitEntity.getMon().equals(TYPE_1)) {
+                        setMonitorDate(btnMon);
+                    }
+                    if (habitEntity.getTue().equals(TYPE_1)){
+                        setMonitorDate(btnTue);
+                    }
+                    if (habitEntity.getWed().equals(TYPE_1)){
+                        setMonitorDate(btnWed);
+                    }
+                    if (habitEntity.getThu().equals(TYPE_1)){
+                        setMonitorDate(btnThu);
+                    }
+                    if (habitEntity.getFri().equals(TYPE_1)){
+                        setMonitorDate(btnFri);
+                    }
+                    if (habitEntity.getSat().equals(TYPE_1)){
+                        setMonitorDate(btnSat);
+                    }
+                    if (habitEntity.getSun().equals(TYPE_1)) {
+                        setMonitorDate(btnSun);
+                    }
+                    // plan date
+                    if (habitEntity.getStartDate() != null) {
+                        setStartEndDate(mStartDate);
+                        tvStartDate.setText(habitEntity.getStartDate());
+                    }
+                    if (habitEntity.getEndDate() != null) {
+                        setStartEndDate(mEndDate);
+                        tvEndDate.setText(habitEntity.getEndDate());
                     }
                     // habit type
                     switch (habitEntity.getHabitType()) {
@@ -420,7 +458,7 @@ public class HabitActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.ll_start_date, R.id.ll_end_date})
-    public void setStartDate(View v) {
+    public void setStartEndDate(View v) {
         if (v.getId() == R.id.ll_start_date) {
             if (startOrEndDate[0]) {
                 uncheck(chkStartDate);

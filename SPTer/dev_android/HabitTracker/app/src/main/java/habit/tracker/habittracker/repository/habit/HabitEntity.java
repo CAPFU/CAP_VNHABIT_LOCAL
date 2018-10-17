@@ -19,6 +19,13 @@ public class HabitEntity {
     private String createdDate;
     private String habitColor;
     private String habitDescription;
+    private String mon;
+    private String tue;
+    private String wed;
+    private String thu;
+    private String fri;
+    private String sat;
+    private String sun;
 
     public String getHabitId() {
         return habitId;
@@ -80,6 +87,34 @@ public class HabitEntity {
         return habitDescription;
     }
 
+    public String getMon() {
+        return mon;
+    }
+
+    public String getTue() {
+        return tue;
+    }
+
+    public String getWed() {
+        return wed;
+    }
+
+    public String getThu() {
+        return thu;
+    }
+
+    public String getFri() {
+        return fri;
+    }
+
+    public String getSat() {
+        return sat;
+    }
+
+    public String getSun() {
+        return sun;
+    }
+
     public void setHabitId(String habitId) {
         this.habitId = habitId;
     }
@@ -138,5 +173,33 @@ public class HabitEntity {
 
     public void setHabitDescription(String habitDescription) {
         this.habitDescription = habitDescription;
+    }
+
+    public void setMon(String mon) {
+        this.mon = mon;
+    }
+
+    public void setTue(String tue) {
+        this.tue = tue;
+    }
+
+    public void setWed(String wed) {
+        this.wed = wed;
+    }
+
+    public void setThu(String thu) {
+        this.thu = thu;
+    }
+
+    public void setFri(String fri) {
+        this.fri = fri;
+    }
+
+    public void setSat(String sat) {
+        this.sat = sat;
+    }
+
+    public void setSun(String sun) {
+        this.sun = sun;
     }
 }

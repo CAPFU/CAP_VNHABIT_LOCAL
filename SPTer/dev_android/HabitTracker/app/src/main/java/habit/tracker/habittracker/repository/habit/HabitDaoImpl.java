@@ -111,6 +111,27 @@ public class HabitDaoImpl extends DatabaseContentProvider implements HabitDao, H
             if (cursor.getColumnIndex(HABIT_DESCRIPTION) != -1) {
                 habitEntity.setHabitDescription(cursor.getString(cursor.getColumnIndexOrThrow(HABIT_DESCRIPTION)));
             }
+            if (cursor.getColumnIndex(MON) != 1) {
+                habitEntity.setMon(cursor.getString(cursor.getColumnIndexOrThrow(MON)));
+            }
+            if (cursor.getColumnIndex(TUE) != 1) {
+                habitEntity.setTue(cursor.getString(cursor.getColumnIndexOrThrow(TUE)));
+            }
+            if (cursor.getColumnIndex(WED) != 1) {
+                habitEntity.setWed(cursor.getString(cursor.getColumnIndexOrThrow(WED)));
+            }
+            if (cursor.getColumnIndex(THU) != 1) {
+                habitEntity.setThu(cursor.getString(cursor.getColumnIndexOrThrow(THU)));
+            }
+            if (cursor.getColumnIndex(FRI) != 1) {
+                habitEntity.setFri(cursor.getString(cursor.getColumnIndexOrThrow(FRI)));
+            }
+            if (cursor.getColumnIndex(SAT) != 1) {
+                habitEntity.setSat(cursor.getString(cursor.getColumnIndexOrThrow(SAT)));
+            }
+            if (cursor.getColumnIndex(SUN) != 1) {
+                habitEntity.setSun(cursor.getString(cursor.getColumnIndexOrThrow(SUN)));
+            }
         }
         return habitEntity;
     }
@@ -132,6 +153,13 @@ public class HabitDaoImpl extends DatabaseContentProvider implements HabitDao, H
             entity.setEndDate(habit.getEndDate());
             entity.setHabitColor(habit.getHabitColor());
             entity.setHabitDescription(habit.getHabitDescription());
+            entity.setMon(habit.getMon());
+            entity.setTue(habit.getTue());
+            entity.setWed(habit.getWed());
+            entity.setThu(habit.getThu());
+            entity.setFri(habit.getFri());
+            entity.setSat(habit.getSat());
+            entity.setSun(habit.getSun());
             return entity;
         }
         return null;
@@ -155,6 +183,13 @@ public class HabitDaoImpl extends DatabaseContentProvider implements HabitDao, H
         initialValues.put(CREATED_DATE, habitEntity.getCreatedDate());
         initialValues.put(HABIT_COLOR, habitEntity.getHabitColor());
         initialValues.put(HABIT_DESCRIPTION, habitEntity.getHabitDescription());
+        initialValues.put(MON, habitEntity.getMon());
+        initialValues.put(TUE, habitEntity.getTue());
+        initialValues.put(WED, habitEntity.getWed());
+        initialValues.put(THU, habitEntity.getThu());
+        initialValues.put(FRI, habitEntity.getFri());
+        initialValues.put(SAT, habitEntity.getSat());
+        initialValues.put(SUN, habitEntity.getSun());
     }
 
     @Override

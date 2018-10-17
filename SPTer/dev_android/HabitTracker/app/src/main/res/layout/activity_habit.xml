@@ -536,7 +536,8 @@
                 </LinearLayout>
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:id="@+id/edit_startDate"
+                    android:layout_width="120dp"
                     android:layout_height="20dp"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="5dp"
@@ -569,7 +570,8 @@
                 </LinearLayout>
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:id="@+id/edit_endDate"
+                    android:layout_width="120dp"
                     android:layout_height="20dp"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
