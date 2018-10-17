@@ -273,7 +273,7 @@
                         android:text="1"
                         android:background="@drawable/bg_input1"/>
                     <EditText
-                        android:id="@+id/edit_countUnit"
+                        android:id="@+id/edit_monitorUnit"
                         android:layout_width="50dp"
                         android:layout_height="25dp"
                         android:gravity="center"

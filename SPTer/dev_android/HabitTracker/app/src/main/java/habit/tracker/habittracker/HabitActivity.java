@@ -40,7 +40,7 @@ public class HabitActivity extends AppCompatActivity {
     public static final String TYPE_9 = "9";
 
     @BindView(R.id.edit_habitName)
-    TextView edHabitName;
+    EditText editHabitName;
 
     @BindView(R.id.btn_TargetBuild)
     Button btnHabitBuild;
@@ -71,8 +71,8 @@ public class HabitActivity extends AppCompatActivity {
     ImageView imgTypeCount;
     @BindView(R.id.edit_checkNumber)
     EditText editCheckNumber;
-    @BindView(R.id.edit_countUnit)
-    EditText editCountUnit;
+    @BindView(R.id.edit_monitorUnit)
+    EditText editMonitorUnit;
     int monitorType = 0;
 
     @BindView(R.id.ll_group)
@@ -138,7 +138,7 @@ public class HabitActivity extends AppCompatActivity {
     ImageView chkStartDate;
     @BindView(R.id.check_endDate)
     ImageView chkEndDate;
-    boolean[] planDate = new boolean[2];
+    boolean[] startOrEndDate = new boolean[2];
 
     @BindView(R.id.btn_save)
     Button btnSave;
@@ -196,7 +196,7 @@ public class HabitActivity extends AppCompatActivity {
                 HabitEntity habitEntity = Database.sHabitDaoImpl.getHabit(habitId);
                 if (habitEntity != null) {
                     // habit name
-                    edHabitName.setText(habitEntity.getHabitName());
+                    editHabitName.setText(habitEntity.getHabitName());
                     // habit target
                     switch (habitEntity.getHabitTarget()) {
                         case TYPE_0:
@@ -229,27 +229,52 @@ public class HabitActivity extends AppCompatActivity {
                             selectMonitorType(chkMonitorCount);
                             break;
                     }
+                    // habit monitor type
+                    switch (habitEntity.getMonitorType()) {
+                        case TYPE_0:
+                            selectMonitorType(chkMonitorCheck);
+                            break;
+                        case TYPE_1:
+                            selectMonitorType(chkMonitorCount);
+                            break;
+                    }
+                    editCheckNumber.setText(habitEntity.getMonitorNumber());
+                    editMonitorUnit.setText(habitEntity.getMonitorUnit());
                     // habit color
                     for (int i=0; i < colorsList.size(); i++) {
                         String code = colorsList.get(i);
                         // TODO: optimize this
                         if (habitEntity.getHabitColor().equals(code)) {
-                            switch (code) {
+                            switch (String.valueOf(i)) {
                                 case TYPE_0:
+                                    setHabitColor(color1);
                                     break;
                                 case TYPE_1:
+                                    setHabitColor(color2);
                                     break;
                                 case TYPE_2:
+                                    setHabitColor(color3);
                                     break;
                                 case TYPE_3:
+                                    setHabitColor(color4);
                                     break;
                                 case TYPE_4:
+                                    setHabitColor(color5);
                                     break;
                                 case TYPE_5:
+                                    setHabitColor(color6);
                                     break;
                                 case TYPE_6:
+                                    setHabitColor(color7);
                                     break;
                                 case TYPE_7:
+                                    setHabitColor(color8);
+                                    break;
+                                case TYPE_8:
+                                    setHabitColor(color9);
+                                    break;
+                                case TYPE_9:
+                                    setHabitColor(color10);
                                     break;
                             }
                         }
@@ -276,14 +301,14 @@ public class HabitActivity extends AppCompatActivity {
             }
         });
         String userId = MySharedPreference.getUserId(this);
-        String habitName = edHabitName.getText().toString();
+        String habitName = editHabitName.getText().toString();
         String monitorNumber = this.editCheckNumber.getText().toString();
         if (!validator.checkEmpty("Tên thói quen", habitName)) {
             return;
         }
         String monitorUnit = null;
         if (this.monitorType == 1) {
-            monitorUnit = this.editCountUnit.getText().toString();
+            monitorUnit = this.editMonitorUnit.getText().toString();
             if (!validator.checkEmpty("Đơn vị", habitName)) {
                 return;
             }
@@ -366,11 +391,13 @@ public class HabitActivity extends AppCompatActivity {
             uncheck(imgTypeCount);
             check(imgTypeCheck);
             editCheckNumber.setEnabled(false);
+            editMonitorUnit.setEnabled(false);
             monitorType = 0;
         } else if (view.getId() == R.id.ll_checkCount) {
             uncheck(imgTypeCheck);
             check(imgTypeCount);
             editCheckNumber.setEnabled(true);
+            editMonitorUnit.setEnabled(true);
             monitorType = 1;
         }
     }
@@ -395,19 +422,19 @@ public class HabitActivity extends AppCompatActivity {
     @OnClick({R.id.ll_start_date, R.id.ll_end_date})
     public void setStartDate(View v) {
         if (v.getId() == R.id.ll_start_date) {
-            if (planDate[0]) {
+            if (startOrEndDate[0]) {
                 uncheck(chkStartDate);
             } else {
                 check(chkStartDate);
             }
-            planDate[0] = !planDate[0];
+            startOrEndDate[0] = !startOrEndDate[0];
         } else if (v.getId() == R.id.ll_end_date) {
-            if (planDate[1]) {
+            if (startOrEndDate[1]) {
                 uncheck(chkEndDate);
             } else {
                 check(chkEndDate);
             }
-            planDate[1] = !planDate[1];
+            startOrEndDate[1] = !startOrEndDate[1];
         }
     }
 
