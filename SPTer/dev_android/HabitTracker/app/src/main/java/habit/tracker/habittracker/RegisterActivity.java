@@ -9,10 +9,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import habit.tracker.habittracker.api.ApiUtils;
+import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.model.user.UserResult;
-import habit.tracker.habittracker.api.service.ApiService;
+import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
 import retrofit2.Call;
@@ -117,7 +117,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void register(User user) {
-        ApiService mService = ApiUtils.getApiService();
+        VnHabitApiService mService = VnHabitApiUtils.getApiService();
         mService.addUser(user).enqueue(new Callback<UserResult>() {
             @Override
             public void onResponse(Call<UserResult> call, Response<UserResult> response) {

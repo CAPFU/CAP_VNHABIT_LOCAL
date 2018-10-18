@@ -1,5 +1,6 @@
 package habit.tracker.habittracker.api.service;
 
+import habit.tracker.habittracker.api.model.group.GroupResponse;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.habit.HabitResponse;
 import habit.tracker.habittracker.api.model.habit.HabitResult;
@@ -13,7 +14,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-public interface ApiService {
+public interface VnHabitApiService {
 
     @GET("user/read_single.php")
     Call<UserResponse> getUser(@Query("username") String username, @Query("password") String password);
@@ -26,4 +27,7 @@ public interface ApiService {
 
     @GET("habit/read_by_user.php")
     Call<HabitResponse> getHabit(@Query("user_id") String userId);
+
+    @GET("group/read.php")
+    Call<GroupResponse> getGroupItems();
 }

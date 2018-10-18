@@ -12,10 +12,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import habit.tracker.habittracker.api.ApiUtils;
+import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.habit.HabitResponse;
-import habit.tracker.habittracker.api.service.ApiService;
+import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
 import retrofit2.Call;
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
 //        data.add(item);
 
         String userId = MySharedPreference.getUserId(this);
-        ApiService mService = ApiUtils.getApiService();
+        VnHabitApiService mService = VnHabitApiUtils.getApiService();
         mService.getHabit(userId).enqueue(new Callback<HabitResponse>() {
             @Override
             public void onResponse(Call<HabitResponse> call, Response<HabitResponse> response) {

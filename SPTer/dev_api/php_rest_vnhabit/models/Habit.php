@@ -75,7 +75,23 @@ include_once '../../models/Model.php';
         }
     
         public function read_join_monitor() {
-            $query = 'SELECT * FROM ' . $this->table . ' h LEFT JOIN monitor_date m ON h.monitor_id = m.monitor_id WHERE h.user_id = :user_id';
+            $query = 'SELECT ' . 
+            'h.habit_id, '.
+            'h.user_id, '.
+            'h.group_id, '. 
+            'h.monitor_id, '.
+            'h.habit_name, '.
+            'h.habit_target, '. 
+            'h.habit_type, '.
+            'h.monitor_type, '. 
+            'h.monitor_unit, '.
+            'h.monitor_number, '.
+            'h.start_date, '.
+            'h.end_date, '.
+            'h.created_date, '. 
+            'h.habit_color, '.
+            'h.habit_description, '.
+            'm.mon, m.tue, m.wed, m.thu, m.fri, m.sat, m.sun FROM habit h LEFT JOIN monitor_date m ON h.monitor_id = m.monitor_id WHERE h.user_id = :user_id';
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(":user_id", $this->user_id);
             $stmt->execute();

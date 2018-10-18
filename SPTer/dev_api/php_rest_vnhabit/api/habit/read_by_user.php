@@ -28,6 +28,7 @@ if ($num > 0) {
     $habits_arr = array();
     while($row = $result->fetch(PDO::FETCH_ASSOC)) {
         extract($row);
+        // var_dump($row);
         $habit_item = array(
             'habit_id' => $habit_id, 
             'user_id' => $user_id, 

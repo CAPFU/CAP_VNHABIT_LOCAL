@@ -30,7 +30,7 @@
         android:background="@drawable/bg_input"
         android:gravity="center"
         android:hint="@string/username"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 
     <EditText
         android:id="@+id/edit_password"
@@ -39,7 +39,7 @@
         android:background="@drawable/bg_input"
         android:gravity="center"
         android:layout_marginTop="10dp"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:hint="@string/password"
         android:inputType="textPassword" />
 
@@ -47,10 +47,10 @@
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:textSize="18sp"
+        android:textSize="15sp"
         android:textAllCaps="false"
         android:background="@drawable/bg_button_blue"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:textColor="#fffd"
         android:text="@string/login"/>
 

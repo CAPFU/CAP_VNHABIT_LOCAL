@@ -6,13 +6,23 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import habit.tracker.habittracker.api.VnHabitApiUtils;
+import habit.tracker.habittracker.api.model.group.Group;
+import habit.tracker.habittracker.api.model.group.GroupResponse;
+import habit.tracker.habittracker.api.service.VnHabitApiService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class GroupActivity extends AppCompatActivity implements GroupRecyclerViewAdapter.ItemClickListener {
-    public static final String GROUP_ITME = "group_itme";
+    public static final String GROUP_ITEM = "group_item";
     RecyclerView rvGroupItem;
     GroupRecyclerViewAdapter recyclerViewAdapter;
     String[] data = new String[]{};
@@ -26,6 +36,22 @@ public class GroupActivity extends AppCompatActivity implements GroupRecyclerVie
         setContentView(R.layout.activity_group);
         ButterKnife.bind(this);
 
+
+        VnHabitApiService mService = VnHabitApiUtils.getApiService();
+        mService.getGroupItems().enqueue(new Callback<GroupResponse>() {
+            @Override
+            public void onResponse(Call<GroupResponse> call, Response<GroupResponse> response) {
+                if (response.body().getResult().equals("1")) {
+                    List<Group> groupList = response.body().getGroupList();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GroupResponse> call, Throwable t) {
+                Toast.makeText(GroupActivity.this, "Not OK!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         rvGroupItem = findViewById(R.id.rv_group);
         rvGroupItem.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewAdapter = new GroupRecyclerViewAdapter(this, data);
@@ -36,7 +62,7 @@ public class GroupActivity extends AppCompatActivity implements GroupRecyclerVie
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = getIntent();
-        intent.putExtra(GROUP_ITME, position);
+        intent.putExtra(GROUP_ITEM, position);
         setResult(RESULT_OK);
         finish();
     }

@@ -10,10 +10,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import habit.tracker.habittracker.api.ApiUtils;
+import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.model.user.UserResponse;
-import habit.tracker.habittracker.api.service.ApiService;
+import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
 import habit.tracker.habittracker.repository.Database;
@@ -88,7 +88,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void login(final String username, final String password) {
-        ApiService mService = ApiUtils.getApiService();
+        VnHabitApiService mService = VnHabitApiUtils.getApiService();
         mService.getUser(username, password).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {

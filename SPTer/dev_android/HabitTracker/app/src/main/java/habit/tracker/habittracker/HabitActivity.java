@@ -214,25 +214,25 @@ public class HabitActivity extends AppCompatActivity {
                             break;
                     }
                     // monitor date
-                    if (habitEntity.getMon().equals(TYPE_1)) {
+                    if (habitEntity.getMon() != null && habitEntity.getMon().equals(TYPE_1)) {
                         setMonitorDate(btnMon);
                     }
-                    if (habitEntity.getTue().equals(TYPE_1)){
+                    if (habitEntity.getTue() != null && habitEntity.getTue().equals(TYPE_1)){
                         setMonitorDate(btnTue);
                     }
-                    if (habitEntity.getWed().equals(TYPE_1)){
+                    if (habitEntity.getWed() != null && habitEntity.getWed().equals(TYPE_1)){
                         setMonitorDate(btnWed);
                     }
-                    if (habitEntity.getThu().equals(TYPE_1)){
+                    if (habitEntity.getThu() != null && habitEntity.getThu().equals(TYPE_1)){
                         setMonitorDate(btnThu);
                     }
-                    if (habitEntity.getFri().equals(TYPE_1)){
+                    if (habitEntity.getFri() != null && habitEntity.getFri().equals(TYPE_1)){
                         setMonitorDate(btnFri);
                     }
-                    if (habitEntity.getSat().equals(TYPE_1)){
+                    if (habitEntity.getSat() != null && habitEntity.getSat().equals(TYPE_1)){
                         setMonitorDate(btnSat);
                     }
-                    if (habitEntity.getSun().equals(TYPE_1)) {
+                    if (habitEntity.getSat() != null && habitEntity.getSun().equals(TYPE_1)) {
                         setMonitorDate(btnSun);
                     }
                     // plan date
@@ -369,7 +369,7 @@ public class HabitActivity extends AppCompatActivity {
         habit.setHabitColor(this.habitColorCode);
         habit.setHabitDescription(this.editDescription.getText().toString());
 
-//        ApiService mService = ApiUtils.getApiService();
+//        ApiService mService = VnHabitApiUtils.getApiService();
 //        mService.addHabit(habit).enqueue(new Callback<HabitResult>() {
 //            @Override
 //            public void onResponse(Call<HabitResult> call, Response<HabitResult> response) {
