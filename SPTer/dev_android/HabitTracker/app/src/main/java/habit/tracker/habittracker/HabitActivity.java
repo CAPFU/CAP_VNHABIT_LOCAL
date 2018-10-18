@@ -161,25 +161,25 @@ public class HabitActivity extends AppCompatActivity {
             colorsList.add(getResources().getString(colorId));
         }
 
+        // init habit type: daily
+        btnHabitType = btnDaily;
+        // init habit color
+        color1.setBackground(getCircleBackground(colorsList.get(0)));
+        color2.setBackground(getCircleBackground(colorsList.get(1)));
+        color3.setBackground(getCircleBackground(colorsList.get(2)));
+        color4.setBackground(getCircleBackground(colorsList.get(3)));
+        color5.setBackground(getCircleBackground(colorsList.get(4)));
+        color6.setBackground(getCircleBackground(colorsList.get(5)));
+        color7.setBackground(getCircleBackground(colorsList.get(6)));
+        color8.setBackground(getCircleBackground(colorsList.get(7)));
+        color9.setBackground(getCircleBackground(colorsList.get(8)));
+        color10.setBackground(getCircleBackground(colorsList.get(9)));
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             // load habit from local data
             initFromSavedHabit();
         } else {
-            // init habit type: daily
-            btnHabitType = btnDaily;
-
-            // init habit color
-            color1.setBackground(getCircleBackground(colorsList.get(0)));
-            color2.setBackground(getCircleBackground(colorsList.get(1)));
-            color3.setBackground(getCircleBackground(colorsList.get(2)));
-            color4.setBackground(getCircleBackground(colorsList.get(3)));
-            color5.setBackground(getCircleBackground(colorsList.get(4)));
-            color6.setBackground(getCircleBackground(colorsList.get(5)));
-            color7.setBackground(getCircleBackground(colorsList.get(6)));
-            color8.setBackground(getCircleBackground(colorsList.get(7)));
-            color9.setBackground(getCircleBackground(colorsList.get(8)));
-            color10.setBackground(getCircleBackground(colorsList.get(9)));
             setHabitColor(color1);
 
             // init monitor date
