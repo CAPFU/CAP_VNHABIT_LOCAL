@@ -18,6 +18,7 @@ import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.group.Group;
 import habit.tracker.habittracker.api.model.group.GroupResponse;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
+import habit.tracker.habittracker.repository.Database;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,6 +47,12 @@ public class GroupActivity extends AppCompatActivity implements GroupRecyclerVie
             public void onResponse(Call<GroupResponse> call, Response<GroupResponse> response) {
                 if (response.body().getResult().equals("1")) {
                     data.addAll(response.body().getGroupList());
+                    Database db = new Database(GroupActivity.this);
+                    db.open();
+                    for (Group g : data) {
+                        Database.sGroupDaoImpl.save(g);
+                    }
+                    db.close();
                     rvGroupItem = findViewById(R.id.rv_group);
                     rvGroupItem.setLayoutManager(new LinearLayoutManager(GroupActivity.this));
                     recyclerViewAdapter = new GroupRecyclerViewAdapter(GroupActivity.this, data);

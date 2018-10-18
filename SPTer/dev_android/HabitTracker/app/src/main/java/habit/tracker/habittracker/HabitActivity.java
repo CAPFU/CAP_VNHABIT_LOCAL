@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,9 +26,11 @@ import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
 import habit.tracker.habittracker.repository.Database;
+import habit.tracker.habittracker.repository.group.GroupEntity;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
 
 public class HabitActivity extends AppCompatActivity {
+    public static final int SELECT_GROUP = 1;
     public static final String TYPE_0 = "0";
     public static final String TYPE_1 = "1";
     public static final String TYPE_2 = "2";
@@ -77,6 +80,9 @@ public class HabitActivity extends AppCompatActivity {
 
     @BindView(R.id.ll_group)
     View selGroup;
+    @BindView(R.id.tv_groupName)
+    TextView tvGroupName;
+    String groupId;
 
     @BindView(R.id.btnMon)
     TextView btnMon;
@@ -149,6 +155,16 @@ public class HabitActivity extends AppCompatActivity {
 
     @BindView(R.id.edit_description)
     EditText editDescription;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_GROUP) {
+                groupId = data.getStringExtra(GroupActivity.GROUP_ID);
+                tvGroupName.setText(data.getStringExtra(GroupActivity.GROUP_NAME));
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -275,6 +291,11 @@ public class HabitActivity extends AppCompatActivity {
                         case TYPE_1:
                             selectMonitorType(chkMonitorCount);
                             break;
+                    }
+                    // habit group
+                    if (habitEntity.getGroupId() != null) {
+                        GroupEntity groupEntity = Database.sGroupDaoImpl.getGroup(habitEntity.getGroupId());
+                        tvGroupName.setText(groupEntity.getGroupName());
                     }
                     editCheckNumber.setText(habitEntity.getMonitorNumber());
                     editMonitorUnit.setText(habitEntity.getMonitorUnit());
@@ -443,7 +464,7 @@ public class HabitActivity extends AppCompatActivity {
     @OnClick(R.id.ll_group)
     public void selectGroup(View view) {
         Intent intent = new Intent(this, GroupActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, SELECT_GROUP);
     }
 
     @OnClick({R.id.btnMon, R.id.btnTue, R.id.btnWed, R.id.btnThu, R.id.btnFri, R.id.btnSat, R.id.btnSun})

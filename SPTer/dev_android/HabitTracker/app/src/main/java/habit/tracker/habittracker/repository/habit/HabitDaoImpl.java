@@ -12,7 +12,6 @@ import habit.tracker.habittracker.repository.DatabaseHelper;
  * Created by DatTVT1 on 10/16/2018
  */
 public class HabitDaoImpl extends DatabaseHelper implements HabitDao, HabitSchema {
-
     private Cursor cursor;
     private ContentValues initialValues;
 
@@ -22,7 +21,7 @@ public class HabitDaoImpl extends DatabaseHelper implements HabitDao, HabitSchem
 
     @Override
     public HabitEntity getHabit(String habitId) {
-        final String selectionArgs[] = {String.valueOf(habitId)};
+        final String selectionArgs[] = {habitId};
         final String selection = HABIT_ID + " = ?";
         HabitEntity habitEntity = new HabitEntity();
         cursor = super.query(HABIT_TABLE, HABIT_COLUMNS, selection, selectionArgs, HABIT_ID);
@@ -32,7 +31,8 @@ public class HabitDaoImpl extends DatabaseHelper implements HabitDao, HabitSchem
                 habitEntity = cursorToEntity(cursor);
                 cursor.moveToNext();
             }
-            cursor.close();return habitEntity;
+            cursor.close();
+            return habitEntity;
         }
         return null;
     }

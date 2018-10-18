@@ -10,7 +10,7 @@
     android:focusableInTouchMode="true"
     android:paddingStart="40dp"
     android:paddingEnd="105dp"
-    android:background="@drawable/app_bg"
+    android:background="@drawable/bg_main"
     tools:context=".LoginActivity">
 
     <ImageView

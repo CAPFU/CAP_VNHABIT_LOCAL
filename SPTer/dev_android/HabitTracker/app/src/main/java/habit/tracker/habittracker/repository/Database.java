@@ -5,6 +5,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import habit.tracker.habittracker.repository.group.GroupDaoImpl;
+import habit.tracker.habittracker.repository.group.GroupSchema;
 import habit.tracker.habittracker.repository.habit.HabitDaoImpl;
 import habit.tracker.habittracker.repository.habit.HabitSchema;
 import habit.tracker.habittracker.repository.user.UserDaoImpl;
@@ -22,6 +24,7 @@ public class Database {
 
     public static UserDaoImpl sUserDaoImpl;
     public static HabitDaoImpl sHabitDaoImpl;
+    public static GroupDaoImpl sGroupDaoImpl;
 
     public Database(Context context) {
         this.mContext = context;
@@ -38,9 +41,9 @@ public class Database {
     public Database open() throws SQLException {
         dbHelper = new DatabaseHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-
         sUserDaoImpl = new UserDaoImpl(db);
         sHabitDaoImpl = new HabitDaoImpl(db);
+        sGroupDaoImpl = new GroupDaoImpl(db);
         return this;
     }
 
@@ -48,7 +51,7 @@ public class Database {
         dbHelper.close();
     }
 
-    public static class DatabaseHelper extends SQLiteOpenHelper implements UserSchema, HabitSchema {
+    public static class DatabaseHelper extends SQLiteOpenHelper implements UserSchema, HabitSchema, GroupSchema {
 
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -58,12 +61,14 @@ public class Database {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(CREATE_USER_TABLE);
             db.execSQL(CREATE_HABIT_TABLE);
+            db.execSQL(CREATE_GROUP_TABLE);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int i, int i1) {
             db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
             db.execSQL("DROP TABLE IF EXISTS " + HABIT_TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + GROUP_TABLE);
             onCreate(db);
         }
     }
