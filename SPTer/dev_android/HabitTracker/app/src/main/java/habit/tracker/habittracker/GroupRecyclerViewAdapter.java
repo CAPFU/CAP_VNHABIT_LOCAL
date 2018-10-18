@@ -8,13 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
+import habit.tracker.habittracker.api.model.group.Group;
+
 public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecyclerViewAdapter.GroupViewHolder> {
     private Context context;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-    String[] data;
+    List<Group> data;
 
-    public GroupRecyclerViewAdapter(Context context, String[] data) {
+    public GroupRecyclerViewAdapter(Context context, List<Group> data) {
         this.context = context;
         this.data = data;
         mInflater = LayoutInflater.from(context);
@@ -29,12 +33,12 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
 
     @Override
     public void onBindViewHolder(@NonNull GroupViewHolder holder, int position) {
-        holder.tvName.setText(data[position]);
+        holder.tvName.setText(data.get(position).getGroupName());
     }
 
     @Override
     public int getItemCount() {
-        return data.length;
+        return data.size();
     }
 
     public class GroupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

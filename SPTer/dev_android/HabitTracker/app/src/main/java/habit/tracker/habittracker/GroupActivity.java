@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -22,10 +23,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class GroupActivity extends AppCompatActivity implements GroupRecyclerViewAdapter.ItemClickListener {
-    public static final String GROUP_ITEM = "group_item";
+    public static final String GROUP_NAME = "group_name";
+    public static final String GROUP_ID = "group_id";
+
     RecyclerView rvGroupItem;
     GroupRecyclerViewAdapter recyclerViewAdapter;
-    String[] data = new String[]{};
+    List<Group> data = new ArrayList<>();
 
     @BindView(R.id.btn_back)
     View btnBack;
@@ -62,7 +65,8 @@ public class GroupActivity extends AppCompatActivity implements GroupRecyclerVie
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = getIntent();
-        intent.putExtra(GROUP_ITEM, position);
+        intent.putExtra(GROUP_ID, data.get(position).getGroupId());
+        intent.putExtra(GROUP_NAME, data.get(position).getGroupName());
         setResult(RESULT_OK);
         finish();
     }
