@@ -1,5 +1,6 @@
 package habit.tracker.habittracker;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -11,12 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -29,7 +32,7 @@ import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.group.GroupEntity;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
 
-public class HabitActivity extends AppCompatActivity {
+public class HabitActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     public static final int SELECT_GROUP = 1;
     public static final String TYPE_0 = "0";
     public static final String TYPE_1 = "1";
@@ -149,6 +152,13 @@ public class HabitActivity extends AppCompatActivity {
     @BindView(R.id.edit_endDate)
     TextView tvEndDate;
     boolean[] startOrEndDate = new boolean[2];
+    boolean isSetStartDate = false;
+    int startYear;
+    int startMonth;
+    int startDay;
+    int endYear;
+    int endMonth;
+    int endDay;
 
     @BindView(R.id.btn_save)
     Button btnSave;
@@ -190,12 +200,21 @@ public class HabitActivity extends AppCompatActivity {
         color8.setBackground(getCircleBackground(colorsList.get(7)));
         color9.setBackground(getCircleBackground(colorsList.get(8)));
         color10.setBackground(getCircleBackground(colorsList.get(9)));
+        // plan date
+        Calendar calendar = Calendar.getInstance();
+        startYear = calendar.get(Calendar.YEAR);
+        startMonth = calendar.get(Calendar.MONTH);
+        startDay = calendar.get(Calendar.DATE);
+        endYear = calendar.get(Calendar.YEAR);
+        endMonth = calendar.get(Calendar.MONTH);
+        endDay = calendar.get(Calendar.DATE);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             // load habit from local data
             initFromSavedHabit();
         } else {
+            // habit color
             setHabitColor(color1);
 
             // init monitor date
@@ -206,6 +225,12 @@ public class HabitActivity extends AppCompatActivity {
             setMonitorDate(btnFri);
             setMonitorDate(btnSat);
             setMonitorDate(btnSun);
+
+            // set plan date
+            StringBuilder date = new StringBuilder(String.valueOf(startDay));
+            date.append("/").append(startMonth + 1).append("/").append(startYear);
+            tvStartDate.setText(date);
+            tvEndDate.setText(date);
         }
     }
 
@@ -458,6 +483,39 @@ public class HabitActivity extends AppCompatActivity {
             editCheckNumber.setEnabled(true);
             editMonitorUnit.setEnabled(true);
             monitorType = 1;
+        }
+    }
+    @OnClick({R.id.edit_startDate, R.id.edit_endDate})
+    public void setPlanDate(View v) {
+        Calendar calendar = Calendar.getInstance();
+        if (v.getId() == R.id.edit_startDate) {
+            DatePickerDialog dialog = new DatePickerDialog(this, this, startYear, startMonth, startDay);
+            isSetStartDate = true;
+            dialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            dialog.show();
+        } else {
+            DatePickerDialog dialog = new DatePickerDialog(this, this, endYear, endMonth, endDay);
+            isSetStartDate = false;
+            calendar.set(startYear, startMonth, startDay);
+            dialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+            dialog.show();
+        }
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        if (isSetStartDate) {
+            startYear = year;
+            startMonth = month;
+            startDay = day;
+            String date = new StringBuilder(String.valueOf(startDay)).append("/").append(startMonth + 1).append("/").append(startYear).toString();
+            tvStartDate.setText(date);
+        } else {
+            endYear = year;
+            endMonth = month;
+            endDay = day;
+            String date = new StringBuilder(String.valueOf(endDay)).append("/").append(endMonth + 1).append("/").append(endYear).toString();
+            tvEndDate.setText(date);
         }
     }
 
