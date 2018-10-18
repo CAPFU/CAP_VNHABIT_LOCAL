@@ -6,12 +6,12 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
 import habit.tracker.habittracker.api.model.habit.Habit;
-import habit.tracker.habittracker.repository.DatabaseContentProvider;
+import habit.tracker.habittracker.repository.DatabaseHelper;
 
 /**
  * Created by DatTVT1 on 10/16/2018
  */
-public class HabitDaoImpl extends DatabaseContentProvider implements HabitDao, HabitSchema {
+public class HabitDaoImpl extends DatabaseHelper implements HabitDao, HabitSchema {
 
     private Cursor cursor;
     private ContentValues initialValues;
@@ -58,7 +58,7 @@ public class HabitDaoImpl extends DatabaseContentProvider implements HabitDao, H
     }
 
     @Override
-    public int delete() {
+    public int delete(String id) {
         return 0;
     }
 

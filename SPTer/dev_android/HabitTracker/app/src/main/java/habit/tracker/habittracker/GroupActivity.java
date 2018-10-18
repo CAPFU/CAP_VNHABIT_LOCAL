@@ -45,7 +45,12 @@ public class GroupActivity extends AppCompatActivity implements GroupRecyclerVie
             @Override
             public void onResponse(Call<GroupResponse> call, Response<GroupResponse> response) {
                 if (response.body().getResult().equals("1")) {
-                    List<Group> groupList = response.body().getGroupList();
+                    data.addAll(response.body().getGroupList());
+                    rvGroupItem = findViewById(R.id.rv_group);
+                    rvGroupItem.setLayoutManager(new LinearLayoutManager(GroupActivity.this));
+                    recyclerViewAdapter = new GroupRecyclerViewAdapter(GroupActivity.this, data);
+                    recyclerViewAdapter.setClickListener(GroupActivity.this);
+                    rvGroupItem.setAdapter(recyclerViewAdapter);
                 }
             }
 
@@ -54,12 +59,6 @@ public class GroupActivity extends AppCompatActivity implements GroupRecyclerVie
                 Toast.makeText(GroupActivity.this, "Not OK!", Toast.LENGTH_SHORT).show();
             }
         });
-
-        rvGroupItem = findViewById(R.id.rv_group);
-        rvGroupItem.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewAdapter = new GroupRecyclerViewAdapter(this, data);
-        recyclerViewAdapter.setClickListener(this);
-        rvGroupItem.setAdapter(recyclerViewAdapter);
     }
 
     @Override

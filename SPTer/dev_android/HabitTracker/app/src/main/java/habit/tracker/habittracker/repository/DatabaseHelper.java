@@ -7,9 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 /**
  * Created by DatTVT1 on 10/15/2018
  */
-public abstract class DatabaseContentProvider {
+public abstract class DatabaseHelper {
     public SQLiteDatabase mDb;
 
+    public DatabaseHelper(SQLiteDatabase db) {
+        this.mDb = db;
+    }
 
     public long insert(String tableName, ContentValues values) {
         return mDb.insert(tableName, null, values);
@@ -19,18 +22,12 @@ public abstract class DatabaseContentProvider {
         return mDb.replace(tableName, null, values);
     }
 
-    public abstract int delete();
+    public abstract int delete(String id);
 
     protected abstract <T> T cursorToEntity(Cursor cursor);
 
-    public DatabaseContentProvider(SQLiteDatabase db) {
-        this.mDb = db;
-    }
-
     public Cursor query(String tableName, String[] columns, String selection, String[] selectionArgs, String sortOrder) {
-
         final Cursor cursor = mDb.query(tableName, columns, selection, selectionArgs, null, null, sortOrder);
-
         return cursor;
     }
 

@@ -12,7 +12,7 @@ public class Group {
     private String groupName;
     @SerializedName("parrent_id")
     @Expose
-    private String parrentId;
+    private String parentId;
     @SerializedName("group_icon")
     @Expose
     private String groupIcon;
@@ -28,8 +28,8 @@ public class Group {
         return groupName;
     }
 
-    public String getParrentId() {
-        return parrentId;
+    public String getParentId() {
+        return parentId;
     }
 
     public String getGroupIcon() {
@@ -48,8 +48,8 @@ public class Group {
         this.groupName = groupName;
     }
 
-    public void setParrentId(String parrentId) {
-        this.parrentId = parrentId;
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public void setGroupIcon(String groupIcon) {

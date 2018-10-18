@@ -5,9 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
-import habit.tracker.habittracker.repository.DatabaseContentProvider;
+import habit.tracker.habittracker.repository.DatabaseHelper;
 
-public class UserDaoImpl extends DatabaseContentProvider implements UserDao, UserSchema {
+public class UserDaoImpl extends DatabaseHelper implements UserDao, UserSchema {
 
     private Cursor cursor;
     private ContentValues initialValues;
@@ -17,7 +17,7 @@ public class UserDaoImpl extends DatabaseContentProvider implements UserDao, Use
     }
 
     @Override
-    public int delete() {
+    public int delete(String id) {
         return mDb.delete(USER_TABLE, null, null);
     }
 
