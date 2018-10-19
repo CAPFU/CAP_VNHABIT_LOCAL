@@ -35,4 +35,19 @@ public class MySharedPreference {
         }
         return null;
     }
+
+    public static void save(Context context, String key, String tail, String val) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(MY_PREFS, MODE_PRIVATE).edit();
+        editor.putString(key + tail, val);
+        editor.apply();
+    }
+
+    public static String get(Context context, String key, String tail) {
+        SharedPreferences prefs = context.getSharedPreferences(MY_PREFS, MODE_PRIVATE);
+        String val = prefs.getString(key + tail, null);
+        if (!TextUtils.isEmpty(val)) {
+            return val;
+        }
+        return null;
+    }
 }

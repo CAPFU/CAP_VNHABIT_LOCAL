@@ -145,11 +145,13 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 int num = Integer.parseInt(tvCount.getText().toString());
                 num = num + 1;
                 tvCount.setText(num + "");
+                mClickListener.onAdjustcount(view, TYPE_COUNT, getAdapterPosition(), num);
             } else if (view.getId() == R.id.btn_minus) {
 //                Toast.makeText(context, "btn_minus", Toast.LENGTH_SHORT).show();
                 int num = Integer.parseInt(tvCount.getText().toString());
                 num = num > 0? num - 1: 0;
                 tvCount.setText(num + "");
+                mClickListener.onAdjustcount(view, TYPE_COUNT, getAdapterPosition(), num);
             } else if (mClickListener != null) {
                 mClickListener.onItemClick(view, TYPE_COUNT, getAdapterPosition());
             }
@@ -181,9 +183,11 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 if (isCheck) {
                     isCheck = false;
                     imgCheck.setImageResource(R.drawable.ck_unchecked);
+                    mClickListener.onAdjustcount(view, TYPE_CHECK, getAdapterPosition(), 0);
                 } else {
                     isCheck = true;
                     imgCheck.setImageResource(R.drawable.ck_checked);
+                    mClickListener.onAdjustcount(view, TYPE_CHECK, getAdapterPosition(), 1);
                 }
             } else if (mClickListener != null) {
                 mClickListener.onItemClick(view, TYPE_CHECK, getAdapterPosition());
@@ -211,6 +215,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public interface ItemClickListener {
+        void onAdjustcount(View view, int type, int position, int count);
         void onItemClick(View view, int type, int position);
     }
 }

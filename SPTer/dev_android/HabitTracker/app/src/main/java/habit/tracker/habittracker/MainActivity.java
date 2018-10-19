@@ -23,6 +23,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static habit.tracker.habittracker.MenuRecyclerViewAdapter.TYPE_ADD;
+import static habit.tracker.habittracker.MenuRecyclerViewAdapter.TYPE_CHECK;
+import static habit.tracker.habittracker.MenuRecyclerViewAdapter.TYPE_COUNT;
 
 public class MainActivity extends AppCompatActivity implements MenuRecyclerViewAdapter.ItemClickListener {
     public static final int CREATE_NEW_HABIT = 0;
@@ -51,6 +53,19 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
 //        data.add(item);
 
         initScreen();
+    }
+
+    @Override
+    public void onAdjustcount(View view, int type, int position, int count) {
+        data.get(position).setCount(String.valueOf(count));
+
+        MySharedPreference.save(this, data.get(position).getId(), "hb", String.valueOf(count));
+
+        if (TYPE_COUNT == type) {
+
+        } else if (TYPE_CHECK == type) {
+
+        }
     }
 
     @Override
@@ -85,6 +100,12 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
                     List<Habit> res = response.body().getHabit();
                     List<HabitEntity> entities = new ArrayList<>();
                     for (Habit habit : res) {
+
+                        String count = "0";
+                        if (MySharedPreference.get(MainActivity.this, habit.getHabitId(), "hb") != null) {
+                            count = MySharedPreference.get(MainActivity.this, habit.getHabitId(), "hb");
+                        }
+
                         MenuItem item = new MenuItem(
                                 habit.getHabitId(),
                                 habit.getHabitName(),
@@ -92,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
                                 habit.getMonitorNumber(),
                                 Integer.parseInt(habit.getMonitorType()),
                                 habit.getMonitorNumber(),
-                                "0",
+                                count,
                                 habit.getMonitorUnit(),
                                 habit.getHabitColor());
                         data.add(item);
@@ -121,5 +142,11 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
     public void showEmpty(View v) {
         Intent itent = new Intent(this, EmptyActivity.class);
         startActivity(itent);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
     }
 }
