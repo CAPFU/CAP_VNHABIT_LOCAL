@@ -73,7 +73,7 @@ public class GroupActivity extends AppCompatActivity implements GroupRecyclerVie
         Intent intent = getIntent();
         intent.putExtra(GROUP_ID, data.get(position).getGroupId());
         intent.putExtra(GROUP_NAME, data.get(position).getGroupName());
-        setResult(RESULT_OK);
+        setResult(RESULT_OK, intent);
         finish();
     }
 

@@ -46,6 +46,7 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
         public GroupViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tv_itemName);
+            itemView.setOnClickListener(this);
         }
 
         @Override

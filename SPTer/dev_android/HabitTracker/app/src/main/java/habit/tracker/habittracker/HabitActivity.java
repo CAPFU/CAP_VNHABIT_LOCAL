@@ -25,12 +25,18 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
+import habit.tracker.habittracker.api.model.habit.HabitResult;
+import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.group.GroupEntity;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HabitActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     public static final int SELECT_GROUP = 1;
@@ -400,36 +406,49 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         if (!validator.checkNumber(monitorNumber, 1)) {
             Toast.makeText(HabitActivity.this, "Số lần phải lớn hon 0", Toast.LENGTH_SHORT).show();
         }
-        Habit habit = new Habit();
+        final Habit habit = new Habit();
         habit.setUserId(userId);
-        habit.setGroupId(null);
+        habit.setGroupId(this.groupId);
         habit.setHabitName(habitName);
         habit.setHabitTarget(String.valueOf(this.habitTarget));
         habit.setHabitType(String.valueOf(this.habitType));
         habit.setMonitorType(String.valueOf(this.monitorType));
         habit.setMonitorUnit(monitorUnit);
         habit.setMonitorNumber(monitorNumber);
-        habit.setStartDate(null);
-        habit.setEndDate(null);
-        habit.setCreatedDate(null);
+        habit.setStartDate(startYear + "-" + startMonth + "-" + startDay);
+        habit.setEndDate(endYear + "-" + endMonth + "-" + endDay);
+        Calendar ca = Calendar.getInstance();
+        habit.setCreatedDate(ca.get(1) + "-" + ca.get(2) + "-" + ca.get(5));
         habit.setHabitColor(this.habitColorCode);
         habit.setHabitDescription(this.editDescription.getText().toString());
+        habit.setMon(String.valueOf(monitorDate[0]));
+        habit.setTue(String.valueOf(monitorDate[1]));
+        habit.setWed(String.valueOf(monitorDate[2]));
+        habit.setThu(String.valueOf(monitorDate[3]));
+        habit.setFri(String.valueOf(monitorDate[4]));
+        habit.setSat(String.valueOf(monitorDate[5]));
+        habit.setSun(String.valueOf(monitorDate[6]));
 
-//        ApiService mService = VnHabitApiUtils.getApiService();
-//        mService.addHabit(habit).enqueue(new Callback<HabitResult>() {
-//            @Override
-//            public void onResponse(Call<HabitResult> call, Response<HabitResult> response) {
-//                if (response.body().getResult().equals("1")) {
-//                    Toast.makeText(HabitActivity.this, "Tạo thói quen thành công", Toast.LENGTH_LONG).show();
-//                    finish();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<HabitResult> call, Throwable t) {
-//                Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
-//            }
-//        });
+        VnHabitApiService mService = VnHabitApiUtils.getApiService();
+        mService.addHabit(habit).enqueue(new Callback<HabitResult>() {
+            @Override
+            public void onResponse(Call<HabitResult> call, Response<HabitResult> response) {
+                if (response.body().getResult().equals("1")) {
+//                    Database db = new Database(HabitActivity.this);
+//                    db.open();
+//                    Database.sHabitDaoImpl.saveHabit(Database.sHabitDaoImpl.convert(habit));
+                    Toast.makeText(HabitActivity.this, "Tạo thói quen thành công", Toast.LENGTH_LONG).show();
+//                    db.close();
+                    HabitActivity.this.setResult(HabitActivity.RESULT_OK);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HabitResult> call, Throwable t) {
+                Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @OnClick({R.id.btn_TargetBuild, R.id.btn_TargetQuit})

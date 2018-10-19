@@ -50,6 +50,30 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
 //        item = new MenuItem("ghi chép chi tiêu", "hãy ghi chép chi tiêu cá nhân", "hôm nay", TYPE_CHECK, "1", "0", "", R.color.color6);
 //        data.add(item);
 
+        initScreen();
+    }
+
+    @Override
+    public void onItemClick(View view, int type, int position) {
+        if (TYPE_ADD == type) {
+            Intent intent = new Intent(this, HabitActivity.class);
+            startActivityForResult(intent, CREATE_NEW_HABIT);
+        } else {
+            Intent intent = new Intent(this, HabitActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == CREATE_NEW_HABIT) {
+            if (resultCode == RESULT_OK) {
+                initScreen();
+            }
+        }
+    }
+
+    private void initScreen() {
         String userId = MySharedPreference.getUserId(this);
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
         mService.getHabit(userId).enqueue(new Callback<HabitResponse>() {
@@ -94,24 +118,8 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
         });
     }
 
-    @Override
-    public void onItemClick(View view, int type, int position) {
-        if (TYPE_ADD == type) {
-            Intent intent = new Intent(this, HabitActivity.class);
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent(this, HabitActivity.class);
-            intent.putExtra(HABIT_ID, data.get(position).getId());
-            startActivityForResult(intent, CREATE_NEW_HABIT);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == CREATE_NEW_HABIT) {
-            if (resultCode == RESULT_OK) {
-
-            }
-        }
+    public void showEmpty(View v) {
+        Intent itent = new Intent(this, EmptyActivity.class);
+        startActivity(itent);
     }
 }

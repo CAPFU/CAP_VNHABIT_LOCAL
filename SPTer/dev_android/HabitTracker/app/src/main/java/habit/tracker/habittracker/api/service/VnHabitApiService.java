@@ -15,7 +15,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface VnHabitApiService {
-
     @GET("user/read_single.php")
     Call<UserResponse> getUser(@Query("username") String username, @Query("password") String password);
 
