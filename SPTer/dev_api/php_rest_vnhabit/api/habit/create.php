@@ -20,14 +20,17 @@ $habit = new Habit($db);
 $data = json_decode(file_get_contents("php://input"));
 
 $habit->user_id = $data->user_id; 
-$habit->catagory_id = $data->catagory_id;
+$habit->group_id = $data->group_id;
+$habit->monitor_id = $data->monitor_id;
 $habit->habit_name = $data->habit_name;
+$habit->habit_target = $data->habit_target;
 $habit->habit_type = $data->habit_type;
-$habit->unit = $data->unit;
-$habit->count_type = $data->count_type;
+$habit->monitor_type = $data->monitor_type;
+$habit->monitor_unit = $data->monitor_unit;
+$habit->monitor_number = $data->monitor_number; 
 $habit->start_date = $data->start_date;
 $habit->end_date = $data->end_date;
-$habit->created_date = $data->created_date; 
+$habit->created_date = $data->created_date;
 $habit->habit_color = $data->habit_color;
 $habit->habit_description = $data->habit_description;
 
