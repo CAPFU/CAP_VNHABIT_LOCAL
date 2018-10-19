@@ -140,4 +140,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         startActivity(intent);
         finish();
     }
+
+    public void showEmpty(View v) {
+        Intent i = new Intent(this, EmptyActivity.class);
+        startActivity(i);
+    }
 }

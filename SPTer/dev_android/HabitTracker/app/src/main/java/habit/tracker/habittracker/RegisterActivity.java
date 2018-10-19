@@ -1,5 +1,6 @@
 package habit.tracker.habittracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -134,5 +135,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 Toast.makeText(RegisterActivity.this, "Đăng ký không thành công", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void showEmpty(View v) {
+        Intent i = new Intent(this, EmptyActivity.class);
+        startActivity(i);
     }
 }

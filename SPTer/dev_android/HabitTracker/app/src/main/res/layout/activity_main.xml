@@ -16,6 +16,7 @@
         android:background="@drawable/border_bottom">
 
         <ImageView
+            android:onClick="showEmpty"
             app:srcCompat="@drawable/ic_setting"
             android:layout_weight="1"
             android:layout_width="0dp"
@@ -32,6 +33,7 @@
             android:textSize="20sp" />
 
         <ImageView
+            android:onClick="showEmpty"
             app:srcCompat="@drawable/ic_fillter"
             android:layout_weight="1"
             android:layout_width="0dp"

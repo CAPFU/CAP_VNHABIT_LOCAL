@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
             startActivityForResult(intent, CREATE_NEW_HABIT);
         } else {
             Intent intent = new Intent(this, HabitActivity.class);
+            intent.putExtra(HABIT_ID, data.get(position).getId());
             startActivity(intent);
         }
     }
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
                     db.open();
                     List<Habit> res = response.body().getHabit();
                     List<HabitEntity> entities = new ArrayList<>();
+                    data.clear();
                     for (Habit habit : res) {
 
                         String count = "0";
@@ -129,6 +131,12 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
                         Database.sHabitDaoImpl.saveHabit(entity);
                     }
                     db.close();
+                } else {
+                    RecyclerView recyclerView = findViewById(R.id.rvMenu);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                    adapter = new MenuRecyclerViewAdapter(MainActivity.this, data);
+                    adapter.setClickListener(MainActivity.this);
+                    recyclerView.setAdapter(adapter);
                 }
             }
 
