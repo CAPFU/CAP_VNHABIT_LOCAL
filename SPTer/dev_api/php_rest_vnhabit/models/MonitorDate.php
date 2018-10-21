@@ -21,8 +21,8 @@ class MonitorDate extends Model {
 
     public function __construct($db) {
         $this->conn = $db;
-        $this->cols = $this->get_read_param(array('conn', 'table', 'cols', 'params'), 'd');
-        $this->params = $this->get_query_param(array('conn', 'table', 'cols', 'params', 'monitor_id'));
+        $this->cols = $this->get_read_param(NULL, 'd');
+        $this->params = $this->get_query_param(NULL);
     }
 
     // GET
@@ -38,13 +38,13 @@ class MonitorDate extends Model {
     // Create User
     public function create() {
         // create query
-        $query = 'INSERT INTO ' . $this->table . ' SET ' . $this->params;
+        $query = 'INSERT INTO monitor_date SET ' . $this->get_query_param(array('monitor_id'));
         
         // Prepare statement
         $stmt = $this->conn->prepare($query);
 
         // Bind data
-        $stmt = $this->bind_param_exc($stmt, array('conn', 'table', 'cols', 'params', 'monitor_id'));
+        $stmt = $this->bind_param_exc($stmt, array('monitor_id'));
 
         // Execute query
         if ($stmt->execute()) {
@@ -57,21 +57,18 @@ class MonitorDate extends Model {
 
     public function update() {
         // create query
-        $query = 'UPDATE ' . $this->table . ' SET ' . $this->params . ' WHERE monitor_id = :monitor_id';
+        $query = 'UPDATE ' . $this->table . ' SET ' . $this->get_query_param(array('monitor_id')) . ' WHERE monitor_id = :monitor_id';
 
         // Prepare statement
         $stmt = $this->conn->prepare($query);
 
         // Bind data
-        $stmt = $this->bind_param_exc($stmt, array('conn', 'table', 'cols', 'params'));
+        $stmt = $this->bind_param_exc($stmt, NULL);
 
         // Execute query
         if ($stmt->execute()) {
-            $this->monitor_id = $this->conn->lastInsertId();
             return true;
         }
-
-        // Print error if something goes wrong
         printf("Error: %s.\n", $stmt->error);
         return false;
     }

@@ -23,8 +23,8 @@ include_once '../../models/Model.php';
 
         public function __construct($db) {
             $this->conn = $db;
-            $this->cols = $this->get_read_param(array('conn', 'table', 'cols', 'params'), NULL);
-            $this->params = $this->get_query_param(array('conn', 'table', 'cols', 'params', 'user_id'));
+            $this->cols = $this->get_read_param(NULL, NULL);
+            $this->params = $this->get_query_param(array('user_id'));
         }
 
         // Get all User
@@ -87,11 +87,11 @@ include_once '../../models/Model.php';
         // Create User
         public function create() {
             // create query
-            $query = 'INSERT INTO ' . $this->table . ' SET ' . $this->params;
+            $query = 'INSERT INTO ' . $this->table . ' SET ' . $this->get_query_param(array('user_id'));
             // Prepare statement
             $stmt = $this->conn->prepare($query);
             // Bind data
-            $stmt = $this->bind_param_exc($stmt, array('conn', 'table', 'cols', 'params', 'user_id'));
+            $stmt = $this->bind_param_exc($stmt, array('user_id'));
             // Execute query
             if ($stmt->execute()) {
                 return true;
@@ -103,10 +103,10 @@ include_once '../../models/Model.php';
         // Update user
         public function update() {
             // create query
-            $query = 'UPDATE ' . $this->table . ' SET ' . $this->params . ' WHERE user_id = :user_id';
+            $query = 'UPDATE ' . $this->table . ' SET ' . $this->get_query_param(array('user_id')) . ' WHERE user_id = :user_id';
             // Prepare statement
             $stmt = $this->conn->prepare($query);
-            $stmt = $this->bind_param_exc($stmt, array('conn', 'table', 'cols', 'params'));
+            $stmt = $this->bind_param_exc($stmt, NULL);
             // Execute query
             if ($stmt->execute()) {
                 return true;

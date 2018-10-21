@@ -620,16 +620,16 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     public void setStartEndDate(View v) {
         if (v.getId() == R.id.ll_start_date) {
             if (startOrEndDate[0]) {
-                uncheck(chkStartDate);
+                uncheckBox(chkStartDate);
             } else {
-                check(chkStartDate);
+                checkBox(chkStartDate);
             }
             startOrEndDate[0] = !startOrEndDate[0];
         } else if (v.getId() == R.id.ll_end_date) {
             if (startOrEndDate[1]) {
-                uncheck(chkEndDate);
+                uncheckBox(chkEndDate);
             } else {
-                check(chkEndDate);
+                checkBox(chkEndDate);
             }
             startOrEndDate[1] = !startOrEndDate[1];
         }
@@ -667,10 +667,20 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     }
 
     public void check(ImageView img) {
-        img.setImageResource(R.drawable.ck_checked);
+//        img.setImageResource(R.drawable.ck_checked);
+        img.setImageResource(R.drawable.radio_check);
     }
 
     public void uncheck(ImageView img) {
+//        img.setImageResource(R.drawable.ck_unchecked);
+        img.setImageResource(R.drawable.radio_uncheck);
+    }
+
+    public void checkBox(ImageView img) {
+        img.setImageResource(R.drawable.ck_checked);
+    }
+
+    public void uncheckBox(ImageView img) {
         img.setImageResource(R.drawable.ck_unchecked);
     }
 

@@ -237,7 +237,7 @@
                         android:id="@+id/img_checkDone"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ck_checked"/>
+                        android:src="@drawable/radio_check"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -260,7 +260,7 @@
                         android:id="@+id/img_checkCount"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ck_unchecked"/>
+                        android:src="@drawable/radio_uncheck"/>
                     <EditText
                         android:id="@+id/edit_checkNumber"
                         android:layout_width="50dp"

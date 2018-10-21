@@ -18,7 +18,7 @@ $date = new MonitorDate($db);
 
 // Get raw posted data
 $data = json_decode(file_get_contents("php://input"));
-
+$date->monitor_id = $data->monitor_id;
 $date->habit_id = $data->habit_id;
 $date->mon = $data->mon;
 $date->tue = $data->tue;

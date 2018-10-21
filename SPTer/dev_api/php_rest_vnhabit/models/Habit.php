@@ -29,8 +29,8 @@ include_once '../../models/MonitorDate.php';
 
         public function __construct($db) {
             $this->conn = $db;
-            $this->cols = $this->get_read_param(array('conn', 'table', 'cols', 'params'), 'h');
-            $this->params = $this->get_query_param(array('conn', 'table', 'cols', 'params', 'habit_id'));
+            $this->cols = $this->get_read_param(NULL, 'h');
+            $this->params = $this->get_query_param(array('habit_id'));
         }
 
         // Get all Habit
@@ -57,8 +57,12 @@ include_once '../../models/MonitorDate.php';
     
         public function read_join_monitor() {
             $date = new MonitorDate($this->conn);
-            $query = 'SELECT ' . $this->cols . ', ' . $date->cols . ' FROM ' . $this->table . ' LEFT JOIN monitor_date d ON h.monitor_id = d.monitor_id WHERE h.user_id = :user_id';
-            $stmt = $this->conn->prepare($query);
+            $query = 'SELECT ' . $this->cols . ', '
+             . $date->get_read_param(array('monitor_id', 'habit_id'), 'd') 
+             . ' FROM ' . $this->table 
+             . ' LEFT JOIN monitor_date d ON h.monitor_id = d.monitor_id WHERE h.user_id = :user_id';
+            
+             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(":user_id", $this->user_id);
             $stmt->execute();
             return $stmt;
@@ -67,10 +71,10 @@ include_once '../../models/MonitorDate.php';
         // Create Habit
         public function create() {
             // create query
-            $query = 'INSERT INTO ' . $this->table . ' SET ' . $this->params;
+            $query = 'INSERT INTO habit SET ' . $this->get_query_param(array('habit_id'));
             // Prepare statement
             $stmt = $this->conn->prepare($query);
-            $stmt = $this->bind_param_exc($stmt, array('conn', 'table', 'cols', 'params', 'habit_id'));
+            $stmt = $this->bind_param_exc($stmt, array('habit_id'));
             // Execute query
             if ($stmt->execute()) {
                 $this->habit_id = $this->conn->lastInsertId();
@@ -82,13 +86,13 @@ include_once '../../models/MonitorDate.php';
         // Update Habit
         public function update() {
             // create query
-            $query = 'UPDATE ' . $this->table . ' SET ' . $this->params . ' WHERE habit_id = :habit_id';
+            $query = 'UPDATE habit SET ' . $this->get_query_param(array('habit_id')) . ' WHERE habit_id = :habit_id';
 
             // Prepare statement
             $stmt = $this->conn->prepare($query);
 
             // Bind data
-            $stmt = $this->bind_param_exc($stmt, array('conn', 'table', 'cols', 'params'));
+            $stmt = $this->bind_param_exc($stmt, NULL);
 
             // Execute query
             if ($stmt->execute()) {
@@ -103,8 +107,7 @@ include_once '../../models/MonitorDate.php';
         // Detele Habit
         public function delete() {
             // create query
-            $query = 'DELETE FROM ' . $this->table . ' WHERE habit_id = :habit_id';
-
+            $query = 'DELETE FROM habit WHERE habit_id = :habit_id';
             // Prepare statement
             $stmt = $this->conn->prepare($query);
 
@@ -113,11 +116,12 @@ include_once '../../models/MonitorDate.php';
 
             // Bind data
             $stmt->bindParam(':habit_id', $this->habit_id);
-
+            
             // Execute query
             if($stmt->execute()) {
                 return true;
             }
+
             // Print error if something goes wrong
             printf("Error: %s.\n", $stmt->error);
             return false;

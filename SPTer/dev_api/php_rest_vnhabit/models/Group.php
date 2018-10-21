@@ -16,8 +16,8 @@ include_once '../../models/Model.php';
 
         public function __construct($db) {
             $this->conn = $db;
-            $this->cols = $this->get_read_param(array('conn', 'table', 'cols', 'params'), NULL);
-            $this->params = $this->get_query_param(array('conn', 'table', 'cols', 'params', 'habit_id'));
+            $this->cols = $this->get_read_param(NULL, NULL);
+            $this->params = $this->get_query_param(array('habit_id'));
         }
 
         // Get all User
