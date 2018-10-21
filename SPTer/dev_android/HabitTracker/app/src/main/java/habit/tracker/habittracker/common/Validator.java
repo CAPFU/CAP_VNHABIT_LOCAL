@@ -12,6 +12,9 @@ public class Validator {
     }
 
     public boolean checkEmpty(String key, String value) {
+        if (value != null) {
+            value = value.trim();
+        }
         if (TextUtils.isEmpty(value)) {
             mErrorMsgListener.showError(ValidatorType.EMPTY, key);
             return false;
