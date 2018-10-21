@@ -9,6 +9,14 @@ class MonitorDate extends Model {
     public $cols;
     private $params;
 
+    private $excludeArr = array(
+        'conn',
+        'table',
+        'cols',
+        'params',
+        'excludeArr'
+    );
+
     public $monitor_id;
     public $habit_id;
     public $mon;
@@ -21,8 +29,8 @@ class MonitorDate extends Model {
 
     public function __construct($db) {
         $this->conn = $db;
-        $this->cols = $this->get_read_param(array('conn', 'table', 'cols', 'params'), 'd');
-        $this->params = $this->get_query_param(array('monitor_id'));
+        $this->cols = $this->get_read_param(array('conn', 'table', 'cols', 'params', 'excludeArr'), 'd');
+        $this->params = $this->get_query_param(array('conn', 'table', 'cols', 'params', 'excludeArr', 'monitor_id'));
     }
 
     // GET
@@ -52,6 +60,27 @@ class MonitorDate extends Model {
             return true;
         }
 
+        return false;
+    }
+
+    public function update() {
+        // create query
+        $query = 'UPDATE ' . $this->table . ' SET ' . $this->params . ' WHERE monitor_id = :monitor_id';
+
+        // Prepare statement
+        $stmt = $this->conn->prepare($query);
+
+        // Bind data
+        $stmt = $this->bind_param_exc($stmt, array('conn', 'table', 'cols', 'params', 'excludeArr'));
+
+        // Execute query
+        if ($stmt->execute()) {
+            $this->monitor_id = $this->conn->lastInsertId();
+            return true;
+        }
+
+        // Print error if something goes wrong
+        printf("Error: %s.\n", $stmt->error);
         return false;
     }
 }

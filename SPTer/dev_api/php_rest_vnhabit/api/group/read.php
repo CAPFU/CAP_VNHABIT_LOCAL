@@ -25,17 +25,7 @@ if ($num > 0) {
     $group_arr = array();
     
     while($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        extract($row);
-        $group_item = array(
-            'group_id' => $group_id,
-            'group_name' => $group_name,
-            'parrent_id' => $parrent_id,
-            'group_icon' => $group_icon,
-            'group_description' => $group_description
-        );
-
-        // push to "data"
-        array_push($group_arr, $group_item);
+        array_push($group_arr, $row);
     }
 
     // turn to JSON

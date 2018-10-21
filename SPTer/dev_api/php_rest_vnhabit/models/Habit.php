@@ -30,7 +30,7 @@ include_once '../../models/MonitorDate.php';
         public function __construct($db) {
             $this->conn = $db;
             $this->cols = $this->get_read_param(array('conn', 'table', 'cols', 'params'), 'h');
-            $this->params = $this->get_query_param(array('habit_id'));
+            $this->params = $this->get_query_param(array('conn', 'table', 'cols', 'params', 'habit_id'));
         }
 
         // Get all Habit
@@ -70,7 +70,7 @@ include_once '../../models/MonitorDate.php';
             $query = 'INSERT INTO ' . $this->table . ' SET ' . $this->params;
             // Prepare statement
             $stmt = $this->conn->prepare($query);
-            $stmt = $this->bind_param_exc($stmt, array('habit_id'));
+            $stmt = $this->bind_param_exc($stmt, array('conn', 'table', 'cols', 'params', 'habit_id'));
             // Execute query
             if ($stmt->execute()) {
                 $this->habit_id = $this->conn->lastInsertId();
@@ -88,7 +88,7 @@ include_once '../../models/MonitorDate.php';
             $stmt = $this->conn->prepare($query);
 
             // Bind data
-            $stmt = $this->bind_param_exc($stmt, NULL);
+            $stmt = $this->bind_param_exc($stmt, array('conn', 'table', 'cols', 'params'));
 
             // Execute query
             if ($stmt->execute()) {

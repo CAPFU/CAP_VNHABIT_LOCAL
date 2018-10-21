@@ -24,7 +24,7 @@ include_once '../../models/Model.php';
         public function __construct($db) {
             $this->conn = $db;
             $this->cols = $this->get_read_param(array('conn', 'table', 'cols', 'params'), NULL);
-            $this->params = $this->get_query_param(array('user_id'));
+            $this->params = $this->get_query_param(array('conn', 'table', 'cols', 'params', 'user_id'));
         }
 
         // Get all User
@@ -61,6 +61,29 @@ include_once '../../models/Model.php';
             }
         }
 
+        public function find_by_username() {
+            // Create query
+            $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . 
+                ' WHERE
+                    username = :username 
+                    LIMIT 0,1';
+
+            // Prepare statement
+            $stmt = $this->conn->prepare($query);
+            // Bind params
+            $stmt = $this->bind_param($stmt, array('username' => $this->username));
+            // Execute query
+            $stmt->execute();
+            // get row count
+            $num = $stmt->rowCount();
+            if ($num == 1) {
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                return $row;
+            } else {
+                return NULL;
+            }
+        }
+
         // Create User
         public function create() {
             // create query
@@ -68,7 +91,7 @@ include_once '../../models/Model.php';
             // Prepare statement
             $stmt = $this->conn->prepare($query);
             // Bind data
-            $stmt = $this->bind_param_exc($stmt, array('user_id'));
+            $stmt = $this->bind_param_exc($stmt, array('conn', 'table', 'cols', 'params', 'user_id'));
             // Execute query
             if ($stmt->execute()) {
                 return true;
@@ -83,7 +106,7 @@ include_once '../../models/Model.php';
             $query = 'UPDATE ' . $this->table . ' SET ' . $this->params . ' WHERE user_id = :user_id';
             // Prepare statement
             $stmt = $this->conn->prepare($query);
-            $stmt = $this->bind_param_exc($stmt, NULL);
+            $stmt = $this->bind_param_exc($stmt, array('conn', 'table', 'cols', 'params'));
             // Execute query
             if ($stmt->execute()) {
                 return true;

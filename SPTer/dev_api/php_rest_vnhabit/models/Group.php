@@ -17,14 +17,14 @@ include_once '../../models/Model.php';
         public function __construct($db) {
             $this->conn = $db;
             $this->cols = $this->get_read_param(array('conn', 'table', 'cols', 'params'), NULL);
-            $this->params = $this->get_query_param(array('habit_id'));
+            $this->params = $this->get_query_param(array('conn', 'table', 'cols', 'params', 'habit_id'));
         }
 
         // Get all User
         public function read() {
             $query = 'SELECT ' . $this->cols . ' FROM `' . $this->table . '` ORDER BY group_id ASC';
             // Prepare statement
-            $stmt = $this->conn->prepare($query);            
+            $stmt = $this->conn->prepare($query);
             // Execute query
             $stmt->execute();
             return $stmt;
