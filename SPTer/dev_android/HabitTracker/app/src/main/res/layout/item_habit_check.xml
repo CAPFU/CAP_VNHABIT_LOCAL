@@ -5,18 +5,18 @@
     android:layout_height="70dp"
     android:gravity="center"
     android:id="@+id/rl_habit"
-    android:background="@drawable/bg_border1"
+    android:background="@drawable/bg_shadow"
     android:layout_margin="7dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
     android:paddingStart="15dp">
 
     <TextView
         android:id="@+id/tv_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:textSize="20sp"
         android:textAllCaps="true"
+        android:textColor="#fff"
         android:text="GHI CHÉP CHI TIÊU"/>
 
     <TextView
@@ -24,8 +24,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
         android:textSize="10sp"
         android:textAllCaps="true"
+        android:textColor="#fff"
         android:text="HÃY GHI CHÉP CHI TIÊU CÁ NHÂN"/>
 
     <TextView
@@ -33,11 +35,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
         android:layout_toEndOf="@+id/tv_description"
         android:paddingStart="3sp"
         android:textSize="10sp"
         android:textStyle="bold"
         android:textAllCaps="true"
+        android:textColor="#fff"
         android:text="HÔM NAY"/>
 
     <ImageView

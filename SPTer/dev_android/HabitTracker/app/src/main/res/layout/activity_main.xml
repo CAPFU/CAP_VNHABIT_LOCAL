@@ -16,6 +16,7 @@
         android:background="@drawable/border_bottom">
 
         <ImageView
+            android:onClick="showEmpty"
             app:srcCompat="@drawable/ic_setting"
             android:layout_weight="1"
             android:layout_width="0dp"
@@ -32,6 +33,7 @@
             android:textSize="20sp" />
 
         <ImageView
+            android:onClick="showEmpty"
             app:srcCompat="@drawable/ic_fillter"
             android:layout_weight="1"
             android:layout_width="0dp"
@@ -52,6 +54,7 @@
         android:layout_height="0dp">
 
         <ImageView
+            android:onClick="showEmpty"
             android:padding="10dp"
             app:srcCompat="@drawable/calendar"
             android:layout_weight="1"
@@ -59,6 +62,7 @@
             android:layout_height="wrap_content" />
 
         <ImageView
+            android:onClick="showEmpty"
             android:padding="10dp"
             app:srcCompat="@drawable/note"
             android:layout_weight="1"
@@ -66,6 +70,7 @@
             android:layout_height="wrap_content" />
 
         <ImageView
+            android:onClick="showEmpty"
             android:padding="10dp"
             app:srcCompat="@drawable/check"
             android:layout_weight="1"
@@ -73,6 +78,7 @@
             android:layout_height="wrap_content" />
 
         <ImageView
+            android:onClick="showEmpty"
             android:padding="10dp"
             app:srcCompat="@drawable/chart"
             android:layout_weight="1"

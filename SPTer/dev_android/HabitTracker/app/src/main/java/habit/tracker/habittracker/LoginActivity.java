@@ -10,21 +10,32 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import habit.tracker.habittracker.api.ApiUtils;
+import habit.tracker.habittracker.api.VnHabitApiUtils;
+import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.model.user.UserResponse;
-import habit.tracker.habittracker.api.service.ApiService;
+import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
+import habit.tracker.habittracker.repository.Database;
+import habit.tracker.habittracker.repository.user.UserEntity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
-
     EditText edUsername;
     EditText edPassword;
     Button btnLogin;
     TextView linkRegister;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (MySharedPreference.getUserId(this) != null) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,24 +87,62 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
-    private void login(String username, String password) {
-        ApiService mService = ApiUtils.getApiService();
+    private void login(final String username, final String password) {
+        VnHabitApiService mService = VnHabitApiUtils.getApiService();
         mService.getUser(username, password).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if (response.body().getResult().equals("1")) {
-                    Toast.makeText(LoginActivity.this, "Login ok!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    LoginActivity.this.startActivity(intent);
+                    User user = response.body().getData();
+                    Database db = new Database(LoginActivity.this);
+                    UserEntity userEntity = new UserEntity();
+                    db.open();
+                    if (user != null) {
+                        userEntity.setUserId(user.getUserId());
+                        userEntity.setUsername(user.getUsername());
+                        userEntity.setEmail(user.getEmail());
+                        userEntity.setPhone(user.getPhone());
+                        userEntity.setGender(user.getGender());
+                        userEntity.setDateOfBirth(user.getDateOfBirth());
+                        userEntity.setPassword(user.getPassword());
+                        userEntity.setUserIcon(user.getUserIcon());
+                        userEntity.setAvatar(user.getAvatar());
+                        userEntity.setUserDescription(user.getUserDescription());
+                        Database.sUserDaoImpl.saveUser(userEntity);
+                        db.close();
+                        showMainScreen(user.getUserId(), user.getUsername());
+                        Toast.makeText(LoginActivity.this, "Welcome!", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(LoginActivity.this, "Login failed! username or password is not correct!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Login Failed! username or password is not correct.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Login failed! username or password is not correct!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(LoginActivity.this, "Login Failed! username or password is not correct.", Toast.LENGTH_SHORT).show();
+                Database db = new Database(LoginActivity.this);
+                db.open();
+                UserEntity userEntity = Database.sUserDaoImpl.getUser(username, password);
+                db.close();
+                if (userEntity != null) {
+                    showMainScreen(userEntity.getUserId(), userEntity.getUsername());
+                } else {
+                    Toast.makeText(LoginActivity.this, "Login Failed! username or password is not correct.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+    }
+
+    private void showMainScreen(String userId, String username) {
+        MySharedPreference.saveUser(LoginActivity.this, userId, username);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void showEmpty(View v) {
+        Intent i = new Intent(this, EmptyActivity.class);
+        startActivity(i);
     }
 }

@@ -20,8 +20,7 @@ public class Validator {
     }
 
     public boolean checkEmail(String email) {
-        final String regex = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        final String regex = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
         Pattern pattern = Pattern.compile(regex);
         if(!pattern.matcher(email).matches()){
             mErrorMsgListener.showError(ValidatorType.EMAIL, "email");
@@ -39,10 +38,25 @@ public class Validator {
     }
 
     public boolean checkPhone(String phone) {
-        final String regex = "^[0][0-9]{10,11}$";
+        final String regex = "^[0][0-9]+$";
         Pattern pattern = Pattern.compile(regex);
-        if(!pattern.matcher(phone).matches()){
-            mErrorMsgListener.showError(ValidatorType.EMAIL, "email");
+        if(phone == null || phone.length() < 10
+                || phone.length() > 15
+                || !pattern.matcher(phone).matches()){
+            mErrorMsgListener.showError(ValidatorType.PHONE, "Số điện thoại");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkNumber(String number, int thre) {
+        final String regex = "^[0-9]+$";
+        Pattern pattern = Pattern.compile(regex);
+        if (number == null || !pattern.matcher(number).matches()){
+            return false;
+        }
+        int num = Integer.parseInt(number);
+        if (num < thre) {
             return false;
         }
         return true;

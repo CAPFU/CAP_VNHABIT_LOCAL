@@ -1,7 +1,12 @@
 package habit.tracker.habittracker;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,14 +14,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
 public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public static final int TYPE_CHECK = 0;
     public static final int TYPE_COUNT = 1;
-    public static final int TYPE_CHECK = 2;
-    public static final int TYPE_ADD = 3;
+    public static final int TYPE_ADD = 2;
     private Context context;
 
     private List<MenuItem> mData;
@@ -77,17 +81,25 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
+    private Drawable getBackground(String color) {
+        Drawable mDrawable = ContextCompat.getDrawable(context, R.drawable.bg_shadow);
+        if (mDrawable != null && color != null) {
+            mDrawable.setColorFilter(new PorterDuffColorFilter(Color.parseColor(color),PorterDuff.Mode.MULTIPLY));
+        }
+        return mDrawable;
+    }
+
     private void initLayoutCount(ViewHolderCount holder, MenuItem item) {
-        holder.tvCategory.setText(item.getCategory());
+        holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
         holder.tvPeriod.setText(item.getPeriod());
         holder.tvNumber.setText(item.getNumber() + " " + item.getUnit());
         holder.tvCount.setText(item.getCount());
-//        holder.layout.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+        holder.layout.setBackground(getBackground(item.getColor()));
     }
 
     private void initLayoutCheck(ViewHolderCheck holder, MenuItem item) {
-        holder.tvCategory.setText(item.getCategory());
+        holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
         holder.tvPeriod.setText(item.getPeriod());
         if (item.getCount().equals("1")) {
@@ -97,6 +109,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.isCheck = false;
             holder.imgCheck.setImageResource(R.drawable.ck_unchecked);
         }
+        holder.layout.setBackground(getBackground(item.getColor()));
     }
 
     public class ViewHolderCount extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -132,18 +145,21 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 int num = Integer.parseInt(tvCount.getText().toString());
                 num = num + 1;
                 tvCount.setText(num + "");
+                mClickListener.onAdjustcount(view, TYPE_COUNT, getAdapterPosition(), num);
             } else if (view.getId() == R.id.btn_minus) {
 //                Toast.makeText(context, "btn_minus", Toast.LENGTH_SHORT).show();
                 int num = Integer.parseInt(tvCount.getText().toString());
                 num = num > 0? num - 1: 0;
                 tvCount.setText(num + "");
+                mClickListener.onAdjustcount(view, TYPE_COUNT, getAdapterPosition(), num);
             } else if (mClickListener != null) {
-                mClickListener.onItemClick(view, getAdapterPosition());
+                mClickListener.onItemClick(view, TYPE_COUNT, getAdapterPosition());
             }
         }
     }
 
     public class ViewHolderCheck extends RecyclerView.ViewHolder implements View.OnClickListener {
+        RelativeLayout layout;
         TextView tvCategory;
         TextView tvDescription;
         TextView tvPeriod;
@@ -153,6 +169,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         ViewHolderCheck(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
+            layout = itemView.findViewById(R.id.rl_habit);
             tvCategory = itemView.findViewById(R.id.tv_category);
             tvDescription = itemView.findViewById(R.id.tv_description);
             tvPeriod = itemView.findViewById(R.id.tv_period);
@@ -166,12 +183,14 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 if (isCheck) {
                     isCheck = false;
                     imgCheck.setImageResource(R.drawable.ck_unchecked);
+                    mClickListener.onAdjustcount(view, TYPE_CHECK, getAdapterPosition(), 0);
                 } else {
                     isCheck = true;
                     imgCheck.setImageResource(R.drawable.ck_checked);
+                    mClickListener.onAdjustcount(view, TYPE_CHECK, getAdapterPosition(), 1);
                 }
             } else if (mClickListener != null) {
-                mClickListener.onItemClick(view, getAdapterPosition());
+                mClickListener.onItemClick(view, TYPE_CHECK, getAdapterPosition());
             }
         }
     }
@@ -186,7 +205,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         @Override
         public void onClick(View view) {
             if (mClickListener != null) {
-                mClickListener.onItemClick(view, getAdapterPosition());
+                mClickListener.onItemClick(view, TYPE_ADD, getAdapterPosition());
             }
         }
     }
@@ -196,6 +215,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onAdjustcount(View view, int type, int position, int count);
+        void onItemClick(View view, int type, int position);
     }
 }

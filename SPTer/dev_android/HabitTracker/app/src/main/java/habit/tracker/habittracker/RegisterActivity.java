@@ -1,5 +1,6 @@
 package habit.tracker.habittracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -9,10 +10,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import habit.tracker.habittracker.api.ApiUtils;
+import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.model.user.UserResult;
-import habit.tracker.habittracker.api.service.ApiService;
+import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
 import retrofit2.Call;
@@ -97,6 +98,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 if (!validator.checkEqual(password, passwordConf, "Mật khẩu")) {
                     return;
                 }
+
+                newUser.setUsername(username);
+                newUser.setPhone(phone);
+                newUser.setEmail(email);
+                newUser.setPassword(password);
                 register(newUser);
                 break;
             case R.id.btn_fb_login:
@@ -112,22 +118,27 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void register(User user) {
-        ApiService mService = ApiUtils.getApiService();
+        VnHabitApiService mService = VnHabitApiUtils.getApiService();
         mService.addUser(user).enqueue(new Callback<UserResult>() {
             @Override
             public void onResponse(Call<UserResult> call, Response<UserResult> response) {
                 if (response.body().getResult().equals("1")) {
-                    Toast.makeText(RegisterActivity.this, "Tài khoản đã tạo", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterActivity.this, "Đăng ký tài khoản thành công", Toast.LENGTH_LONG).show();
                     finish();
                 } else {
-                    Toast.makeText(RegisterActivity.this, "not ok", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Đăng ký không thành công", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<UserResult> call, Throwable t) {
-                Toast.makeText(RegisterActivity.this, "not ok", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "Đăng ký không thành công", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void showEmpty(View v) {
+        Intent i = new Intent(this, EmptyActivity.class);
+        startActivity(i);
     }
 }

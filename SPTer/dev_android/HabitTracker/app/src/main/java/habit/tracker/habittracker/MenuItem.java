@@ -1,19 +1,21 @@
 package habit.tracker.habittracker;
 
 public class MenuItem {
-    private String category;
+    private String id;
+    private String name;
     private String description;
     private String period;
     private int type;
     private String number;
     private String count;
     private String unit;
-    private int color;
+    private String color;
 
     public MenuItem() {}
 
-    public MenuItem(String category, String description, String period, int type, String number, String count, String unit, int color) {
-        this.category = category;
+    public MenuItem(String id, String name, String description, String period, int type, String number, String count, String unit, String color) {
+        this.id = id;
+        this.name = name;
         this.description = description;
         this.period = period;
         this.type = type;
@@ -23,8 +25,12 @@ public class MenuItem {
         this.color = color;
     }
 
-    public String getCategory() {
-        return category;
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getDescription() {
@@ -51,12 +57,16 @@ public class MenuItem {
         return unit;
     }
 
-    public int getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setDescription(String description) {
@@ -83,7 +93,7 @@ public class MenuItem {
         this.unit = unit;
     }
 
-    public void setColor(int color) {
+    public void setColor(String color) {
         this.color = color;
     }
 }
