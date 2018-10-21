@@ -24,6 +24,9 @@ public interface VnHabitApiService {
     @POST("habit/create.php")
     Call<HabitResult> addHabit(@Body Habit habit);
 
+    @POST("habit/update.php")
+    Call<HabitResult> updateHabit(@Body Habit habit);
+
     @GET("habit/read_by_user.php")
     Call<HabitResponse> getHabit(@Query("user_id") String userId);
 

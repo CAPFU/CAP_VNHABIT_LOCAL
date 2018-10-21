@@ -2,6 +2,7 @@ package habit.tracker.habittracker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.View;
@@ -23,10 +24,23 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
+    public static final int SIGN_UP = 1;
+    public static final String USERNAME = "username";
     EditText edUsername;
     EditText edPassword;
     Button btnLogin;
     TextView linkRegister;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SIGN_UP) {
+                if (data != null) {
+                    edUsername.setText(data.getStringExtra(USERNAME));
+                }
+            }
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -81,8 +95,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 showEmptyScreen();
                 break;
             case R.id.link_register:
-                Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(i);
+                Intent itent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivityForResult(itent, SIGN_UP);
                 break;
         }
     }

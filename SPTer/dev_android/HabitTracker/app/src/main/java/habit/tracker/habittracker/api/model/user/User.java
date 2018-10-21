@@ -38,7 +38,6 @@ public class User {
 
     public User() {
         phone = password = email = dateOfBirth = gender = userIcon = avatar = userDescription = "";
-        username = "tmp";
     }
 
     public String getUserId() {

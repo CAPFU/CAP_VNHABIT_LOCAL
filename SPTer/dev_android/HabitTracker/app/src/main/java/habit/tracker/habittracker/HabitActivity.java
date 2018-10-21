@@ -53,6 +53,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
     @BindView(R.id.edit_habitName)
     EditText editHabitName;
+    String habitId;
 
     @BindView(R.id.btn_TargetBuild)
     Button btnHabitBuild;
@@ -108,6 +109,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     @BindView(R.id.btnSun)
     TextView btnSun;
     boolean[] monitorDate = new boolean[7];
+    String monitorDateId;
 
     @BindView(R.id.color1)
     View color1;
@@ -166,8 +168,13 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     int endMonth;
     int endDay;
 
+    static final int MODE_CREATE = 0;
+    static final int MODE_UPDATE = 1;
     @BindView(R.id.btn_save)
     Button btnSave;
+    @BindView(R.id.btn_cancel)
+    Button btnCancel;
+    int createMode = MODE_CREATE;
 
     @BindView(R.id.edit_description)
     EditText editDescription;
@@ -192,7 +199,6 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         for (int colorId : colors) {
             colorsList.add(getResources().getString(colorId));
         }
-
         // init habit type: daily
         btnHabitType = btnDaily;
         // init habit color
@@ -216,9 +222,13 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         endDay = calendar.get(Calendar.DATE);
 
         Bundle extras = getIntent().getExtras();
+        // load habit from local data
         if (extras != null) {
-            // load habit from local data
-            initFromSavedHabit();
+            this.habitId = extras.getString(MainActivity.HABIT_ID, null);
+            if (habitId != null) {
+                this.createMode = 1;
+                initFromSavedHabit(habitId);
+            }
         } else {
             // habit color
             setHabitColor(color1);
@@ -238,97 +248,102 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         }
     }
 
-    private void initFromSavedHabit() {
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String habitId = extras.getString(MainActivity.HABIT_ID, null);
-            if (habitId != null) {
-                Database db = new Database(this);
-                db.open();
-                HabitEntity habitEntity = Database.sHabitDaoImpl.getHabit(habitId);
-                if (habitEntity != null) {
-                    // habit name
-                    editHabitName.setText(habitEntity.getHabitName());
-                    // habit target
-                    switch (habitEntity.getHabitTarget()) {
-                        case TYPE_0:
-                            setHabitTarget(btnHabitBuild);
-                            break;
-                        case TYPE_1:
-                            setHabitTarget(btnHabitQuit);
-                            break;
-                    }
-                    // monitor date
-                    if (habitEntity.getMon() != null && habitEntity.getMon().equals(TYPE_1)) {
-                        setMonitorDate(btnMon);
-                    }
-                    if (habitEntity.getTue() != null && habitEntity.getTue().equals(TYPE_1)) {
-                        setMonitorDate(btnTue);
-                    }
-                    if (habitEntity.getWed() != null && habitEntity.getWed().equals(TYPE_1)) {
-                        setMonitorDate(btnWed);
-                    }
-                    if (habitEntity.getThu() != null && habitEntity.getThu().equals(TYPE_1)) {
-                        setMonitorDate(btnThu);
-                    }
-                    if (habitEntity.getFri() != null && habitEntity.getFri().equals(TYPE_1)) {
-                        setMonitorDate(btnFri);
-                    }
-                    if (habitEntity.getSat() != null && habitEntity.getSat().equals(TYPE_1)) {
-                        setMonitorDate(btnSat);
-                    }
-                    if (habitEntity.getSat() != null && habitEntity.getSun().equals(TYPE_1)) {
-                        setMonitorDate(btnSun);
-                    }
-                    // plan date
-                    if (habitEntity.getStartDate() != null) {
-                        setStartEndDate(mStartDate);
-                        tvStartDate.setText(habitEntity.getStartDate());
-                    }
-                    if (habitEntity.getEndDate() != null) {
-                        setStartEndDate(mEndDate);
-                        tvEndDate.setText(habitEntity.getEndDate());
-                    }
-                    // habit type
-                    switch (habitEntity.getHabitType()) {
-                        case TYPE_0:
-                            setHabitType(btnDaily);
-                            break;
-                        case TYPE_1:
-                            setHabitType(btnWeekly);
-                            break;
-                        case TYPE_2:
-                            setHabitType(btnMonthly);
-                            break;
-                        case TYPE_3:
-                            setHabitType(btnYearly);
-                            break;
-                    }
-                    switch (habitEntity.getMonitorType()) {
-                        case TYPE_0:
-                            selectMonitorType(chkMonitorCheck);
-                            break;
-                        case TYPE_1:
-                            selectMonitorType(chkMonitorCount);
-                            break;
-                    }
-                    // habit monitor type
-                    switch (habitEntity.getMonitorType()) {
-                        case TYPE_0:
-                            selectMonitorType(chkMonitorCheck);
-                            break;
-                        case TYPE_1:
-                            selectMonitorType(chkMonitorCount);
-                            break;
-                    }
-                    // habit group
-                    if (habitEntity.getGroupId() != null) {
-                        GroupEntity groupEntity = Database.sGroupDaoImpl.getGroup(habitEntity.getGroupId());
-                        tvGroupName.setText(groupEntity.getGroupName());
-                    }
-                    editCheckNumber.setText(habitEntity.getMonitorNumber());
-                    editMonitorUnit.setText(habitEntity.getMonitorUnit());
-                    // habit color
+    private void initFromSavedHabit(String habitId) {
+        if (habitId != null) {
+            // change UI for update and delete
+            btnSave.setText("Cập nhật");
+            btnCancel.setText("Xóa");
+
+            Database db = new Database(this);
+            db.open();
+            HabitEntity habitEntity = Database.sHabitDaoImpl.getHabit(habitId);
+            if (habitEntity != null) {
+                if (habitEntity.getGroupId() != null) {
+                    this.groupId = habitEntity.getGroupId();
+                    GroupEntity groupEntity = Database.sGroupDaoImpl.getGroup(habitEntity.getGroupId());
+                    tvGroupName.setText(groupEntity.getGroupName());
+                }
+                if (habitEntity.getMonitorId() != null) {
+                    this.monitorDateId = habitEntity.getMonitorId();
+                }
+                // habit name
+                editHabitName.setText(habitEntity.getHabitName());
+                // habit target
+                switch (habitEntity.getHabitTarget()) {
+                    case TYPE_0:
+                        setHabitTarget(btnHabitBuild);
+                        break;
+                    case TYPE_1:
+                        setHabitTarget(btnHabitQuit);
+                        break;
+                }
+                // monitor date
+                if (habitEntity.getMon() != null && habitEntity.getMon().equals(TYPE_1)) {
+                    setMonitorDate(btnMon);
+                }
+                if (habitEntity.getTue() != null && habitEntity.getTue().equals(TYPE_1)) {
+                    setMonitorDate(btnTue);
+                }
+                if (habitEntity.getWed() != null && habitEntity.getWed().equals(TYPE_1)) {
+                    setMonitorDate(btnWed);
+                }
+                if (habitEntity.getThu() != null && habitEntity.getThu().equals(TYPE_1)) {
+                    setMonitorDate(btnThu);
+                }
+                if (habitEntity.getFri() != null && habitEntity.getFri().equals(TYPE_1)) {
+                    setMonitorDate(btnFri);
+                }
+                if (habitEntity.getSat() != null && habitEntity.getSat().equals(TYPE_1)) {
+                    setMonitorDate(btnSat);
+                }
+                if (habitEntity.getSat() != null && habitEntity.getSun().equals(TYPE_1)) {
+                    setMonitorDate(btnSun);
+                }
+                // plan date
+                if (habitEntity.getStartDate() != null) {
+                    setStartEndDate(mStartDate);
+                    tvStartDate.setText(habitEntity.getStartDate());
+                }
+                if (habitEntity.getEndDate() != null) {
+                    setStartEndDate(mEndDate);
+                    tvEndDate.setText(habitEntity.getEndDate());
+                }
+                // habit type
+                switch (habitEntity.getHabitType()) {
+                    case TYPE_0:
+                        setHabitType(btnDaily);
+                        break;
+                    case TYPE_1:
+                        setHabitType(btnWeekly);
+                        break;
+                    case TYPE_2:
+                        setHabitType(btnMonthly);
+                        break;
+                    case TYPE_3:
+                        setHabitType(btnYearly);
+                        break;
+                }
+                switch (habitEntity.getMonitorType()) {
+                    case TYPE_0:
+                        selectMonitorType(chkMonitorCheck);
+                        break;
+                    case TYPE_1:
+                        selectMonitorType(chkMonitorCount);
+                        break;
+                }
+                // habit monitor type
+                switch (habitEntity.getMonitorType()) {
+                    case TYPE_0:
+                        selectMonitorType(chkMonitorCheck);
+                        break;
+                    case TYPE_1:
+                        selectMonitorType(chkMonitorCount);
+                        break;
+                }
+                editCheckNumber.setText(habitEntity.getMonitorNumber());
+                editMonitorUnit.setText(habitEntity.getMonitorUnit());
+                // habit color
+                if (habitEntity.getHabitColor() != null) {
                     for (int i = 0; i < colorsList.size(); i++) {
                         String code = colorsList.get(i);
                         // TODO: optimize this
@@ -367,11 +382,11 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                             }
                         }
                     }
-                    // habit description
-                    editDescription.setText(habitEntity.getHabitDescription());
                 }
-                db.close();
+                // habit description
+                editDescription.setText(habitEntity.getHabitDescription());
             }
+            db.close();
         }
     }
 
@@ -429,25 +444,47 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         habit.setSun(String.valueOf(monitorDate[6]));
 
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
-        mService.addHabit(habit).enqueue(new Callback<HabitResult>() {
-            @Override
-            public void onResponse(Call<HabitResult> call, Response<HabitResult> response) {
-                if (response.body().getResult().equals("1")) {
-//                    Database db = new Database(HabitActivity.this);
-//                    db.open();
-//                    Database.sHabitDaoImpl.saveHabit(Database.sHabitDaoImpl.convert(habit));
-//                    db.close();
-                    Toast.makeText(HabitActivity.this, "Tạo thói quen thành công", Toast.LENGTH_LONG).show();
-                    HabitActivity.this.setResult(HabitActivity.RESULT_OK);
-                    finish();
+        if (createMode == MODE_CREATE) {
+            mService.addHabit(habit).enqueue(new Callback<HabitResult>() {
+                @Override
+                public void onResponse(Call<HabitResult> call, Response<HabitResult> response) {
+                    if (response.body().getResult().equals("1")) {
+                        Toast.makeText(HabitActivity.this, "Tạo thói quen thành công", Toast.LENGTH_LONG).show();
+                        HabitActivity.this.setResult(HabitActivity.RESULT_OK);
+                        finish();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<HabitResult> call, Throwable t) {
-                Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<HabitResult> call, Throwable t) {
+                    Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
+                }
+            });
+        } else if (createMode == MODE_UPDATE) {
+            habit.setHabitId(habitId);
+            habit.setGroupId(groupId);
+            habit.setMonitorId(monitorDateId);
+            mService.updateHabit(habit).enqueue(new Callback<HabitResult>() {
+                @Override
+                public void onResponse(Call<HabitResult> call, Response<HabitResult> response) {
+
+                }
+
+                @Override
+                public void onFailure(Call<HabitResult> call, Throwable t) {
+
+                }
+            });
+        }
+    }
+
+    @OnClick(R.id.btn_cancel)
+    public void cancel(View v) {
+        if (createMode == MODE_CREATE) {
+            finish();
+        } else if (createMode == MODE_UPDATE) {
+
+        }
     }
 
     @OnClick({R.id.btn_TargetBuild, R.id.btn_TargetQuit})
@@ -632,10 +669,6 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     public void showEmpty(View v) {
         Intent intent = new Intent(HabitActivity.this, EmptyActivity.class);
         HabitActivity.this.startActivity(intent);
-    }
-
-    public void cancel(View v) {
-        finish();
     }
 
     private Drawable getCircleBackground(String colorCode) {

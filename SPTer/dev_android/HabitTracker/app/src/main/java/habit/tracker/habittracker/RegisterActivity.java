@@ -21,12 +21,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RegisterActivity extends BaseActivity implements View.OnClickListener {
-
     Button btnRegister;
     TextView linkLogin;
-
     EditText edUsername;
-    EditText edPhone;
     EditText edEmail;
     EditText edPassword;
     EditText edPasswordConfirm;
@@ -46,7 +43,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         linkLogin.setText(content);
 
         edUsername = findViewById(R.id.edit_username);
-        edPhone = findViewById(R.id.edit_phone);
         edEmail = findViewById(R.id.edit_email);
         edPassword = findViewById(R.id.edit_password);
         edPasswordConfirm = findViewById(R.id.edit_conf_password);
@@ -58,7 +54,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             case R.id.btn_register:
                 String username = edUsername.getText().toString();
                 String password = edPassword.getText().toString();
-                String phone = edPhone.getText().toString();
                 String email = edEmail.getText().toString();
                 String passwordConf = edPasswordConfirm.getText().toString();
                 User newUser = new User();
@@ -83,13 +78,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     }
                 });
                 if (!validator.checkEmpty("Tên tài khoản", username)
-                        || !validator.checkEmpty("Số điện thoại", phone)
                         || !validator.checkEmpty("Email", email)
                         || !validator.checkEmpty("Mật khẩu", password)
                         || !validator.checkEmpty("Mật khẩu", passwordConf)) {
-                    return;
-                }
-                if (!validator.checkPhone(phone)) {
                     return;
                 }
                 if (!validator.checkEmail(email)) {
@@ -100,7 +91,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 }
 
                 newUser.setUsername(username);
-                newUser.setPhone(phone);
                 newUser.setEmail(email);
                 newUser.setPassword(password);
                 register(newUser);
@@ -117,13 +107,16 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    private void register(User user) {
+    private void register(final User user) {
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
         mService.addUser(user).enqueue(new Callback<UserResult>() {
             @Override
             public void onResponse(Call<UserResult> call, Response<UserResult> response) {
                 if (response.body().getResult().equals("1")) {
                     Toast.makeText(RegisterActivity.this, "Đăng ký tài khoản thành công", Toast.LENGTH_LONG).show();
+                    Intent intent = getIntent();
+                    intent.putExtra(LoginActivity.USERNAME, user.getUsername());
+                    RegisterActivity.this.setResult(RESULT_OK, intent);
                     finish();
                 } else {
                     Toast.makeText(RegisterActivity.this, "Đăng ký không thành công", Toast.LENGTH_SHORT).show();
