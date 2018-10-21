@@ -9,14 +9,6 @@ class MonitorDate extends Model {
     public $cols;
     private $params;
 
-    private $excludeArr = array(
-        'conn',
-        'table',
-        'cols',
-        'params',
-        'excludeArr'
-    );
-
     public $monitor_id;
     public $habit_id;
     public $mon;
@@ -29,8 +21,8 @@ class MonitorDate extends Model {
 
     public function __construct($db) {
         $this->conn = $db;
-        $this->cols = $this->get_read_param(array('conn', 'table', 'cols', 'params', 'excludeArr'), 'd');
-        $this->params = $this->get_query_param(array('conn', 'table', 'cols', 'params', 'excludeArr', 'monitor_id'));
+        $this->cols = $this->get_read_param(array('conn', 'table', 'cols', 'params'), 'd');
+        $this->params = $this->get_query_param(array('conn', 'table', 'cols', 'params', 'monitor_id'));
     }
 
     // GET
@@ -52,7 +44,7 @@ class MonitorDate extends Model {
         $stmt = $this->conn->prepare($query);
 
         // Bind data
-        $stmt = $this->bind_param_exc($stmt, array('monitor_id'));
+        $stmt = $this->bind_param_exc($stmt, array('conn', 'table', 'cols', 'params', 'monitor_id'));
 
         // Execute query
         if ($stmt->execute()) {
@@ -71,7 +63,7 @@ class MonitorDate extends Model {
         $stmt = $this->conn->prepare($query);
 
         // Bind data
-        $stmt = $this->bind_param_exc($stmt, array('conn', 'table', 'cols', 'params', 'excludeArr'));
+        $stmt = $this->bind_param_exc($stmt, array('conn', 'table', 'cols', 'params'));
 
         // Execute query
         if ($stmt->execute()) {
