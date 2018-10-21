@@ -9,6 +9,7 @@ import habit.tracker.habittracker.api.model.user.UserResponse;
 import habit.tracker.habittracker.api.model.user.UserResult;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -26,6 +27,9 @@ public interface VnHabitApiService {
 
     @POST("habit/update.php")
     Call<HabitResult> updateHabit(@Body Habit habit);
+
+    @DELETE("habit/delete.php")
+    Call<HabitResult> deleteHabit(@Query("habit_id") String habitId);
 
     @GET("habit/read_by_user.php")
     Call<HabitResponse> getHabit(@Query("user_id") String userId);

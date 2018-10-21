@@ -139,10 +139,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 db.open();
                 UserEntity userEntity = Database.sUserDaoImpl.getUser(username, password);
                 db.close();
-                if (userEntity != null) {
+                if (userEntity.getUserId() != null) {
                     showMainScreen(userEntity.getUserId(), userEntity.getUsername());
                 } else {
-                    Toast.makeText(LoginActivity.this, "Login Failed! username or password is not correct.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Đăng nhập không thành công!", Toast.LENGTH_SHORT).show();
                 }
             }
         });

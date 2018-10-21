@@ -212,6 +212,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         color8.setBackground(getCircleBackground(colorsList.get(7)));
         color9.setBackground(getCircleBackground(colorsList.get(8)));
         color10.setBackground(getCircleBackground(colorsList.get(9)));
+        setHabitColor(color1);
         // plan date
         Calendar calendar = Calendar.getInstance();
         startYear = calendar.get(Calendar.YEAR);
@@ -301,10 +302,18 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 }
                 // plan date
                 if (habitEntity.getStartDate() != null) {
+                    String[] date = habitEntity.getStartDate().split("-");
+                    startDay = Integer.parseInt(date[2]);
+                    startMonth = Integer.parseInt(date[1]) - 1;
+                    startYear = Integer.parseInt(date[0]);
                     setStartEndDate(mStartDate);
                     tvStartDate.setText(habitEntity.getStartDate());
                 }
                 if (habitEntity.getEndDate() != null) {
+                    String[] date = habitEntity.getEndDate().split("-");
+                    endDay = Integer.parseInt(date[2]);
+                    endMonth = Integer.parseInt(date[1]) - 1;
+                    endYear = Integer.parseInt(date[0]);
                     setStartEndDate(mEndDate);
                     tvEndDate.setText(habitEntity.getEndDate());
                 }
@@ -416,7 +425,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 return;
             }
         }
-        if (!validator.checkNumber(monitorNumber, 1)) {
+        if (monitorType == 1 && !validator.checkNumber(monitorNumber, 1)) {
             Toast.makeText(HabitActivity.this, "Số lần phải lớn hon 0", Toast.LENGTH_SHORT).show();
         }
 
@@ -429,19 +438,19 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         habit.setMonitorType(String.valueOf(monitorType));
         habit.setMonitorUnit(monitorUnit);
         habit.setMonitorNumber(monitorNumber);
-        habit.setStartDate(startYear + "-" + startMonth + "-" + startDay);
-        habit.setEndDate(endYear + "-" + endMonth + "-" + endDay);
+        habit.setStartDate(startYear + "-" + (startMonth + 1) + "-" + startDay);
+        habit.setEndDate(endYear + "-" + (endMonth + 1) + "-" + endDay);
         Calendar ca = Calendar.getInstance();
-        habit.setCreatedDate(ca.get(1) + "-" + ca.get(2) + "-" + ca.get(5));
+        habit.setCreatedDate(ca.get(1) + "-" + (ca.get(2) + 1) + "-" + ca.get(5));
         habit.setHabitColor(habitColorCode);
         habit.setHabitDescription(editDescription.getText().toString());
-        habit.setMon(String.valueOf(monitorDate[0]));
-        habit.setTue(String.valueOf(monitorDate[1]));
-        habit.setWed(String.valueOf(monitorDate[2]));
-        habit.setThu(String.valueOf(monitorDate[3]));
-        habit.setFri(String.valueOf(monitorDate[4]));
-        habit.setSat(String.valueOf(monitorDate[5]));
-        habit.setSun(String.valueOf(monitorDate[6]));
+        habit.setMon(String.valueOf(monitorDate[0] ? 1 : 0));
+        habit.setTue(String.valueOf(monitorDate[1] ? 1 : 0));
+        habit.setWed(String.valueOf(monitorDate[2] ? 1 : 0));
+        habit.setThu(String.valueOf(monitorDate[3] ? 1 : 0));
+        habit.setFri(String.valueOf(monitorDate[4] ? 1 : 0));
+        habit.setSat(String.valueOf(monitorDate[5] ? 1 : 0));
+        habit.setSun(String.valueOf(monitorDate[6] ? 1 : 0));
 
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
         if (createMode == MODE_CREATE) {
@@ -473,18 +482,32 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
                 @Override
                 public void onFailure(Call<HabitResult> call, Throwable t) {
-
+                    Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
                 }
             });
         }
     }
 
-    @OnClick(R.id.btn_cancel)
+    @OnClick({R.id.btn_cancel, R.id.btn_back})
     public void cancel(View v) {
         if (createMode == MODE_CREATE) {
             finish();
         } else if (createMode == MODE_UPDATE) {
+            // delete habit
+            VnHabitApiService service = VnHabitApiUtils.getApiService();
+            service.deleteHabit(this.habitId).enqueue(new Callback<HabitResult>() {
+                @Override
+                public void onResponse(Call<HabitResult> call, Response<HabitResult> response) {
+                    Toast.makeText(HabitActivity.this, "Đã xóa thói quen", Toast.LENGTH_LONG).show();
+                    HabitActivity.this.setResult(HabitActivity.RESULT_OK);
+                    finish();
+                }
 
+                @Override
+                public void onFailure(Call<HabitResult> call, Throwable t) {
+                    Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 
