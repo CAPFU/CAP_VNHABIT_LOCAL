@@ -83,7 +83,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private Drawable getBackground(String color) {
         Drawable mDrawable = ContextCompat.getDrawable(context, R.drawable.bg_shadow);
-        if (mDrawable != null) {
+        if (mDrawable != null && color != null) {
             mDrawable.setColorFilter(new PorterDuffColorFilter(Color.parseColor(color),PorterDuff.Mode.MULTIPLY));
         }
         return mDrawable;

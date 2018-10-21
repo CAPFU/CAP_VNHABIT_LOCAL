@@ -222,7 +222,6 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         } else {
             // habit color
             setHabitColor(color1);
-
             // init monitor date
             setMonitorDate(btnMon);
             setMonitorDate(btnTue);
@@ -231,7 +230,6 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             setMonitorDate(btnFri);
             setMonitorDate(btnSat);
             setMonitorDate(btnSun);
-
             // set plan date
             StringBuilder date = new StringBuilder(String.valueOf(startDay));
             date.append("/").append(startMonth + 1).append("/").append(startYear);
@@ -264,19 +262,19 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                     if (habitEntity.getMon() != null && habitEntity.getMon().equals(TYPE_1)) {
                         setMonitorDate(btnMon);
                     }
-                    if (habitEntity.getTue() != null && habitEntity.getTue().equals(TYPE_1)){
+                    if (habitEntity.getTue() != null && habitEntity.getTue().equals(TYPE_1)) {
                         setMonitorDate(btnTue);
                     }
-                    if (habitEntity.getWed() != null && habitEntity.getWed().equals(TYPE_1)){
+                    if (habitEntity.getWed() != null && habitEntity.getWed().equals(TYPE_1)) {
                         setMonitorDate(btnWed);
                     }
-                    if (habitEntity.getThu() != null && habitEntity.getThu().equals(TYPE_1)){
+                    if (habitEntity.getThu() != null && habitEntity.getThu().equals(TYPE_1)) {
                         setMonitorDate(btnThu);
                     }
-                    if (habitEntity.getFri() != null && habitEntity.getFri().equals(TYPE_1)){
+                    if (habitEntity.getFri() != null && habitEntity.getFri().equals(TYPE_1)) {
                         setMonitorDate(btnFri);
                     }
-                    if (habitEntity.getSat() != null && habitEntity.getSat().equals(TYPE_1)){
+                    if (habitEntity.getSat() != null && habitEntity.getSat().equals(TYPE_1)) {
                         setMonitorDate(btnSat);
                     }
                     if (habitEntity.getSat() != null && habitEntity.getSun().equals(TYPE_1)) {
@@ -331,7 +329,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                     editCheckNumber.setText(habitEntity.getMonitorNumber());
                     editMonitorUnit.setText(habitEntity.getMonitorUnit());
                     // habit color
-                    for (int i=0; i < colorsList.size(); i++) {
+                    for (int i = 0; i < colorsList.size(); i++) {
                         String code = colorsList.get(i);
                         // TODO: optimize this
                         if (habitEntity.getHabitColor().equals(code)) {
@@ -406,21 +404,22 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         if (!validator.checkNumber(monitorNumber, 1)) {
             Toast.makeText(HabitActivity.this, "Số lần phải lớn hon 0", Toast.LENGTH_SHORT).show();
         }
+
         final Habit habit = new Habit();
         habit.setUserId(userId);
-        habit.setGroupId(this.groupId);
+        habit.setGroupId(groupId);
         habit.setHabitName(habitName);
-        habit.setHabitTarget(String.valueOf(this.habitTarget));
-        habit.setHabitType(String.valueOf(this.habitType));
-        habit.setMonitorType(String.valueOf(this.monitorType));
+        habit.setHabitTarget(String.valueOf(habitTarget));
+        habit.setHabitType(String.valueOf(habitType));
+        habit.setMonitorType(String.valueOf(monitorType));
         habit.setMonitorUnit(monitorUnit);
         habit.setMonitorNumber(monitorNumber);
         habit.setStartDate(startYear + "-" + startMonth + "-" + startDay);
         habit.setEndDate(endYear + "-" + endMonth + "-" + endDay);
         Calendar ca = Calendar.getInstance();
         habit.setCreatedDate(ca.get(1) + "-" + ca.get(2) + "-" + ca.get(5));
-        habit.setHabitColor(this.habitColorCode);
-        habit.setHabitDescription(this.editDescription.getText().toString());
+        habit.setHabitColor(habitColorCode);
+        habit.setHabitDescription(editDescription.getText().toString());
         habit.setMon(String.valueOf(monitorDate[0]));
         habit.setTue(String.valueOf(monitorDate[1]));
         habit.setWed(String.valueOf(monitorDate[2]));
@@ -437,8 +436,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 //                    Database db = new Database(HabitActivity.this);
 //                    db.open();
 //                    Database.sHabitDaoImpl.saveHabit(Database.sHabitDaoImpl.convert(habit));
-                    Toast.makeText(HabitActivity.this, "Tạo thói quen thành công", Toast.LENGTH_LONG).show();
 //                    db.close();
+                    Toast.makeText(HabitActivity.this, "Tạo thói quen thành công", Toast.LENGTH_LONG).show();
                     HabitActivity.this.setResult(HabitActivity.RESULT_OK);
                     finish();
                 }
@@ -504,6 +503,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             monitorType = 1;
         }
     }
+
     @OnClick({R.id.edit_startDate, R.id.edit_endDate})
     public void setPlanDate(View v) {
         Calendar calendar = Calendar.getInstance();
@@ -621,11 +621,11 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         v.setBackground(ContextCompat.getDrawable(this, android.R.color.transparent));
     }
 
-    public void pickColor(View v, int color){
+    public void pickColor(View v, int color) {
         v.setBackground(getCircleCheckBackground(color));
     }
 
-    public void unpickColor(View v, String colorCode){
+    public void unpickColor(View v, String colorCode) {
         v.setBackground(getCircleBackground(colorCode));
     }
 

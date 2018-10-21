@@ -23,8 +23,8 @@ include_once '../../models/Model.php';
 
         public function __construct($db) {
             $this->conn = $db;
-            $this->cols = implode(", ", $this->colsArr);
-            $this->params = $this->make_query_param($this->colsArr);
+            $this->cols = $this->get_read_param(array('conn', 'table', 'cols', 'params'), NULL);
+            $this->params = $this->get_query_param(array('habit_id'));
         }
 
         // Get all User
@@ -58,12 +58,7 @@ include_once '../../models/Model.php';
 
             if ($num == 1) {
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
-                $this->user_id = $row['category_id'];
-                $this->username = $row['parent_id'];
-                $this->password = $row['category_name'];
-                $this->email = $row['category_icon'];
-                $this->date_of_birth = $row['category_description'];
-                return $this;
+                return $row;
             } else {
                 return NULL;
             }
@@ -90,12 +85,7 @@ include_once '../../models/Model.php';
 
             if ($num == 1) {
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
-                $this->user_id = $row['category_id'];
-                $this->username = $row['parent_id'];
-                $this->password = $row['category_name'];
-                $this->email = $row['category_icon'];
-                $this->date_of_birth = $row['category_description'];
-                return $this;
+                return $row;
             } else {
                 return NULL;
             }

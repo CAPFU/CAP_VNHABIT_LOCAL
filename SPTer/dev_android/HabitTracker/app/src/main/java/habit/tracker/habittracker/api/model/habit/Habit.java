@@ -50,7 +50,6 @@ public class Habit {
     @SerializedName("habit_description")
     @Expose
     private String habitDescription;
-
     @SerializedName("mon")
     @Expose
     private String mon;

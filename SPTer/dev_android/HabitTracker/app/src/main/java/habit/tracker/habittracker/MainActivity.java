@@ -95,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
         mService.getHabit(userId).enqueue(new Callback<HabitResponse>() {
             @Override
             public void onResponse(Call<HabitResponse> call, Response<HabitResponse> response) {
+                RecyclerView recyclerView = findViewById(R.id.rvMenu);
+                recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                adapter = new MenuRecyclerViewAdapter(MainActivity.this, data);
+                adapter.setClickListener(MainActivity.this);
+                recyclerView.setAdapter(adapter);
                 if (response.body().getResult().equals("1")) {
                     Database db = new Database(MainActivity.this);
                     db.open();
@@ -102,17 +107,15 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
                     List<HabitEntity> entities = new ArrayList<>();
                     data.clear();
                     for (Habit habit : res) {
-
                         String count = "0";
                         if (MySharedPreference.get(MainActivity.this, habit.getHabitId(), "hb") != null) {
                             count = MySharedPreference.get(MainActivity.this, habit.getHabitId(), "hb");
                         }
-
                         MenuItem item = new MenuItem(
                                 habit.getHabitId(),
                                 habit.getHabitName(),
                                 habit.getHabitDescription(),
-                                habit.getMonitorNumber(),
+                                habit.getMonitorId(),
                                 Integer.parseInt(habit.getMonitorType()),
                                 habit.getMonitorNumber(),
                                 count,
@@ -121,22 +124,12 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
                         data.add(item);
                         entities.add(Database.sHabitDaoImpl.convert(habit));
                     }
-                    RecyclerView recyclerView = findViewById(R.id.rvMenu);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                    adapter = new MenuRecyclerViewAdapter(MainActivity.this, data);
-                    adapter.setClickListener(MainActivity.this);
-                    recyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                     // update db
                     for (HabitEntity entity : entities) {
                         Database.sHabitDaoImpl.saveHabit(entity);
                     }
                     db.close();
-                } else {
-                    RecyclerView recyclerView = findViewById(R.id.rvMenu);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                    adapter = new MenuRecyclerViewAdapter(MainActivity.this, data);
-                    adapter.setClickListener(MainActivity.this);
-                    recyclerView.setAdapter(adapter);
                 }
             }
 

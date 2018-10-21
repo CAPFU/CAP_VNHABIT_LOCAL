@@ -1,46 +1,14 @@
 <?php
 
 include_once '../../models/Model.php';
+include_once '../../models/MonitorDate.php';
 
     class Habit extends Model {
         // db
         private $conn;
-        private $table = 'habit';
+        private $table = 'habit h';
         private $cols;
         private $params;
-        private $colsArr = array(
-            'habit_id', 
-            'user_id', 
-            'group_id', 
-            'monitor_id',
-            'habit_name',
-            'habit_target', 
-            'habit_type', 
-            'monitor_type', 
-            'monitor_unit',
-            'monitor_number',
-            'start_date', 
-            'end_date', 
-            'created_date', 
-            'habit_color', 
-            'habit_description'
-        );
-        private $colsArr2 = array(
-            'user_id', 
-            'group_id', 
-            'monitor_id',
-            'habit_name',
-            'habit_target', 
-            'habit_type', 
-            'monitor_type', 
-            'monitor_unit',
-            'monitor_number',
-            'start_date', 
-            'end_date', 
-            'created_date', 
-            'habit_color', 
-            'habit_description'
-        );
 
         // habit
         public $habit_id;
@@ -61,20 +29,17 @@ include_once '../../models/Model.php';
 
         public function __construct($db) {
             $this->conn = $db;
-            $this->cols = implode(", ", $this->colsArr);
-            $this->params = $this->make_query_param($this->colsArr2);
+            $this->cols = $this->get_read_param(array('conn', 'table', 'cols', 'params'), 'h');
+            $this->params = $this->get_query_param(array('habit_id'));
         }
 
         // Get all Habit
         public function read() {
             $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . ' ORDER BY habit_id ASC';
-
             // Prepare statement
             $stmt = $this->conn->prepare($query);
-            
             // Execute query
             $stmt->execute();
-
             return $stmt;
         }
 
@@ -91,7 +56,8 @@ include_once '../../models/Model.php';
         }
     
         public function read_join_monitor() {
-            $query = 'SELECT * FROM ' . $this->table . ' h LEFT JOIN monitor_date m ON h.monitor_id = m.monitor_id WHERE h.user_id = :user_id';
+            $date = new MonitorDate($this->conn);
+            $query = 'SELECT ' . $this->cols . ', ' . $date->cols . ' FROM ' . $this->table . ' LEFT JOIN monitor_date d ON h.monitor_id = d.monitor_id WHERE h.user_id = :user_id';
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(":user_id", $this->user_id);
             $stmt->execute();
@@ -102,33 +68,14 @@ include_once '../../models/Model.php';
         public function create() {
             // create query
             $query = 'INSERT INTO ' . $this->table . ' SET ' . $this->params;
-            
             // Prepare statement
             $stmt = $this->conn->prepare($query);
-
-            // Bind data
-            $stmt->bindParam(':user_id', $this->user_id);
-            $stmt->bindParam(':group_id', $this->group_id);
-            $stmt->bindParam(':monitor_id', $this->monitor_id);
-            $stmt->bindParam(':habit_name', $this->habit_name);
-            $stmt->bindParam(':habit_target', $this->habit_target);
-            $stmt->bindParam(':habit_type', $this->habit_type);
-            $stmt->bindParam(':monitor_type', $this->monitor_type);
-            $stmt->bindParam(':monitor_unit', $this->monitor_unit);
-            $stmt->bindParam(':monitor_number', $this->monitor_number);
-            $stmt->bindParam(':start_date', $this->start_date);
-            $stmt->bindParam(':end_date', $this->end_date);
-            $stmt->bindParam(':created_date', $this->created_date);
-            $stmt->bindParam(':habit_color', $this->habit_color);
-            $stmt->bindParam(':habit_description', $this->habit_description);
-
+            $stmt = $this->bind_param_exc($stmt, array('habit_id'));
             // Execute query
             if ($stmt->execute()) {
+                $this->habit_id = $this->conn->lastInsertId();
                 return true;
             }
-
-            // Print error if something goes wrong
-            printf("Error: %s.\n", $stmt->error);
             return false;
         }
 
@@ -141,21 +88,7 @@ include_once '../../models/Model.php';
             $stmt = $this->conn->prepare($query);
 
             // Bind data
-            $stmt->bindParam(':habit_id', $this->habit_id);
-            $stmt->bindParam(':user_id', $this->user_id);
-            $stmt->bindParam(':group_id', $this->group_id);
-            $stmt->bindParam(':monitor_id', $this->monitor_id);
-            $stmt->bindParam(':habit_name', $this->habit_name);
-            $stmt->bindParam(':habit_target', $this->habit_target);
-            $stmt->bindParam(':habit_type', $this->habit_type);
-            $stmt->bindParam(':monitor_type', $this->monitor_type);
-            $stmt->bindParam(':monitor_unit', $this->monitor_unit);
-            $stmt->bindParam(':monitor_number', $this->monitor_number);
-            $stmt->bindParam(':start_date', $this->start_date);
-            $stmt->bindParam(':end_date', $this->end_date);
-            $stmt->bindParam(':created_date', $this->created_date);
-            $stmt->bindParam(':habit_color', $this->habit_color);
-            $stmt->bindParam(':habit_description', $this->habit_description);
+            $stmt = $this->bind_param_exc($stmt, NULL);
 
             // Execute query
             if ($stmt->execute()) {

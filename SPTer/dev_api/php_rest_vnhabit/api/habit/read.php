@@ -23,26 +23,8 @@ $num = $result->rowCount();
 // check if any users
 if ($num > 0) {
     $habits_arr = array();
-    $habits_arr['data'] = array();
-    
     while($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        extract($row);
-        $habit_item = array(
-            'habit_id' => $habit_id,
-            'user_id' => $user_id,
-            'category_id' => $category_id,
-            'habit_name' => $habit_name,
-            'habit_type' => $habit_type,
-            'count_type' => $count_type,
-            'unit' => $unit,
-            'start_date' => $start_date,
-            'end_date' => $end_date,
-            'created_date' => $created_date,
-            'habit_color' => $habit_color,
-            'habit_description' => $habit_description
-        );
-        // push to "data"
-        array_push($habits_arr['data'], $habit_item);
+        array_push($habits_arr, $row);
     }
 
     // turn to JSON
