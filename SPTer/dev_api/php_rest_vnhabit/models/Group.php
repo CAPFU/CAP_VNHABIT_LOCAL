@@ -7,13 +7,6 @@ include_once '../../models/Model.php';
         private $table = 'group';
         private $cols;
         private $params;
-        private $colsArr = array(
-            'group_id', 
-            'parrent_id', 
-            'group_name', 
-            'group_icon', 
-            'group_description'
-        );
 
         public $group_id;
         public $parent_id;
