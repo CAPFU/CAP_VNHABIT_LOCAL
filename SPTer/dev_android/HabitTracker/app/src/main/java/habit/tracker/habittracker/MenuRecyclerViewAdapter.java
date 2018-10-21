@@ -23,11 +23,11 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public static final int TYPE_ADD = 2;
     private Context context;
 
-    private List<MenuItem> mData;
+    private List<HabitItem> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
-    public MenuRecyclerViewAdapter(Context context, List<MenuItem> data) {
+    public MenuRecyclerViewAdapter(Context context, List<HabitItem> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.context = context;
@@ -89,19 +89,19 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         return mDrawable;
     }
 
-    private void initLayoutCount(ViewHolderCount holder, MenuItem item) {
+    private void initLayoutCount(ViewHolderCount holder, HabitItem item) {
         holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
-        holder.tvPeriod.setText(item.getPeriod());
+        holder.tvHabitType.setText(item.getHabitType());
         holder.tvNumber.setText(item.getNumber() + " " + item.getUnit());
         holder.tvCount.setText(item.getCount());
         holder.layout.setBackground(getBackground(item.getColor()));
     }
 
-    private void initLayoutCheck(ViewHolderCheck holder, MenuItem item) {
+    private void initLayoutCheck(ViewHolderCheck holder, HabitItem item) {
         holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
-        holder.tvPeriod.setText(item.getPeriod());
+        holder.tvPeriod.setText(item.getHabitType());
         if (item.getCount().equals("1")) {
             holder.isCheck = true;
             holder.imgCheck.setImageResource(R.drawable.ck_checked);
@@ -116,7 +116,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         RelativeLayout layout;
         TextView tvCategory;
         TextView tvDescription;
-        TextView tvPeriod;
+        TextView tvHabitType;
         TextView tvNumber;
         TextView tvCount;
         View btnPlus;
@@ -129,7 +129,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             tvCategory = itemView.findViewById(R.id.tv_category);
             tvDescription = itemView.findViewById(R.id.tv_description);
-            tvPeriod = itemView.findViewById(R.id.tv_period);
+            tvHabitType = itemView.findViewById(R.id.tv_habitType);
             tvNumber = itemView.findViewById(R.id.tv_number);
             tvCount = itemView.findViewById(R.id.tv_count);
             btnPlus = itemView.findViewById(R.id.btn_plus);
@@ -172,7 +172,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             layout = itemView.findViewById(R.id.rl_habit);
             tvCategory = itemView.findViewById(R.id.tv_category);
             tvDescription = itemView.findViewById(R.id.tv_description);
-            tvPeriod = itemView.findViewById(R.id.tv_period);
+            tvPeriod = itemView.findViewById(R.id.tv_habitType);
             imgCheck = itemView.findViewById(R.id.ck_check);
             imgCheck.setOnClickListener(this);
         }

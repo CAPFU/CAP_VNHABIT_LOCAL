@@ -1,23 +1,36 @@
 package habit.tracker.habittracker;
 
-public class MenuItem {
+public class HabitItem {
     private String id;
     private String name;
     private String description;
-    private String period;
+    private String habitType;
     private int type;
     private String number;
     private String count;
     private String unit;
     private String color;
 
-    public MenuItem() {}
+    public HabitItem() {}
 
-    public MenuItem(String id, String name, String description, String period, int type, String number, String count, String unit, String color) {
+    public HabitItem(String id, String name, String description, String habitType, int type, String number, String count, String unit, String color) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.period = period;
+        switch (Integer.parseInt(habitType)) {
+            case 0:
+                this.habitType = "hôm nay";
+                break;
+            case 1:
+                this.habitType = "tuần này";
+                break;
+            case 2:
+                this.habitType = "tháng này";
+                break;
+            case 3:
+                this.habitType = "năm nay";
+                break;
+        }
         this.type = type;
         this.number = number;
         this.count = count;
@@ -37,8 +50,8 @@ public class MenuItem {
         return description;
     }
 
-    public String getPeriod() {
-        return period;
+    public String getHabitType() {
+        return habitType;
     }
 
     public int getType() {
@@ -73,8 +86,8 @@ public class MenuItem {
         this.description = description;
     }
 
-    public void setPeriod(String period) {
-        this.period = period;
+    public void setHabitType(String habitType) {
+        this.habitType = habitType;
     }
 
     public void setType(int type) {

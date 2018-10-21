@@ -31,7 +31,7 @@
         android:text="HÃY GHI CHÉP CHI TIÊU CÁ NHÂN"/>
 
     <TextView
-        android:id="@+id/tv_period"
+        android:id="@+id/tv_habitType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

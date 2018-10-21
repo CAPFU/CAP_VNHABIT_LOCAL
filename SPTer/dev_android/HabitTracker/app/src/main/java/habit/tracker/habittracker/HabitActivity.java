@@ -467,7 +467,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             mService.updateHabit(habit).enqueue(new Callback<HabitResult>() {
                 @Override
                 public void onResponse(Call<HabitResult> call, Response<HabitResult> response) {
-
+                    HabitActivity.this.setResult(HabitActivity.RESULT_OK);
+                    finish();
                 }
 
                 @Override

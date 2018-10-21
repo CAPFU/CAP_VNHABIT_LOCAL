@@ -28,9 +28,10 @@ import static habit.tracker.habittracker.MenuRecyclerViewAdapter.TYPE_COUNT;
 
 public class MainActivity extends AppCompatActivity implements MenuRecyclerViewAdapter.ItemClickListener {
     public static final int CREATE_NEW_HABIT = 0;
+    public static final int UPDATE_HABIT = 1;
     public static final String HABIT_ID = "HABIT_ID";
 
-    List<MenuItem> data = new ArrayList<>();
+    List<HabitItem> data = new ArrayList<>();
     MenuRecyclerViewAdapter adapter;
 
     @Override
@@ -38,18 +39,18 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        MenuItem item = new MenuItem("đọc sách", "thói quen đọc 4 cuốn sách trong", "tháng này", TYPE_COUNT, "4", "0", "cuốn", R.color.color1);
+//        HabitItem item = new HabitItem("đọc sách", "thói quen đọc 4 cuốn sách trong", "tháng này", TYPE_COUNT, "4", "0", "cuốn", R.color.color1);
 //        data.add(item);
-//        item = new MenuItem("chạy bộ", "chạy bộ 10km trong", "tuần này", TYPE_COUNT, "10", "0", "km", R.color.color2);
+//        item = new HabitItem("chạy bộ", "chạy bộ 10km trong", "tuần này", TYPE_COUNT, "10", "0", "km", R.color.color2);
 //        data.add(item);
-//        item = new MenuItem("hít đất", "hít đất 100 cái trong", "hôm nay", TYPE_COUNT, "100", "0", "cái", R.color.color3);
+//        item = new HabitItem("hít đất", "hít đất 100 cái trong", "hôm nay", TYPE_COUNT, "100", "0", "cái", R.color.color3);
 //        data.add(item);
-//        item = new MenuItem("đưa gia đình đi du lịch", "đưa gia đình đi du lịch trong", "năm nay", TYPE_CHECK, "2", "0" +
+//        item = new HabitItem("đưa gia đình đi du lịch", "đưa gia đình đi du lịch trong", "năm nay", TYPE_CHECK, "2", "0" +
 //                "", "lần", R.color.color4);
 //        data.add(item);
-//        item = new MenuItem("đi mua sắm", "đi mua sắm với vợ trong", "tuần này", TYPE_CHECK, "1", "0", "", R.color.color5);
+//        item = new HabitItem("đi mua sắm", "đi mua sắm với vợ trong", "tuần này", TYPE_CHECK, "1", "0", "", R.color.color5);
 //        data.add(item);
-//        item = new MenuItem("ghi chép chi tiêu", "hãy ghi chép chi tiêu cá nhân", "hôm nay", TYPE_CHECK, "1", "0", "", R.color.color6);
+//        item = new HabitItem("ghi chép chi tiêu", "hãy ghi chép chi tiêu cá nhân", "hôm nay", TYPE_CHECK, "1", "0", "", R.color.color6);
 //        data.add(item);
 
         initScreen();
@@ -76,13 +77,13 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
         } else {
             Intent intent = new Intent(this, HabitActivity.class);
             intent.putExtra(HABIT_ID, data.get(position).getId());
-            startActivity(intent);
+            startActivityForResult(intent, UPDATE_HABIT);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == CREATE_NEW_HABIT) {
+        if (requestCode == CREATE_NEW_HABIT || requestCode == UPDATE_HABIT) {
             if (resultCode == RESULT_OK) {
                 initScreen();
             }
@@ -97,25 +98,26 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
             public void onResponse(Call<HabitResponse> call, Response<HabitResponse> response) {
                 RecyclerView recyclerView = findViewById(R.id.rvMenu);
                 recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                data.clear();
                 adapter = new MenuRecyclerViewAdapter(MainActivity.this, data);
                 adapter.setClickListener(MainActivity.this);
                 recyclerView.setAdapter(adapter);
+
                 if (response.body().getResult().equals("1")) {
                     Database db = new Database(MainActivity.this);
                     db.open();
                     List<Habit> res = response.body().getHabit();
                     List<HabitEntity> entities = new ArrayList<>();
-                    data.clear();
                     for (Habit habit : res) {
                         String count = "0";
                         if (MySharedPreference.get(MainActivity.this, habit.getHabitId(), "hb") != null) {
                             count = MySharedPreference.get(MainActivity.this, habit.getHabitId(), "hb");
                         }
-                        MenuItem item = new MenuItem(
+                        HabitItem item = new HabitItem(
                                 habit.getHabitId(),
                                 habit.getHabitName(),
                                 habit.getHabitDescription(),
-                                habit.getMonitorId(),
+                                habit.getHabitType(),
                                 Integer.parseInt(habit.getMonitorType()),
                                 habit.getMonitorNumber(),
                                 count,
