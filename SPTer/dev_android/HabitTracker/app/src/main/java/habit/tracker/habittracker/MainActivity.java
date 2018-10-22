@@ -1,6 +1,7 @@
 package habit.tracker.habittracker;
 
 import android.content.Intent;
+import android.icu.util.TimeZone;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -96,28 +97,38 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
                     for (Habit habit : res) {
                         Calendar ca = Calendar.getInstance();
                         String currentDate = ca.get(Calendar.YEAR) + "-" + (ca.get(Calendar.MONTH) + 1) + "-" + ca.get(Calendar.DATE);
-                        TrackingEntity tracking = Database.sTrackingImpl.getTracking(habit.getHabitId(), currentDate);
-                        if (tracking.getTrackingId() == null) {
-                            tracking.setHabitId(habit.getHabitId());
-                            tracking.setCount("0");
-                            tracking.setCurrentDate(currentDate);
-                            tracking.setDescription(currentDate);
-                            Database.sTrackingImpl.saveTracking(tracking);
-                            tracking.setTrackingId(Database.sTrackingImpl.getLastId());
-                        }
+                        int day = ca.get(Calendar.DAY_OF_WEEK);
+                        if (day == Calendar.MONDAY && habit.getMon().equals("1")
+                        || day == Calendar.TUESDAY && habit.getTue().equals("1")
+                        || day == Calendar.WEDNESDAY && habit.getWed().equals("1")
+                        || day == Calendar.THURSDAY && habit.getThu().equals("1")
+                        || day == Calendar.FRIDAY && habit.getFri().equals("1")
+                        || day == Calendar.SATURDAY && habit.getSat().equals("1")
+                        || day == Calendar.SUNDAY && habit.getSun().equals("1")) {
 
-                        TrackingItem item = new TrackingItem(
-                                habit.getHabitId(),
-                                habit.getHabitName(),
-                                habit.getHabitDescription(),
-                                habit.getHabitType(),
-                                Integer.parseInt(habit.getMonitorType()),
-                                habit.getMonitorNumber(),
-                                Integer.parseInt(tracking.getCount()),
-                                habit.getMonitorUnit(),
-                                habit.getHabitColor());
-                        item.setTrackId(tracking.getTrackingId());
-                        data.add(item);
+                            TrackingEntity tracking = Database.sTrackingImpl.getTracking(habit.getHabitId(), currentDate);
+                            if (tracking.getTrackingId() == null) {
+                                tracking.setHabitId(habit.getHabitId());
+                                tracking.setCount("0");
+                                tracking.setCurrentDate(currentDate);
+                                tracking.setDescription(currentDate);
+                                Database.sTrackingImpl.saveTracking(tracking);
+                                tracking.setTrackingId(Database.sTrackingImpl.getLastId());
+                            }
+
+                            TrackingItem item = new TrackingItem(
+                                    habit.getHabitId(),
+                                    habit.getHabitName(),
+                                    habit.getHabitDescription(),
+                                    habit.getHabitType(),
+                                    Integer.parseInt(habit.getMonitorType()),
+                                    habit.getMonitorNumber(),
+                                    Integer.parseInt(tracking.getCount()),
+                                    habit.getMonitorUnit(),
+                                    habit.getHabitColor());
+                            item.setTrackId(tracking.getTrackingId());
+                            data.add(item);
+                        }
                         entities.add(Database.sHabitDaoImpl.convert(habit));
                     }
                     adapter.notifyDataSetChanged();
@@ -138,12 +149,12 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
     }
 
     public void showEmpty(View v) {
-        Intent itent = new Intent(this, EmptyActivity.class);
-        startActivity(itent);
+        Intent intent = new Intent(this, EmptyActivity.class);
+        startActivity(intent);
     }
 
     @Override
-    protected void onStop() {
+    protected void onPause() {
         TrackingItem item;
         Database db = new Database(MainActivity.this);
         db.open();
@@ -152,6 +163,6 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
             Database.sTrackingImpl.updateTrackCount(item.getTrackId(), String.valueOf(item.getCount()));
         }
         db.close();
-        super.onStop();
+        super.onPause();
     }
 }
