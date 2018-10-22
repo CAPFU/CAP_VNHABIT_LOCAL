@@ -94,7 +94,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.tvDescription.setText(item.getDescription());
         holder.tvHabitType.setText(item.getHabitType());
         holder.tvNumber.setText("/" + item.getNumber() + " " + item.getUnit());
-        holder.tvCount.setText(item.getCount());
+        holder.tvCount.setText(String.valueOf(item.getCount()));
         holder.layout.setBackground(getBackground(item.getColor()));
     }
 

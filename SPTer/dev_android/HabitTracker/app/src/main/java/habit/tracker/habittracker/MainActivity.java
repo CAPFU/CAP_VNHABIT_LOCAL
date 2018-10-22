@@ -94,9 +94,8 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
                     List<Habit> res = response.body().getHabit();
                     List<HabitEntity> entities = new ArrayList<>();
                     for (Habit habit : res) {
-
                         Calendar ca = Calendar.getInstance();
-                        String currentDate = ca.get(Calendar.YEAR) + "-" + ca.get(Calendar.MONTH) + "-" + ca.get(Calendar.DATE);
+                        String currentDate = ca.get(Calendar.YEAR) + "-" + (ca.get(Calendar.MONTH) + 1) + "-" + ca.get(Calendar.DATE);
                         TrackingEntity tracking = Database.sTrackingImpl.getTracking(habit.getHabitId(), currentDate);
                         if (tracking.getTrackingId() == null) {
                             tracking.setHabitId(habit.getHabitId());
@@ -104,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
                             tracking.setCurrentDate(currentDate);
                             tracking.setDescription(currentDate);
                             Database.sTrackingImpl.saveTracking(tracking);
+                            tracking.setTrackingId(Database.sTrackingImpl.getLastId());
                         }
 
                         TrackingItem item = new TrackingItem(
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
                                 Integer.parseInt(tracking.getCount()),
                                 habit.getMonitorUnit(),
                                 habit.getHabitColor());
-                        item.setTrackId(Database.sTrackingImpl.getLastId());
+                        item.setTrackId(tracking.getTrackingId());
                         data.add(item);
                         entities.add(Database.sHabitDaoImpl.convert(habit));
                     }
@@ -144,15 +144,12 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
 
     @Override
     protected void onStop() {
-        TrackingEntity entity = new TrackingEntity();
         TrackingItem item;
         Database db = new Database(MainActivity.this);
         db.open();
         for (int i = 0; i < data.size(); i++) {
             item = data.get(i);
-            entity.setTrackingId(item.getHabitId());
-            entity.setCount(String.valueOf(item.getCount()));
-            Database.sTrackingImpl.updateTracking(entity);
+            Database.sTrackingImpl.updateTrackCount(item.getTrackId(), String.valueOf(item.getCount()));
         }
         db.close();
         super.onStop();

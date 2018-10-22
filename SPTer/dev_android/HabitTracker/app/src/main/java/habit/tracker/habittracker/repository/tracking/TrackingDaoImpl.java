@@ -29,19 +29,19 @@ public class TrackingDaoImpl extends DatabaseHelper implements TrackingDao, Trac
     protected TrackingEntity cursorToEntity(Cursor cursor) {
         TrackingEntity entity = new TrackingEntity();
         if (cursor != null) {
-            if (cursor.getColumnIndex(TRACKING_ID) != 1) {
+            if (cursor.getColumnIndex(TRACKING_ID) != -1) {
                 entity.setTrackingId(cursor.getString(cursor.getColumnIndexOrThrow(TRACKING_ID)));
             }
-            if (cursor.getColumnIndex(HABIT_ID) != 1) {
+            if (cursor.getColumnIndex(HABIT_ID) != -1) {
                 entity.setHabitId(cursor.getString(cursor.getColumnIndexOrThrow(HABIT_ID)));
             }
-            if (cursor.getColumnIndex(CURRENT_DATE) != 1) {
+            if (cursor.getColumnIndex(CURRENT_DATE) != -1) {
                 entity.setCurrentDate(cursor.getString(cursor.getColumnIndexOrThrow(CURRENT_DATE)));
             }
-            if (cursor.getColumnIndex(COUNT) != 1) {
+            if (cursor.getColumnIndex(COUNT) != -1) {
                 entity.setCount(cursor.getString(cursor.getColumnIndexOrThrow(COUNT)));
             }
-            if (cursor.getColumnIndex(TRACKING_DESCRIPTION) != 1) {
+            if (cursor.getColumnIndex(TRACKING_DESCRIPTION) != -1) {
                 entity.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(TRACKING_DESCRIPTION)));
             }
         }
@@ -56,9 +56,9 @@ public class TrackingDaoImpl extends DatabaseHelper implements TrackingDao, Trac
         cursor = super.query(TRACKING_TABLE, TRACKING_COLUMNS, selection, selectionArgs, TRACKING_ID);
         if (cursor != null) {
             cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                entity = cursorToEntity(cursor);
-                cursor.moveToNext();
+            entity = cursorToEntity(cursor);
+            if (entity.getHabitId() == null) {
+                entity.setHabitId(cursor.getString(cursor.getColumnIndexOrThrow(HABIT_ID)));
             }
             cursor.close();
         }
@@ -68,7 +68,7 @@ public class TrackingDaoImpl extends DatabaseHelper implements TrackingDao, Trac
     public TrackingEntity getTracking(String habitId, String currentDate) {
         TrackingEntity entity = new TrackingEntity();
         final String selectionArgs[] = {habitId, currentDate};
-        final String selection = TRACKING_ID + " = ? AND " + CURRENT_DATE + " = ?";
+        final String selection = HABIT_ID + " = ? AND " + CURRENT_DATE + " = ?";
         cursor = super.query(TRACKING_TABLE, TRACKING_COLUMNS, selection, selectionArgs, TRACKING_ID);
         if (cursor != null) {
             cursor.moveToFirst();
@@ -86,7 +86,7 @@ public class TrackingDaoImpl extends DatabaseHelper implements TrackingDao, Trac
         setContentValue(entity);
         try {
             boolean res = super.replace(TRACKING_TABLE, getContentValue()) > 0;
-            Cursor cursor = super.rawQuery("SELECT * FROM " + TRACKING_TABLE + " ORDER BY " + TRACKING_ID + " DESC LIMIT 1", TRACKING_COLUMNS);
+            Cursor cursor = super.rawQuery("SELECT * FROM " + TRACKING_TABLE + " ORDER BY " + TRACKING_ID + " DESC LIMIT 1", null);
             if (cursor != null && cursor.moveToFirst()) {
                 entity = cursorToEntity(cursor);
                 this.lastId = entity.getTrackingId();
@@ -104,6 +104,19 @@ public class TrackingDaoImpl extends DatabaseHelper implements TrackingDao, Trac
         setContentValue(entity);
         try {
             return super.update(TRACKING_TABLE, getContentValue(), selection, selectionArgs) > 0;
+        } catch (SQLiteConstraintException ex) {
+            return false;
+        }
+    }
+
+    public boolean updateTrackCount(String trackId, String count) {
+        final String selectionArgs[] = {String.valueOf(trackId)};
+        final String selection = TRACKING_ID + " = ?";
+        initialValues = new ContentValues();
+        initialValues.put(COUNT, count);
+        try {
+            boolean res = super.update(TRACKING_TABLE, initialValues, selection, selectionArgs) > 0;
+            return res;
         } catch (SQLiteConstraintException ex) {
             return false;
         }
