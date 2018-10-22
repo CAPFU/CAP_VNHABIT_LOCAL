@@ -5,7 +5,7 @@
     <string name="username">Tên đăng nhập</string>
     <string name="phone">Số Điện Thoại</string>
     <string name="email">Email</string>
-    <string name="password">Mật khẫu</string>
+    <string name="password">Mật khẩu</string>
     <string name="password_conf">Nhập lại mật khẩu</string>
     <string name="login">Đăng Nhập</string>
     <string name="register">Đăng Ký</string>
