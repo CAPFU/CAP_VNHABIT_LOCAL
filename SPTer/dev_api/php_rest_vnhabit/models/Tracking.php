@@ -10,19 +10,19 @@ include_once '../../models/Model.php';
         private $params;
 
         // tracking columns
-        public $track_id;
+        public $tracking_id;
         public $habit_id;
         public $current_date;
         public $count;
+        public $tracking_description;
 
         public function __construct($db) {
             $this->conn = $db;
             $this->cols = $this->get_read_param(NULL, NULL);
-            $this->params = $this->get_query_param(array('track_id'));
         }
 
         public function read() {
-            $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . ' ORDER BY track_id ASC';
+            $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . ' ORDER BY tracking_id ASC';
             // Prepare statement
             $stmt = $this->conn->prepare($query);
             // Execute query
@@ -50,13 +50,14 @@ include_once '../../models/Model.php';
         // Create User
         public function create() {
             // create query
-            $query = 'INSERT INTO ' . $this->table . ' SET ' . $this->get_query_param(array('track_id'));
+            $query = 'INSERT INTO ' . $this->table . ' SET ' . $this->get_query_param(array('tracking_id'));
             // Prepare statement
             $stmt = $this->conn->prepare($query);
             // Bind data
-            $stmt = $this->bind_param_exc($stmt, array('track_id'));
+            $stmt = $this->bind_param_exc($stmt, array('tracking_id'));
             // Execute query
             if ($stmt->execute()) {
+                $this->tracking_id = $this->conn->lastInsertId();
                 return true;
             }
             printf("Error: %s.\n", $stmt->error);
@@ -66,10 +67,12 @@ include_once '../../models/Model.php';
         // Update user
         public function update() {
             // create query
-            $query = 'UPDATE ' . $this->table . ' SET ' . $this->get_query_param(array('track_id')) . ' WHERE track_id = :track_id';
-            // Prepare statement
+            $query = 'UPDATE ' . $this->table . ' SET count = :count, tracking_description = :tracking_description '
+                        . ' WHERE habit_id = :habit_id AND current_date = :current_date';
+            
+                // Prepare statement
             $stmt = $this->conn->prepare($query);
-            $stmt = $this->bind_param_exc($stmt, NULL);
+            $stmt = $this->bind_param_exc($stmt, array('tracking_id'));
             // Execute query
             if ($stmt->execute()) {
                 return true;

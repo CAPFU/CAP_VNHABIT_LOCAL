@@ -46,7 +46,7 @@
             $array = array_keys($array);
             $length = count($array);
             for ($i = 0; $i < $length; $i++) {
-                $str = $str . $array[$i] . '= :' . $array[$i];
+                $str = $str . '`' . $array[$i] . '`' . '= :' . $array[$i];
                 if ($i < $length - 1) {
                     $str = $str . ', ';
                 }
