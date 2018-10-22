@@ -176,7 +176,10 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     Button btnCancel;
     int createMode = MODE_CREATE;
 
-    @BindView(R.id.edit_description)
+    @BindView(R.id.btn_addReminder)
+    View btnAddReminder;
+
+    @BindView(R.id.spinner_repeat)
     EditText editDescription;
 
     @Override

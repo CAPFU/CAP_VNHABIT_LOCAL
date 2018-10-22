@@ -701,7 +701,6 @@
                 android:text="màu thói quen" />
 
             <RelativeLayout
-                android:onClick="showEmpty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -772,14 +771,14 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/btn_addReminder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:textSize="10sp"
                     android:textColor="#799c4b"
-                    android:textAllCaps="true"
-                    android:text="thêm >"/>
+                    android:textSize="10sp"
+                    android:text="Thêm >"/>
             </RelativeLayout>
 
             <!-- 8 -->
@@ -798,7 +797,7 @@
                 android:text="hãy viết động lực cho thói quen này" />
 
             <EditText
-                android:id="@+id/edit_description"
+                android:id="@+id/spinner_repeat"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:textSize="11sp"
