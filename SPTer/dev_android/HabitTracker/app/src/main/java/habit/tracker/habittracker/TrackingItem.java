@@ -1,20 +1,21 @@
 package habit.tracker.habittracker;
 
-public class HabitItem {
-    private String id;
+public class TrackingItem {
+    private String trackId;
+    private String habitId;
     private String name;
     private String description;
     private String habitType;
     private int type;
     private String number;
-    private String count;
+    private int count;
     private String unit;
     private String color;
 
-    public HabitItem() {}
+    public TrackingItem() {}
 
-    public HabitItem(String id, String name, String description, String habitType, int type, String number, String count, String unit, String color) {
-        this.id = id;
+    public TrackingItem(String habitId, String name, String description, String habitType, int type, String number, int count, String unit, String color) {
+        this.habitId = habitId;
         this.name = name;
         this.description = description;
         switch (Integer.parseInt(habitType)) {
@@ -38,8 +39,12 @@ public class HabitItem {
         this.color = color;
     }
 
-    public String getId() {
-        return id;
+    public String getTrackId() {
+        return trackId;
+    }
+
+    public String getHabitId() {
+        return habitId;
     }
 
     public String getName() {
@@ -62,7 +67,7 @@ public class HabitItem {
         return number;
     }
 
-    public String getCount() {
+    public int getCount() {
         return count;
     }
 
@@ -74,8 +79,12 @@ public class HabitItem {
         return color;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setTrackId(String trackId) {
+        this.trackId = trackId;
+    }
+
+    public void setHabitId(String habitId) {
+        this.habitId = habitId;
     }
 
     public void setName(String name) {
@@ -98,7 +107,7 @@ public class HabitItem {
         this.number = number;
     }
 
-    public void setCount(String count) {
+    public void setCount(int count) {
         this.count = count;
     }
 

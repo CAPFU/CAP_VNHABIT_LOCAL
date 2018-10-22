@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import habit.tracker.habittracker.api.VnHabitApiUtils;
@@ -18,6 +19,7 @@ import habit.tracker.habittracker.api.model.habit.HabitResponse;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
+import habit.tracker.habittracker.repository.tracking.TrackingEntity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,8 +32,7 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
     public static final int CREATE_NEW_HABIT = 0;
     public static final int UPDATE_HABIT = 1;
     public static final String HABIT_ID = "HABIT_ID";
-
-    List<HabitItem> data = new ArrayList<>();
+    List<TrackingItem> data = new ArrayList<>();
     MenuRecyclerViewAdapter adapter;
 
     @Override
@@ -43,10 +44,8 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
 
     @Override
     public void onSetCount(View view, int type, int position, int count) {
-        data.get(position).setCount(String.valueOf(count));
-
-        MySharedPreference.save(this, data.get(position).getId(), "hb", String.valueOf(count));
-
+        data.get(position).setCount(count);
+        MySharedPreference.save(this, data.get(position).getHabitId(), "hb", String.valueOf(count));
         if (TYPE_COUNT == type) {
 
         } else if (TYPE_CHECK == type) {
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
             startActivityForResult(intent, CREATE_NEW_HABIT);
         } else {
             Intent intent = new Intent(this, HabitActivity.class);
-            intent.putExtra(HABIT_ID, data.get(position).getId());
+            intent.putExtra(HABIT_ID, data.get(position).getHabitId());
             startActivityForResult(intent, UPDATE_HABIT);
         }
     }
@@ -91,27 +90,38 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
                 if (response.body().getResult().equals("1")) {
                     Database db = new Database(MainActivity.this);
                     db.open();
+
                     List<Habit> res = response.body().getHabit();
                     List<HabitEntity> entities = new ArrayList<>();
                     for (Habit habit : res) {
-                        String count = "0";
-                        if (MySharedPreference.get(MainActivity.this, habit.getHabitId(), "hb") != null) {
-                            count = MySharedPreference.get(MainActivity.this, habit.getHabitId(), "hb");
+
+                        Calendar ca = Calendar.getInstance();
+                        String currentDate = ca.get(Calendar.YEAR) + "-" + ca.get(Calendar.MONTH) + "-" + ca.get(Calendar.DATE);
+                        TrackingEntity tracking = Database.sTrackingImpl.getTracking(habit.getHabitId(), currentDate);
+                        if (tracking.getTrackingId() == null) {
+                            tracking.setHabitId(habit.getHabitId());
+                            tracking.setCount("0");
+                            tracking.setCurrentDate(currentDate);
+                            tracking.setDescription(currentDate);
+                            Database.sTrackingImpl.saveTracking(tracking);
                         }
-                        HabitItem item = new HabitItem(
+
+                        TrackingItem item = new TrackingItem(
                                 habit.getHabitId(),
                                 habit.getHabitName(),
                                 habit.getHabitDescription(),
                                 habit.getHabitType(),
                                 Integer.parseInt(habit.getMonitorType()),
                                 habit.getMonitorNumber(),
-                                count,
+                                Integer.parseInt(tracking.getCount()),
                                 habit.getMonitorUnit(),
                                 habit.getHabitColor());
+                        item.setTrackId(Database.sTrackingImpl.getLastId());
                         data.add(item);
                         entities.add(Database.sHabitDaoImpl.convert(habit));
                     }
                     adapter.notifyDataSetChanged();
+
                     // update db
                     for (HabitEntity entity : entities) {
                         Database.sHabitDaoImpl.saveHabit(entity);
@@ -134,7 +144,17 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
 
     @Override
     protected void onStop() {
+        TrackingEntity entity = new TrackingEntity();
+        TrackingItem item;
+        Database db = new Database(MainActivity.this);
+        db.open();
+        for (int i = 0; i < data.size(); i++) {
+            item = data.get(i);
+            entity.setTrackingId(item.getHabitId());
+            entity.setCount(String.valueOf(item.getCount()));
+            Database.sTrackingImpl.updateTracking(entity);
+        }
+        db.close();
         super.onStop();
-
     }
 }

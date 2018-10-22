@@ -23,11 +23,11 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public static final int TYPE_ADD = 2;
     private Context context;
 
-    private List<HabitItem> mData;
+    private List<TrackingItem> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
-    public MenuRecyclerViewAdapter(Context context, List<HabitItem> data) {
+    public MenuRecyclerViewAdapter(Context context, List<TrackingItem> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.context = context;
@@ -89,7 +89,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         return mDrawable;
     }
 
-    private void initLayoutCount(ViewHolderCount holder, HabitItem item) {
+    private void initLayoutCount(ViewHolderCount holder, TrackingItem item) {
         holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
         holder.tvHabitType.setText(item.getHabitType());
@@ -98,14 +98,14 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.layout.setBackground(getBackground(item.getColor()));
     }
 
-    private void initLayoutCheck(ViewHolderCheck holder, HabitItem item) {
+    private void initLayoutCheck(ViewHolderCheck holder, TrackingItem item) {
         holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
         holder.tvPeriod.setText(item.getHabitType());
-        if (item.getCount().equals("1")) {
+        if (item.getCount() == 1) {
             holder.isCheck = true;
             holder.imgCheck.setImageResource(R.drawable.ck_checked);
-        } else if (item.getCount().equals("0")) {
+        } else if (item.getCount() == 0) {
             holder.isCheck = false;
             holder.imgCheck.setImageResource(R.drawable.ck_unchecked);
         }

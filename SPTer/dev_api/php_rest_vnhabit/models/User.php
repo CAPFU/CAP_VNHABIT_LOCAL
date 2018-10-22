@@ -41,9 +41,7 @@ include_once '../../models/Model.php';
         public function read_single() {
             // Create query
             $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . 
-                ' WHERE
-                    username = :username and password = :password 
-                    LIMIT 0,1';
+                ' WHERE username = :username and password = :password LIMIT 0,1';
 
             // Prepare statement
             $stmt = $this->conn->prepare($query);

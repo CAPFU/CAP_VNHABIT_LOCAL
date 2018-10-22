@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 19, 2018 at 02:14 AM
+-- Generation Time: Oct 22, 2018 at 08:01 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -76,25 +76,13 @@ CREATE TABLE `feedback` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `goal`
---
-
-CREATE TABLE `goal` (
-  `goal_id` int(11) NOT NULL,
-  `goal_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `goal_description` text COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `group`
 --
 
 CREATE TABLE `group` (
   `group_id` int(11) NOT NULL,
   `group_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `parrent_id` int(11) DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
   `group_icon` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `group_description` text COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -103,7 +91,7 @@ CREATE TABLE `group` (
 -- Dumping data for table `group`
 --
 
-INSERT INTO `group` (`group_id`, `group_name`, `parrent_id`, `group_icon`, `group_description`) VALUES
+INSERT INTO `group` (`group_id`, `group_name`, `parent_id`, `group_icon`, `group_description`) VALUES
 (1, 'Sức khỏe', NULL, '', ''),
 (2, 'Tài chính', NULL, '', ''),
 (3, 'Gia đình', NULL, '', ''),
@@ -139,16 +127,11 @@ CREATE TABLE `habit` (
 --
 
 INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
-(1, 1, 4, 1, 'đọc sách', 1, 0, 1, 'cuốn', 4, '2018-10-14', '2018-12-31', '2018-10-14', '#78535bfe', 'đọc 4 cuốn sách'),
 (2, 3, 1, 2, 'chạy bộ', 1, 1, 1, 'km', 10, '2018-10-17', '2018-10-26', '2018-10-14', '#78445b77', 'chạy bộ 10km'),
 (3, 2, 1, 4, 'hít đất', 1, 2, 1, 'cái', 100, '2018-10-15', '2018-10-31', '2018-10-14', '#787f8737', 'hít đất 100 cái'),
 (4, 2, 3, 5, 'đưa gia đình đi du lịch', 1, 2, 0, NULL, NULL, '2018-10-14', '2018-10-31', '2018-10-14', '#78a5662e', 'đưa gia đình đi du lịch'),
-(7, 1, 3, 6, 'đi mua sắm', 1, 1, 0, NULL, NULL, '2018-10-14', '2018-10-18', '2018-10-14', '#786f457e', 'đi mua sắm với vợ'),
 (8, 3, 2, 7, 'ghi chép chi tiêu', 1, 3, 0, NULL, NULL, '2018-10-14', '2018-10-31', '2018-10-14', '#78d15e6c', 'hãy ghi chép chi tiêu cá nhân'),
-(14, 1, NULL, NULL, 'haha', 1, 1, 1, 'LẦN', 1, '2018-09-19', '2018-09-30', '2018-09-19', '#78893fc1', 'ggggg'),
-(16, NULL, NULL, NULL, 'vbcv', 1, 0, 0, NULL, 1, '2018-09-19', '2018-09-19', '2018-09-19', '#78893fc1', 'ffasfa'),
-(17, NULL, NULL, NULL, 'cbcvb', 0, 0, 0, NULL, 1, '2018-09-19', '2018-09-19', '2018-09-19', '#78893fc1', 'cbxcvb'),
-(18, 1, NULL, NULL, 'sads', 0, 0, 0, NULL, 1, '2018-09-19', '2018-09-19', '2018-09-19', '#78893fc1', 'gggg');
+(9, 1, NULL, 11, 'haha', 1, 0, 1, 'cuốn', 2, '2018-10-22', '2018-10-31', '2018-10-22', '#64445b77', 'gggg');
 
 -- --------------------------------------------------------
 
@@ -158,14 +141,14 @@ INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_nam
 
 CREATE TABLE `monitor_date` (
   `monitor_id` int(11) NOT NULL,
-  `habit_id` int(11) NOT NULL,
-  `mon` tinyint(1) NOT NULL DEFAULT '1',
-  `tue` tinyint(1) NOT NULL DEFAULT '1',
-  `wed` tinyint(1) NOT NULL DEFAULT '1',
-  `thu` tinyint(1) NOT NULL DEFAULT '1',
+  `habit_id` int(11) DEFAULT NULL,
+  `mon` tinyint(1) DEFAULT '1',
+  `tue` tinyint(1) DEFAULT '1',
+  `wed` tinyint(1) DEFAULT '1',
+  `thu` tinyint(1) DEFAULT '1',
   `fri` tinyint(1) DEFAULT '1',
-  `sat` tinyint(1) NOT NULL DEFAULT '1',
-  `sun` tinyint(1) NOT NULL DEFAULT '1'
+  `sat` tinyint(1) DEFAULT '1',
+  `sun` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -173,24 +156,11 @@ CREATE TABLE `monitor_date` (
 --
 
 INSERT INTO `monitor_date` (`monitor_id`, `habit_id`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`) VALUES
-(1, 1, 0, 1, 0, 1, 0, 1, 0),
 (2, 2, 0, 0, 1, 1, 1, 0, 1),
 (4, 3, 1, 0, 1, 0, 1, 1, 1),
 (5, 4, 0, 0, 1, 1, 0, 0, 1),
-(6, 7, 0, 1, 1, 1, 1, 1, 0),
-(7, 8, 0, 1, 0, 0, 0, 1, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `schedule`
---
-
-CREATE TABLE `schedule` (
-  `schedule_id` int(11) NOT NULL,
-  `schedule_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `schedule_description` text COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+(7, 8, 0, 1, 1, 1, 1, 1, 1),
+(11, 9, 0, 0, 0, 0, 0, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -202,9 +172,8 @@ CREATE TABLE `tracking` (
   `tracking_id` int(11) NOT NULL,
   `habit_id` int(11) NOT NULL,
   `current_date` date NOT NULL,
-  `type_check` tinyint(1) NOT NULL,
-  `type_count` int(11) NOT NULL,
-  `tracking_description` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `count` int(11) NOT NULL DEFAULT '0',
+  `tracking_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -220,7 +189,7 @@ CREATE TABLE `user` (
   `phone` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `date_of_birth` date NOT NULL,
-  `gender` tinyint(1) NOT NULL,
+  `gender` tinyint(1) NOT NULL DEFAULT '-1',
   `user_icon` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `avatar` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_description` text COLLATE utf8mb4_unicode_ci NOT NULL
@@ -233,7 +202,9 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `user_icon`, `avatar`, `user_description`) VALUES
 (1, 'user01', '12345678', '', 'user01@mail.com', '1998-04-25', 0, '', '', 'The first user'),
 (2, 'user02', '87654321', '', 'user02@mail.com', '1985-08-08', 0, '', '', 'The second user'),
-(3, 'user03', 'abc12345', '', 'user03@mail.com', '1995-10-20', 0, '', '', 'a new user');
+(3, 'user03', 'abc12345', '', 'user03@mail.com', '1995-10-20', 0, '', '', 'a new user'),
+(4, 'user04', '123asd', '0967883956', 'user04@mail.com', '0000-00-00', 0, '', '', ''),
+(5, 'user05', '12345678', '0976588632', 'user04@mail.com', '0000-00-00', 0, '', '', '');
 
 --
 -- Indexes for dumped tables
@@ -260,12 +231,6 @@ ALTER TABLE `feedback`
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `goal`
---
-ALTER TABLE `goal`
-  ADD PRIMARY KEY (`goal_id`);
-
---
 -- Indexes for table `group`
 --
 ALTER TABLE `group`
@@ -286,12 +251,6 @@ ALTER TABLE `habit`
 ALTER TABLE `monitor_date`
   ADD PRIMARY KEY (`monitor_id`),
   ADD KEY `habit_id` (`habit_id`);
-
---
--- Indexes for table `schedule`
---
-ALTER TABLE `schedule`
-  ADD PRIMARY KEY (`schedule_id`);
 
 --
 -- Indexes for table `tracking`
@@ -324,12 +283,6 @@ ALTER TABLE `feedback`
   MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `goal`
---
-ALTER TABLE `goal`
-  MODIFY `goal_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `group`
 --
 ALTER TABLE `group`
@@ -339,31 +292,19 @@ ALTER TABLE `group`
 -- AUTO_INCREMENT for table `habit`
 --
 ALTER TABLE `habit`
-  MODIFY `habit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `habit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `monitor_date`
 --
 ALTER TABLE `monitor_date`
-  MODIFY `monitor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT for table `schedule`
---
-ALTER TABLE `schedule`
-  MODIFY `schedule_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `tracking`
---
-ALTER TABLE `tracking`
-  MODIFY `tracking_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `monitor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
@@ -388,15 +329,15 @@ ALTER TABLE `feedback`
 -- Constraints for table `habit`
 --
 ALTER TABLE `habit`
-  ADD CONSTRAINT `habit_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-  ADD CONSTRAINT `habit_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`),
-  ADD CONSTRAINT `habit_ibfk_3` FOREIGN KEY (`monitor_id`) REFERENCES `monitor_date` (`monitor_id`);
+  ADD CONSTRAINT `habit_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `habit_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `habit_ibfk_3` FOREIGN KEY (`monitor_id`) REFERENCES `monitor_date` (`monitor_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `monitor_date`
 --
 ALTER TABLE `monitor_date`
-  ADD CONSTRAINT `monitor_date_ibfk_1` FOREIGN KEY (`habit_id`) REFERENCES `habit` (`habit_id`);
+  ADD CONSTRAINT `monitor_date_ibfk_1` FOREIGN KEY (`habit_id`) REFERENCES `habit` (`habit_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tracking`

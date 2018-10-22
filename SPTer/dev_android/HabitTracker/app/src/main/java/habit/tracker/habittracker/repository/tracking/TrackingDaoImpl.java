@@ -10,6 +10,11 @@ import habit.tracker.habittracker.repository.DatabaseHelper;
 public class TrackingDaoImpl extends DatabaseHelper implements TrackingDao, TrackingSchema {
     private Cursor cursor;
     private ContentValues initialValues;
+    private String lastId;
+
+    public String getLastId() {
+        return lastId;
+    }
 
     public TrackingDaoImpl(SQLiteDatabase db) {
         super(db);
@@ -48,7 +53,23 @@ public class TrackingDaoImpl extends DatabaseHelper implements TrackingDao, Trac
         final String selectionArgs[] = {String.valueOf(trackID)};
         final String selection = TRACKING_ID + " = ?";
         TrackingEntity entity = new TrackingEntity();
-        cursor = super.query(TRACKING_TABLE, TRACKING_COLUMNS, selection, selectionArgs, trackID);
+        cursor = super.query(TRACKING_TABLE, TRACKING_COLUMNS, selection, selectionArgs, TRACKING_ID);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                entity = cursorToEntity(cursor);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        return entity;
+    }
+
+    public TrackingEntity getTracking(String habitId, String currentDate) {
+        TrackingEntity entity = new TrackingEntity();
+        final String selectionArgs[] = {habitId, currentDate};
+        final String selection = TRACKING_ID + " = ? AND " + CURRENT_DATE + " = ?";
+        cursor = super.query(TRACKING_TABLE, TRACKING_COLUMNS, selection, selectionArgs, TRACKING_ID);
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -64,15 +85,16 @@ public class TrackingDaoImpl extends DatabaseHelper implements TrackingDao, Trac
     public boolean saveTracking(TrackingEntity entity) {
         setContentValue(entity);
         try {
-            return super.replace(TRACKING_TABLE, getContentValue()) > 0;
+            boolean res = super.replace(TRACKING_TABLE, getContentValue()) > 0;
+            Cursor cursor = super.rawQuery("SELECT * FROM " + TRACKING_TABLE + " ORDER BY " + TRACKING_ID + " DESC LIMIT 1", TRACKING_COLUMNS);
+            if (cursor != null && cursor.moveToFirst()) {
+                entity = cursorToEntity(cursor);
+                this.lastId = entity.getTrackingId();
+            }
+            return res;
         } catch (SQLiteConstraintException ex) {
             return false;
         }
-    }
-
-    @Override
-    public boolean deleteTracking(TrackingEntity entity) {
-        return false;
     }
 
     @Override
@@ -89,11 +111,21 @@ public class TrackingDaoImpl extends DatabaseHelper implements TrackingDao, Trac
 
     private void setContentValue(TrackingEntity entity) {
         initialValues = new ContentValues();
-        initialValues.put(TRACKING_ID, entity.getTrackingId());
-        initialValues.put(HABIT_ID, entity.getHabitId());
-        initialValues.put(CURRENT_DATE, entity.getCurrentDate());
-        initialValues.put(COUNT, entity.getCount());
-        initialValues.put(TRACKING_DESCRIPTION, entity.getDescription());
+        if (entity.getTrackingId() != null) {
+            initialValues.put(TRACKING_ID, entity.getTrackingId());
+        }
+        if (entity.getHabitId() != null) {
+            initialValues.put(HABIT_ID, entity.getHabitId());
+        }
+        if (entity.getCurrentDate() != null) {
+            initialValues.put(CURRENT_DATE, entity.getCurrentDate());
+        }
+        if (entity.getCount() != null) {
+            initialValues.put(COUNT, entity.getCount());
+        }
+        if (entity.getDescription() != null) {
+            initialValues.put(TRACKING_DESCRIPTION, entity.getDescription());
+        }
     }
 
     private ContentValues getContentValue() {
