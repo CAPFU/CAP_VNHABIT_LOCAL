@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 22, 2018 at 08:01 AM
+-- Generation Time: Oct 22, 2018 at 03:11 PM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -131,7 +131,8 @@ INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_nam
 (3, 2, 1, 4, 'hít đất', 1, 2, 1, 'cái', 100, '2018-10-15', '2018-10-31', '2018-10-14', '#787f8737', 'hít đất 100 cái'),
 (4, 2, 3, 5, 'đưa gia đình đi du lịch', 1, 2, 0, NULL, NULL, '2018-10-14', '2018-10-31', '2018-10-14', '#78a5662e', 'đưa gia đình đi du lịch'),
 (8, 3, 2, 7, 'ghi chép chi tiêu', 1, 3, 0, NULL, NULL, '2018-10-14', '2018-10-31', '2018-10-14', '#78d15e6c', 'hãy ghi chép chi tiêu cá nhân'),
-(9, 1, NULL, 11, 'haha', 1, 0, 1, 'cuốn', 2, '2018-10-22', '2018-10-31', '2018-10-22', '#64445b77', 'gggg');
+(9, 1, NULL, 11, 'haha', 1, 0, 1, 'cuốn', 2, '2018-10-22', '2018-10-31', '2018-10-22', '#64445b77', 'gggg'),
+(10, 1, NULL, 12, 'di sieu thi', 0, 0, 0, NULL, 1, '2018-10-22', '2018-10-30', '2018-10-22', '#64535bfe', 'di sieu thi');
 
 -- --------------------------------------------------------
 
@@ -156,11 +157,12 @@ CREATE TABLE `monitor_date` (
 --
 
 INSERT INTO `monitor_date` (`monitor_id`, `habit_id`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`) VALUES
-(2, 2, 0, 0, 1, 1, 1, 0, 1),
-(4, 3, 1, 0, 1, 0, 1, 1, 1),
-(5, 4, 0, 0, 1, 1, 0, 0, 1),
-(7, 8, 0, 1, 1, 1, 1, 1, 1),
-(11, 9, 0, 0, 0, 0, 0, 1, 1);
+(2, 2, 1, 1, 1, 1, 1, 1, 1),
+(4, 3, 1, 1, 1, 1, 1, 1, 1),
+(5, 4, 1, 1, 1, 1, 1, 1, 1),
+(7, 8, 1, 1, 1, 1, 1, 1, 1),
+(11, 9, 1, 1, 1, 1, 1, 1, 1),
+(12, 10, 1, 0, 1, 0, 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -292,13 +294,13 @@ ALTER TABLE `group`
 -- AUTO_INCREMENT for table `habit`
 --
 ALTER TABLE `habit`
-  MODIFY `habit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `habit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `monitor_date`
 --
 ALTER TABLE `monitor_date`
-  MODIFY `monitor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `monitor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `user`
