@@ -46,12 +46,6 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
     @Override
     public void onSetCount(View view, int type, int position, int count) {
         data.get(position).setCount(count);
-        MySharedPreference.save(this, data.get(position).getHabitId(), "hb", String.valueOf(count));
-        if (TYPE_COUNT == type) {
-
-        } else if (TYPE_CHECK == type) {
-
-        }
     }
 
     @Override
