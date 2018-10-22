@@ -38,26 +38,11 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        HabitItem item = new HabitItem("đọc sách", "thói quen đọc 4 cuốn sách trong", "tháng này", TYPE_COUNT, "4", "0", "cuốn", R.color.color1);
-//        data.add(item);
-//        item = new HabitItem("chạy bộ", "chạy bộ 10km trong", "tuần này", TYPE_COUNT, "10", "0", "km", R.color.color2);
-//        data.add(item);
-//        item = new HabitItem("hít đất", "hít đất 100 cái trong", "hôm nay", TYPE_COUNT, "100", "0", "cái", R.color.color3);
-//        data.add(item);
-//        item = new HabitItem("đưa gia đình đi du lịch", "đưa gia đình đi du lịch trong", "năm nay", TYPE_CHECK, "2", "0" +
-//                "", "lần", R.color.color4);
-//        data.add(item);
-//        item = new HabitItem("đi mua sắm", "đi mua sắm với vợ trong", "tuần này", TYPE_CHECK, "1", "0", "", R.color.color5);
-//        data.add(item);
-//        item = new HabitItem("ghi chép chi tiêu", "hãy ghi chép chi tiêu cá nhân", "hôm nay", TYPE_CHECK, "1", "0", "", R.color.color6);
-//        data.add(item);
-
         initScreen();
     }
 
     @Override
-    public void onAdjustcount(View view, int type, int position, int count) {
+    public void onSetCount(View view, int type, int position, int count) {
         data.get(position).setCount(String.valueOf(count));
 
         MySharedPreference.save(this, data.get(position).getId(), "hb", String.valueOf(count));
