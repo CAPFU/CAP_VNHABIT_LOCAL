@@ -40,6 +40,7 @@ import retrofit2.Response;
 
 public class HabitActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     public static final int SELECT_GROUP = 1;
+    public static final int ADD_REMINDER = 2;
     public static final String TYPE_0 = "0";
     public static final String TYPE_1 = "1";
     public static final String TYPE_2 = "2";
@@ -50,6 +51,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     public static final String TYPE_7 = "7";
     public static final String TYPE_8 = "8";
     public static final String TYPE_9 = "9";
+    public static final String DAY_OF_WEEK = "day_of_week";
 
     @BindView(R.id.edit_habitName)
     EditText editHabitName;
@@ -512,6 +514,13 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 }
             });
         }
+    }
+
+    @OnClick(R.id.btn_addReminder)
+    public void addReminder(View v) {
+        Intent intent = new Intent(this, ReminderActivity.class);
+        intent.putExtra(DAY_OF_WEEK, monitorDate);
+        startActivityForResult(intent, ADD_REMINDER);
     }
 
     @OnClick({R.id.btn_TargetBuild, R.id.btn_TargetQuit})
