@@ -34,6 +34,7 @@ import habit.tracker.habittracker.common.ValidatorType;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.group.GroupEntity;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
+import habit.tracker.habittracker.repository.reminder.ReminderEntity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -184,12 +185,28 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     @BindView(R.id.spinner_repeat)
     EditText editDescription;
 
+    List<ReminderEntity> reminders = new ArrayList<>();
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_GROUP) {
-                groupId = data.getStringExtra(GroupActivity.GROUP_ID);
-                tvGroupName.setText(data.getStringExtra(GroupActivity.GROUP_NAME));
+                if (data != null && data.getExtras() != null) {
+                    groupId = data.getStringExtra(GroupActivity.GROUP_ID);
+                    tvGroupName.setText(data.getStringExtra(GroupActivity.GROUP_NAME));
+                }
+            } else if (requestCode == ADD_REMINDER) {
+                if (data != null && data.getExtras() != null) {
+                    String hour = data.getStringExtra(ReminderActivity.TIME_HOUR);
+                    String minute = data.getStringExtra(ReminderActivity.TIME_MINUTE);
+                    String repeat = data.getStringExtra(ReminderActivity.REPEAT_TIME);
+                    ReminderEntity entity = new ReminderEntity();
+                    entity.setReminderHour(hour);
+                    entity.setReminderMinute(minute);
+                    entity.setRepeatRemain(repeat);
+                    entity.setRepeatRemain(repeat);
+                    reminders.add(entity);
+                }
             }
         }
     }
@@ -434,28 +451,29 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             Toast.makeText(HabitActivity.this, "Số lần phải lớn hon 0", Toast.LENGTH_SHORT).show();
         }
 
+        // collect user input
+        Calendar ca = Calendar.getInstance();
         final Habit habit = new Habit();
         habit.setUserId(userId);
-        habit.setGroupId(groupId);
+        habit.setGroupId(this.groupId);
         habit.setHabitName(habitName);
-        habit.setHabitTarget(String.valueOf(habitTarget));
-        habit.setHabitType(String.valueOf(habitType));
-        habit.setMonitorType(String.valueOf(monitorType));
+        habit.setHabitTarget(String.valueOf(this.habitTarget));
+        habit.setHabitType(String.valueOf(this.habitType));
+        habit.setMonitorType(String.valueOf(this.monitorType));
         habit.setMonitorUnit(monitorUnit);
         habit.setMonitorNumber(monitorNumber);
-        habit.setStartDate(startYear + "-" + (startMonth + 1) + "-" + startDay);
-        habit.setEndDate(endYear + "-" + (endMonth + 1) + "-" + endDay);
-        Calendar ca = Calendar.getInstance();
+        habit.setStartDate(this.startYear + "-" + (this.startMonth + 1) + "-" + this.startDay);
+        habit.setEndDate(this.endYear + "-" + (this.endMonth + 1) + "-" + this.endDay);
         habit.setCreatedDate(ca.get(1) + "-" + (ca.get(2) + 1) + "-" + ca.get(5));
-        habit.setHabitColor(habitColorCode);
-        habit.setHabitDescription(editDescription.getText().toString());
-        habit.setMon(String.valueOf(monitorDate[0] ? 1 : 0));
-        habit.setTue(String.valueOf(monitorDate[1] ? 1 : 0));
-        habit.setWed(String.valueOf(monitorDate[2] ? 1 : 0));
-        habit.setThu(String.valueOf(monitorDate[3] ? 1 : 0));
-        habit.setFri(String.valueOf(monitorDate[4] ? 1 : 0));
-        habit.setSat(String.valueOf(monitorDate[5] ? 1 : 0));
-        habit.setSun(String.valueOf(monitorDate[6] ? 1 : 0));
+        habit.setHabitColor(this.habitColorCode);
+        habit.setHabitDescription(this.editDescription.getText().toString());
+        habit.setMon(String.valueOf(this.monitorDate[0] ? 1 : 0));
+        habit.setTue(String.valueOf(this.monitorDate[1] ? 1 : 0));
+        habit.setWed(String.valueOf(this.monitorDate[2] ? 1 : 0));
+        habit.setThu(String.valueOf(this.monitorDate[3] ? 1 : 0));
+        habit.setFri(String.valueOf(this.monitorDate[4] ? 1 : 0));
+        habit.setSat(String.valueOf(this.monitorDate[5] ? 1 : 0));
+        habit.setSun(String.valueOf(this.monitorDate[6] ? 1 : 0));
 
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
         if (createMode == MODE_CREATE) {

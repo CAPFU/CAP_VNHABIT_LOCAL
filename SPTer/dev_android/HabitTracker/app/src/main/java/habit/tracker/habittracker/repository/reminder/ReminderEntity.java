@@ -2,7 +2,8 @@ package habit.tracker.habittracker.repository.reminder;
 
 public class ReminderEntity {
     String reminderId;
-    String reminderGroup;
+    String reminderHour;
+    String reminderMinute;
     String repeatTime;
     String repeatRemain;
     String habitId;
@@ -10,9 +11,12 @@ public class ReminderEntity {
     public String getReminderId() {
         return reminderId;
     }
+    public String getReminderHour() {
+        return reminderHour;
+    }
 
-    public String getReminderGroup() {
-        return reminderGroup;
+    public String getReminderMinute() {
+        return reminderMinute;
     }
 
     public String getRepeatTime() {
@@ -31,8 +35,12 @@ public class ReminderEntity {
         this.reminderId = reminderId;
     }
 
-    public void setReminderGroup(String reminderGroup) {
-        this.reminderGroup = reminderGroup;
+    public void setReminderHour(String reminderHour) {
+        this.reminderHour = reminderHour;
+    }
+
+    public void setReminderMinute(String reminderMinute) {
+        this.reminderMinute = reminderMinute;
     }
 
     public void setRepeatTime(String repeatTime) {

@@ -19,6 +19,9 @@ import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.reminder.ReminderEntity;
 
 public class ReminderActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener, TimePicker.OnTimeChangedListener {
+    public static final String TIME_HOUR = "hour";
+    public static final String TIME_MINUTE = "minute";
+    public static final String REPEAT_TIME = "repeat_time";
 
     @BindView(R.id.reminderTime_picker)
     TimePicker timePicker;
@@ -75,13 +78,22 @@ public class ReminderActivity extends AppCompatActivity implements NumberPicker.
     @OnClick(R.id.btnOk)
     public void addReminder(Button ok) {
 
-        Database db = new Database(this);
-        db.open();
+//        Database db = new Database(this);
+//        db.open();
+//        ReminderEntity entity = new ReminderEntity();
+//        entity.setReminderHour(String.valueOf(hour));
+//        entity.setReminderMinute(String.valueOf(minute));
+//        entity.setRepeatTime(String.valueOf(repeatTime));
+//        entity.setRepeatRemain(String.valueOf(repeatTime));
+//        Database.sReminderImpl.addReminder(entity);
+//        db.close();
 
-        ReminderEntity entity = new ReminderEntity();
-
-        db.close();
-
+        Intent intent = getIntent();
+        intent.putExtra(TIME_HOUR, String.valueOf(hour));
+        intent.putExtra(TIME_MINUTE, String.valueOf(minute));
+        intent.putExtra(REPEAT_TIME, repeatTime);
+        setResult(RESULT_OK, intent);
+        finish();
 
 //        if (dayOfWeek[0]) {
 //            remindOnDay(Calendar.MONDAY);
@@ -106,20 +118,20 @@ public class ReminderActivity extends AppCompatActivity implements NumberPicker.
 //        }
     }
 
-    public void remindOnDay(int day) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_WEEK, day);
+//    public void remindOnDay(int day) {
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.set(Calendar.DAY_OF_WEEK, day);
 //        calendar.set(Calendar.HOUR_OF_DAY, this.hour);
 //        calendar.set(Calendar.MINUTE, this.minute);
-        calendar.setTimeInMillis(System.currentTimeMillis());
-
-        int requestCode = 0;
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, receiverIntent, 0);
-        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,
-                calendar.getTimeInMillis() + 1000,
-                INTERVAL, pendingIntent);
-        Toast.makeText(this, "start remind", Toast.LENGTH_SHORT).show();
-    }
+//        calendar.setTimeInMillis(System.currentTimeMillis());
+//
+//        int requestCode = 0;
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, receiverIntent, 0);
+//        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,
+//                calendar.getTimeInMillis() + 1000,
+//                INTERVAL, pendingIntent);
+//        Toast.makeText(this, "start remind", Toast.LENGTH_SHORT).show();
+//    }
 
     @OnClick(R.id.btnCancel)
     public void cancel(Button cancel) {
