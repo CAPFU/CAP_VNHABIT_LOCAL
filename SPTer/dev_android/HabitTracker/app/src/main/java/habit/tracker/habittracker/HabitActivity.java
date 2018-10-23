@@ -449,6 +449,18 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         }
         if (monitorType == 1 && !validator.checkNumber(monitorNumber, 1)) {
             Toast.makeText(HabitActivity.this, "Số lần phải lớn hon 0", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        boolean isMonitor = false;
+        for (boolean day : monitorDate) {
+            if (day) {
+                isMonitor = true;
+                break;
+            }
+        }
+        if (!isMonitor) {
+            Toast.makeText(HabitActivity.this, "Phải chọn ít nhất một ngày trong tuần", Toast.LENGTH_LONG).show();
+            return;
         }
 
         // collect user input
