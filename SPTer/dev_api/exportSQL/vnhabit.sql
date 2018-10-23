@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 22, 2018 at 03:11 PM
+-- Generation Time: Oct 23, 2018 at 04:10 PM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -127,12 +127,12 @@ CREATE TABLE `habit` (
 --
 
 INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
-(2, 3, 1, 2, 'chạy bộ', 1, 1, 1, 'km', 10, '2018-10-17', '2018-10-26', '2018-10-14', '#78445b77', 'chạy bộ 10km'),
+(2, 1, 1, 2, 'chạy bộ', 1, 1, 1, 'km', 10, '2018-10-17', '2018-10-26', '2018-10-14', '#78445b77', 'chạy bộ 10km'),
 (3, 2, 1, 4, 'hít đất', 1, 2, 1, 'cái', 100, '2018-10-15', '2018-10-31', '2018-10-14', '#787f8737', 'hít đất 100 cái'),
 (4, 2, 3, 5, 'đưa gia đình đi du lịch', 1, 2, 0, NULL, NULL, '2018-10-14', '2018-10-31', '2018-10-14', '#78a5662e', 'đưa gia đình đi du lịch'),
 (8, 3, 2, 7, 'ghi chép chi tiêu', 1, 3, 0, NULL, NULL, '2018-10-14', '2018-10-31', '2018-10-14', '#78d15e6c', 'hãy ghi chép chi tiêu cá nhân'),
-(9, 1, NULL, 11, 'haha', 1, 0, 1, 'cuốn', 2, '2018-10-22', '2018-10-31', '2018-10-22', '#64445b77', 'gggg'),
-(10, 1, NULL, 12, 'di sieu thi', 0, 0, 0, NULL, 1, '2018-10-22', '2018-10-30', '2018-10-22', '#64535bfe', 'di sieu thi');
+(9, 1, 1, 11, 'haha', 1, 0, 1, 'cuốn', 2, '2018-10-22', '2018-10-31', '2018-10-23', '#78de0639', 'gggg'),
+(10, 1, 1, 12, 'di sieu thi', 0, 0, 0, NULL, 1, '2018-10-22', '2018-10-30', '2018-10-22', '#64535bfe', 'di sieu thi');
 
 -- --------------------------------------------------------
 
@@ -167,16 +167,37 @@ INSERT INTO `monitor_date` (`monitor_id`, `habit_id`, `mon`, `tue`, `wed`, `thu`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `reminder`
+--
+
+CREATE TABLE `reminder` (
+  `reminder_id` int(11) NOT NULL,
+  `habit_id` int(11) DEFAULT NULL,
+  `reminder_time` int(11) DEFAULT NULL,
+  `repeat_time` int(11) DEFAULT NULL,
+  `reminder_description` text COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tracking`
 --
 
 CREATE TABLE `tracking` (
   `tracking_id` int(11) NOT NULL,
   `habit_id` int(11) NOT NULL,
-  `current_date` date NOT NULL,
+  `current_date` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `count` int(11) NOT NULL DEFAULT '0',
   `tracking_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tracking`
+--
+
+INSERT INTO `tracking` (`tracking_id`, `habit_id`, `current_date`, `count`, `tracking_description`) VALUES
+(4, 2, '2018-10-22', 5, 'update');
 
 -- --------------------------------------------------------
 
@@ -255,6 +276,13 @@ ALTER TABLE `monitor_date`
   ADD KEY `habit_id` (`habit_id`);
 
 --
+-- Indexes for table `reminder`
+--
+ALTER TABLE `reminder`
+  ADD PRIMARY KEY (`reminder_id`),
+  ADD KEY `reminder_ibfk_1` (`habit_id`);
+
+--
 -- Indexes for table `tracking`
 --
 ALTER TABLE `tracking`
@@ -294,13 +322,25 @@ ALTER TABLE `group`
 -- AUTO_INCREMENT for table `habit`
 --
 ALTER TABLE `habit`
-  MODIFY `habit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `habit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `monitor_date`
 --
 ALTER TABLE `monitor_date`
-  MODIFY `monitor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `monitor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `reminder`
+--
+ALTER TABLE `reminder`
+  MODIFY `reminder_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `tracking`
+--
+ALTER TABLE `tracking`
+  MODIFY `tracking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -340,6 +380,12 @@ ALTER TABLE `habit`
 --
 ALTER TABLE `monitor_date`
   ADD CONSTRAINT `monitor_date_ibfk_1` FOREIGN KEY (`habit_id`) REFERENCES `habit` (`habit_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `reminder`
+--
+ALTER TABLE `reminder`
+  ADD CONSTRAINT `reminder_ibfk_1` FOREIGN KEY (`habit_id`) REFERENCES `habit` (`habit_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tracking`

@@ -15,7 +15,7 @@ public interface ReminderSchema {
                     + REMINDER_MINUTE + " TEXT, "
                     + REPEAT_TIME + " TEXT, "
                     + REPEAT_REMAIN + " TEXT, "
-                    + HABIT_ID + " TEXT, "
+                    + HABIT_ID + " TEXT "
                     + ")";
     String[] REMINDER_COLUMNS = {REMINDER_ID, REMINDER_HOUR, REMINDER_MINUTE, REPEAT_TIME, REPEAT_REMAIN, HABIT_ID};
 }

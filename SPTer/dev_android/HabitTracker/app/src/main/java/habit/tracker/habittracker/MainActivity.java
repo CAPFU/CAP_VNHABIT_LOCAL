@@ -1,7 +1,6 @@
 package habit.tracker.habittracker;
 
 import android.content.Intent;
-import android.icu.util.TimeZone;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -25,16 +24,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static habit.tracker.habittracker.MenuRecyclerViewAdapter.TYPE_ADD;
-import static habit.tracker.habittracker.MenuRecyclerViewAdapter.TYPE_CHECK;
-import static habit.tracker.habittracker.MenuRecyclerViewAdapter.TYPE_COUNT;
+import static habit.tracker.habittracker.HabitRecyclerViewAdapter.TYPE_ADD;
 
-public class MainActivity extends AppCompatActivity implements MenuRecyclerViewAdapter.ItemClickListener {
+public class MainActivity extends AppCompatActivity implements HabitRecyclerViewAdapter.ItemClickListener {
     public static final int CREATE_NEW_HABIT = 0;
     public static final int UPDATE_HABIT = 1;
     public static final String HABIT_ID = "HABIT_ID";
     List<TrackingItem> data = new ArrayList<>();
-    MenuRecyclerViewAdapter adapter;
+    HabitRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
                 RecyclerView recyclerView = findViewById(R.id.rvMenu);
                 recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                 data.clear();
-                adapter = new MenuRecyclerViewAdapter(MainActivity.this, data);
+                adapter = new HabitRecyclerViewAdapter(MainActivity.this, data);
                 adapter.setClickListener(MainActivity.this);
                 recyclerView.setAdapter(adapter);
 
@@ -92,13 +89,13 @@ public class MainActivity extends AppCompatActivity implements MenuRecyclerViewA
                         Calendar ca = Calendar.getInstance();
                         String currentDate = ca.get(Calendar.YEAR) + "-" + (ca.get(Calendar.MONTH) + 1) + "-" + ca.get(Calendar.DATE);
                         int day = ca.get(Calendar.DAY_OF_WEEK);
-                        if (day == Calendar.MONDAY && habit.getMon().equals("1")
-                        || day == Calendar.TUESDAY && habit.getTue().equals("1")
-                        || day == Calendar.WEDNESDAY && habit.getWed().equals("1")
-                        || day == Calendar.THURSDAY && habit.getThu().equals("1")
-                        || day == Calendar.FRIDAY && habit.getFri().equals("1")
-                        || day == Calendar.SATURDAY && habit.getSat().equals("1")
-                        || day == Calendar.SUNDAY && habit.getSun().equals("1")) {
+                        if (day == Calendar.MONDAY && habit.getMon() != null && habit.getMon().equals("1")
+                        || day == Calendar.TUESDAY && habit.getTue() != null && habit.getTue().equals("1")
+                        || day == Calendar.WEDNESDAY && habit.getWed() != null && habit.getWed().equals("1")
+                        || day == Calendar.THURSDAY && habit.getThu() != null && habit.getThu().equals("1")
+                        || day == Calendar.FRIDAY && habit.getFri() != null && habit.getFri().equals("1")
+                        || day == Calendar.SATURDAY && habit.getSat() != null && habit.getSat().equals("1")
+                        || day == Calendar.SUNDAY && habit.getSun() != null && habit.getSun().equals("1")) {
 
                             TrackingEntity tracking = Database.sTrackingImpl.getTracking(habit.getHabitId(), currentDate);
                             if (tracking.getTrackingId() == null) {

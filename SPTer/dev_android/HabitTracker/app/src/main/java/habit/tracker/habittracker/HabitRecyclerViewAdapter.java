@@ -11,13 +11,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
-public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int TYPE_CHECK = 0;
     public static final int TYPE_COUNT = 1;
     public static final int TYPE_ADD = 2;
@@ -27,7 +29,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
-    public MenuRecyclerViewAdapter(Context context, List<TrackingItem> data) {
+    public HabitRecyclerViewAdapter(Context context, List<TrackingItem> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.context = context;
@@ -96,6 +98,10 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.tvNumber.setText("/" + item.getNumber() + " " + item.getUnit());
         holder.tvCount.setText(String.valueOf(item.getCount()));
         holder.layout.setBackground(getBackground(item.getColor()));
+        holder.background.setBackground(getBackground(item.getColor()));
+
+        float comp = (float) item.getCount() / Integer.parseInt(item.getNumber());
+        scaleView(holder.background, 0f, comp > 1? 1f: comp);
     }
 
     private void initLayoutCheck(ViewHolderCheck holder, TrackingItem item) {
@@ -114,6 +120,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public class ViewHolderCount extends RecyclerView.ViewHolder implements View.OnClickListener {
         RelativeLayout layout;
+        View background;
         TextView tvCategory;
         TextView tvDescription;
         TextView tvHabitType;
@@ -126,7 +133,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             super(itemView);
             itemView.setOnClickListener(this);
             layout = itemView.findViewById(R.id.rl_habit);
-
+            background = itemView.findViewById(R.id.view_bg);
             tvCategory = itemView.findViewById(R.id.tv_category);
             tvDescription = itemView.findViewById(R.id.tv_description);
             tvHabitType = itemView.findViewById(R.id.tv_habitType);
@@ -193,6 +200,17 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 mClickListener.onItemClick(view, TYPE_CHECK, getAdapterPosition());
             }
         }
+    }
+
+    public void scaleView(View v, float startScale, float endScale) {
+        Animation anim = new ScaleAnimation(
+                startScale, endScale, // Start and end values for the X axis scaling
+                1f, 1f, // Start and end values for the Y axis scaling
+                Animation.RELATIVE_TO_SELF, 0f, // Pivot point of X scaling
+                Animation.RELATIVE_TO_SELF, v.getMeasuredHeight()); // Pivot point of Y scaling
+        anim.setFillAfter(true); // Needed to keep the result of the animation
+        anim.setDuration(600);
+        v.startAnimation(anim);
     }
 
     public class ViewHolderAdd extends RecyclerView.ViewHolder implements View.OnClickListener {
