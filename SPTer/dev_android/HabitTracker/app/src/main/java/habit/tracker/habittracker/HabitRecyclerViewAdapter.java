@@ -99,23 +99,26 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         holder.tvCount.setText(String.valueOf(item.getCount()));
         holder.layout.setBackground(getBackground(item.getColor()));
         holder.background.setBackground(getBackground(item.getColor()));
-
         float comp = (float) item.getCount() / Integer.parseInt(item.getNumber());
-        scaleView(holder.background, 0f, comp > 1? 1f: comp);
+        scaleView(holder.background, item.getComp(), comp > 1? 1f: comp);
+        item.setComp(comp);
     }
 
     private void initLayoutCheck(ViewHolderCheck holder, TrackingItem item) {
         holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
         holder.tvPeriod.setText(item.getHabitType());
+        holder.layout.setBackground(getBackground(item.getColor()));
+        holder.background.setBackground(getBackground(item.getColor()));
         if (item.getCount() == 1) {
             holder.isCheck = true;
             holder.imgCheck.setImageResource(R.drawable.ck_checked);
+            scaleView(holder.background, 0f, 1f);
         } else if (item.getCount() == 0) {
             holder.isCheck = false;
             holder.imgCheck.setImageResource(R.drawable.ck_unchecked);
+            scaleView(holder.background, 0f, 0f);
         }
-        holder.layout.setBackground(getBackground(item.getColor()));
     }
 
     public class ViewHolderCount extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -167,6 +170,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
     public class ViewHolderCheck extends RecyclerView.ViewHolder implements View.OnClickListener {
         RelativeLayout layout;
+        View background;
         TextView tvCategory;
         TextView tvDescription;
         TextView tvPeriod;
@@ -177,6 +181,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             super(itemView);
             itemView.setOnClickListener(this);
             layout = itemView.findViewById(R.id.rl_habit);
+            background = itemView.findViewById(R.id.view_bg);
             tvCategory = itemView.findViewById(R.id.tv_category);
             tvDescription = itemView.findViewById(R.id.tv_description);
             tvPeriod = itemView.findViewById(R.id.tv_habitType);
@@ -209,7 +214,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 Animation.RELATIVE_TO_SELF, 0f, // Pivot point of X scaling
                 Animation.RELATIVE_TO_SELF, v.getMeasuredHeight()); // Pivot point of Y scaling
         anim.setFillAfter(true); // Needed to keep the result of the animation
-        anim.setDuration(600);
+        anim.setDuration(500);
         v.startAnimation(anim);
     }
 

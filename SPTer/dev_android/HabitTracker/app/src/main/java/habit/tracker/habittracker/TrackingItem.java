@@ -11,6 +11,7 @@ public class TrackingItem {
     private int count;
     private String unit;
     private String color;
+    private float comp = 0f;
 
     public TrackingItem() {}
 
@@ -79,6 +80,10 @@ public class TrackingItem {
         return color;
     }
 
+    public float getComp() {
+        return comp;
+    }
+
     public void setTrackId(String trackId) {
         this.trackId = trackId;
     }
@@ -117,5 +122,9 @@ public class TrackingItem {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public void setComp(float comp) {
+        this.comp = comp;
     }
 }

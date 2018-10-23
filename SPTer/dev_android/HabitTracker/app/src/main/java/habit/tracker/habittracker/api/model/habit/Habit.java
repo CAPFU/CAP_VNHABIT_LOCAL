@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import habit.tracker.habittracker.api.model.Reminder;
+import habit.tracker.habittracker.api.model.reminder.Reminder;
 
 public class Habit {
 

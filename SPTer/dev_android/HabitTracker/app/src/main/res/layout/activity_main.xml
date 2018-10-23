@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_weight="8"
             android:layout_height="match_parent"
-            android:text="VN Habit Tracker"
+            android:text="Hôm Nay"
             android:gravity="center"
             android:textColor="#333"
             android:textSize="20sp" />

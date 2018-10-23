@@ -6,6 +6,7 @@
     android:layout_height="70dp"
     android:gravity="center"
     android:id="@+id/rl_habit"
+    android:background="#a7a7a7"
     android:layout_margin="7dp">
 
     <View
@@ -20,8 +21,8 @@
         android:layout_marginTop="10dp"
         android:paddingStart="10dp"
         android:textSize="20sp"
-        android:textAllCaps="true"
         android:textColor="#fff"
+        android:fontFamily="@font/new_roman"
         android:text="ĐỌC SÁCH"/>
 
     <TextView
@@ -32,7 +33,6 @@
         android:layout_marginBottom="10dp"
         android:paddingStart="10dp"
         android:textSize="10sp"
-        android:textAllCaps="true"
         android:textColor="#fff"
         android:text="THÓI QUEN ĐỌC 4 CUỐN SACH TRONG"/>
 
@@ -46,7 +46,6 @@
         android:paddingStart="3sp"
         android:textSize="10sp"
         android:textStyle="bold"
-        android:textAllCaps="true"
         android:textColor="#fff"
         android:text="THÁNG NÀY"/>
 

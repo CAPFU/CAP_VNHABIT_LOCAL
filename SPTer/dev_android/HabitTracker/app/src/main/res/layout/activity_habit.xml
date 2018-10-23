@@ -30,9 +30,10 @@
             android:layout_width="0dp"
             android:layout_weight="8"
             android:layout_height="match_parent"
-            android:text="VN Habit Tracker"
+            android:text="Tạo Thói Quen"
             android:gravity="center"
             android:textColor="#333"
+            android:fontFamily="@font/new_roman"
             android:textSize="20sp" />
         <View
             android:layout_width="0dp"
@@ -60,9 +61,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textAllCaps="true"
                 android:layout_marginBottom="10dp"
-                android:text="tên thói quen" />
+                android:text="Tên thói quen" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -76,7 +76,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="10"
                     android:layout_height="35dp"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:background="@drawable/bg_input1"
                     android:paddingStart="7dp"
                     android:hint="Chạy bộ, đọc sách, ghi chép chi tiêu, vv"/>
@@ -84,13 +84,13 @@
                     android:onClick="showEmpty"
                     android:id="@+id/btn_suggestHabit"
                     android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="22dp"
+                    android:layout_weight="3"
+                    android:layout_height="20dp"
                     android:layout_marginStart="10dp"
-                    android:text="đề xuất"
-                    android:textSize="10dp"
+                    android:text="Đề xuất"
+                    android:textSize="11sp"
                     android:textColor="@color/light_brown"
-                    android:background="@drawable/bg_button_green"/>
+                    android:background="@drawable/button_green"/>
             </LinearLayout>
 
             <View
@@ -103,9 +103,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textAllCaps="true"
                 android:layout_marginBottom="15dp"
-                android:text="xây dựng hay từ bỏ thói quen" />
+                android:text="Xây dựng hay từ bỏ thói quen" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -119,18 +118,18 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="25dp"
-                    android:text="xây dựng"
-                    android:textSize="10dp"
+                    android:text="Xây dựng"
+                    android:textSize="11sp"
                     android:textColor="@color/light_brown"
-                    android:background="@drawable/bg_button_green"/>
+                    android:background="@drawable/button_green"/>
 
                 <Button
                     android:id="@+id/btn_TargetQuit"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="25dp"
-                    android:text="từ bỏ"
-                    android:textSize="10dp"
+                    android:text="Từ bỏ"
+                    android:textSize="11sp"
                     android:textColor="@color/light_brown"
                     android:background="@android:color/transparent"/>
 
@@ -151,9 +150,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textAllCaps="true"
                 android:layout_marginBottom="15dp"
-                android:text="loại mục tiêu" />
+                android:text="Loại mục tiêu" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -168,10 +166,10 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="25dp"
-                    android:text="hằng ngày"
-                    android:textSize="10dp"
+                    android:text="Hằng ngày"
+                    android:textSize="11sp"
                     android:textColor="@color/light_brown"
-                    android:background="@drawable/bg_button_green"/>
+                    android:background="@drawable/button_green"/>
 
                 <Button
                     android:id="@+id/btn_TypeWeekly"
@@ -179,8 +177,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="25dp"
-                    android:text="hằng tuần"
-                    android:textSize="10dp"
+                    android:text="Hằng tuần"
+                    android:textSize="11sp"
                     android:textColor="@color/light_brown"
                     android:background="@android:color/transparent"/>
                 <Button
@@ -189,8 +187,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="25dp"
-                    android:text="hằng tháng"
-                    android:textSize="10dp"
+                    android:text="Hằng tháng"
+                    android:textSize="11sp"
                     android:textColor="@color/light_brown"
                     android:background="@android:color/transparent"/>
                 <Button
@@ -199,8 +197,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="25dp"
-                    android:text="hằng năm"
-                    android:textSize="10dp"
+                    android:text="Hằng năm"
+                    android:textSize="11sp"
                     android:textColor="@color/light_brown"
                     android:background="@android:color/transparent"/>
             </LinearLayout>
@@ -216,9 +214,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textAllCaps="true"
                 android:layout_marginBottom="15dp"
-                android:text="cách theo dõi" />
+                android:text="Cách theo dõi" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -237,15 +234,14 @@
                         android:id="@+id/img_checkDone"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/radio_check"/>
+                        android:src="@drawable/rd_checked"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAllCaps="true"
                         android:paddingStart="5dp"
-                        android:textSize="10sp"
+                        android:textSize="12sp"
                         android:textColor="#5fa467"
-                        android:text="có/không"/>
+                        android:text="Có/Không"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -260,7 +256,7 @@
                         android:id="@+id/img_checkCount"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/radio_uncheck"/>
+                        android:src="@drawable/rd_unchecked"/>
                     <EditText
                         android:id="@+id/edit_checkNumber"
                         android:layout_width="50dp"
@@ -279,18 +275,17 @@
                         android:layout_marginStart="5dp"
                         android:textSize="12sp"
                         android:enabled="false"
-                        android:text="LẦN"
+                        android:text="Lần"
                         android:background="@drawable/bg_input1"/>
                     <TextView
                         android:id="@+id/tv_count_unit"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:textAllCaps="true"
                         android:paddingStart="5dp"
-                        android:textSize="10sp"
+                        android:textSize="12sp"
                         android:textColor="#5fa467"
-                        android:text="/ một ngày"/>
+                        android:text="/ Một ngày"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -367,9 +362,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textAllCaps="true"
                 android:layout_marginBottom="10dp"
-                android:text="nhóm habit" />
+                android:text="Nhóm thói quen" />
 
             <RelativeLayout
                 android:id="@+id/ll_group"
@@ -385,19 +379,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#5fa467"
-                    android:textAllCaps="true"
-                    android:textSize="10sp"
-                    android:text="chưa có"/>
+                    android:textSize="12sp"
+                    android:text="Chưa có"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingEnd="10dp"
                     android:textColor="#5fa467"
-                    android:textAllCaps="true"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:layout_alignParentEnd="true"
-                    android:text="xem thêm >"/>
+                    android:text="Xem thêm >"/>
             </RelativeLayout>
 
             <!-- 6 -->
@@ -411,9 +403,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textAllCaps="true"
                 android:layout_marginBottom="15dp"
-                android:text="ngày theo dõi trong tuần" />
+                android:text="Ngày Theo Dõi Trong Tuần" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -429,7 +420,7 @@
                     android:textSize="11sp"
                     android:gravity="center"
                     android:textColor="@color/light_brown"
-                    android:text="HAI"/>
+                    android:text="Hai"/>
                 <TextView
                     android:id="@+id/btnTue"
                     android:tag="1"
@@ -439,7 +430,7 @@
                     android:layout_marginStart="10dp"
                     android:gravity="center"
                     android:textColor="@color/light_brown"
-                    android:text="BA"/>
+                    android:text="Ba"/>
                 <TextView
                     android:id="@+id/btnWed"
                     android:tag="2"
@@ -449,7 +440,7 @@
                     android:layout_marginStart="10dp"
                     android:gravity="center"
                     android:textColor="@color/light_brown"
-                    android:text="TƯ"/>
+                    android:text="Tư"/>
                 <TextView
                     android:id="@+id/btnThu"
                     android:tag="3"
@@ -459,7 +450,7 @@
                     android:layout_marginStart="10dp"
                     android:gravity="center"
                     android:textColor="@color/light_brown"
-                    android:text="NĂM"/>
+                    android:text="Năm"/>
                 <TextView
                     android:id="@+id/btnFri"
                     android:tag="4"
@@ -469,7 +460,7 @@
                     android:layout_marginStart="10dp"
                     android:gravity="center"
                     android:textColor="@color/light_brown"
-                    android:text="SÁU"/>
+                    android:text="Sáu"/>
                 <TextView
                     android:id="@+id/btnSat"
                     android:tag="5"
@@ -479,7 +470,7 @@
                     android:layout_marginStart="10dp"
                     android:gravity="center"
                     android:textColor="@color/light_brown"
-                    android:text="BẢY"/>
+                    android:text="Bảy"/>
                 <TextView
                     android:id="@+id/btnSun"
                     android:tag="6"
@@ -503,9 +494,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textAllCaps="true"
                 android:layout_marginBottom="15dp"
-                android:text="thời gian thực hiện" />
+                android:text="Thời gian thực hiện" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -530,10 +520,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAllCaps="true"
                         android:paddingStart="5dp"
-                        android:textSize="10sp"
-                        android:text="ngày bắt đầu"/>
+                        android:textSize="12sp"
+                        android:text="Ngày bắt đầu"/>
                 </LinearLayout>
 
                 <TextView
@@ -565,10 +554,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAllCaps="true"
                         android:paddingStart="5dp"
-                        android:textSize="10sp"
-                        android:text="ngày hoàn thành"/>
+                        android:textSize="12sp"
+                        android:text="Ngày hoàn thành"/>
                 </LinearLayout>
 
                 <TextView
@@ -597,9 +585,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textAllCaps="true"
                 android:layout_marginBottom="15dp"
-                android:text="màu thói quen"/>
+                android:text="Màu thói quen"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -696,9 +683,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textAllCaps="true"
                 android:layout_marginBottom="10dp"
-                android:text="màu thói quen" />
+                android:text="Màu thói quen" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -777,7 +763,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:textColor="#799c4b"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:text="Thêm >"/>
             </RelativeLayout>
 
@@ -792,18 +778,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textAllCaps="true"
                 android:layout_marginBottom="10dp"
-                android:text="hãy viết động lực cho thói quen này" />
+                android:text="Hãy viết động lực cho thói quen này" />
 
             <EditText
                 android:id="@+id/spinner_repeat"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
-                android:textSize="11sp"
+                android:textSize="12sp"
                 android:paddingStart="7dp"
                 android:background="@drawable/bg_input1"
                 android:layout_marginStart="10dp"
+                android:fontFamily="@font/new_roman"
                 android:hint="Động lực của thói quen"/>
 
             <LinearLayout
@@ -818,19 +804,19 @@
                     android:onClick="cancel"
                     android:layout_width="100dp"
                     android:layout_height="25dp"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/bg_button_white"
-                    android:text="hủy bỏ"/>
+                    android:text="Hủy bỏ"/>
                 <Button
                     android:id="@+id/btn_save"
                     android:layout_width="100dp"
                     android:layout_height="25dp"
                     android:layout_marginStart="20dp"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/bg_button_long_green"
-                    android:text="lưu lại"/>
+                    android:text="Lưu lại"/>
             </LinearLayout>
 
         </LinearLayout>

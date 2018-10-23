@@ -511,7 +511,12 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         }
     }
 
-    @OnClick({R.id.btn_cancel, R.id.btn_back})
+    @OnClick({R.id.btn_back})
+    public void back(View v) {
+        finish();
+    }
+
+    @OnClick({R.id.btn_cancel})
     public void cancel(View v) {
         if (createMode == MODE_CREATE) {
             finish();
@@ -689,7 +694,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     }
 
     public void setGreenBg(View v) {
-        v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_button_green));
+        v.setBackground(ContextCompat.getDrawable(this, R.drawable.button_green));
     }
 
     public void setWhiteBg(View v) {
@@ -698,12 +703,12 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
     public void check(ImageView img) {
 //        img.setImageResource(R.drawable.ck_checked);
-        img.setImageResource(R.drawable.radio_check);
+        img.setImageResource(R.drawable.rd_checked);
     }
 
     public void uncheck(ImageView img) {
 //        img.setImageResource(R.drawable.ck_unchecked);
-        img.setImageResource(R.drawable.radio_uncheck);
+        img.setImageResource(R.drawable.rd_unchecked);
     }
 
     public void checkBox(ImageView img) {

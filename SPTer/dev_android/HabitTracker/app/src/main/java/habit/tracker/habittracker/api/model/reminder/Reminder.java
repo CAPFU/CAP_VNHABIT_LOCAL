@@ -1,4 +1,4 @@
-package habit.tracker.habittracker.api.model;
+package habit.tracker.habittracker.api.model.reminder;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
