@@ -15,6 +15,8 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import habit.tracker.habittracker.repository.Database;
+import habit.tracker.habittracker.repository.reminder.ReminderEntity;
 
 public class ReminderActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener, TimePicker.OnTimeChangedListener {
 
@@ -71,16 +73,21 @@ public class ReminderActivity extends AppCompatActivity implements NumberPicker.
     }
 
     @OnClick(R.id.btnOk)
-    public void remind(Button ok) {
-//        if (dayOfWeek == null) {
-//            Toast.makeText(this, "error", Toast.LENGTH_LONG).show();
-//            return;
-//        }
+    public void addReminder(Button ok) {
+
+        Database db = new Database(this);
+        db.open();
+
+        ReminderEntity entity = new ReminderEntity();
+
+        db.close();
+
+
 //        if (dayOfWeek[0]) {
 //            remindOnDay(Calendar.MONDAY);
 //        }
 //        if (dayOfWeek[1]) {
-            remindOnDay(Calendar.TUESDAY);
+//            remindOnDay(Calendar.TUESDAY);
 //        }
 //        if (dayOfWeek[2]) {
 //            remindOnDay(Calendar.WEDNESDAY);

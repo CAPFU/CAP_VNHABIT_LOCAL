@@ -21,7 +21,7 @@ public class GroupDaoImpl extends DatabaseHelper implements GroupDao, GroupSchem
         final String selectionArgs[] = {groupId};
         final String selection = GROUP_ID + " = ?";
         GroupEntity entity = new GroupEntity();
-        cursor = super.query(GROUP_TABLE, GROUP_COLUMS, selection, selectionArgs, GROUP_ID);
+        cursor = super.query(GROUP_TABLE, GROUP_COLUMNS, selection, selectionArgs, GROUP_ID);
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {

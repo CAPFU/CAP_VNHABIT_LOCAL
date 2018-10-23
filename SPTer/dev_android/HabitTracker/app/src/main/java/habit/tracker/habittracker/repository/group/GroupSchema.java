@@ -15,5 +15,5 @@ public interface GroupSchema {
                     + GROUP_ICON + " TEXT, "
                     + GROUP_DESCRIPTION + " TEXT "
                     + ")";
-    String[] GROUP_COLUMS = {GROUP_ID, GROUP_NAME, PARENT_ID, GROUP_ICON, GROUP_DESCRIPTION};
+    String[] GROUP_COLUMNS = {GROUP_ID, GROUP_NAME, PARENT_ID, GROUP_ICON, GROUP_DESCRIPTION};
 }

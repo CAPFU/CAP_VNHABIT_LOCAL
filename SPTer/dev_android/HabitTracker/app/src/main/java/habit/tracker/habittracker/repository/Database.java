@@ -9,6 +9,8 @@ import habit.tracker.habittracker.repository.group.GroupDaoImpl;
 import habit.tracker.habittracker.repository.group.GroupSchema;
 import habit.tracker.habittracker.repository.habit.HabitDaoImpl;
 import habit.tracker.habittracker.repository.habit.HabitSchema;
+import habit.tracker.habittracker.repository.reminder.ReminderDaoImpl;
+import habit.tracker.habittracker.repository.reminder.ReminderSchema;
 import habit.tracker.habittracker.repository.tracking.TrackingDaoImpl;
 import habit.tracker.habittracker.repository.tracking.TrackingSchema;
 import habit.tracker.habittracker.repository.user.UserDaoImpl;
@@ -28,6 +30,7 @@ public class Database {
     public static HabitDaoImpl sHabitDaoImpl;
     public static GroupDaoImpl sGroupDaoImpl;
     public static TrackingDaoImpl sTrackingImpl;
+    public static ReminderDaoImpl sReminderImpl;
 
     public Database(Context context) {
         this.mContext = context;
@@ -48,6 +51,7 @@ public class Database {
         sHabitDaoImpl = new HabitDaoImpl(db);
         sGroupDaoImpl = new GroupDaoImpl(db);
         sTrackingImpl = new TrackingDaoImpl(db);
+        sReminderImpl = new ReminderDaoImpl(db);
         return this;
     }
 
@@ -55,7 +59,7 @@ public class Database {
         dbHelper.close();
     }
 
-    public static class DatabaseHelper extends SQLiteOpenHelper implements UserSchema, HabitSchema, GroupSchema, TrackingSchema {
+    public static class DatabaseHelper extends SQLiteOpenHelper implements UserSchema, HabitSchema, GroupSchema, TrackingSchema, ReminderSchema {
 
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -67,6 +71,7 @@ public class Database {
             db.execSQL(CREATE_HABIT_TABLE);
             db.execSQL(CREATE_GROUP_TABLE);
             db.execSQL(CREATE_TRACKING_TABLE);
+            db.execSQL(CREATE_REMINDER_TABLE);
         }
 
         @Override
@@ -75,6 +80,7 @@ public class Database {
             db.execSQL("DROP TABLE IF EXISTS " + HABIT_TABLE);
             db.execSQL("DROP TABLE IF EXISTS " + GROUP_TABLE);
             db.execSQL("DROP TABLE IF EXISTS " + TRACKING_TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + REMINDER_TABLE);
             onCreate(db);
         }
     }
