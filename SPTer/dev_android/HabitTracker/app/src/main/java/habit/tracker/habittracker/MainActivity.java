@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     @Override
     public void onSetCount(View view, int type, int position, int count) {
         data.get(position).setCount(count);
+        adapter.notifyItemChanged(position);
     }
 
     @Override
