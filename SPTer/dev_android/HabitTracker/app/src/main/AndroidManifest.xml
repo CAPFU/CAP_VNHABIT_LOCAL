@@ -4,7 +4,7 @@
     package="habit.tracker.habittracker">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name='android.permission.WAKE_LOCK'/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -37,12 +37,11 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".SplashActivity" />
         <activity android:name=".GroupActivity" />
-        <activity android:name=".ReminderActivity">
+        <activity android:name=".ReminderActivity"></activity>
 
-        </activity>
+        <receiver android:name=".ReminderReceiver"></receiver>
 
-        <receiver android:name='habit.tracker.habittracker.ReminderReceiver'>
-        </receiver>
+        <activity android:name=".GuideActivity"></activity>
     </application>
 
 </manifest>

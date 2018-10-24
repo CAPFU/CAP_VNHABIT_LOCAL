@@ -4,6 +4,8 @@ import habit.tracker.habittracker.api.model.group.GroupResponse;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.habit.HabitResponse;
 import habit.tracker.habittracker.api.model.habit.HabitResult;
+import habit.tracker.habittracker.api.model.tracking.Tracking;
+import habit.tracker.habittracker.api.model.tracking.TrackingResult;
 import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.model.user.UserResponse;
 import habit.tracker.habittracker.api.model.user.UserResult;
@@ -36,4 +38,7 @@ public interface VnHabitApiService {
 
     @GET("group/read.php")
     Call<GroupResponse> getGroupItems();
+
+    @POST("tracking/create_update.php")
+    Call<TrackingResult> replace(@Body Tracking tracking);
 }

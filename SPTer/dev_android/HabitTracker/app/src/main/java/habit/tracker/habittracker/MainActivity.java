@@ -91,12 +91,12 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                         String currentDate = ca.get(Calendar.YEAR) + "-" + (ca.get(Calendar.MONTH) + 1) + "-" + ca.get(Calendar.DATE);
                         int day = ca.get(Calendar.DAY_OF_WEEK);
                         if (day == Calendar.MONDAY && habit.getMon() != null && habit.getMon().equals("1")
-                        || day == Calendar.TUESDAY && habit.getTue() != null && habit.getTue().equals("1")
-                        || day == Calendar.WEDNESDAY && habit.getWed() != null && habit.getWed().equals("1")
-                        || day == Calendar.THURSDAY && habit.getThu() != null && habit.getThu().equals("1")
-                        || day == Calendar.FRIDAY && habit.getFri() != null && habit.getFri().equals("1")
-                        || day == Calendar.SATURDAY && habit.getSat() != null && habit.getSat().equals("1")
-                        || day == Calendar.SUNDAY && habit.getSun() != null && habit.getSun().equals("1")) {
+                                || day == Calendar.TUESDAY && habit.getTue() != null && habit.getTue().equals("1")
+                                || day == Calendar.WEDNESDAY && habit.getWed() != null && habit.getWed().equals("1")
+                                || day == Calendar.THURSDAY && habit.getThu() != null && habit.getThu().equals("1")
+                                || day == Calendar.FRIDAY && habit.getFri() != null && habit.getFri().equals("1")
+                                || day == Calendar.SATURDAY && habit.getSat() != null && habit.getSat().equals("1")
+                                || day == Calendar.SUNDAY && habit.getSun() != null && habit.getSun().equals("1")) {
 
                             TrackingEntity tracking = Database.sTrackingImpl.getTracking(habit.getHabitId(), currentDate);
                             if (tracking.getTrackingId() == null) {
@@ -146,15 +146,24 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     }
 
     @Override
-    protected void onPause() {
+    public void onBackPressed() {
+
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onStop() {
         TrackingItem item;
         Database db = new Database(MainActivity.this);
         db.open();
         for (int i = 0; i < data.size(); i++) {
             item = data.get(i);
-            Database.sTrackingImpl.updateTrackCount(item.getTrackId(), String.valueOf(item.getCount()));
+            if (!Database.sTrackingImpl.updateTrackCount(
+                    item.getTrackId(), String.valueOf(item.getCount()))) {
+                break;
+            }
         }
         db.close();
-        super.onPause();
+        super.onStop();
     }
 }
