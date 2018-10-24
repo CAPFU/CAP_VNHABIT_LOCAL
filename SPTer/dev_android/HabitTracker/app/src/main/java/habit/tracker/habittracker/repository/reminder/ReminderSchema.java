@@ -10,7 +10,7 @@ public interface ReminderSchema {
     String HABIT_ID = "habit_id";
     String CREATE_REMINDER_TABLE =
             "CREATE TABLE IF NOT EXISTS " + REMINDER_TABLE + " ("
-                    + REMINDER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                    + REMINDER_ID + " TEXT PRIMARY KEY NOT NULL, "
                     + REMINDER_HOUR + " TEXT, "
                     + REMINDER_MINUTE + " TEXT, "
                     + REPEAT_TIME + " TEXT, "

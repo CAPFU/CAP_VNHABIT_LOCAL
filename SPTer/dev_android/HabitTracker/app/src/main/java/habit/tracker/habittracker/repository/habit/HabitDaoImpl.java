@@ -60,7 +60,8 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
     public boolean saveHabit(HabitEntity habitEntity) {
         setContentValue(habitEntity);
         try {
-            return super.replace(HABIT_TABLE, getContentValue()) > 0;
+            boolean res = super.replace(HABIT_TABLE, getContentValue()) > 0;
+            return res;
         } catch (SQLiteConstraintException ex) {
             return false;
         }

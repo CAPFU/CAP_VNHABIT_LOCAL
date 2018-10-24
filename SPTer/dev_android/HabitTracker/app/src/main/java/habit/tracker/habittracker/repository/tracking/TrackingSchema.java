@@ -9,7 +9,7 @@ public interface TrackingSchema {
     String TRACKING_DESCRIPTION = "tracking_description";
     String CREATE_TRACKING_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TRACKING_TABLE + " ("
-                    + TRACKING_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                    + TRACKING_ID + " TEXT PRIMARY KEY NOT NULL, "
                     + HABIT_ID + " TEXT, "
                     + CURRENT_DATE + " TEXT, "
                     + COUNT + " TEXT, "
