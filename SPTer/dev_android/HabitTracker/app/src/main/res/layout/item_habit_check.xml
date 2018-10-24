@@ -5,7 +5,7 @@
     android:layout_height="70dp"
     android:gravity="center"
     android:id="@+id/rl_habit"
-    android:background="#a7a7a7"
+    android:background="#a1a1a1"
     android:layout_margin="7dp">
 
     <View

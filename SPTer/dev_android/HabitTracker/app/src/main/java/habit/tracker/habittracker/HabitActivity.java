@@ -581,16 +581,16 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         habitType = Integer.parseInt(view.getTag().toString());
         switch (view.getId()) {
             case R.id.btn_TypeDaily:
-                tvCountUnit.setText("trong một ngày");
+                tvCountUnit.setText("một ngày");
                 break;
             case R.id.btn_TypeWeekly:
-                tvCountUnit.setText("trong một tuần");
+                tvCountUnit.setText("một tuần");
                 break;
             case R.id.btn_TypeMonthly:
-                tvCountUnit.setText("trong một tháng");
+                tvCountUnit.setText("một tháng");
                 break;
             case R.id.btn_TypeYearly:
-                tvCountUnit.setText("trong một năm");
+                tvCountUnit.setText("một năm");
                 break;
         }
     }

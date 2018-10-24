@@ -30,10 +30,9 @@
             android:layout_width="0dp"
             android:layout_weight="8"
             android:layout_height="match_parent"
-            android:text="Tạo Thói Quen"
+            android:text="Tạo thói quen"
             android:gravity="center"
             android:textColor="#333"
-            android:fontFamily="@font/new_roman"
             android:textSize="20sp" />
         <View
             android:layout_width="0dp"
@@ -85,12 +84,12 @@
                     android:id="@+id/btn_suggestHabit"
                     android:layout_width="0dp"
                     android:layout_weight="3"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="10dp"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="5dp"
+                    android:gravity="center"
                     android:text="Đề xuất"
                     android:textSize="11sp"
-                    android:textColor="@color/light_brown"
-                    android:background="@drawable/button_green"/>
+                    android:background="@drawable/button_green2"/>
             </LinearLayout>
 
             <View
@@ -288,72 +287,9 @@
                         android:paddingStart="5dp"
                         android:textSize="12sp"
                         android:textColor="#5fa467"
-                        android:text="/ Một ngày"/>
+                        android:text="/ một ngày"/>
                 </LinearLayout>
             </LinearLayout>
-
-            <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:layout_marginTop="10dp"-->
-            <!--android:layout_marginBottom="18dp"/>-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textSize="15sp"-->
-            <!--android:textAllCaps="true"-->
-            <!--android:layout_marginBottom="15dp"-->
-            <!--android:text="cách đếm thói quen" />-->
-
-            <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:paddingStart="10dp"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:orientation="horizontal">-->
-
-            <!--<Button-->
-            <!--android:id="@+id/btn_no_unit"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_height="25dp"-->
-            <!--android:text="không đặt"-->
-            <!--android:textSize="10dp"-->
-            <!--android:textColor="@color/light_brown"-->
-            <!--android:background="@drawable/bg_button_green" />-->
-
-            <!--<Button-->
-            <!--android:id="@+id/btn_set_unit"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_height="25dp"-->
-            <!--android:layout_marginStart="20dp"-->
-            <!--android:textSize="10dp"-->
-            <!--android:text="thiết lập"-->
-            <!--android:textColor="@color/light_brown"-->
-            <!--android:background="@android:color/transparent" />-->
-
-            <!--<EditText-->
-            <!--android:id="@+id/edit_unit"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_height="25dp"-->
-            <!--android:layout_marginStart="5dp"-->
-            <!--android:paddingStart="5dp"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:textSize="10sp"-->
-            <!--android:inputType="textCapCharacters"-->
-            <!--android:hint="LẦN/CÁI/..."-->
-            <!--android:background="@drawable/bg_input1"-->
-            <!--android:enabled="false"/>-->
-
-            <!--<View-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"/>-->
-            <!--</LinearLayout>-->
-
             <!-- 5 -->
             <View
                 android:layout_width="match_parent"
@@ -393,7 +329,7 @@
                     android:textColor="#5fa467"
                     android:textSize="12sp"
                     android:layout_alignParentEnd="true"
-                    android:text="Xem thêm >"/>
+                    android:text="Thêm >"/>
             </RelativeLayout>
 
             <!-- 6 -->
@@ -409,7 +345,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:layout_marginBottom="15dp"
-                android:text="Ngày Theo Dõi Trong Tuần" />
+                android:text="Ngày theo dõi trong tuần" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -798,7 +734,6 @@
                 android:paddingStart="7dp"
                 android:background="@drawable/bg_input1"
                 android:layout_marginStart="10dp"
-                android:fontFamily="@font/new_roman"
                 android:hint="Động lực của thói quen"/>
 
             <LinearLayout
@@ -816,6 +751,7 @@
                     android:textSize="12sp"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/bg_button_white"
+                    android:textColor="#363636"
                     android:text="Hủy bỏ"/>
                 <Button
                     android:id="@+id/btn_save"
@@ -824,7 +760,7 @@
                     android:layout_marginStart="20dp"
                     android:textSize="12sp"
                     android:layout_alignParentBottom="true"
-                    android:background="@drawable/bg_button_long_green"
+                    android:background="@drawable/button_green2"
                     android:text="Lưu lại"/>
             </LinearLayout>
 

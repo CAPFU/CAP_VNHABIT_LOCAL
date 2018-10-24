@@ -97,8 +97,12 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         holder.tvHabitType.setText(item.getHabitType());
         holder.tvNumber.setText("/" + item.getNumber() + " " + item.getUnit());
         holder.tvCount.setText(String.valueOf(item.getCount()));
-        holder.layout.setBackground(getBackground(item.getColor()));
-        holder.background.setBackground(getBackground(item.getColor()));
+        String color = item.getColor();
+        if (color != null && color.equals("#ffffffff")) {
+            color = "#64838383";
+        }
+        holder.layout.setBackground(getBackground(color));
+        holder.background.setBackground(getBackground(color));
         float comp = (float) item.getCount() / Integer.parseInt(item.getNumber());
         scaleView(holder.background, item.getComp(), comp > 1? 1f: comp);
         item.setComp(comp);
@@ -108,8 +112,12 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
         holder.tvPeriod.setText(item.getHabitType());
-        holder.layout.setBackground(getBackground(item.getColor()));
-        holder.background.setBackground(getBackground(item.getColor()));
+        String color = item.getColor();
+        if (color != null && color.equals("#ffffffff")) {
+            color = "#64838383";
+        }
+        holder.layout.setBackground(getBackground(color));
+        holder.background.setBackground(getBackground(color));
         if (item.getCount() == 1) {
             holder.isCheck = true;
             holder.imgCheck.setImageResource(R.drawable.ck_checked);
