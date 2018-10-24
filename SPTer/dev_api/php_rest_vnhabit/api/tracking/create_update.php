@@ -17,42 +17,29 @@ $db = $database->connect();
 $tracker = new Tracking($db);
 
 // Get raw posted data
-$data = json_decode(file_get_contents("php://input"));
+$raw = json_decode(file_get_contents("php://input"));
+$data = $raw->data;
 
-$tracker->habit_id = $data->habit_id;
-$tracker->current_date = $data->current_date;
-$tracker->count = $data->count;
-$tracker->tracking_description = $data->tracking_description;
+$arrTrack = array();
+for($i = 0; $i < count($data); $i++) {
+    array_push($arrTrack, get_object_vars($data[$i]));
+}
 
-$error = false;
-if ($tracker->get_tracking() != NULL) {
-    if ($tracker->update() != NULL) {
-        echo json_encode(
-            array(
-                'result' => '1',
-                'id' => $tracker->habit_id
-            )
-        );
+for($i = 0; $i < count($arrTrack); $i++) {
+    $item = $arrTrack[$i];
+    $row = $tracker->getTrackWithParam($item);
+    if($row) {
+        $tracker->updateWithParam($item);
     } else {
-        $error = true;
+        $tracker->createWithParam($item);
     }
-} else if ($tracker->create()) {
-    echo json_encode(
-        array(
-            'result' => '1',
-            'id' => $tracker->habit_id
-        )
-    );
-} else {
-    $error = true;
 }
 
-if ($error == true) {
-    echo json_encode(
-        array(
-            'result' => '0'
-        )
-    );
-}
+echo json_encode(
+    array(
+        'result' => '1',
+        'id' => count($data)
+    )
+);
 
 ?>
