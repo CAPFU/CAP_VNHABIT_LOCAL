@@ -16,10 +16,14 @@ import java.util.List;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.habit.HabitResponse;
+import habit.tracker.habittracker.api.model.tracking.Tracking;
+import habit.tracker.habittracker.api.model.tracking.TrackingList;
+import habit.tracker.habittracker.api.model.tracking.TrackingResult;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
 import habit.tracker.habittracker.repository.tracking.TrackingEntity;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     public static final int CREATE_NEW_HABIT = 0;
     public static final int UPDATE_HABIT = 1;
     public static final String HABIT_ID = "HABIT_ID";
-    List<TrackingItem> data = new ArrayList<>();
-    HabitRecyclerViewAdapter adapter;
+    List<TrackingItem> trackingItemList = new ArrayList<>();
+    HabitRecyclerViewAdapter trackingAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +46,8 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
     @Override
     public void onSetCount(View view, int type, int position, int count) {
-        data.get(position).setCount(count);
-        adapter.notifyItemChanged(position);
+        trackingItemList.get(position).setCount(count);
+        trackingAdapter.notifyItemChanged(position);
     }
 
     @Override
@@ -53,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             startActivityForResult(intent, CREATE_NEW_HABIT);
         } else {
             Intent intent = new Intent(this, HabitActivity.class);
-            intent.putExtra(HABIT_ID, data.get(position).getHabitId());
+            intent.putExtra(HABIT_ID, trackingItemList.get(position).getHabitId());
             startActivityForResult(intent, UPDATE_HABIT);
         }
     }
@@ -75,10 +79,10 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             public void onResponse(Call<HabitResponse> call, Response<HabitResponse> response) {
                 RecyclerView recyclerView = findViewById(R.id.rvMenu);
                 recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                data.clear();
-                adapter = new HabitRecyclerViewAdapter(MainActivity.this, data);
-                adapter.setClickListener(MainActivity.this);
-                recyclerView.setAdapter(adapter);
+                trackingItemList.clear();
+                trackingAdapter = new HabitRecyclerViewAdapter(MainActivity.this, trackingItemList);
+                trackingAdapter.setClickListener(MainActivity.this);
+                recyclerView.setAdapter(trackingAdapter);
 
                 if (response.body().getResult().equals("1")) {
                     Database db = new Database(MainActivity.this);
@@ -119,11 +123,11 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                                     habit.getMonitorUnit(),
                                     habit.getHabitColor());
                             item.setTrackId(tracking.getTrackingId());
-                            data.add(item);
+                            trackingItemList.add(item);
                         }
                         entities.add(Database.sHabitDaoImpl.convert(habit));
                     }
-                    adapter.notifyDataSetChanged();
+                    trackingAdapter.notifyDataSetChanged();
 
                     // update db
                     for (HabitEntity entity : entities) {
@@ -146,24 +150,43 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     }
 
     @Override
-    public void onBackPressed() {
+    protected void onPause() {
+        VnHabitApiService service = VnHabitApiUtils.getApiService();
+        List<Tracking> trackList = new ArrayList<>();
+        TrackingList trackingData = new TrackingList();
+        Tracking tracking;
+        Calendar ca = Calendar.getInstance();
+        for (TrackingItem item: trackingItemList) {
+            tracking = new Tracking();
+            tracking.setHabitId(item.getHabitId());
+            tracking.setCurrentDate(ca.get(Calendar.YEAR) + "-" + (ca.get(Calendar.MONTH) + 1) + "-" + ca.get(Calendar.DATE));
+            tracking.setCount(String.valueOf(item.getCount()));
+            trackList.add(tracking);
+        }
+        trackingData.setTrackingList(trackList);
+        service.replace(trackingData).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                response.body();
+            }
 
-        super.onBackPressed();
-    }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Not OK", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-    @Override
-    protected void onStop() {
         TrackingItem item;
         Database db = new Database(MainActivity.this);
         db.open();
-        for (int i = 0; i < data.size(); i++) {
-            item = data.get(i);
+        for (int i = 0; i < trackingItemList.size(); i++) {
+            item = trackingItemList.get(i);
             if (!Database.sTrackingImpl.updateTrackCount(
                     item.getTrackId(), String.valueOf(item.getCount()))) {
                 break;
             }
         }
         db.close();
-        super.onStop();
+        super.onPause();
     }
 }

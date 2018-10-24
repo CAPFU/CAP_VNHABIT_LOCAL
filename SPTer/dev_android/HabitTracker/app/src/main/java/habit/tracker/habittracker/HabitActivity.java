@@ -245,7 +245,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         endDay = calendar.get(Calendar.DATE);
 
         Bundle extras = getIntent().getExtras();
-        // load habit from local data
+        // load habit from local trackingItemList
         if (extras != null) {
             this.habitId = extras.getString(MainActivity.HABIT_ID, null);
             if (habitId != null) {
