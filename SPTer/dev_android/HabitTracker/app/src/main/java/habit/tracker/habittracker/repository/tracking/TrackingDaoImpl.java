@@ -5,9 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
-import habit.tracker.habittracker.repository.DatabaseHelper;
+import habit.tracker.habittracker.repository.MyDatabaseHelper;
 
-public class TrackingDaoImpl extends DatabaseHelper implements TrackingDao, TrackingSchema {
+public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, TrackingSchema {
     private Cursor cursor;
     private ContentValues initialValues;
     private String lastId;

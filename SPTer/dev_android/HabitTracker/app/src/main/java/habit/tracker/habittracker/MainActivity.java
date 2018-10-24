@@ -72,65 +72,29 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     }
 
     private void initScreen() {
+        RecyclerView recyclerView = findViewById(R.id.rvMenu);
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        trackingItemList.clear();
+        trackingAdapter = new HabitRecyclerViewAdapter(MainActivity.this, trackingItemList);
+        trackingAdapter.setClickListener(MainActivity.this);
+        recyclerView.setAdapter(trackingAdapter);
         String userId = MySharedPreference.getUserId(this);
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
         mService.getHabit(userId).enqueue(new Callback<HabitResponse>() {
             @Override
             public void onResponse(Call<HabitResponse> call, Response<HabitResponse> response) {
-                RecyclerView recyclerView = findViewById(R.id.rvMenu);
-                recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                trackingItemList.clear();
-                trackingAdapter = new HabitRecyclerViewAdapter(MainActivity.this, trackingItemList);
-                trackingAdapter.setClickListener(MainActivity.this);
-                recyclerView.setAdapter(trackingAdapter);
-
                 if (response.body().getResult().equals("1")) {
                     Database db = new Database(MainActivity.this);
                     db.open();
-
-                    List<Habit> res = response.body().getHabit();
-                    List<HabitEntity> entities = new ArrayList<>();
-                    for (Habit habit : res) {
-                        Calendar ca = Calendar.getInstance();
-                        String currentDate = ca.get(Calendar.YEAR) + "-" + (ca.get(Calendar.MONTH) + 1) + "-" + ca.get(Calendar.DATE);
-                        int day = ca.get(Calendar.DAY_OF_WEEK);
-                        if (day == Calendar.MONDAY && habit.getMon() != null && habit.getMon().equals("1")
-                                || day == Calendar.TUESDAY && habit.getTue() != null && habit.getTue().equals("1")
-                                || day == Calendar.WEDNESDAY && habit.getWed() != null && habit.getWed().equals("1")
-                                || day == Calendar.THURSDAY && habit.getThu() != null && habit.getThu().equals("1")
-                                || day == Calendar.FRIDAY && habit.getFri() != null && habit.getFri().equals("1")
-                                || day == Calendar.SATURDAY && habit.getSat() != null && habit.getSat().equals("1")
-                                || day == Calendar.SUNDAY && habit.getSun() != null && habit.getSun().equals("1")) {
-
-                            TrackingEntity tracking = Database.sTrackingImpl.getTracking(habit.getHabitId(), currentDate);
-                            if (tracking.getTrackingId() == null) {
-                                tracking.setHabitId(habit.getHabitId());
-                                tracking.setCount("0");
-                                tracking.setCurrentDate(currentDate);
-                                tracking.setDescription(currentDate);
-                                Database.sTrackingImpl.saveTracking(tracking);
-                                tracking.setTrackingId(Database.sTrackingImpl.getLastId());
-                            }
-
-                            TrackingItem item = new TrackingItem(
-                                    habit.getHabitId(),
-                                    habit.getHabitName(),
-                                    habit.getHabitDescription(),
-                                    habit.getHabitType(),
-                                    Integer.parseInt(habit.getMonitorType()),
-                                    habit.getMonitorNumber(),
-                                    Integer.parseInt(tracking.getCount()),
-                                    habit.getMonitorUnit(),
-                                    habit.getHabitColor());
-                            item.setTrackId(tracking.getTrackingId());
-                            trackingItemList.add(item);
-                        }
-                        entities.add(Database.sHabitDaoImpl.convert(habit));
+                    List<Habit> habitList = response.body().getHabit();
+                    List<HabitEntity> habitEntities = new ArrayList<>();
+                    for (Habit habit : habitList) {
+                        habitEntities.add(Database.sHabitDaoImpl.convert(habit));
                     }
+                    loadData(habitEntities);
                     trackingAdapter.notifyDataSetChanged();
-
                     // update db
-                    for (HabitEntity entity : entities) {
+                    for (HabitEntity entity : habitEntities) {
                         Database.sHabitDaoImpl.saveHabit(entity);
                     }
                     db.close();
@@ -139,9 +103,53 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
             @Override
             public void onFailure(Call<HabitResponse> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Not OK", Toast.LENGTH_SHORT).show();
+                Database db = new Database(MainActivity.this);
+                db.open();
+                List<HabitEntity> habitEntities = Database.sHabitDaoImpl.fetchUser();
+                loadData(habitEntities);
+                trackingAdapter.notifyDataSetChanged();
+                db.close();
             }
         });
+    }
+
+    public void loadData(List<HabitEntity> habitList) {
+        for (HabitEntity habit : habitList) {
+            Calendar ca = Calendar.getInstance();
+            String currentDate = ca.get(Calendar.YEAR) + "-" + (ca.get(Calendar.MONTH) + 1) + "-" + ca.get(Calendar.DATE);
+            int day = ca.get(Calendar.DAY_OF_WEEK);
+            if (day == Calendar.MONDAY && habit.getMon() != null && habit.getMon().equals("1")
+                    || day == Calendar.TUESDAY && habit.getTue() != null && habit.getTue().equals("1")
+                    || day == Calendar.WEDNESDAY && habit.getWed() != null && habit.getWed().equals("1")
+                    || day == Calendar.THURSDAY && habit.getThu() != null && habit.getThu().equals("1")
+                    || day == Calendar.FRIDAY && habit.getFri() != null && habit.getFri().equals("1")
+                    || day == Calendar.SATURDAY && habit.getSat() != null && habit.getSat().equals("1")
+                    || day == Calendar.SUNDAY && habit.getSun() != null && habit.getSun().equals("1")) {
+
+                TrackingEntity tracking = Database.sTrackingImpl.getTracking(habit.getHabitId(), currentDate);
+                if (tracking.getTrackingId() == null) {
+                    tracking.setHabitId(habit.getHabitId());
+                    tracking.setCount("0");
+                    tracking.setCurrentDate(currentDate);
+                    tracking.setDescription(currentDate);
+                    Database.sTrackingImpl.saveTracking(tracking);
+                    tracking.setTrackingId(Database.sTrackingImpl.getLastId());
+                }
+
+                TrackingItem item = new TrackingItem(
+                        habit.getHabitId(),
+                        habit.getHabitName(),
+                        habit.getHabitDescription(),
+                        habit.getHabitType(),
+                        Integer.parseInt(habit.getMonitorType()),
+                        habit.getMonitorNumber(),
+                        Integer.parseInt(tracking.getCount()),
+                        habit.getMonitorUnit(),
+                        habit.getHabitColor());
+                item.setTrackId(tracking.getTrackingId());
+                trackingItemList.add(item);
+            }
+        }
     }
 
     public void showEmpty(View v) {
@@ -156,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         TrackingList trackingData = new TrackingList();
         Tracking tracking;
         Calendar ca = Calendar.getInstance();
-        for (TrackingItem item: trackingItemList) {
+        for (TrackingItem item : trackingItemList) {
             tracking = new Tracking();
             tracking.setHabitId(item.getHabitId());
             tracking.setCurrentDate(ca.get(Calendar.YEAR) + "-" + (ca.get(Calendar.MONTH) + 1) + "-" + ca.get(Calendar.DATE));
@@ -167,12 +175,12 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         service.replace(trackingData).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                response.body();
+
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Not OK", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Không tải được dữ liệu.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -181,8 +189,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         db.open();
         for (int i = 0; i < trackingItemList.size(); i++) {
             item = trackingItemList.get(i);
-            if (!Database.sTrackingImpl.updateTrackCount(
-                    item.getTrackId(), String.valueOf(item.getCount()))) {
+            if (!Database.sTrackingImpl.updateTrackCount(item.getTrackId(), String.valueOf(item.getCount()))) {
                 break;
             }
         }

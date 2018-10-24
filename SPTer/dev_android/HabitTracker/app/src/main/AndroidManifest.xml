@@ -37,7 +37,9 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".SplashActivity" />
         <activity android:name=".GroupActivity" />
-        <activity android:name=".ReminderActivity"></activity>
+        <activity android:name=".ReminderActivity">
+
+        </activity>
 
         <receiver android:name=".ReminderReceiver"></receiver>
 

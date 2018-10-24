@@ -1,12 +1,12 @@
 package habit.tracker.habittracker.repository.reminder;
 
 public class ReminderEntity {
-    String reminderId;
-    String reminderHour;
-    String reminderMinute;
-    String repeatTime;
-    String repeatRemain;
-    String habitId;
+    private String reminderId;
+    private String reminderHour;
+    private String reminderMinute;
+    private String repeatTime;
+    private String repeatRemain;
+    private String habitId;
 
     public String getReminderId() {
         return reminderId;

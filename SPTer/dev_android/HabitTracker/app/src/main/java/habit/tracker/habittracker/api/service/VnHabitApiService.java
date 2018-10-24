@@ -29,10 +29,10 @@ public interface VnHabitApiService {
     Call<UserResult> addUser(@Body User user);
 
     @POST("habit/create.php")
-    Call<HabitResult> addHabit(@Body Habit habit);
+    Call<ResponseBody> addHabit(@Body Habit habit);
 
     @POST("habit/update.php")
-    Call<HabitResult> updateHabit(@Body Habit habit);
+    Call<ResponseBody> updateHabit(@Body Habit habit);
 
     @DELETE("habit/delete.php")
     Call<HabitResult> deleteHabit(@Query("habit_id") String habitId);

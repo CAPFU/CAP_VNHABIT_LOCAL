@@ -5,18 +5,37 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import habit.tracker.habittracker.api.model.habit.Habit;
-import habit.tracker.habittracker.repository.DatabaseHelper;
+import habit.tracker.habittracker.repository.MyDatabaseHelper;
 
 /**
  * Created by DatTVT1 on 10/16/2018
  */
-public class HabitDaoImpl extends DatabaseHelper implements HabitDao, HabitSchema {
+public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSchema {
     private Cursor cursor;
     private ContentValues initialValues;
 
     public HabitDaoImpl(SQLiteDatabase db) {
         super(db);
+    }
+
+    @Override
+    public List<HabitEntity> fetchUser() {
+        List<HabitEntity> list = new ArrayList<>();
+        Cursor cursor = super.query(HABIT_TABLE, HABIT_COLUMNS, null,
+                null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                list.add(cursorToEntity(cursor));
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        return list;
     }
 
     @Override

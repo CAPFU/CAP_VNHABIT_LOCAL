@@ -28,6 +28,7 @@ import butterknife.OnClick;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.habit.HabitResult;
+import habit.tracker.habittracker.api.model.reminder.Reminder;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
@@ -35,6 +36,7 @@ import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.group.GroupEntity;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
 import habit.tracker.habittracker.repository.reminder.ReminderEntity;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -185,7 +187,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     @BindView(R.id.spinner_repeat)
     EditText editDescription;
 
-    List<ReminderEntity> reminders = new ArrayList<>();
+    List<Reminder> reminderList = new ArrayList<>();
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -199,13 +201,11 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 if (data != null && data.getExtras() != null) {
                     String hour = data.getStringExtra(ReminderActivity.TIME_HOUR);
                     String minute = data.getStringExtra(ReminderActivity.TIME_MINUTE);
-                    String repeat = data.getStringExtra(ReminderActivity.REPEAT_TIME);
-                    ReminderEntity entity = new ReminderEntity();
-                    entity.setReminderHour(hour);
-                    entity.setReminderMinute(minute);
-                    entity.setRepeatRemain(repeat);
-                    entity.setRepeatRemain(repeat);
-                    reminders.add(entity);
+                    int repeat = data.getIntExtra(ReminderActivity.REPEAT_TIME, 0);
+                    Reminder reminder = new Reminder();
+                    reminder.setReminderTime(hour + "-" + minute);
+                    reminder.setRepeatTime(String.valueOf(repeat));
+                    reminderList.add(reminder);
                 }
             }
         }
@@ -216,14 +216,13 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_habit);
         ButterKnife.bind(this);
-
+        // init habit type: daily
+        btnHabitType = btnDaily;
+        // init habit color
         colorsList = new ArrayList<>();
         for (int colorId : colors) {
             colorsList.add(getResources().getString(colorId));
         }
-        // init habit type: daily
-        btnHabitType = btnDaily;
-        // init habit color
         color1.setBackground(getCircleBackground(colorsList.get(0)));
         color2.setBackground(getCircleBackground(colorsList.get(1)));
         color3.setBackground(getCircleBackground(colorsList.get(2)));
@@ -235,7 +234,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         color9.setBackground(getCircleBackground(colorsList.get(8)));
         color10.setBackground(getCircleBackground(colorsList.get(9)));
         setHabitColor(color1);
-        // plan date
+        // start and end date
         Calendar calendar = Calendar.getInstance();
         startYear = calendar.get(Calendar.YEAR);
         startMonth = calendar.get(Calendar.MONTH);
@@ -244,17 +243,16 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         endMonth = calendar.get(Calendar.MONTH);
         endDay = calendar.get(Calendar.DATE);
 
-        Bundle extras = getIntent().getExtras();
         // load habit from local trackingItemList
+        Bundle extras = getIntent().getExtras();
         if (extras != null) {
             this.habitId = extras.getString(MainActivity.HABIT_ID, null);
             if (habitId != null) {
+                // mode CREATE
                 this.createMode = 1;
                 initFromSavedHabit(habitId);
             }
         } else {
-            // habit color
-            setHabitColor(color1);
             // init monitor date
             setMonitorDate(btnMon);
             setMonitorDate(btnTue);
@@ -377,7 +375,6 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 if (habitEntity.getHabitColor() != null) {
                     for (int i = 0; i < colorsList.size(); i++) {
                         String code = colorsList.get(i);
-                        // TODO: optimize this
                         if (habitEntity.getHabitColor().equals(code)) {
                             switch (String.valueOf(i)) {
                                 case TYPE_0:
@@ -423,6 +420,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
     @OnClick(R.id.btn_save)
     public void saveHabit(View v) {
+        // validate user input
         Validator validator = new Validator();
         validator.setErrorMsgListener(new Validator.ErrorMsg() {
             @Override
@@ -486,37 +484,39 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         habit.setFri(String.valueOf(this.monitorDate[4] ? 1 : 0));
         habit.setSat(String.valueOf(this.monitorDate[5] ? 1 : 0));
         habit.setSun(String.valueOf(this.monitorDate[6] ? 1 : 0));
+        habit.setReminderList(reminderList);
 
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
+        // CREATE new habit
         if (createMode == MODE_CREATE) {
-            mService.addHabit(habit).enqueue(new Callback<HabitResult>() {
+            mService.addHabit(habit).enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<HabitResult> call, Response<HabitResult> response) {
-                    if (response.body().getResult().equals("1")) {
-                        Toast.makeText(HabitActivity.this, "Tạo thói quen thành công", Toast.LENGTH_LONG).show();
-                        HabitActivity.this.setResult(HabitActivity.RESULT_OK);
-                        finish();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<HabitResult> call, Throwable t) {
-                    Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
-                }
-            });
-        } else if (createMode == MODE_UPDATE) {
-            habit.setHabitId(habitId);
-            habit.setGroupId(groupId);
-            habit.setMonitorId(monitorDateId);
-            mService.updateHabit(habit).enqueue(new Callback<HabitResult>() {
-                @Override
-                public void onResponse(Call<HabitResult> call, Response<HabitResult> response) {
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    Toast.makeText(HabitActivity.this, "Tạo thói quen thành công", Toast.LENGTH_LONG).show();
                     HabitActivity.this.setResult(HabitActivity.RESULT_OK);
                     finish();
                 }
 
                 @Override
-                public void onFailure(Call<HabitResult> call, Throwable t) {
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+        // UPDATE habit
+        else if (createMode == MODE_UPDATE) {
+            habit.setHabitId(habitId);
+            habit.setGroupId(groupId);
+            habit.setMonitorId(monitorDateId);
+            mService.updateHabit(habit).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    HabitActivity.this.setResult(HabitActivity.RESULT_OK);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
                     Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
                 }
             });

@@ -4,10 +4,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import habit.tracker.habittracker.repository.DatabaseHelper;
+import habit.tracker.habittracker.repository.MyDatabaseHelper;
 import habit.tracker.habittracker.repository.tracking.TrackingEntity;
 
-public class ReminderDaoImpl extends DatabaseHelper implements ReminderDao, ReminderSchema {
+public class ReminderDaoImpl extends MyDatabaseHelper implements ReminderDao, ReminderSchema {
     Cursor cursor;
     private ContentValues initialValues;
     private String lastId;
