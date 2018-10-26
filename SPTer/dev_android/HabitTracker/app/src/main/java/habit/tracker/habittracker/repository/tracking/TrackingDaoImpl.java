@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import habit.tracker.habittracker.repository.MyDatabaseHelper;
 
 public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, TrackingSchema {
@@ -49,8 +52,8 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
     }
 
     @Override
-    public TrackingEntity getTracking(String trackID) {
-        final String selectionArgs[] = {String.valueOf(trackID)};
+    public TrackingEntity getTracking(String trackId) {
+        final String selectionArgs[] = {String.valueOf(trackId)};
         final String selection = TRACKING_ID + " = ?";
         TrackingEntity entity = new TrackingEntity();
         cursor = super.query(TRACKING_TABLE, TRACKING_COLUMNS, selection, selectionArgs, TRACKING_ID);
@@ -79,6 +82,22 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
             cursor.close();
         }
         return entity;
+    }
+
+    public List<TrackingEntity> getTrackingByDate(String currentDate) {
+        List<TrackingEntity> list = new ArrayList<>();
+        final String selectionArgs[] = {currentDate};
+        final String selection = CURRENT_DATE + " = ?";
+        cursor = super.query(TRACKING_TABLE, TRACKING_COLUMNS, selection, selectionArgs, CURRENT_DATE);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                list.add(cursorToEntity(cursor));
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        return list;
     }
 
     @Override

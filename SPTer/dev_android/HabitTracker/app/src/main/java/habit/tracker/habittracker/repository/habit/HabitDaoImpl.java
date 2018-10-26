@@ -4,17 +4,21 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.repository.MyDatabaseHelper;
+import habit.tracker.habittracker.repository.tracking.TrackingDaoImpl;
+import habit.tracker.habittracker.repository.tracking.TrackingEntity;
+import habit.tracker.habittracker.repository.tracking.TrackingSchema;
 
 /**
  * Created by DatTVT1 on 10/16/2018
  */
-public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSchema {
+public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSchema, TrackingSchema {
     private Cursor cursor;
     private ContentValues initialValues;
 
@@ -23,10 +27,9 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
     }
 
     @Override
-    public List<HabitEntity> fetchUser() {
+    public List<HabitEntity> fetchHabit() {
         List<HabitEntity> list = new ArrayList<>();
-        Cursor cursor = super.query(HABIT_TABLE, HABIT_COLUMNS, null,
-                null, null);
+        Cursor cursor = super.query(HABIT_TABLE, HABIT_COLUMNS, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -38,12 +41,44 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
         return list;
     }
 
+    public List<DateTracking> getHabitOnTrackingDay(String day) {
+        List<DateTracking> list = new ArrayList<>();
+        try {
+            Cursor cursor = super.rawQuery("SELECT "
+                            + getColumnParams(HABIT_COLUMNS, "h", false)
+                            + getColumnParams(TRACKING_COLUMNS, "t", true)
+                            + " FROM " + HABIT_TABLE + " INNER JOIN " + TRACKING_TABLE
+                            + " ON "
+                            + getColumnParam(HabitSchema.HABIT_ID, "h") + " = " + getColumnParam(TrackingSchema.HABIT_ID, "t")
+                            + " AND "
+                            + getColumnParam(TrackingSchema.CURRENT_DATE, "t") + " = " + day
+                    , null);
+
+            if (cursor != null) {
+                DateTracking dateTracking;
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+                    dateTracking = new DateTracking();
+                    dateTracking.setHabitEntity(cursorToEntity(cursor));
+                    dateTracking.setTrackingEntity(cursorToTrackingEntity(cursor));
+                    list.add(dateTracking);
+                    cursor.moveToNext();
+                }
+                cursor.close();
+                return list;
+            }
+        } catch (SQLiteConstraintException ex) {
+            Log.e("error", "error in HabitDaoImpl.getHabitOnTrackingDay");
+        }
+        return list;
+    }
+
     @Override
     public HabitEntity getHabit(String habitId) {
         final String selectionArgs[] = {habitId};
-        final String selection = HABIT_ID + " = ?";
+        final String selection = HabitSchema.HABIT_ID + " = ?";
         HabitEntity habitEntity = new HabitEntity();
-        cursor = super.query(HABIT_TABLE, HABIT_COLUMNS, selection, selectionArgs, HABIT_ID);
+        cursor = super.query(HABIT_TABLE, HABIT_COLUMNS, selection, selectionArgs, HabitSchema.HABIT_ID);
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -86,8 +121,8 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
     protected HabitEntity cursorToEntity(Cursor cursor) {
         HabitEntity habitEntity = new HabitEntity();
         if (cursor != null) {
-            if (cursor.getColumnIndex(HABIT_ID) != -1) {
-                habitEntity.setHabitId(cursor.getString(cursor.getColumnIndexOrThrow(HABIT_ID)));
+            if (cursor.getColumnIndex(HabitSchema.HABIT_ID) != -1) {
+                habitEntity.setHabitId(cursor.getString(cursor.getColumnIndexOrThrow(HabitSchema.HABIT_ID)));
             }
             if (cursor.getColumnIndex(USER_ID) != -1) {
                 habitEntity.setUserId(cursor.getString(cursor.getColumnIndexOrThrow(USER_ID)));
@@ -156,6 +191,28 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
         return habitEntity;
     }
 
+    private TrackingEntity cursorToTrackingEntity(Cursor cursor) {
+        TrackingEntity entity = new TrackingEntity();
+        if (cursor != null) {
+            if (cursor.getColumnIndex(TRACKING_ID) != -1) {
+                entity.setTrackingId(cursor.getString(cursor.getColumnIndexOrThrow(TRACKING_ID)));
+            }
+            if (cursor.getColumnIndex(TrackingSchema.HABIT_ID) != -1) {
+                entity.setHabitId(cursor.getString(cursor.getColumnIndexOrThrow(TrackingSchema.HABIT_ID)));
+            }
+            if (cursor.getColumnIndex(CURRENT_DATE) != -1) {
+                entity.setCurrentDate(cursor.getString(cursor.getColumnIndexOrThrow(CURRENT_DATE)));
+            }
+            if (cursor.getColumnIndex(COUNT) != -1) {
+                entity.setCount(cursor.getString(cursor.getColumnIndexOrThrow(COUNT)));
+            }
+            if (cursor.getColumnIndex(TRACKING_DESCRIPTION) != -1) {
+                entity.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(TRACKING_DESCRIPTION)));
+            }
+        }
+        return entity;
+    }
+
     public HabitEntity convert(Habit habit) {
         if (habit != null) {
             HabitEntity entity = new HabitEntity();
@@ -188,7 +245,7 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
     @Override
     public void setContentValue(HabitEntity habitEntity) {
         initialValues = new ContentValues();
-        initialValues.put(HABIT_ID, habitEntity.getHabitId());
+        initialValues.put(HabitSchema.HABIT_ID, habitEntity.getHabitId());
         initialValues.put(USER_ID, habitEntity.getUserId());
         initialValues.put(GROUP_ID, habitEntity.getGroupId());
         initialValues.put(MONITOR_ID, habitEntity.getMonitorId());
@@ -215,5 +272,20 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
     @Override
     public ContentValues getContentValue() {
         return initialValues;
+    }
+
+    public String getColumnParams(String[] columns, String alias, boolean removeEnd) {
+        String str = "";
+        for (int i = 0; i < columns.length; i++) {
+            str = str + alias + "." + columns[i] + ", ";
+            if (removeEnd && i == columns.length - 1) {
+                return str.substring(0, str.length() - 2);
+            }
+        }
+        return str;
+    }
+
+    public String getColumnParam(String column, String alias) {
+        return alias + "." + column;
     }
 }

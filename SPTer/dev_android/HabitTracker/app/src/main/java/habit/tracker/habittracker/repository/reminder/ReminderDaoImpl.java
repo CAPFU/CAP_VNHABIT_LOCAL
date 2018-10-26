@@ -47,9 +47,9 @@ public class ReminderDaoImpl extends MyDatabaseHelper implements ReminderDao, Re
         if (cursor.getColumnIndex(REPEAT_REMAIN) != -1) {
             entity.setRepeatRemain(cursor.getString(cursor.getColumnIndexOrThrow(REPEAT_REMAIN)));
         }
-        if (cursor.getColumnIndex(SERVICE_ID) != -1) {
-            entity.setServerId(cursor.getInt(cursor.getColumnIndexOrThrow(SERVICE_ID)));
-        }
+//        if (cursor.getColumnIndex(SERVICE_ID) != -1) {
+//            entity.setServerId(cursor.getInt(cursor.getColumnIndexOrThrow(SERVICE_ID)));
+//        }
         return entity;
     }
 
