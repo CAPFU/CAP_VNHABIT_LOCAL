@@ -31,11 +31,13 @@ import habit.tracker.habittracker.api.model.habit.HabitResult;
 import habit.tracker.habittracker.api.model.reminder.Reminder;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.Generator;
+import habit.tracker.habittracker.common.ReminderService;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.group.GroupEntity;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
+import habit.tracker.habittracker.repository.reminder.ReminderEntity;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -495,14 +497,57 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         habit.setSun(String.valueOf(this.monitorDate[6] ? 1 : 0));
         for (Reminder reminder : reminderList) {
             reminder.setReminderId(Generator.getNewId());
+            reminder.setHabitId(habit.getHabitId());
         }
         habit.setReminderList(reminderList);
 
         // save or update habit to local
+        List<ReminderEntity> remindEntities = null;
         Database db = new Database(HabitActivity.this);
         db.open();
-        Database.sHabitDaoImpl.saveHabit(Database.sHabitDaoImpl.convert(habit));
+        if(Database.sHabitDaoImpl.saveHabit(Database.sHabitDaoImpl.convert(habit))) {
+            for (Reminder reminder : reminderList) {
+                Database.sReminderImpl.addReminder(Database.sReminderImpl.convert(reminder));
+            }
+            remindEntities = Database.sReminderImpl.getRemindersByHabit(habit.getHabitId());
+        }
         db.close();
+//        // start remind server for each service id
+//        ReminderService reminderService = new ReminderService(this);
+//        if (remindEntities != null && remindEntities.size() > 0) {
+//            for (int i = 0; i < monitorDate.length; i++) {
+//                if (monitorDate[i]) {
+//                    int day = Calendar.MONDAY;
+//                    switch (i) {
+//                        case 1:
+//                            day = Calendar.TUESDAY;
+//                            break;
+//                        case 2:
+//                            day = Calendar.WEDNESDAY;
+//                            break;
+//                        case 3:
+//                            day = Calendar.THURSDAY;
+//                            break;
+//                        case 4:
+//                            day = Calendar.FRIDAY;
+//                            break;
+//                        case 5:
+//                            day = Calendar.SATURDAY;
+//                            break;
+//                        case 6:
+//                            day = Calendar.SUNDAY;
+//                            break;
+//                    }
+//                    int h, m;
+//                    for (ReminderEntity entity : remindEntities) {
+//                        String[] timeArr = entity.getReminderTime().split("-");
+//                        h = Integer.parseInt(timeArr[0]);
+//                        m = Integer.parseInt(timeArr[1]);
+//                        reminderService.remind(entity.getServerId(), day, h, m);
+//                    }
+//                }
+//            }
+//        }
 
         // call api to syn data
         VnHabitApiService mService = VnHabitApiUtils.getApiService();

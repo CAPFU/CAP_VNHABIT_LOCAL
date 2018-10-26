@@ -83,7 +83,7 @@ public class ReminderActivity extends AppCompatActivity implements NumberPicker.
 //        Database db = new Database(this);
 //        db.open();
 //        ReminderEntity entity = new ReminderEntity();
-//        entity.setReminderHour(String.valueOf(hour));
+//        entity.setReminderTime(String.valueOf(hour));
 //        entity.setReminderMinute(String.valueOf(minute));
 //        entity.setRepeatTime(String.valueOf(repeatTime));
 //        entity.setRepeatRemain(String.valueOf(repeatTime));
