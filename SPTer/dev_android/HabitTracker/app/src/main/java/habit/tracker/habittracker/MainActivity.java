@@ -12,9 +12,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,12 +89,10 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         service.replace(trackingData).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
         db.close();
@@ -183,12 +179,6 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
             @Override
             public void onFailure(Call<HabitResponse> call, Throwable t) {
-                Database db = new Database(MainActivity.this);
-                db.open();
-//                List<HabitEntity> habitEntities = Database.sHabitDaoImpl.fetchHabit();
-//                loadData(habitEntities);
-//                trackingAdapter.notifyDataSetChanged();
-                db.close();
             }
         });
     }
