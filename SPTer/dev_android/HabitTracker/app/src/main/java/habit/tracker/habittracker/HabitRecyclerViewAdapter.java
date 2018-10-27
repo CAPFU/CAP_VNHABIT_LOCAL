@@ -21,6 +21,7 @@ import android.widget.TextView;
 import java.util.List;
 
 public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private boolean isEditable = true;
     public static final int TYPE_CHECK = 0;
     public static final int TYPE_COUNT = 1;
     public static final int TYPE_ADD = 2;
@@ -34,6 +35,10 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.context = context;
+    }
+
+    public void setEditable(boolean editable) {
+        isEditable = editable;
     }
 
     @Override
@@ -161,6 +166,9 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
         @Override
         public void onClick(View view) {
+            if (!isEditable) {
+                return;
+            }
             if (view.getId() == R.id.btn_plus) {
 //                Toast.makeText(context, "btn_plus", Toast.LENGTH_SHORT).show();
                 int num = Integer.parseInt(tvCount.getText().toString());
@@ -202,6 +210,9 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
         @Override
         public void onClick(View view) {
+            if (!isEditable) {
+                return;
+            }
             if (view.getId() == R.id.ck_check) {
                 if (isCheck) {
                     isCheck = false;
