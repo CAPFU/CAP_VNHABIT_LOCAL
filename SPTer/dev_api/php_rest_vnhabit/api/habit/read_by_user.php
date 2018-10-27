@@ -34,8 +34,7 @@ if ($num > 0) {
         $trackArr = array();
         $tracker->habit_id = $habit_id;
         $trackRes = $tracker->getTrackByHabit();
-        $num = $trackRes->rowCount();
-        if ($num > 0) {
+        if ($trackRes) {
             while($row2 = $trackRes->fetch(PDO::FETCH_ASSOC)) {
                 array_push($trackArr, $row2);
             }

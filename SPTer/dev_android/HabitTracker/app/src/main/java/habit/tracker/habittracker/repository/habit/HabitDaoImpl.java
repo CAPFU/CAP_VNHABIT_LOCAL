@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import habit.tracker.habittracker.api.model.habit.Habit;
+import habit.tracker.habittracker.common.TrackingDate;
 import habit.tracker.habittracker.repository.MyDatabaseHelper;
 import habit.tracker.habittracker.repository.tracking.TrackingEntity;
 import habit.tracker.habittracker.repository.tracking.TrackingSchema;
@@ -29,6 +30,29 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
     public List<HabitEntity> fetchHabit() {
         List<HabitEntity> list = new ArrayList<>();
         Cursor cursor = super.query(HABIT_TABLE, HABIT_COLUMNS, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                list.add(cursorToEntity(cursor));
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        return list;
+    }
+
+    public List<HabitEntity> fetchTodayHabit(TrackingDate date) {
+        List<HabitEntity> list = new ArrayList<>();
+        final String[] selectionArgs = new String[]{date.getMon(), date.getTue(), date.getWed(), date.getThu(), date.getFri(), date.getSat(), date.getSun()};
+        final String selection = HabitSchema.MON + " = ? OR "
+                + HabitSchema.TUE + " = ? OR "
+                + HabitSchema.WED + " = ? OR "
+                + HabitSchema.THU + " = ? OR "
+                + HabitSchema.FRI + " = ? OR "
+                + HabitSchema.SAT + " = ? OR "
+                + HabitSchema.SUN + " = ? ";
+
+        Cursor cursor = super.query(HABIT_TABLE, HABIT_COLUMNS, selection, selectionArgs, null);
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {

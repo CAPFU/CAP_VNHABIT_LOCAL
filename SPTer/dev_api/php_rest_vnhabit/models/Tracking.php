@@ -68,7 +68,7 @@ include_once '../../models/Model.php';
             $stmt = $this->conn->prepare($query);
             $stmt = $this->bind_param($stmt, array('habit_id' => $track['habit_id'], 'current_date' => $track['current_date']));
             $stmt->execute();
-            $stmt->debugDumpParams();
+            // $stmt->debugDumpParams();
 
             $num = $stmt->rowCount();
             if ($num == 1) {
@@ -135,16 +135,20 @@ include_once '../../models/Model.php';
 
         // Update user
         public function updateWithParam($track) {
+            $habit_id = $track['habit_id'];
+            $count = $track['count'];
+            $tracking_description = $track['tracking_description'];
+            $current_date = $track['current_date'];
             // create query
             $query = 'UPDATE ' . $this->table . ' t ' . ' SET count = :count, tracking_description = :tracking_description '
                         . ' WHERE habit_id = :habit_id AND t.current_date = :current_date';
             
             // Prepare statement
             $stmt = $this->conn->prepare($query);
-            $stmt = $this->bind_param($stmt, array('habit_id' => $track['habit_id'],
-                                    'current_date' => $track['current_date'],
-                                    'count' => $track['count'], 
-                                    'tracking_description' => $track['tracking_description']));
+            $stmt = $this->bind_param($stmt, array('habit_id' => $habit_id,
+                                    'current_date' => $current_date,
+                                    'count' => $count, 
+                                    'tracking_description' => $tracking_description));
 
             // $stmt->debugDumpParams();
             

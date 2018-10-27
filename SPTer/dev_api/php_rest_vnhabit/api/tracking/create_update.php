@@ -25,16 +25,14 @@ for($i = 0; $i < count($data); $i++) {
     array_push($arrTrack, get_object_vars($data[$i]));
 }
 
+var_dump($arrTrack);
+
 for($i = 0; $i < count($arrTrack); $i++) {
-    $item = $arrTrack[$i];
-    $row = $tracker->getTrackWithParam($item);
-
-    // var_dump($row);
-
+    $row = $tracker->getTrackWithParam($arrTrack[$i]);
     if($row) {
-        $tracker->updateWithParam($item);
+        $tracker->updateWithParam($arrTrack[$i]);
     } else {
-        $tracker->createWithParam($item);
+        $tracker->createWithParam($arrTrack[$i]);
     }
 }
 
