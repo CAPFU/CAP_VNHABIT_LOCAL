@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import habit.tracker.habittracker.api.model.tracking.Tracking;
+import habit.tracker.habittracker.common.Generator;
 import habit.tracker.habittracker.repository.MyDatabaseHelper;
 
 public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, TrackingSchema {
@@ -105,11 +107,11 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
         setContentValue(entity);
         try {
             boolean res = super.replace(TRACKING_TABLE, getContentValue()) > 0;
-            Cursor cursor = super.rawQuery("SELECT * FROM " + TRACKING_TABLE + " ORDER BY " + TRACKING_ID + " DESC LIMIT 1", null);
-            if (cursor != null && cursor.moveToFirst()) {
-                entity = cursorToEntity(cursor);
-                this.lastId = entity.getTrackingId();
-            }
+//            Cursor cursor = super.rawQuery("SELECT * FROM " + TRACKING_TABLE + " ORDER BY " + TRACKING_ID + " DESC LIMIT 1", null);
+//            if (cursor != null && cursor.moveToFirst()) {
+//                entity = cursorToEntity(cursor);
+//                this.lastId = entity.getTrackingId();
+//            }
             return res;
         } catch (SQLiteConstraintException ex) {
             return false;
@@ -162,5 +164,14 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
 
     private ContentValues getContentValue() {
         return initialValues;
+    }
+
+    public TrackingEntity convert(Tracking track) {
+        TrackingEntity entity = new TrackingEntity();
+        entity.setTrackingId(track.getTrackingId());
+        entity.setHabitId(track.getHabitId());
+        entity.setCount(track.getCount());
+        entity.setCurrentDate(track.getCurrentDate());
+        return entity;
     }
 }

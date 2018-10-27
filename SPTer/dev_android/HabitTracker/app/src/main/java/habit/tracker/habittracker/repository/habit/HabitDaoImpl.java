@@ -11,7 +11,6 @@ import java.util.List;
 
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.repository.MyDatabaseHelper;
-import habit.tracker.habittracker.repository.tracking.TrackingDaoImpl;
 import habit.tracker.habittracker.repository.tracking.TrackingEntity;
 import habit.tracker.habittracker.repository.tracking.TrackingSchema;
 
@@ -45,13 +44,13 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
         List<DateTracking> list = new ArrayList<>();
         try {
             Cursor cursor = super.rawQuery("SELECT "
-                            + getColumnParams(HABIT_COLUMNS, "h", false)
-                            + getColumnParams(TRACKING_COLUMNS, "t", true)
-                            + " FROM " + HABIT_TABLE + " INNER JOIN " + TRACKING_TABLE
+                            + getParams(HABIT_COLUMNS, "h", false)
+                            + getParams(TRACKING_COLUMNS, "t", true)
+                            + " FROM " + HABIT_TABLE + " AS h INNER JOIN " + TRACKING_TABLE + " AS t"
                             + " ON "
-                            + getColumnParam(HabitSchema.HABIT_ID, "h") + " = " + getColumnParam(TrackingSchema.HABIT_ID, "t")
-                            + " AND "
-                            + getColumnParam(TrackingSchema.CURRENT_DATE, "t") + " = " + day
+                            + getParam(HabitSchema.HABIT_ID, "h") + " = " + getParam(TrackingSchema.HABIT_ID, "t")
+                            + " WHERE "
+                            + getParam(TrackingSchema.CURRENT_DATE, "t") + " = '" + day  + "'"
                     , null);
 
             if (cursor != null) {
@@ -274,7 +273,7 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
         return initialValues;
     }
 
-    public String getColumnParams(String[] columns, String alias, boolean removeEnd) {
+    public String getParams(String[] columns, String alias, boolean removeEnd) {
         String str = "";
         for (int i = 0; i < columns.length; i++) {
             str = str + alias + "." + columns[i] + ", ";
@@ -285,7 +284,7 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
         return str;
     }
 
-    public String getColumnParam(String column, String alias) {
+    public String getParam(String column, String alias) {
         return alias + "." + column;
     }
 }

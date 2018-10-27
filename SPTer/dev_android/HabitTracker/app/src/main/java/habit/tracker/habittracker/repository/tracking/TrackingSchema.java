@@ -4,7 +4,7 @@ public interface TrackingSchema {
     String TRACKING_TABLE = "tracking";
     String TRACKING_ID = "tracking_id";
     String HABIT_ID = "habit_id";
-    String CURRENT_DATE = "current_date";
+    String CURRENT_DATE = "tracking_current_date";
     String COUNT = "count";
     String TRACKING_DESCRIPTION = "tracking_description";
     String CREATE_TRACKING_TABLE =
