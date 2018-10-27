@@ -23,9 +23,21 @@ public class Generator {
         try {
             Calendar ca = Calendar.getInstance();
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-//            date = dateFormat.parse(ca.get(Calendar.YEAR) + "-" + (ca.get(Calendar.MONTH) + 1) + "-" + ca.get(Calendar.DATE));
             Date date = dateFormat.parse(currentDate);
             Date oneDayBefore = new Date(date.getTime() - Generator.MILLISECOND_IN_DAY);
+            return dateFormat.format(oneDayBefore);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getNextDate(String currentDate) {
+        try {
+            Calendar ca = Calendar.getInstance();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date date = dateFormat.parse(currentDate);
+            Date oneDayBefore = new Date(date.getTime() + Generator.MILLISECOND_IN_DAY);
             return dateFormat.format(oneDayBefore);
         } catch (ParseException e) {
             e.printStackTrace();

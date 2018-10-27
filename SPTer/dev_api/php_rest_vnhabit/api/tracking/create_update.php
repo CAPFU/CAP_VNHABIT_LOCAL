@@ -28,6 +28,9 @@ for($i = 0; $i < count($data); $i++) {
 for($i = 0; $i < count($arrTrack); $i++) {
     $item = $arrTrack[$i];
     $row = $tracker->getTrackWithParam($item);
+
+    // var_dump($row);
+
     if($row) {
         $tracker->updateWithParam($item);
     } else {

@@ -18,11 +18,11 @@ include_once '../../models/Model.php';
 
         public function __construct($db) {
             $this->conn = $db;
-            $this->cols = $this->get_read_param(NULL, NULL);
+            $this->cols = $this->get_read_param(NULL, 't');
         }
 
         public function read() {
-            $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . ' ORDER BY tracking_id ASC';
+            $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . ' t ORDER BY tracking_id ASC';
             // Prepare statement
             $stmt = $this->conn->prepare($query);
             // Execute query
@@ -30,8 +30,21 @@ include_once '../../models/Model.php';
             return $stmt;
         }
 
+        public function getTrackByHabit() {
+            $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . ' t WHERE habit_id = :habit_id';
+            $stmt = $this->conn->prepare($query);
+            $stmt = $this->bind_param($stmt, array('habit_id' => $this->habit_id));
+            $stmt->execute();
+            $num = $stmt->rowCount();
+            if ($num > 0) {
+                return $stmt;
+            } else {
+                return NULL;
+            }
+        }
+
         public function get_tracking() {
-            $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . 
+            $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . ' t ' . 
                 ' WHERE 
                     habit_id = :habit_id and current_date = :current_date 
                     LIMIT 0,1';
@@ -49,13 +62,14 @@ include_once '../../models/Model.php';
 
         // get track data by habit id and date
         public function getTrackWithParam($track) {
-            $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . 
+            $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . " t ". 
                 ' WHERE 
-                    habit_id = :habit_id and current_date = :current_date 
-                    LIMIT 0,1';
+                    t.habit_id = :habit_id AND t.current_date = :current_date';
             $stmt = $this->conn->prepare($query);
             $stmt = $this->bind_param($stmt, array('habit_id' => $track['habit_id'], 'current_date' => $track['current_date']));
             $stmt->execute();
+            $stmt->debugDumpParams();
+
             $num = $stmt->rowCount();
             if ($num == 1) {
                 return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -67,11 +81,11 @@ include_once '../../models/Model.php';
         // Create User
         public function create() {
             // create query
-            $query = 'INSERT INTO ' . $this->table . ' SET ' . $this->get_query_param(array('tracking_id'));
+            $query = 'INSERT INTO ' . $this->table . ' SET ' . $this->get_query_param(NULL);
             // Prepare statement
             $stmt = $this->conn->prepare($query);
             // Bind data
-            $stmt = $this->bind_param_exc($stmt, array('tracking_id'));
+            $stmt = $this->bind_param_exc($stmt, NULL);
             // Execute query
             if ($stmt->execute()) {
                 return true;
@@ -83,11 +97,12 @@ include_once '../../models/Model.php';
         // Create User
         public function createWithParam($track) {
             // create query
-            $query = 'INSERT INTO ' . $this->table . ' SET ' . $this->get_query_param(array('tracking_id'));
+            $query = 'INSERT INTO ' . $this->table . ' SET ' . $this->get_query_param(NULL);
             // Prepare statement
             $stmt = $this->conn->prepare($query);
             // Bind data
-            $stmt = $this->bind_param($stmt, array('habit_id' => $track['habit_id'],
+            $stmt = $this->bind_param($stmt, array('tracking_id' => $track['tracking_id'], 
+                                    'habit_id' => $track['habit_id'],
                                     'current_date' => $track['current_date'],
                                     'count' => $track['count'],
                                     'tracking_description' => $track['tracking_description']));
@@ -103,8 +118,8 @@ include_once '../../models/Model.php';
         // Update user
         public function update() {
             // create query
-            $query = 'UPDATE ' . $this->table . ' SET count = :count, tracking_description = :tracking_description '
-                        . ' WHERE habit_id = :habit_id AND current_date = :current_date';
+            $query = 'UPDATE ' . $this->table . ' t ' . ' SET t.count = :count, t.tracking_description = :tracking_description '
+                        . ' WHERE t.habit_id = :habit_id AND t.current_date = :current_date';
             
             // Prepare statement
             $stmt = $this->conn->prepare($query);
@@ -121,8 +136,8 @@ include_once '../../models/Model.php';
         // Update user
         public function updateWithParam($track) {
             // create query
-            $query = 'UPDATE ' . $this->table . ' SET count = :count, tracking_description = :tracking_description '
-                        . ' WHERE habit_id = :habit_id AND current_date = :current_date';
+            $query = 'UPDATE ' . $this->table . ' t ' . ' SET count = :count, tracking_description = :tracking_description '
+                        . ' WHERE habit_id = :habit_id AND t.current_date = :current_date';
             
             // Prepare statement
             $stmt = $this->conn->prepare($query);
@@ -130,6 +145,9 @@ include_once '../../models/Model.php';
                                     'current_date' => $track['current_date'],
                                     'count' => $track['count'], 
                                     'tracking_description' => $track['tracking_description']));
+
+            // $stmt->debugDumpParams();
+            
             // Execute query
             if ($stmt->execute()) {
                 return true;

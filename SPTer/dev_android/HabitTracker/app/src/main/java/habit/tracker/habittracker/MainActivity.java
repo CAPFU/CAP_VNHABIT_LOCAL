@@ -179,12 +179,20 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
     @OnClick(R.id.imgNext)
     public void next(ImageView img) {
-
+        String nextDate = Generator.getNextDate(currentDate);
+        if (nextDate != null) {
+            currentDate = nextDate;
+            Toast.makeText(this, nextDate, Toast.LENGTH_SHORT).show();
+            Database db = new Database(this);
+            db.open();
+            trackingItemList.clear();
+            updateDataList(trackingItemList, trackingAdapter);
+            db.close();
+        }
     }
 
     @OnClick(R.id.imgBack)
     public void back(ImageView img) {
-        Calendar ca = Calendar.getInstance();
         String preDate = Generator.getPreDate(currentDate);
         if (preDate != null) {
             currentDate = preDate;
@@ -192,9 +200,16 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             Database db = new Database(this);
             db.open();
             trackingItemList.clear();
-            List<DateTracking> dateTrackingList = Database.sHabitDaoImpl.getHabitOnTrackingDay(currentDate);
-            HabitEntity habitEntity;
-            TrackingEntity trackingEntity;
+            updateDataList(trackingItemList, trackingAdapter);
+            db.close();
+        }
+    }
+
+    public void updateDataList(List<TrackingItem> trackingItemList, HabitRecyclerViewAdapter trackingAdapter) {
+        List<DateTracking> dateTrackingList = Database.sHabitDaoImpl.getHabitOnTrackingDay(currentDate);
+        HabitEntity habitEntity;
+        TrackingEntity trackingEntity;
+        if (dateTrackingList.size() > 0) {
             for (DateTracking tracking : dateTrackingList) {
                 habitEntity = tracking.getHabitEntity();
                 trackingEntity = tracking.getTrackingEntity();
@@ -211,7 +226,6 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                 item.setTrackId(trackingEntity.getTrackingId());
                 trackingItemList.add(item);
             }
-            db.close();
             trackingAdapter.notifyDataSetChanged();
         }
     }
@@ -222,12 +236,11 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         List<Tracking> trackList = new ArrayList<>();
         TrackingList trackingData = new TrackingList();
         Tracking tracking;
-        Calendar ca = Calendar.getInstance();
         for (TrackingItem item : trackingItemList) {
             tracking = new Tracking();
-            tracking.setTrackingId(Generator.getNewId());
+            tracking.setTrackingId(item.getTrackId());
             tracking.setHabitId(item.getHabitId());
-            tracking.setCurrentDate(ca.get(Calendar.YEAR) + "-" + (ca.get(Calendar.MONTH) + 1) + "-" + ca.get(Calendar.DATE));
+            tracking.setCurrentDate(currentDate);
             tracking.setCount(String.valueOf(item.getCount()));
             trackList.add(tracking);
         }
