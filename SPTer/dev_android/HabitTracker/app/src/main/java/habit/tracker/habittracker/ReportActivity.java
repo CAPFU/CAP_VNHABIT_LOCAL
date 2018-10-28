@@ -2,11 +2,12 @@ package habit.tracker.habittracker;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -20,67 +21,65 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.model.GradientColor;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import habit.tracker.habittracker.common.DayAxisValueFormatter;
-import habit.tracker.habittracker.common.MyAxisValueFormatter;
+import butterknife.OnClick;
+import habit.tracker.habittracker.common.Generator;
+import habit.tracker.habittracker.common.chart.DayAxisValueFormatter;
+import habit.tracker.habittracker.common.chart.MyAxisValueFormatter;
+import habit.tracker.habittracker.repository.Database;
+import habit.tracker.habittracker.repository.habit.DateTracking;
 
 
 public class ReportActivity extends AppCompatActivity implements OnChartValueSelectedListener {
 
     @BindView(R.id.chart)
     BarChart chart;
+    @BindView(R.id.pre)
+    View pre;
+    @BindView(R.id.next)
+    View next;
+    @BindView(R.id.displayTime)
+    TextView time;
+    @BindView(R.id.total)
+    TextView tvTotal;
+    @BindView(R.id.totalDone)
+    TextView tvTotalDone;
+
+    String currentTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_report);
         ButterKnife.bind(this);
-
-//        AnyChartView anyChartView = findViewById(R.id.any_chart_view);
-//        anyChartView.setProgressBar(findViewById(R.id.progress_bar));
-//
-//        Cartesian cartesian = AnyChart.column();
-//
-//        cartesian.startSelectMarquee(true);
-//        cartesian.selectMarqueeFill(new String[]{"#FFB6C1", "#F08080"});
-//
-//        List<DataEntry> data = new ArrayList<>();
-//        data.add(new ValueDataEntry("T2", 1));
-//        data.add(new ValueDataEntry("T3", 2));
-//        data.add(new ValueDataEntry("T4", 1));
-//        data.add(new ValueDataEntry("T5", 3));
-//        data.add(new ValueDataEntry("T6", 2));
-//        data.add(new ValueDataEntry("T7", 4));
-//        data.add(new ValueDataEntry("CN", 1));
-//
-//        Column column = cartesian.column(data);
-//        column.tooltip()
-//                .titleFormat("")
-//                .position(Position.CENTER_BOTTOM)
-//                .anchor(Anchor.CENTER_BOTTOM)
-//                .offsetX(0d)
-//                .offsetY(5d)
-//                .format("{%Value}");
-//
-//        cartesian.animation(true);
-//        cartesian.title("");
-//        cartesian.yScale().minimum(0d);
-//        cartesian.yAxis(0).labels().format("{%Value}");
-//        cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
-//        cartesian.interactivity().hoverMode(HoverMode.BY_X);
-//        cartesian.xAxis(0).title("");
-//        cartesian.yAxis(0).title("");
-//        anyChartView.setChart(cartesian);
-
         initChart();
+    }
+
+    @OnClick(R.id.pre)
+    public void pre(View v) {
+        currentTime = Generator.getDayPreWeek(currentTime);
+        ArrayList<BarEntry> values = loadData(currentTime);
+        setData(values);
+        chart.invalidate();
+    }
+
+    @OnClick(R.id.next)
+    public void next(View v) {
+        currentTime = Generator.getDayNextWeek(currentTime);
+        ArrayList<BarEntry> values = loadData(currentTime);
+        setData(values);
+        chart.invalidate();
     }
 
     private void initChart() {
         chart.setOnChartValueSelectedListener(this);
-        chart.setOnChartValueSelectedListener(this);
+        chart.getDescription().setEnabled(false);
         chart.setDrawBarShadow(false);
         chart.setDrawValueAboveBar(false);
         chart.getDescription().setEnabled(false);
@@ -96,74 +95,135 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter();
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setTypeface(tfLight);
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f); // only intervals of 1 day
-        xAxis.setLabelCount(8);
+        xAxis.setLabelCount(7);
         xAxis.setValueFormatter(xAxisFormatter);
 
         IAxisValueFormatter custom = new MyAxisValueFormatter();
 
         YAxis leftAxis = chart.getAxisLeft();
-//        leftAxis.setTypeface(tfLight);
         leftAxis.setLabelCount(7, false);
         leftAxis.setValueFormatter(custom);
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         leftAxis.setSpaceTop(15f);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-        YAxis rightAxis = chart.getAxisRight();
-        rightAxis.setEnabled(false);
-
-        Legend l = chart.getLegend();
-        l.setEnabled(false);
+        chart.getAxisRight().setEnabled(false);
+        chart.getLegend().setEnabled(false);
 
         XYMarkerView mv = new XYMarkerView(this, xAxisFormatter);
         mv.setChartView(chart); // For bounds control
         chart.setMarker(mv); // Set the marker to the chart
 
-        setData();
+        Calendar ca = Calendar.getInstance();
+        int year = ca.get(Calendar.YEAR);
+        int month = ca.get(Calendar.MONTH) + 1;
+        int date = ca.get(Calendar.DATE);
+        currentTime = year + "-" + month + "-" + date;
+//        String[] week = Generator.getWeek(year, month, date);
+//        String startDate = convert(week[0], "-", "/");
+//        String endDate = convert(week[6], "-", "/");
+//        time.setText(startDate + " - " + endDate);
+
+        ArrayList<BarEntry> values = loadData(currentTime);
+        setData(values);
     }
 
-    private void setData() {
-        ArrayList<BarEntry> values = new ArrayList<>();
-
-        values.add(new BarEntry(0, 10));
-        values.add(new BarEntry(1, 15));
-        values.add(new BarEntry(2, 12));
-        values.add(new BarEntry(3, 9));
-        values.add(new BarEntry(4, 5));
-        values.add(new BarEntry(5, 12));
-        values.add(new BarEntry(6, 13));
-
+    private void setData(ArrayList<BarEntry> values) {
         BarDataSet set1;
-
         if (chart.getData() != null && chart.getData().getDataSetCount() > 0) {
             set1 = (BarDataSet) chart.getData().getDataSetByIndex(0);
             set1.setValues(values);
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
+            chart.animateY(500);
 
         } else {
-            set1 = new BarDataSet(values, "The year 2017");
+            set1 = new BarDataSet(values, "");
             set1.setDrawIcons(false);
             int startColor1 = ContextCompat.getColor(this, R.color.red1);
             int endColor1 = ContextCompat.getColor(this, R.color.red2);
 
-            List<GradientColor> gradientColors2 = new ArrayList<>();
-            gradientColors2.add(new com.github.mikephil.charting.model.GradientColor(startColor1, endColor1));
+            List<GradientColor> gradientColors = new ArrayList<>();
+            gradientColors.add(new com.github.mikephil.charting.model.GradientColor(startColor1, endColor1));
 
-            set1.setGradientColors(gradientColors2);
+            set1.setGradientColors(gradientColors);
+
             ArrayList<IBarDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1);
 
             BarData data = new BarData(dataSets);
             data.setValueTextSize(10f);
-//            data.setValueTypeface(tfLight);
-            data.setBarWidth(0.6f);
+            data.setBarWidth(0.9f);
 
             chart.setData(data);
+            chart.animateY(500);
         }
+    }
+
+    private  ArrayList<BarEntry> loadData(String currentTime) {
+        ArrayList<BarEntry> values = new ArrayList<>();
+        String[] strs = currentTime.split("-");
+        int year = Integer.parseInt(strs[0]);
+        int month = Integer.parseInt(strs[1]);
+        int date = Integer.parseInt(strs[2]);
+        String[] week = Generator.getWeek(year, month, date);
+
+        String startDate = convert(week[0], "-", "/");
+        String endDate = convert(week[6], "-", "/");
+        time.setText(startDate + " - " + endDate);
+
+        Database db = new Database(this);
+        db.open();
+        // get all completed habits in one week
+        List<DateTracking> total = Database.sHabitDaoImpl.getHabitsBetween(week[0], week[6]);
+        List<DateTracking> completedList = new ArrayList<>();
+        for (DateTracking item : total) {
+            if (item.getHabitEntity().getMonitorNumber() != null
+                    && item.getTrackingEntity().getCount() != null
+                    && item.getHabitEntity().getMonitorNumber().equals(item.getTrackingEntity().getCount())) {
+                completedList.add(item);
+            }
+        }
+        int[] count = countPerDay(week, completedList);
+        for (int i = 0; i < 7; i++) {
+            values.add(new BarEntry(i, count[i]));
+        }
+        db.close();
+
+        tvTotal.setText(String.valueOf(total.size()));
+        tvTotalDone.setText(String.valueOf(completedList.size()));
+
+        return values;
+    }
+
+    private int[] countPerDay(String[] week, List<DateTracking> list) {
+        int[] count = new int[7];
+        for (int i = 0; i < list.size(); i++) {
+            String date = list.get(i).getTrackingEntity().getCurrentDate();
+            if (date.equals(week[0])) {
+                ++count[0];
+            } else if (date.equals(week[1])) {
+                ++count[1];
+            } else if (date.equals(week[2])) {
+                ++count[2];
+            } else if (date.equals(week[3])) {
+                ++count[3];
+            } else if (date.equals(week[4])) {
+                ++count[4];
+            } else if (date.equals(week[5])) {
+                ++count[5];
+            } else if (date.equals(week[6])) {
+                ++count[6];
+            }
+        }
+        return count;
+    }
+
+    private String convert(String date, String p1, String p2) {
+        String[] strs = date.split(p1);
+        return strs[2] + p2 + strs[1] + strs[0];
     }
 
     @Override
