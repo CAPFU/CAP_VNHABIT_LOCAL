@@ -22,4 +22,6 @@
     <color name="gray1">#64838383</color>
     <!-- color picker -->
 
+    <color name="red1">#ffcccc</color>
+    <color name="red2">#f46666</color>
 </resources>

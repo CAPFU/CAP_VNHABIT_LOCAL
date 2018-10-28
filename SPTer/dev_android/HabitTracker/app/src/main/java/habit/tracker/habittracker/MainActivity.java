@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     ImageView imgNext;
     @BindView(R.id.imgBack)
     ImageView imgBack;
+    @BindView(R.id.report)
+    View btnReport;
 
     public void showEmpty(View v) {
         Intent intent = new Intent(this, EmptyActivity.class);
@@ -259,10 +261,10 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         db.close();
     }
 
-    @Override
-    protected void onPause() {
-
-        super.onPause();
+    @OnClick(R.id.report)
+    public void report(View v) {
+        Intent intent = new Intent(this, ReportActivity.class);
+        startActivity(intent);
     }
 
     public boolean isTodayHabit(int year, int month, int date, TrackingDate habit) {
