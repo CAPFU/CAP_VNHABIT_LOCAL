@@ -30,7 +30,7 @@
             android:layout_height="match_parent"
             android:textSize="18sp"
             android:gravity="center"
-            android:background="@drawable/bg_tab"
+            android:background="@drawable/bg_tab_red"
             android:text="Tuần"/>
         <TextView
             android:id="@+id/tabMonth"

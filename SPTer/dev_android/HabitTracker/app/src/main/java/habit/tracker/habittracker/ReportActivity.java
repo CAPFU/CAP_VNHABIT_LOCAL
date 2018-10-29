@@ -174,8 +174,34 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
 
     private void setData(ArrayList<BarEntry> values) {
         BarDataSet set1;
+
+        int startColor1 = ContextCompat.getColor(this, R.color.red1);
+        int endColor1 = ContextCompat.getColor(this, R.color.red2);
+        switch (mode) {
+            case MODE_WEEK:
+                startColor1 = ContextCompat.getColor(this, R.color.red1);
+                endColor1 = ContextCompat.getColor(this, R.color.red2);
+                break;
+            case MODE_MONTH:
+                startColor1 = ContextCompat.getColor(this, R.color.purple1);
+                endColor1 = ContextCompat.getColor(this, R.color.purple2);
+                break;
+            case MODE_YEAR:
+                startColor1 = ContextCompat.getColor(this, R.color.blue1);
+                endColor1 = ContextCompat.getColor(this, R.color.blue2);
+                break;
+            default:
+                break;
+        }
+
         if (chart.getData() != null && chart.getData().getDataSetCount() > 0) {
             set1 = (BarDataSet) chart.getData().getDataSetByIndex(0);
+
+            List<GradientColor> gradientColors = new ArrayList<>();
+            gradientColors.add(new com.github.mikephil.charting.model.GradientColor(startColor1, endColor1));
+
+            set1.setGradientColors(gradientColors);
+
             set1.setValues(values);
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
@@ -184,8 +210,6 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         } else {
             set1 = new BarDataSet(values, "");
             set1.setDrawIcons(false);
-            int startColor1 = ContextCompat.getColor(this, R.color.red1);
-            int endColor1 = ContextCompat.getColor(this, R.color.red2);
 
             List<GradientColor> gradientColors = new ArrayList<>();
             gradientColors.add(new com.github.mikephil.charting.model.GradientColor(startColor1, endColor1));
@@ -371,7 +395,19 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
     }
 
     public void select(View v) {
-        v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab));
+        switch (mode) {
+            case MODE_WEEK:
+                v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab_red));
+                break;
+            case MODE_MONTH:
+                v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab_purple));
+                break;
+            case MODE_YEAR:
+                v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab_blue));
+                break;
+            default:
+                break;
+        }
     }
 
     public void unselect(View v) {
