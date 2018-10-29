@@ -121,7 +121,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         int month = ca.get(Calendar.MONTH) + 1;
         int date = ca.get(Calendar.DATE);
         currentTime = year + "-" + month + "-" + date;
-//        String[] week = Generator.getWeek(year, month, date);
+//        String[] week = Generator.getDatesInWeek(year, month, date);
 //        String startDate = convert(week[0], "-", "/");
 //        String endDate = convert(week[6], "-", "/");
 //        time.setText(startDate + " - " + endDate);
@@ -168,7 +168,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         int year = Integer.parseInt(strs[0]);
         int month = Integer.parseInt(strs[1]);
         int date = Integer.parseInt(strs[2]);
-        String[] week = Generator.getWeek(year, month, date);
+        String[] week = Generator.getDatesInWeek(year, month, date);
 
         String startDate = convert(week[0], "-", "/");
         String endDate = convert(week[6], "-", "/");

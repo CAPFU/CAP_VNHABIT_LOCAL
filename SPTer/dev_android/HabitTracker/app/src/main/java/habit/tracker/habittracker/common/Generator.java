@@ -68,7 +68,13 @@ public class Generator {
         return null;
     }
 
-    public static String[] getWeek(int year, int month, int date) {
+    public static int getMaxDayInMonth(int year, int month){
+        Calendar ca = Calendar.getInstance();
+        ca.set(year, month, 1);
+        return ca.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+
+    public static String[] getDatesInWeek(int year, int month, int date) {
         String currentDate = year + "-" + month + "-" + date;
         String[] week = new String[7];
         Calendar ca = Calendar.getInstance();
