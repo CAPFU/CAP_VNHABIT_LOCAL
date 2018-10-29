@@ -24,15 +24,16 @@
         android:layout_below="@+id/header"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/btnWeek"
+            android:id="@+id/tabWeek"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:textSize="18sp"
             android:gravity="center"
+            android:background="@drawable/bg_tab"
             android:text="Tuần"/>
         <TextView
-            android:id="@+id/btnMonth"
+            android:id="@+id/tabMonth"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
@@ -40,7 +41,7 @@
             android:gravity="center"
             android:text="Tháng"/>
         <TextView
-            android:id="@+id/btnYear"
+            android:id="@+id/tabYear"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"

@@ -68,6 +68,9 @@ public class Generator {
         return null;
     }
 
+    /**
+     * @param month start from 0
+     */
     public static int getMaxDayInMonth(int year, int month){
         Calendar ca = Calendar.getInstance();
         ca.set(year, month, 1);
@@ -118,6 +121,33 @@ public class Generator {
         }
         return week;
     }
+
+    /**
+     *
+     * @param year
+     * @param month start from 0
+     * @param date
+     * @return
+     */
+    public static String[] getDatesInMonth(int year, int month, int date) {
+        String currentDate = year + "-" + month + "-" + date;
+        Calendar ca = Calendar.getInstance();
+        ca.set(year, month - 1, date);
+        int numberOfDays = ca.getActualMaximum(Calendar.DAY_OF_MONTH);
+        String[] daysInMonth = new String[numberOfDays];
+        daysInMonth[date - 1] = currentDate;
+        for (int i = date - 2; i >= 0; i--) {
+            daysInMonth[i] = getPreDate(currentDate);
+            currentDate = daysInMonth[i];
+        }
+        currentDate = daysInMonth[date - 1];
+        for (int i = date; i < numberOfDays; i++) {
+            daysInMonth[i] = getNextDate(currentDate);
+            currentDate = daysInMonth[i];
+        }
+        return daysInMonth;
+    }
+
 
     /**
      * The first month of the year in the Gregorian and Julian calendars is 0
