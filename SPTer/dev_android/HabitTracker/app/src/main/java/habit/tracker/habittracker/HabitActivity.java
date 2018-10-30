@@ -599,6 +599,11 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             finish();
         } else if (createMode == MODE_UPDATE) {
             // delete habit
+            Database db = new Database(this);
+            db.open();
+            Database.sHabitDaoImpl.deleteHabit(this.savedHabitId);
+            db.close();
+
             VnHabitApiService service = VnHabitApiUtils.getApiService();
             service.deleteHabit(this.savedHabitId).enqueue(new Callback<ResponseBody>() {
                 @Override
