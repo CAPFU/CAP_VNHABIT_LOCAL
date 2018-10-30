@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     HabitRecyclerViewAdapter trackingAdapter;
     String currentDate;
     String firstCurrentDate;
+    int dayStack = 0;
 
     @BindView(R.id.tvDate)
     TextView tvDate;
@@ -251,11 +251,8 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         Database db = new Database(this);
         db.open();
         if (nextDate != null) {
-            if (nextDate.equals(firstCurrentDate)) {
-                tvDate.setText("Hôm nay");
-            } else {
-                tvDate.setText(Generator.convert(nextDate, "-", "/"));
-            }
+            dayStack++;
+            updateTitle(nextDate);
             currentDate = nextDate;
             trackingItemList.clear();
             updateData(trackingItemList, trackingAdapter, currentDate);
@@ -269,12 +266,8 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         Database db = new Database(this);
         db.open();
         if (preDate != null) {
-            boolean isEdit = true;
-            if (preDate.equals(firstCurrentDate)) {
-                tvDate.setText("Hôm nay");
-            } else {
-                tvDate.setText(Generator.convert(preDate, "-", "/"));
-            }
+            dayStack--;
+            updateTitle(preDate);
             currentDate = preDate;
             trackingItemList.clear();
             updateData(trackingItemList, trackingAdapter, currentDate);
@@ -299,5 +292,18 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                 || toDay == Calendar.FRIDAY && habit.getFri() != null && habit.getFri().equals("1")
                 || toDay == Calendar.SATURDAY && habit.getSat() != null && habit.getSat().equals("1")
                 || toDay == Calendar.SUNDAY && habit.getSun() != null && habit.getSun().equals("1");
+    }
+
+    private void updateTitle(String date) {
+        if (date.equals(firstCurrentDate)) {
+            tvDate.setText("Hôm nay");
+        } else if (dayStack == 1) {
+            tvDate.setText("Ngày mai");
+        } else if (dayStack == -1) {
+            tvDate.setText("Hôm qua");
+        }
+        else {
+            tvDate.setText(Generator.convert(date, "-", "/"));
+        }
     }
 }

@@ -25,8 +25,6 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     public static final int TYPE_COUNT = 1;
     public static final int TYPE_ADD = 2;
 
-    private View.OnClickListener checkListener;
-    private View.OnClickListener countListener;
     private boolean isEditable = true;
 
     private Context context;
@@ -118,14 +116,6 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         float comp = (float) item.getCount() / Integer.parseInt(item.getNumber());
         scaleView(holder.background, item.getComp(), comp > 1 ? 1f : comp);
         item.setComp(comp);
-
-        if (!isEditable) {
-            holder.btnPlus.setOnClickListener(null);
-            holder.btnMinus.setOnClickListener(null);
-        } else {
-            holder.btnPlus.setOnClickListener(countListener);
-            holder.btnMinus.setOnClickListener(countListener);
-        }
     }
 
     @SuppressLint("ResourceType")
@@ -149,12 +139,6 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             holder.isCheck = false;
             holder.imgCheck.setImageResource(R.drawable.ck_unchecked);
             scaleView(holder.background, 1f, 0f);
-        }
-
-        if (!isEditable) {
-            holder.imgCheck.setOnClickListener(null);
-        } else {
-            holder.imgCheck.setOnClickListener(this.checkListener);
         }
     }
 
@@ -183,7 +167,6 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             btnPlus.setOnClickListener(this);
             btnMinus = itemView.findViewById(R.id.btn_minus);
             btnMinus.setOnClickListener(this);
-            countListener = this;
         }
 
         @Override
@@ -228,7 +211,6 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             tvHabitType = itemView.findViewById(R.id.tv_habitType);
             imgCheck = itemView.findViewById(R.id.ck_check);
             imgCheck.setOnClickListener(this);
-            checkListener = this;
         }
 
         @Override
