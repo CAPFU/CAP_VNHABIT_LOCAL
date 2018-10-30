@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         db.open();
         if (nextDate != null) {
 //            Toast.makeText(this, nextDate, Toast.LENGTH_SHORT).show();
-            tvDate.setText(nextDate);
+            tvDate.setText(Generator.convert(nextDate,"-","/"));
             currentDate = nextDate;
             trackingItemList.clear();
             updateData(trackingItemList, trackingAdapter, currentDate);
@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         db.open();
         if (preDate != null) {
 //            Toast.makeText(this, preDate, Toast.LENGTH_SHORT).show();
-            tvDate.setText(preDate);
+            tvDate.setText(Generator.convert(preDate,"-","/"));
             currentDate = preDate;
             trackingItemList.clear();
             updateData(trackingItemList, trackingAdapter, currentDate);
