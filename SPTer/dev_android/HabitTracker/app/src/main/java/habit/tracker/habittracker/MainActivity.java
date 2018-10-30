@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     public void onSetCount(View view, int type, int position, int count) {
         TrackingItem item = trackingItemList.get(position);
         item.setCount(count);
-        trackingAdapter.notifyItemChanged(position);
+//        trackingAdapter.notifyItemChanged(position);
 
         Database db = new Database(MainActivity.this);
         db.open();
