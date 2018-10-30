@@ -114,7 +114,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         holder.background.setBackground(getBackground(color));
 
         float ratio = (float) item.getCount() / Integer.parseInt(item.getNumber());
-        scaleView(holder.background, item.getComp(), ratio > 1 ? 1f : ratio, 200);
+        scaleView(holder.background, item.getComp(), ratio > 1 ? 1f : ratio, 0);
         item.setRatio(ratio);
     }
 

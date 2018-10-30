@@ -56,11 +56,6 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     @BindView(R.id.report)
     View btnReport;
 
-    public void showEmpty(View v) {
-        Intent intent = new Intent(this, EmptyActivity.class);
-        startActivity(intent);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -275,9 +270,25 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         db.close();
     }
 
+    public void backToCurrent(View v) {
+        Database db = new Database(this);
+        db.open();
+        dayStack = 0;
+        updateTitle(firstCurrentDate);
+        currentDate = firstCurrentDate;
+        trackingItemList.clear();
+        updateData(trackingItemList, trackingAdapter, currentDate);
+        db.close();
+    }
+
     @OnClick(R.id.report)
     public void report(View v) {
         Intent intent = new Intent(this, ReportActivity.class);
+        startActivity(intent);
+    }
+
+    public void showEmpty(View v) {
+        Intent intent = new Intent(this, EmptyActivity.class);
         startActivity(intent);
     }
 
@@ -295,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     }
 
     private void updateTitle(String date) {
-        if (date.equals(firstCurrentDate)) {
+        if (dayStack == 0) {
             tvDate.setText("Hôm nay");
         } else if (dayStack == 1) {
             tvDate.setText("Ngày mai");
