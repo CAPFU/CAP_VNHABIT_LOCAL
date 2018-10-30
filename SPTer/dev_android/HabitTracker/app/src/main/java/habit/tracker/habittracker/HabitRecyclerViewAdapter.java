@@ -21,12 +21,15 @@ import android.widget.TextView;
 import java.util.List;
 
 public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private boolean isEditable = true;
     public static final int TYPE_CHECK = 0;
     public static final int TYPE_COUNT = 1;
     public static final int TYPE_ADD = 2;
-    private Context context;
 
+    private View.OnClickListener checkListener;
+    private View.OnClickListener countListener;
+    private boolean isEditable = true;
+
+    private Context context;
     private List<TrackingItem> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
@@ -101,31 +104,43 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     private void initLayoutCount(ViewHolderCount holder, TrackingItem item) {
         holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
-        holder.tvHabitType.setText(oncvertHabitType(item.getHabitType()));
+        holder.tvHabitType.setText(item.getHabitType());
         holder.tvNumber.setText("/" + item.getNumber() + " " + item.getUnit());
         holder.tvCount.setText(String.valueOf(item.getCount()));
+
         String color = item.getColor();
         if (color != null && color.equals(context.getString(R.color.color0))) {
             color = context.getString(R.color.gray1);
         }
         holder.layout.setBackground(getBackground(color));
         holder.background.setBackground(getBackground(color));
+
         float comp = (float) item.getCount() / Integer.parseInt(item.getNumber());
         scaleView(holder.background, item.getComp(), comp > 1 ? 1f : comp);
         item.setComp(comp);
+
+        if (!isEditable) {
+            holder.btnPlus.setOnClickListener(null);
+            holder.btnMinus.setOnClickListener(null);
+        } else {
+            holder.btnPlus.setOnClickListener(countListener);
+            holder.btnMinus.setOnClickListener(countListener);
+        }
     }
 
     @SuppressLint("ResourceType")
     private void initLayoutCheck(ViewHolderCheck holder, TrackingItem item) {
         holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
-        holder.tvHabitType.setText(oncvertHabitType(item.getHabitType()));
+        holder.tvHabitType.setText(item.getHabitType());
+
         String color = item.getColor();
         if (color != null && color.equals(context.getString(R.color.color0))) {
             color = context.getString(R.color.gray1);
         }
         holder.layout.setBackground(getBackground(color));
         holder.background.setBackground(getBackground(color));
+
         if (item.getCount() == 1) {
             holder.isCheck = true;
             holder.imgCheck.setImageResource(R.drawable.ck_checked);
@@ -134,6 +149,12 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             holder.isCheck = false;
             holder.imgCheck.setImageResource(R.drawable.ck_unchecked);
             scaleView(holder.background, 1f, 0f);
+        }
+
+        if (!isEditable) {
+            holder.imgCheck.setOnClickListener(null);
+        } else {
+            holder.imgCheck.setOnClickListener(this.checkListener);
         }
     }
 
@@ -162,6 +183,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             btnPlus.setOnClickListener(this);
             btnMinus = itemView.findViewById(R.id.btn_minus);
             btnMinus.setOnClickListener(this);
+            countListener = this;
         }
 
         @Override
@@ -206,6 +228,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             tvHabitType = itemView.findViewById(R.id.tv_habitType);
             imgCheck = itemView.findViewById(R.id.ck_check);
             imgCheck.setOnClickListener(this);
+            checkListener = this;
         }
 
         @Override
@@ -240,7 +263,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         v.startAnimation(anim);
     }
 
-    private String oncvertHabitType(String type) {
+    private String convertHabitType(String type) {
         switch (type) {
             case "0":
                 return "hôm nay";

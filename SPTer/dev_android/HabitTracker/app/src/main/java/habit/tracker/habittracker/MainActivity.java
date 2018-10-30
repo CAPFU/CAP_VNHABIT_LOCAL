@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     List<TrackingItem> trackingItemList = new ArrayList<>();
     HabitRecyclerViewAdapter trackingAdapter;
     String currentDate;
+    String firstCurrentDate;
 
     @BindView(R.id.tvDate)
     TextView tvDate;
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         ButterKnife.bind(this);
         Calendar ca = Calendar.getInstance();
         currentDate = ca.get(Calendar.YEAR) + "-" + (ca.get(Calendar.MONTH) + 1) + "-" + ca.get(Calendar.DATE);
+        firstCurrentDate = currentDate;
         initScreen();
     }
 
@@ -198,9 +200,10 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         int month = Integer.parseInt(arr[1]);
         int date = Integer.parseInt(arr[2]);
         Schedule schedule = new Schedule(year, month, date);
-        List<HabitEntity> habitEntities = Database.sHabitDaoImpl.fetchTodayHabit(schedule);
+        List<HabitEntity> habitEntities = Database.sHabitDaoImpl.fetchTodayHabit(schedule, currentDate);
         boolean isDataSetChanged = false;
         for (HabitEntity habit : habitEntities) {
+            // get tracking records on current date
             TrackingEntity record = Database.sTrackingImpl.getTracking(habit.getHabitId(), currentDate);
             if (record.getTrackingId() == null) {
                 record = getTrackRecord(habit.getHabitId(), currentDate, 0);
@@ -222,9 +225,11 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                 isDataSetChanged = true;
             }
         }
-        if (isDataSetChanged) {
-            trackingAdapter.notifyDataSetChanged();
-        }
+
+        trackingAdapter.setEditable(currentDate.compareTo(firstCurrentDate) < 1);
+//        if (isDataSetChanged) {
+        trackingAdapter.notifyDataSetChanged();
+//        }
     }
 
     public TrackingEntity getTrackRecord(String habitId, String currentDate, int defaultVal) {
@@ -246,8 +251,11 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         Database db = new Database(this);
         db.open();
         if (nextDate != null) {
-//            Toast.makeText(this, nextDate, Toast.LENGTH_SHORT).show();
-            tvDate.setText(Generator.convert(nextDate,"-","/"));
+            if (nextDate.equals(firstCurrentDate)) {
+                tvDate.setText("Hôm nay");
+            } else {
+                tvDate.setText(Generator.convert(nextDate, "-", "/"));
+            }
             currentDate = nextDate;
             trackingItemList.clear();
             updateData(trackingItemList, trackingAdapter, currentDate);
@@ -261,8 +269,12 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         Database db = new Database(this);
         db.open();
         if (preDate != null) {
-//            Toast.makeText(this, preDate, Toast.LENGTH_SHORT).show();
-            tvDate.setText(Generator.convert(preDate,"-","/"));
+            boolean isEdit = true;
+            if (preDate.equals(firstCurrentDate)) {
+                tvDate.setText("Hôm nay");
+            } else {
+                tvDate.setText(Generator.convert(preDate, "-", "/"));
+            }
             currentDate = preDate;
             trackingItemList.clear();
             updateData(trackingItemList, trackingAdapter, currentDate);
