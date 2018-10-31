@@ -38,6 +38,10 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         this.context = context;
     }
 
+    public void setData(List<TrackingItem> mData) {
+        this.mData = mData;
+    }
+
     public void setEditable(boolean editable) {
         isEditable = editable;
     }
@@ -51,9 +55,9 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     public int getItemViewType(int position) {
         if (position == mData.size()) {
             return TYPE_ADD;
-        } else if (TYPE_COUNT == mData.get(position).getType()) {
+        } else if (TYPE_COUNT == mData.get(position).getMonitorType()) {
             return TYPE_COUNT;
-        } else if (TYPE_CHECK == mData.get(position).getType()) {
+        } else if (TYPE_CHECK == mData.get(position).getMonitorType()) {
             return TYPE_CHECK;
         }
         return TYPE_COUNT;
@@ -102,7 +106,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     private void initLayoutCount(ViewHolderCount holder, TrackingItem item) {
         holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
-        holder.tvHabitType.setText(item.getHabitType());
+        holder.tvHabitType.setText(item.getHabitTypeName());
         holder.tvNumber.setText("/" + item.getNumber() + " " + item.getUnit());
         holder.tvCount.setText(String.valueOf(item.getCount()));
 
@@ -122,7 +126,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     private void initLayoutCheck(ViewHolderCheck holder, TrackingItem item) {
         holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
-        holder.tvHabitType.setText(item.getHabitType());
+        holder.tvHabitType.setText(item.getHabitTypeName());
 
         String color = item.getColor();
         if (color != null && color.equals(context.getString(R.color.color0))) {

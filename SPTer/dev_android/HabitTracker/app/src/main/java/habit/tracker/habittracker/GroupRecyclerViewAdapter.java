@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -34,6 +35,11 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
     @Override
     public void onBindViewHolder(@NonNull GroupViewHolder holder, int position) {
         holder.tvName.setText(data.get(position).getGroupName());
+        if (data.get(position).isSelected()) {
+            holder.imgSelect.setVisibility(View.VISIBLE);
+        } else {
+            holder.imgSelect.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -43,9 +49,11 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
 
     public class GroupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView tvName;
+        ImageView imgSelect;
         public GroupViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tv_itemName);
+            imgSelect = itemView.findViewById(R.id.imgSelect);
             itemView.setOnClickListener(this);
         }
 

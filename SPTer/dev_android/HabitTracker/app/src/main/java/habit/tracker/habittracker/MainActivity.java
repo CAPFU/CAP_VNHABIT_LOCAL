@@ -40,12 +40,18 @@ import static habit.tracker.habittracker.HabitRecyclerViewAdapter.TYPE_ADD;
 public class MainActivity extends AppCompatActivity implements HabitRecyclerViewAdapter.ItemClickListener {
     public static final int CREATE_NEW_HABIT = 0;
     public static final int UPDATE_HABIT = 1;
+    public static final int USE_FILTER = 2;
+
     public static final String HABIT_ID = "HABIT_ID";
+
     List<TrackingItem> trackingItemList = new ArrayList<>();
     HabitRecyclerViewAdapter trackingAdapter;
     String currentDate;
     String firstCurrentDate;
     int dayStack = 0;
+
+    @BindView(R.id.imgFilter)
+    ImageView imgFilter;
 
     @BindView(R.id.tvDate)
     TextView tvDate;
@@ -122,6 +128,26 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             if (resultCode == RESULT_OK) {
                 initScreen();
             }
+        } else if (requestCode == USE_FILTER) {
+            if (resultCode == RESULT_OK) {
+                Bundle filter = data.getExtras();
+                String type = filter.getString("type");
+                String target = filter.getString("target");
+                String group = filter.getString("group");
+
+                List<TrackingItem> filteredList = new ArrayList<>();
+                for (int i = 0; i < trackingItemList.size(); i++) {
+                    if ((target.equals("-1") || target.equals(trackingItemList.get(i).getTarget()))
+                            && (type.equals("-1") || type.equals(String.valueOf(trackingItemList.get(i).getHabitType())))
+                            && (group.equals("-1") || group.equals(trackingItemList.get(i).getGroup()))
+                            ) {
+                        filteredList.add(trackingItemList.get(i));
+                    }
+                }
+                trackingAdapter.setData(filteredList);
+                trackingAdapter.notifyDataSetChanged();
+
+            }
         }
     }
 
@@ -171,6 +197,8 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                                     Integer.parseInt(todayTracking.getCount()),
                                     habit.getMonitorUnit(),
                                     habit.getHabitColor());
+                            item.setTarget(habit.getHabitTarget());
+                            item.setGroup(habit.getGroupId());
                             trackingItemList.add(item);
                         }
                     }
@@ -215,6 +243,8 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                     Integer.parseInt(record.getCount()),
                     habit.getMonitorUnit(),
                     habit.getHabitColor());
+            item.setTarget(habit.getHabitTarget());
+            item.setGroup(habit.getGroupId());
             trackingItemList.add(item);
             if (!isDataSetChanged) {
                 isDataSetChanged = true;
@@ -285,6 +315,12 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     public void report(View v) {
         Intent intent = new Intent(this, ReportActivity.class);
         startActivity(intent);
+    }
+
+    @OnClick(R.id.imgFilter)
+    public void showFilter(View v) {
+        Intent intent = new Intent(this, FilterMainActivity.class);
+        startActivityForResult(intent, USE_FILTER);
     }
 
     public void showEmpty(View v) {
