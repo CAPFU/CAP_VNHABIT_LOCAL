@@ -121,6 +121,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
                     Intent intent = getIntent();
                     intent.putExtra(LoginActivity.USERNAME, user.getUsername());
+//                    intent.putExtra(LoginActivity.PASSWORD, user.getPassword());
                     RegisterActivity.this.setResult(RESULT_OK, intent);
                     finish();
                 } else {

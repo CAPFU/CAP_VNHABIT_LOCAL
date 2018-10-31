@@ -24,7 +24,9 @@ import com.github.mikephil.charting.model.GradientColor;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -310,6 +312,15 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         tvTotalDone.setText(String.valueOf(completedList.size()));
 
         return values;
+    }
+
+    private void countTotal(List<DateTracking> list) {
+        Map<String, DateTracking> map = new HashMap<>();
+        for (DateTracking d : list) {
+            map.put(d.getHabitEntity().getHabitId(), d);
+        }
+        tvTotal.setText(String.valueOf(map.size()));
+
     }
 
     private ArrayList<BarEntry> loadMonthData(String currentTime) {

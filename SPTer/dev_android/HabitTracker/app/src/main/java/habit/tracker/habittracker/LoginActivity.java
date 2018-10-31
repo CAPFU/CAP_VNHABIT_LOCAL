@@ -27,10 +27,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public static final int SIGN_UP = 1;
     public static final int GUIDE = 0;
     public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
     EditText edUsername;
     EditText edPassword;
     Button btnLogin;
     TextView linkRegister;
+    private boolean isSignUp = false;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -38,9 +40,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             if (requestCode == SIGN_UP) {
                 if (data != null) {
                     edUsername.setText(data.getStringExtra(USERNAME));
+                    isSignUp = true;
                 }
             } else if (requestCode == GUIDE) {
-
+                isSignUp = false;
             }
         }
     }
@@ -48,7 +51,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onStart() {
         super.onStart();
-        if (MySharedPreference.getUserId(this) != null) {
+        if (!isSignUp && MySharedPreference.getUserId(this) != null) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -81,11 +84,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 validator.setErrorMsgListener(new Validator.ErrorMsg() {
                     @Override
                     public void showError(ValidatorType type, String key) {
-                        Toast.makeText(LoginActivity.this, key + " is empty", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, key + " rỗng", Toast.LENGTH_SHORT).show();
                     }
                 });
-                if (!validator.checkEmpty("username", username)
-                        || !validator.checkEmpty("password", password)) {
+                if (!validator.checkEmpty("Tên tài khoản", username)
+                        || !validator.checkEmpty("Mật khẩu", password)) {
                     return;
                 }
                 login(username, password);
@@ -151,7 +154,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void showMainScreen(String userId, String username) {
-        if (MySharedPreference.getUserId(this) == null) {
+        if (isSignUp || MySharedPreference.getUserId(this) == null) {
             MySharedPreference.saveUser(LoginActivity.this, userId, username);
             startActivityForResult(new Intent(this, GuideActivity.class), GUIDE);
         } else {
