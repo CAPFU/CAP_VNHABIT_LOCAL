@@ -23,6 +23,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.model.GradientColor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -308,19 +309,26 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         }
         db.close();
 
-        tvTotal.setText(String.valueOf(total.size()));
+        Map<String, List<DateTracking>> map = mapHabitTracking(total);
+
+        tvTotal.setText(String.valueOf(map.size()));
         tvTotalDone.setText(String.valueOf(completedList.size()));
 
         return values;
     }
 
-    private void countTotal(List<DateTracking> list) {
-        Map<String, DateTracking> map = new HashMap<>();
+    private Map<String, List<DateTracking>> mapHabitTracking(List<DateTracking> list) {
+        Map<String, List<DateTracking>> map = new HashMap<>();
         for (DateTracking d : list) {
-            map.put(d.getHabitEntity().getHabitId(), d);
+            if (map.containsKey(d.getHabitEntity().getHabitId())) {
+                map.get(d.getHabitEntity().getHabitId()).add(d);
+            } else {
+                map.put(d.getHabitEntity().getHabitId(),
+                        new ArrayList<>(Arrays.asList(d))
+                );
+            }
         }
-        tvTotal.setText(String.valueOf(map.size()));
-
+        return map;
     }
 
     private ArrayList<BarEntry> loadMonthData(String currentTime) {
@@ -361,7 +369,9 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         }
         db.close();
 
-        tvTotal.setText(String.valueOf(total.size()));
+        Map<String, List<DateTracking>> map = mapHabitTracking(total);
+
+        tvTotal.setText(String.valueOf(map.size()));
         tvTotalDone.setText(String.valueOf(completedList.size()));
 
         return values;
@@ -377,12 +387,14 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
 
         Database db = new Database(this);
         db.open();
+
+        List<DateTracking> total = new ArrayList<>();
         List<List<DateTracking>> yearData = new ArrayList<>();
         for (int i = 0; i < 12; i++) {
-            yearData.add(
-                    Database.sHabitDaoImpl.getHabitsBetween(
-                            year + "-" + (i + 1) + "-" + 1, year + "-" + (i + 1) + "-" + Generator.getMaxDayInMonth(year, i))
-            );
+            List<DateTracking> l = Database.sHabitDaoImpl.getHabitsBetween(
+                    year + "-" + (i + 1) + "-" + 1, year + "-" + (i + 1) + "-" + Generator.getMaxDayInMonth(year, i));
+            yearData.add(l);
+            total.addAll(l);
         }
 
         int sum = 0;
@@ -408,7 +420,9 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         }
         db.close();
 
-        tvTotal.setText(String.valueOf(sum));
+        Map<String, List<DateTracking>> map = mapHabitTracking(total);
+
+        tvTotal.setText(String.valueOf(map.size()));
         tvTotalDone.setText(String.valueOf(done));
 
         return values;
