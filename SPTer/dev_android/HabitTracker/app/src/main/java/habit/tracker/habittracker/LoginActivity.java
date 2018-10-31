@@ -11,6 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.model.user.UserResponse;
@@ -23,26 +26,37 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
-    public static final int SIGN_UP = 1;
+public class LoginActivity extends BaseActivity {
+
     public static final int GUIDE = 0;
+
+    public static final int SIGN_UP = 1;
+
     public static final String USERNAME = "username";
+
     public static final String PASSWORD = "password";
+
+    @BindView(R.id.edit_username)
     EditText edUsername;
+    @BindView(R.id.edit_password)
     EditText edPassword;
+    @BindView(R.id.btn_login)
     Button btnLogin;
+    @BindView(R.id.link_register)
     TextView linkRegister;
     private boolean isSignUp = false;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SIGN_UP) {
+        if (requestCode == SIGN_UP) {
+            if (resultCode == RESULT_OK) {
                 if (data != null) {
                     edUsername.setText(data.getStringExtra(USERNAME));
                     isSignUp = true;
                 }
-            } else if (requestCode == GUIDE) {
+            }
+        } else if (requestCode == GUIDE) {
+            if (resultCode == RESULT_OK) {
                 isSignUp = false;
             }
         }
@@ -62,19 +76,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        edUsername = findViewById(R.id.edit_username);
-        edPassword = findViewById(R.id.edit_password);
-        btnLogin = findViewById(R.id.btn_login);
-        linkRegister = findViewById(R.id.link_register);
+        ButterKnife.bind(this);
+
         String registerText = getResources().getString(R.string.register_account);
         SpannableString content = new SpannableString(registerText);
         content.setSpan(new UnderlineSpan(), 0, registerText.length(), 0);
         linkRegister.setText(content);
-        btnLogin.setOnClickListener(this);
-        linkRegister.setOnClickListener(this);
     }
 
-    @Override
+    @OnClick({R.id.btn_login, R.id.link_register, R.id.btn_fb_login, R.id.btn_google_login})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
@@ -100,8 +110,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 showEmptyScreen();
                 break;
             case R.id.link_register:
-                Intent itent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivityForResult(itent, SIGN_UP);
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivityForResult(intent, SIGN_UP);
                 break;
         }
     }
@@ -130,7 +140,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         Database.sUserDaoImpl.saveUser(userEntity);
                         db.close();
                         showMainScreen(user.getUserId(), user.getUsername());
-//                        Toast.makeText(LoginActivity.this, "Welcome!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(LoginActivity.this, "Đăng nhập không thành công!", Toast.LENGTH_SHORT).show();
@@ -139,7 +148,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
-//                Toast.makeText(LoginActivity.this, "Login Failed! username or password is not correct.", Toast.LENGTH_SHORT).show();
                 Database db = new Database(LoginActivity.this);
                 db.open();
                 UserEntity userEntity = Database.sUserDaoImpl.getUser(username, password);

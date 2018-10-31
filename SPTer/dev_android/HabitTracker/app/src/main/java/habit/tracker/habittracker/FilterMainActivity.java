@@ -38,6 +38,8 @@ public class FilterMainActivity extends AppCompatActivity implements GroupRecycl
     String target;
     String group;
 
+    @BindView(R.id.imgCancel)
+    View imgCancel;
     @BindView(R.id.btn_TypeAll)
     View btnTypeAll;
     @BindView(R.id.btn_TypeDaily)
@@ -124,7 +126,7 @@ public class FilterMainActivity extends AppCompatActivity implements GroupRecycl
         target = v.getTag().toString();
     }
 
-    @OnClick({R.id.btn_TypeDaily, R.id.btn_TypeWeekly, R.id.btn_TypeMonthly, R.id.btn_TypeYearly})
+    @OnClick({R.id.btn_TypeAll, R.id.btn_TypeDaily, R.id.btn_TypeWeekly, R.id.btn_TypeMonthly, R.id.btn_TypeYearly})
     public void setHabitType(View view) {
         setWhiteBg(vType);
         setGreenBg(view);
@@ -139,6 +141,11 @@ public class FilterMainActivity extends AppCompatActivity implements GroupRecycl
         intent.putExtra("target", target);
         intent.putExtra("group", group);
         setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @OnClick({R.id.imgCancel})
+    public void cancel(View v) {
         finish();
     }
 
