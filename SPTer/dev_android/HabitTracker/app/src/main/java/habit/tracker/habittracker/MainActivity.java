@@ -18,15 +18,17 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import habit.tracker.habittracker.adapter.HabitRecyclerViewAdapter;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.habit.HabitResponse;
 import habit.tracker.habittracker.api.model.tracking.Tracking;
 import habit.tracker.habittracker.api.model.tracking.TrackingList;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
-import habit.tracker.habittracker.common.Generator;
+import habit.tracker.habittracker.common.util.Generator;
 import habit.tracker.habittracker.common.Schedule;
 import habit.tracker.habittracker.common.TrackingDate;
+import habit.tracker.habittracker.common.util.MySharedPreference;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
 import habit.tracker.habittracker.repository.tracking.TrackingEntity;
@@ -35,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static habit.tracker.habittracker.HabitRecyclerViewAdapter.TYPE_ADD;
+import static habit.tracker.habittracker.adapter.HabitRecyclerViewAdapter.TYPE_ADD;
 
 public class MainActivity extends AppCompatActivity implements HabitRecyclerViewAdapter.ItemClickListener {
     public static final int CREATE_NEW_HABIT = 0;

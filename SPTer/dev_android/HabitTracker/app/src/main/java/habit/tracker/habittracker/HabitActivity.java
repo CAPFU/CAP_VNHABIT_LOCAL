@@ -28,13 +28,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
-import habit.tracker.habittracker.api.model.habit.HabitResult;
 import habit.tracker.habittracker.api.model.reminder.Reminder;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
-import habit.tracker.habittracker.common.Generator;
-import habit.tracker.habittracker.common.ReminderService;
+import habit.tracker.habittracker.common.util.Generator;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
+import habit.tracker.habittracker.common.util.MySharedPreference;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.group.GroupEntity;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
@@ -203,13 +202,12 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 }
             } else if (requestCode == ADD_REMINDER) {
                 if (data != null && data.getExtras() != null) {
-                    String hour = data.getStringExtra(ReminderActivity.TIME_HOUR);
-                    String minute = data.getStringExtra(ReminderActivity.TIME_MINUTE);
-                    int repeat = data.getIntExtra(ReminderActivity.REPEAT_TIME, 0);
+
+                    // TODO: save and display added reminder
                     Reminder reminder = new Reminder();
                     reminder.setReminderId(Generator.getNewId());
-                    reminder.setReminderTime(hour + "-" + minute);
-                    reminder.setRepeatTime(String.valueOf(repeat));
+                    reminder.setReminderTime("");
+                    reminder.setRepeatTime("");
                     reminderList.add(reminder);
                 }
             }

@@ -1,4 +1,4 @@
-package habit.tracker.habittracker;
+package habit.tracker.habittracker.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import habit.tracker.habittracker.R;
 import habit.tracker.habittracker.api.model.group.Group;
 
 public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecyclerViewAdapter.GroupViewHolder> {
