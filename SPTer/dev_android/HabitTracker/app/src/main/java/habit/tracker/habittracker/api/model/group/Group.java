@@ -10,7 +10,7 @@ public class Group {
     @SerializedName("group_name")
     @Expose
     private String groupName;
-    @SerializedName("parrent_id")
+    @SerializedName("parent_id")
     @Expose
     private String parentId;
     @SerializedName("group_icon")
