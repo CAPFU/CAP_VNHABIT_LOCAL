@@ -1,27 +1,28 @@
 package habit.tracker.habittracker;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.Toast;
+        import android.content.Intent;
+        import android.support.v7.app.AppCompatActivity;
+        import android.os.Bundle;
+        import android.support.v7.widget.LinearLayoutManager;
+        import android.support.v7.widget.RecyclerView;
+        import android.view.View;
+        import android.view.WindowManager;
+        import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+        import java.util.ArrayList;
+        import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import habit.tracker.habittracker.api.VnHabitApiUtils;
-import habit.tracker.habittracker.api.model.group.Group;
-import habit.tracker.habittracker.api.model.group.GroupResponse;
-import habit.tracker.habittracker.api.service.VnHabitApiService;
-import habit.tracker.habittracker.repository.Database;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+        import butterknife.BindView;
+        import butterknife.ButterKnife;
+        import butterknife.OnClick;
+        import habit.tracker.habittracker.api.VnHabitApiUtils;
+        import habit.tracker.habittracker.api.model.group.Group;
+        import habit.tracker.habittracker.api.model.group.GroupResponse;
+        import habit.tracker.habittracker.api.service.VnHabitApiService;
+        import habit.tracker.habittracker.repository.Database;
+        import retrofit2.Call;
+        import retrofit2.Callback;
+        import retrofit2.Response;
 
 public class GroupActivity extends AppCompatActivity implements GroupRecyclerViewAdapter.ItemClickListener {
     public static final String GROUP_NAME = "group_name";
@@ -34,9 +35,14 @@ public class GroupActivity extends AppCompatActivity implements GroupRecyclerVie
     @BindView(R.id.btn_back)
     View btnBack;
 
+    @BindView(R.id.imgAddGroup)
+    View imgAddNew;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_group);
         ButterKnife.bind(this);
 
@@ -81,5 +87,10 @@ public class GroupActivity extends AppCompatActivity implements GroupRecyclerVie
     public void back(View view) {
         setResult(RESULT_CANCELED);
         finish();
+    }
+
+    @OnClick(R.id.imgAddGroup)
+    public void addNewGroup(View v) {
+
     }
 }

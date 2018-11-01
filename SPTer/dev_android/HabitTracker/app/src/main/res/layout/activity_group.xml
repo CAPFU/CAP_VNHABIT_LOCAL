@@ -26,10 +26,22 @@
             android:paddingBottom="10dp"
             android:layout_height="match_parent" />
 
-        <View
+        <TextView
             android:layout_width="0dp"
-            android:layout_weight="9"
-            android:layout_height="match_parent"/>
+            android:layout_weight="8"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="#333"
+            android:textSize="20sp"
+            android:text="Nhóm thói quen"/>
+
+        <ImageView
+            android:id="@+id/imgAddGroup"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:src="@drawable/add"/>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
