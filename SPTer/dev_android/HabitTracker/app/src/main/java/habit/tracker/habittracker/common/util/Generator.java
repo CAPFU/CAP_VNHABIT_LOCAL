@@ -200,6 +200,17 @@ public class Generator {
         return daysInMonth;
     }
 
+    public static String convertFormat(String dateTime, String fm1, String fm2) {
+        try {
+            SimpleDateFormat fm = new SimpleDateFormat(fm1, Locale.getDefault());
+            Date d = fm.parse(dateTime);
+            fm = new SimpleDateFormat(fm2, Locale.getDefault());
+            return fm.format(d);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     /**
      * The first month of the year in the Gregorian and Julian calendars is 0

@@ -12,6 +12,7 @@ import java.util.List;
 
 import habit.tracker.habittracker.R;
 import habit.tracker.habittracker.api.model.reminder.Reminder;
+import habit.tracker.habittracker.common.util.Generator;
 
 public class RemindRecyclerViewAdaper extends RecyclerView.Adapter<RemindRecyclerViewAdaper.ReminderViewHolder> {
     List<Reminder> data;
@@ -34,7 +35,11 @@ public class RemindRecyclerViewAdaper extends RecyclerView.Adapter<RemindRecycle
     @Override
     public void onBindViewHolder(@NonNull ReminderViewHolder holder, int position) {
         Reminder reminder = data.get(position);
-        holder.tvRemindTime.setText(reminder.getReminderTime());
+        holder.tvRemindTime.setText(
+                Generator.convertFormat(
+                        reminder.getReminderTime(),
+                        "yyyy-MM-dd hh:mm:ss",
+                        "dd-MM-yyyy hh:mm:ss"));
     }
 
     @Override
