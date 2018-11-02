@@ -203,11 +203,17 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             } else if (requestCode == ADD_REMINDER) {
                 if (data != null && data.getExtras() != null) {
 
-                    // TODO: save and display added reminder
+                    String remindType = data.getStringExtra(ReminderCreateActivity.REMIND_TYPE);
+                    String remindText = data.getStringExtra(ReminderCreateActivity.REMIND_TEXT);
+                    String date = data.getStringExtra(ReminderCreateActivity.REMIND_DATE);
+                    String hour = data.getStringExtra(ReminderCreateActivity.REMIND_HOUR);
+                    String minute = data.getStringExtra(ReminderCreateActivity.REMIND_MINUTE);
+
                     Reminder reminder = new Reminder();
                     reminder.setReminderId(Generator.getNewId());
-                    reminder.setReminderTime("");
-                    reminder.setRepeatTime("");
+                    reminder.setRemindText(remindText);
+                    reminder.setReminderTime(date + hour + ":" + minute);
+                    reminder.setRepeatType(remindType);
                     reminderList.add(reminder);
                 }
             }
@@ -621,7 +627,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
     @OnClick(R.id.btn_addReminder)
     public void addReminder(View v) {
-        Intent intent = new Intent(this, ReminderActivity.class);
+        Intent intent = new Intent(this, ReminderCreateActivity.class);
         intent.putExtra(DAY_OF_WEEK, monitorDate);
         startActivityForResult(intent, ADD_REMINDER);
     }

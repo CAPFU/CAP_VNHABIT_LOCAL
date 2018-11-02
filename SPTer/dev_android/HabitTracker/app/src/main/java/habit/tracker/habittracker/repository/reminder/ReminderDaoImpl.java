@@ -41,15 +41,12 @@ public class ReminderDaoImpl extends MyDatabaseHelper implements ReminderDao, Re
         if (cursor.getColumnIndex(REMINDER_TIME) != -1) {
             entity.setReminderTime(cursor.getString(cursor.getColumnIndexOrThrow(REMINDER_TIME)));
         }
-        if (cursor.getColumnIndex(REPEAT_TIME) != -1) {
-            entity.setRepeatTime(cursor.getString(cursor.getColumnIndexOrThrow(REPEAT_TIME)));
+        if (cursor.getColumnIndex(REPEAT_TYPE) != -1) {
+            entity.setRepeatType(cursor.getString(cursor.getColumnIndexOrThrow(REPEAT_TYPE)));
         }
-        if (cursor.getColumnIndex(REPEAT_REMAIN) != -1) {
-            entity.setRepeatRemain(cursor.getString(cursor.getColumnIndexOrThrow(REPEAT_REMAIN)));
+        if (cursor.getColumnIndex(SERVICE_ID) != -1) {
+            entity.setServerId(cursor.getInt(cursor.getColumnIndexOrThrow(SERVICE_ID)));
         }
-//        if (cursor.getColumnIndex(SERVICE_ID) != -1) {
-//            entity.setServerId(cursor.getInt(cursor.getColumnIndexOrThrow(SERVICE_ID)));
-//        }
         return entity;
     }
 
@@ -86,8 +83,8 @@ public class ReminderDaoImpl extends MyDatabaseHelper implements ReminderDao, Re
         initialValues.put(REMINDER_ID, entity.getReminderId());
         initialValues.put(HABIT_ID, entity.getHabitId());
         initialValues.put(REMINDER_TIME, entity.getReminderTime());
-        initialValues.put(REPEAT_TIME, entity.getRepeatTime());
-        initialValues.put(REPEAT_REMAIN, entity.getRepeatRemain());
+        initialValues.put(REPEAT_TYPE, entity.getRepeatType());
+        initialValues.put(SERVICE_ID, entity.getServerId());
     }
 
     private ContentValues getContentValue() {
@@ -99,8 +96,8 @@ public class ReminderDaoImpl extends MyDatabaseHelper implements ReminderDao, Re
         entity.setReminderId(reminder.getReminderId());
         entity.setHabitId(reminder.getHabitId());
         entity.setReminderTime(reminder.getReminderTime());
-        entity.setRepeatTime(reminder.getRepeatTime());
-        entity.setRepeatRemain(reminder.getRepeatTime());
+        entity.setRepeatType(reminder.getRepeatType());
+        entity.setServerId(reminder.getServerId());
         return entity;
     }
 }
