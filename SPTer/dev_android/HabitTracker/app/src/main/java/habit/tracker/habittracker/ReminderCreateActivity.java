@@ -50,14 +50,14 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
     View btnTypeYear;
     View vType;
 
-    String[] hours;
-    String[] minutes;
+    int[] hours;
+    int[] minutes;
     String[] dates;
 
-    String hour;
-    String minute;
+    int hour;
+    int minute;
+    int type;
     String date;
-    String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +67,9 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
         setContentView(R.layout.activity_reminder_create);
         ButterKnife.bind(this);
 
-        hour = "0";
-        minute = "0";
+        hour = 0;
+        minute = 0;
+        type = -1;
         vType = btnTypeAll;
 
         Calendar ca = Calendar.getInstance();
@@ -76,7 +77,7 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
         int month = ca.get(Calendar.MONTH);
         int date = ca.get(Calendar.DATE);
         dates = Generator.getDatesInMonth(year, month, date);
-        String[] dispDates = convert(dates);
+        String[] dispDates = convertDisplayDate(dates);
         pickerDate.setMinValue(0);
         pickerDate.setMaxValue(dispDates.length - 1);
         pickerDate.setDisplayedValues(dispDates);
@@ -84,22 +85,22 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
 
         this.date = dates[0];
 
-        hours = new String[24];
+        hours = new int[24];
         for (int i = 0; i < hours.length; i++) {
-            hours[i] = String.valueOf(i);
+            hours[i] = i;
         }
         pickerHour.setMinValue(0);
         pickerHour.setMaxValue(hours.length - 1);
-        pickerHour.setDisplayedValues(hours);
+        pickerHour.setDisplayedValues(getStringArr(hours));
         pickerHour.setOnValueChangedListener(this);
 
-        minutes = new String[59];
+        minutes = new int[59];
         for (int i = 0; i < minutes.length; i++) {
-            minutes[i] = String.valueOf(i);
+            minutes[i] = i;
         }
         pickerMinute.setMinValue(0);
         pickerMinute.setMaxValue(minutes.length - 1);
-        pickerMinute.setDisplayedValues(minutes);
+        pickerMinute.setDisplayedValues(getStringArr(minutes));
         pickerMinute.setOnValueChangedListener(this);
     }
 
@@ -145,10 +146,10 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
         setWhiteBg(vType);
         setGreenBg(view);
         vType = view;
-        type = view.getTag().toString();
+        type = Integer.parseInt(view.getTag().toString());
     }
 
-    private String[] convert(String[] dates) {
+    private String[] convertDisplayDate(String[] dates) {
         String[] res = new String[dates.length];
         int year;
         int month;
@@ -188,6 +189,14 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
             }
             str += " "+ day + " Th " + month;
             res[i] = str;
+        }
+        return res;
+    }
+
+    private String[] getStringArr(int[] arr) {
+        String[] res = new String[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            res[i] = String.valueOf(arr[i]);
         }
         return res;
     }

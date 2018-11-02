@@ -38,6 +38,9 @@ public class ReminderDaoImpl extends MyDatabaseHelper implements ReminderDao, Re
         if (cursor.getColumnIndex(HABIT_ID) != -1) {
             entity.setHabitId(cursor.getString(cursor.getColumnIndexOrThrow(HABIT_ID)));
         }
+        if (cursor.getColumnIndex(REMIND_TEXT) != -1) {
+            entity.setRemindText(cursor.getString(cursor.getColumnIndexOrThrow(REMIND_TEXT)));
+        }
         if (cursor.getColumnIndex(REMINDER_TIME) != -1) {
             entity.setReminderTime(cursor.getString(cursor.getColumnIndexOrThrow(REMINDER_TIME)));
         }
@@ -51,11 +54,10 @@ public class ReminderDaoImpl extends MyDatabaseHelper implements ReminderDao, Re
     }
 
     @Override
-    public boolean addReminder(ReminderEntity entity) {
+    public boolean saveUpdateReminder(ReminderEntity entity) {
         setContentValue(entity);
         try {
-            boolean res = super.replace(REMINDER_TABLE, getContentValue()) > 0;
-            return res;
+            return super.replace(REMINDER_TABLE, getContentValue()) > 0;
         } catch (SQLiteConstraintException ex) {
             return false;
         }
@@ -82,6 +84,7 @@ public class ReminderDaoImpl extends MyDatabaseHelper implements ReminderDao, Re
         initialValues = new ContentValues();
         initialValues.put(REMINDER_ID, entity.getReminderId());
         initialValues.put(HABIT_ID, entity.getHabitId());
+        initialValues.put(REMIND_TEXT, entity.getRemindText());
         initialValues.put(REMINDER_TIME, entity.getReminderTime());
         initialValues.put(REPEAT_TYPE, entity.getRepeatType());
         initialValues.put(SERVICE_ID, entity.getServerId());
@@ -95,6 +98,7 @@ public class ReminderDaoImpl extends MyDatabaseHelper implements ReminderDao, Re
         ReminderEntity entity = new ReminderEntity();
         entity.setReminderId(reminder.getReminderId());
         entity.setHabitId(reminder.getHabitId());
+        entity.setRemindText(reminder.getRemindText());
         entity.setReminderTime(reminder.getReminderTime());
         entity.setRepeatType(reminder.getRepeatType());
         entity.setServerId(reminder.getServerId());

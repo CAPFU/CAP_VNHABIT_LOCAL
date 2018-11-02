@@ -38,8 +38,8 @@ public class RemindRecyclerViewAdaper extends RecyclerView.Adapter<RemindRecycle
         holder.tvRemindTime.setText(
                 Generator.convertFormat(
                         reminder.getReminderTime(),
-                        "yyyy-MM-dd hh:mm:ss",
-                        "dd-MM-yyyy hh:mm:ss"));
+                        "yyyy-MM-dd HH:mm:ss",
+                        "dd-MM-yyyy HH:mm:ss") + " " + reminder.getRemindText());
     }
 
     @Override

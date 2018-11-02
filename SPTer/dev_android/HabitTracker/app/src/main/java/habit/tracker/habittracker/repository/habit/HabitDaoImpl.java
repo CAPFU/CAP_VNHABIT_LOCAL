@@ -166,11 +166,10 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
     }
 
     @Override
-    public boolean saveHabit(HabitEntity habitEntity) {
+    public boolean saveUpdateHabit(HabitEntity habitEntity) {
         setContentValue(habitEntity);
         try {
-            boolean res = super.replace(HABIT_TABLE, getContentValue()) > 0;
-            return res;
+            return super.replace(HABIT_TABLE, getContentValue()) > 0;
         } catch (SQLiteConstraintException ex) {
             return false;
         }

@@ -3,6 +3,7 @@ package habit.tracker.habittracker.repository.reminder;
 public class ReminderEntity {
     private String reminderId;
     private String habitId;
+    private String remindText;
     private String reminderTime;
     private String repeatType;
     private int serverId;
@@ -13,6 +14,10 @@ public class ReminderEntity {
 
     public String getHabitId() {
         return habitId;
+    }
+
+    public String getRemindText() {
+        return remindText;
     }
 
     public String getReminderTime() {
@@ -33,6 +38,10 @@ public class ReminderEntity {
 
     public void setHabitId(String habitId) {
         this.habitId = habitId;
+    }
+
+    public void setRemindText(String remindText) {
+        this.remindText = remindText;
     }
 
     public void setReminderTime(String reminderTime) {

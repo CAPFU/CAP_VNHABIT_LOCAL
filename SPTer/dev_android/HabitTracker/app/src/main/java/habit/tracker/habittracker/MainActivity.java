@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                     trackingAdapter.notifyDataSetChanged();
                     // update db
                     for (HabitEntity entity : habitEntities) {
-                        Database.sHabitDaoImpl.saveHabit(entity);
+                        Database.sHabitDaoImpl.saveUpdateHabit(entity);
                     }
                     db.close();
                 }
