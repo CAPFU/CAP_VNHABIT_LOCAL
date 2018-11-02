@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -26,6 +28,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import habit.tracker.habittracker.adapter.RemindRecyclerViewAdaper;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.reminder.Reminder;
@@ -190,7 +193,10 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     @BindView(R.id.spinner_repeat)
     EditText editDescription;
 
+    @BindView(R.id.rvRemind)
+    RecyclerView rvRemind;
     List<Reminder> reminderList = new ArrayList<>();
+    RemindRecyclerViewAdaper remindAdapter;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -212,9 +218,10 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                     Reminder reminder = new Reminder();
                     reminder.setReminderId(Generator.getNewId());
                     reminder.setRemindText(remindText);
-                    reminder.setReminderTime(date + hour + ":" + minute);
+                    reminder.setReminderTime(date + " " + hour + ":" + minute);
                     reminder.setRepeatType(remindType);
                     reminderList.add(reminder);
+                    remindAdapter.notifyDataSetChanged();
                 }
             }
         }
@@ -278,6 +285,17 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             tvStartDate.setText(date);
             tvEndDate.setText(date);
         }
+
+        // init remind list
+        remindAdapter = new RemindRecyclerViewAdaper(this, reminderList);
+        rvRemind.setLayoutManager(new LinearLayoutManager(this));
+        rvRemind.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        rvRemind.setAdapter(remindAdapter);
     }
 
     private void initFromSavedHabit(String habitId) {
