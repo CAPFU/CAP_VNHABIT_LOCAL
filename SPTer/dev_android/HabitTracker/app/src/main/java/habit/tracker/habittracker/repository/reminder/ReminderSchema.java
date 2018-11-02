@@ -12,8 +12,8 @@ public interface ReminderSchema {
                     + REMINDER_ID + " TEXT PRIMARY KEY NOT NULL, "
                     + REMINDER_TIME + " TEXT, "
                     + REPEAT_TYPE + " TEXT, "
-                    + HABIT_ID + " TEXT "
-                    + SERVICE_ID + " INTEGER AUTOINCREMENT NOT NULL"
+                    + HABIT_ID + " TEXT, "
+                    + SERVICE_ID + " INTEGER NOT NULL"
                     + ")";
     String[] REMINDER_COLUMNS = {REMINDER_ID, HABIT_ID, REMINDER_TIME, REPEAT_TYPE, SERVICE_ID};
 }

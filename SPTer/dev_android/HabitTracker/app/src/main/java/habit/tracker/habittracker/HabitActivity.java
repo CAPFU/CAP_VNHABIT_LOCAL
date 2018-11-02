@@ -218,7 +218,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                     Reminder reminder = new Reminder();
                     reminder.setReminderId(Generator.getNewId());
                     reminder.setRemindText(remindText);
-                    reminder.setReminderTime(date + " " + hour + ":" + minute);
+                    reminder.setReminderTime(date + " " + hour + ":" + minute + ":00");
                     reminder.setRepeatType(remindType);
                     reminderList.add(reminder);
                     remindAdapter.notifyDataSetChanged();
