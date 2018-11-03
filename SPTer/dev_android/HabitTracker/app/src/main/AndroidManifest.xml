@@ -40,7 +40,7 @@
 
         </activity>
 
-        <receiver android:name=".ReminderReceiver" />
+        <receiver android:name=".common.receiver.ReminderReceiver" />
 
         <activity android:name=".GuideActivity" />
         <activity android:name=".ReportActivity"></activity>

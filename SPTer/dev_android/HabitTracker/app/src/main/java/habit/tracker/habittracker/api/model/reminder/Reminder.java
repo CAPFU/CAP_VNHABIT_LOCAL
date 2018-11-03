@@ -19,7 +19,13 @@ public class Reminder {
     @SerializedName("habit_id")
     @Expose
     private String habitId;
-    private int serverId;
+    @SerializedName("server_id")
+    @Expose
+    private String serverId;
+
+    private String habitName;
+
+    private String endDate;
 
     public String getReminderId() {
         return reminderId;
@@ -29,6 +35,7 @@ public class Reminder {
         return remindText;
     }
 
+    // yyyy-MM-dd HH:mm:ss
     public String getReminderTime() {
         return reminderTime;
     }
@@ -41,8 +48,16 @@ public class Reminder {
         return habitId;
     }
 
-    public int getServerId() {
+    public String getServerId() {
         return serverId;
+    }
+
+    public String getHabitName() {
+        return habitName;
+    }
+
+    public String getEndDate() {
+        return endDate;
     }
 
     public void setReminderId(String reminderId) {
@@ -65,7 +80,15 @@ public class Reminder {
         this.habitId = habitId;
     }
 
-    public void setServerId(int serverId) {
+    public void setServerId(String serverId) {
         this.serverId = serverId;
+    }
+
+    public void setHabitName(String habitName) {
+        this.habitName = habitName;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }

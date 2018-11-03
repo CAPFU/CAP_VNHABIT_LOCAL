@@ -6,7 +6,7 @@ public class ReminderEntity {
     private String remindText;
     private String reminderTime;
     private String repeatType;
-    private int serverId;
+    private String serverId;
 
     public String getReminderId() {
         return reminderId;
@@ -28,7 +28,7 @@ public class ReminderEntity {
         return repeatType;
     }
 
-    public int getServerId() {
+    public String getServerId() {
         return serverId;
     }
 
@@ -52,7 +52,7 @@ public class ReminderEntity {
         this.repeatType = repeatType;
     }
 
-    public void setServerId(int serverId) {
+    public void setServerId(String serverId) {
         this.serverId = serverId;
     }
 }

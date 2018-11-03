@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -33,10 +34,11 @@ import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.reminder.Reminder;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
-import habit.tracker.habittracker.common.util.Generator;
+import habit.tracker.habittracker.common.util.DateGenerator;
 import habit.tracker.habittracker.common.Validator;
 import habit.tracker.habittracker.common.ValidatorType;
 import habit.tracker.habittracker.common.util.MySharedPreference;
+import habit.tracker.habittracker.common.util.ReminderManager;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.group.GroupEntity;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
@@ -218,7 +220,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                     String minute = String.format(format, data.getIntExtra(ReminderCreateActivity.REMIND_MINUTE, 0));
 
                     Reminder reminder = new Reminder();
-                    reminder.setReminderId(Generator.getNewId());
+                    reminder.setServerId(DateGenerator.getNewId());
                     reminder.setRemindText(remindText);
                     reminder.setReminderTime(date + " " + hour + ":" + minute + ":00");
                     reminder.setRepeatType(remindType);
@@ -446,6 +448,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 Reminder reminder;
                 for (ReminderEntity entity : reminders) {
                     reminder = new Reminder();
+                    reminder.setReminderId(entity.getReminderId());
                     reminder.setHabitId(habitId);
                     reminder.setRemindText(entity.getRemindText());
                     reminder.setReminderTime(entity.getReminderTime());
@@ -508,23 +511,26 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         Calendar ca = Calendar.getInstance();
         final Habit habit = new Habit();
         if (createMode == MODE_CREATE) {
-            habit.setHabitId(Generator.getNewId());
-            habit.setMonitorId(Generator.getNewId());
+            habit.setHabitId(DateGenerator.getNewId());
+            habit.setMonitorId(DateGenerator.getNewId());
         } else if (createMode == MODE_UPDATE) {
             habit.setHabitId(this.savedHabitId);
             habit.setMonitorId(this.savedMonitorDateId);
         }
         habit.setUserId(savedUserId);
         habit.setGroupId(this.savedGroupId);
+
         habit.setHabitName(habitName);
         habit.setHabitTarget(String.valueOf(this.habitTarget));
         habit.setHabitType(String.valueOf(this.habitType));
         habit.setMonitorType(String.valueOf(this.monitorType));
         habit.setMonitorUnit(monitorUnit);
         habit.setMonitorNumber(monitorNumber);
+
         habit.setStartDate(this.startYear + "-" + (this.startMonth + 1) + "-" + this.startDay);
         habit.setEndDate(this.endYear + "-" + (this.endMonth + 1) + "-" + this.endDay);
         habit.setCreatedDate(ca.get(1) + "-" + (ca.get(2) + 1) + "-" + ca.get(5));
+
         habit.setHabitColor(this.habitColorCode);
         habit.setHabitDescription(this.editDescription.getText().toString());
 
@@ -535,22 +541,27 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         habit.setFri(String.valueOf(this.monitorDate[4] ? 1 : 0));
         habit.setSat(String.valueOf(this.monitorDate[5] ? 1 : 0));
         habit.setSun(String.valueOf(this.monitorDate[6] ? 1 : 0));
+
         for (Reminder reminder : remindDispList) {
-            reminder.setReminderId(Generator.getNewId());
             reminder.setHabitId(habit.getHabitId());
+            reminder.setHabitName(habit.getHabitName());
+            if (TextUtils.isEmpty(habit.getEndDate())) {
+                reminder.setEndDate(habit.getEndDate());
+            }
         }
         habit.setReminderList(remindDispList);
 
         // save habit
         Database db = new Database(HabitActivity.this);
         db.open();
-        if(Database.sHabitDaoImpl.saveUpdateHabit(
-                        Database.sHabitDaoImpl.convert(habit))) {
+        if (Database.sHabitDaoImpl.saveUpdateHabit(
+                Database.sHabitDaoImpl.convert(habit))) {
             // save reminder list
             for (Reminder reminder : remindAddNew) {
                 reminder.setHabitId(habit.getHabitId());
-                Database.sReminderImpl.saveUpdateReminder(
+                int remindId = Database.sReminderImpl.addReminder(
                         Database.sReminderImpl.convert(reminder));
+                reminder.setReminderId(String.valueOf(remindId));
             }
         }
         db.close();
@@ -564,6 +575,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     Toast.makeText(HabitActivity.this, "Tạo thói quen thành công", Toast.LENGTH_LONG).show();
                     HabitActivity.this.setResult(HabitActivity.RESULT_OK);
+                    ReminderManager reminderManager = new ReminderManager(HabitActivity.this, remindDispList);
+                    reminderManager.start();
                     finish();
                 }
 
@@ -579,6 +592,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     HabitActivity.this.setResult(HabitActivity.RESULT_OK);
+                    ReminderManager reminderManager = new ReminderManager(HabitActivity.this, remindDispList);
+                    reminderManager.start();
                     finish();
                 }
 

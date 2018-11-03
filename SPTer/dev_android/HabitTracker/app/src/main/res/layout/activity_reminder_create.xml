@@ -95,7 +95,7 @@
             android:background="@drawable/button_green"
             android:textColor="@color/light_brown"
             android:textSize="13sp"
-            android:text="Tất cả"/>
+            android:text="Không lặp"/>
 
         <Button
             android:id="@+id/btn_TypeDaily"

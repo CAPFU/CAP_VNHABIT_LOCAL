@@ -199,7 +199,7 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
     }
 
     @Override
-    protected HabitEntity cursorToEntity(Cursor cursor) {
+    public HabitEntity cursorToEntity(Cursor cursor) {
         HabitEntity habitEntity = new HabitEntity();
         if (cursor != null) {
             if (cursor.getColumnIndex(HabitSchema.HABIT_ID) != -1) {
