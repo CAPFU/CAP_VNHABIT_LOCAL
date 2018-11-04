@@ -10,7 +10,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3">
+        android:layout_weight="3"
+        android:layout_marginBottom="20dp"
+        >
         <TextView
             android:id="@+id/tvHabitName"
             android:layout_width="wrap_content"
@@ -18,7 +20,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="15dp"
-            android:textSize="28sp"
+            android:textSize="25sp"
             android:text="Chạy bộ"/>
 
         <TextView
@@ -58,11 +60,11 @@
             android:layout_below="@+id/tvTime"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:textSize="32sp"
+            android:textSize="30sp"
             android:text="04"/>
         <ImageView
             android:id="@+id/minus"
-            android:layout_width="30dp"
+            android:layout_width="25dp"
             android:layout_height="0dp"
             android:layout_toStartOf="@+id/tvCount"
             android:layout_alignTop="@+id/tvCount"
@@ -71,7 +73,7 @@
 
         <ImageView
             android:id="@+id/add"
-            android:layout_width="30dp"
+            android:layout_width="25dp"
             android:layout_height="0dp"
             android:layout_toEndOf="@+id/tvCount"
             android:layout_alignTop="@+id/tvCount"
@@ -83,6 +85,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -175,7 +178,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="30dp"
             android:gravity="center"
             android:textSize="14sp"
             android:text="Tuần này, 29.10.2018 - 04.11.2018"/>
