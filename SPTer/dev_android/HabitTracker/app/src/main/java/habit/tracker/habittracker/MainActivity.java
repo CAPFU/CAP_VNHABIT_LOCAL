@@ -117,9 +117,13 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             Intent intent = new Intent(this, HabitActivity.class);
             startActivityForResult(intent, CREATE_NEW_HABIT);
         } else {
-            Intent intent = new Intent(this, HabitActivity.class);
+//            Intent intent = new Intent(this, HabitActivity.class);
+//            intent.putExtra(HABIT_ID, trackingItemList.get(position).getHabitId());
+//            startActivityForResult(intent, UPDATE_HABIT);
+
+            Intent intent = new Intent(this, ReportDetailsActivity.class);
             intent.putExtra(HABIT_ID, trackingItemList.get(position).getHabitId());
-            startActivityForResult(intent, UPDATE_HABIT);
+            startActivity(intent);
         }
     }
 
