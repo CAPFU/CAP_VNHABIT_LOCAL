@@ -300,8 +300,8 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
     private ArrayList<BarEntry> loadWeekData(String currentDate) {
         ArrayList<BarEntry> values = new ArrayList<>();
         String[] daysInWeek = AppGenerator.getDatesInWeek(currentDate);
-        String startDate = AppGenerator.convertFormat(daysInWeek[0], AppGenerator.formatYMD, AppGenerator.formatDMY2);
-        String endDate = AppGenerator.convertFormat(daysInWeek[6], AppGenerator.formatYMD, AppGenerator.formatDMY2);
+        String startDate = AppGenerator.convertFormat(daysInWeek[0], AppGenerator.formatYMD2, AppGenerator.formatDMY2);
+        String endDate = AppGenerator.convertFormat(daysInWeek[6], AppGenerator.formatYMD2, AppGenerator.formatDMY2);
         time.setText(startDate + " - " + endDate);
 
         Database db = new Database(this);
@@ -372,8 +372,8 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         int date = Integer.parseInt(strs[2]);
         String[] daysInMonth = AppGenerator.getDatesInMonth(year, month, date, false);
 
-        String startDate = AppGenerator.convertFormat(daysInMonth[0], AppGenerator.formatYMD, AppGenerator.formatDMY2);
-        String endDate = AppGenerator.convertFormat(daysInMonth[daysInMonth.length - 1], AppGenerator.formatYMD, AppGenerator.formatDMY2);
+        String startDate = AppGenerator.convertFormat(daysInMonth[0], AppGenerator.formatYMD2, AppGenerator.formatDMY2);
+        String endDate = AppGenerator.convertFormat(daysInMonth[daysInMonth.length - 1], AppGenerator.formatYMD2, AppGenerator.formatDMY2);
         time.setText(startDate + " - " + endDate);
 
         Database db = new Database(this);
