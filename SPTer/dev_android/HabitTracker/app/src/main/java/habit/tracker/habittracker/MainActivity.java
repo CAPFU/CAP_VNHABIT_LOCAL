@@ -25,7 +25,7 @@ import habit.tracker.habittracker.api.model.habit.HabitResponse;
 import habit.tracker.habittracker.api.model.tracking.Tracking;
 import habit.tracker.habittracker.api.model.tracking.TrackingList;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
-import habit.tracker.habittracker.common.util.DateGenerator;
+import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.Schedule;
 import habit.tracker.habittracker.common.TrackingDate;
 import habit.tracker.habittracker.common.util.MySharedPreference;
@@ -120,7 +120,6 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 //            Intent intent = new Intent(this, HabitActivity.class);
 //            intent.putExtra(HABIT_ID, trackingItemList.get(position).getHabitId());
 //            startActivityForResult(intent, UPDATE_HABIT);
-
             Intent intent = new Intent(this, ReportDetailsActivity.class);
             intent.putExtra(HABIT_ID, trackingItemList.get(position).getHabitId());
             startActivity(intent);
@@ -265,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     public TrackingEntity getTrackRecord(String habitId, String currentDate, int defaultVal) {
         TrackingEntity todayTracking = Database.sTrackingImpl.getTracking(habitId, currentDate);
         if (todayTracking.getTrackingId() == null) {
-            todayTracking.setTrackingId(DateGenerator.getNewId());
+            todayTracking.setTrackingId(AppGenerator.getNewId());
             todayTracking.setHabitId(habitId);
             todayTracking.setCount(String.valueOf(defaultVal));
             todayTracking.setCurrentDate(currentDate);
@@ -277,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
     @OnClick(R.id.imgNext)
     public void next(ImageView img) {
-        String nextDate = DateGenerator.getNextDate(currentDate);
+        String nextDate = AppGenerator.getNextDate(currentDate);
         Database db = new Database(this);
         db.open();
         if (nextDate != null) {
@@ -292,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
     @OnClick(R.id.imgBack)
     public void back(ImageView img) {
-        String preDate = DateGenerator.getPreDate(currentDate);
+        String preDate = AppGenerator.getPreDate(currentDate);
         Database db = new Database(this);
         db.open();
         if (preDate != null) {
@@ -355,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             tvDate.setText("Hôm qua");
         }
         else {
-            tvDate.setText(DateGenerator.convertFormat(date, DateGenerator.formatYMD, DateGenerator.formatDMY2));
+            tvDate.setText(AppGenerator.convertFormat(date, AppGenerator.formatYMD2, AppGenerator.formatDMY2));
         }
     }
 }

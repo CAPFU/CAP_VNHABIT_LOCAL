@@ -60,7 +60,7 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
             Cursor cursor = super.rawQuery(
                     "SELECT * FROM " + HabitSchema.HABIT_TABLE + " INNER JOIN " + TRACKING_TABLE
                             + " ON "
-                            + HabitSchema.HABIT_TABLE + "." + HabitSchema.HABIT_ID + " = " + HabitSchema.HABIT_TABLE + "." + TrackingSchema.HABIT_ID
+                            + TrackingSchema.TRACKING_TABLE + "." + TrackingSchema.HABIT_ID + " = " + HabitSchema.HABIT_TABLE + "." + HabitSchema.HABIT_ID
                             + " WHERE "
                             + TrackingSchema.TRACKING_TABLE + "." + TrackingSchema.CURRENT_DATE
                             + " BETWEEN "
