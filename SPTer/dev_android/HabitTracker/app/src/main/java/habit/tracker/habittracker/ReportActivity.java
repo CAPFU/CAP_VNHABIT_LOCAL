@@ -111,8 +111,10 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         }
 
         ArrayList<BarEntry> values = loadData(currentDate);
-        setData(values);
-        chart.invalidate();
+        if (values != null && values.size() > 0) {
+            setData(values);
+            chart.invalidate();
+        }
     }
 
     @OnClick(R.id.pre)
