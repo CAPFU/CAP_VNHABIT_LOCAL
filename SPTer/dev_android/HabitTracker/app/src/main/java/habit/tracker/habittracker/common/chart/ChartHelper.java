@@ -18,16 +18,9 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.model.GradientColor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import habit.tracker.habittracker.R;
-import habit.tracker.habittracker.common.util.AppGenerator;
-import habit.tracker.habittracker.repository.Database;
-import habit.tracker.habittracker.repository.habit.HabitEntity;
-import habit.tracker.habittracker.repository.tracking.HabitTracking;
-import habit.tracker.habittracker.repository.tracking.TrackingEntity;
 
 public class ChartHelper implements OnChartValueSelectedListener {
 

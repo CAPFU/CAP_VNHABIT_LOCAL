@@ -1,9 +1,12 @@
 package habit.tracker.habittracker;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarEntry;
@@ -15,21 +18,40 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import habit.tracker.habittracker.common.chart.ChartHelper;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.repository.Database;
-import habit.tracker.habittracker.repository.habit.DateTracking;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
 import habit.tracker.habittracker.repository.tracking.HabitTracking;
 import habit.tracker.habittracker.repository.tracking.TrackingEntity;
 
 public class ReportDetailsActivity extends AppCompatActivity {
 
+    @BindView(R.id.tvGoal)
+    TextView tvGoal;
+    @BindView(R.id.tvSumCount)
+    TextView tvSumCount;
+
+    @BindView(R.id.tabWeek)
+    View tabWeek;
+    @BindView(R.id.tabMonth)
+    View tabMonth;
+    @BindView(R.id.tabYear)
+    View tabYear;
+    View selectedTab;
+
     @BindView(R.id.chart)
     BarChart chart;
 
+    ChartHelper chartHelper;
+
     private String habitId;
     private String currentDate;
+
+    int sumCount = 0;
+
+    private int mode = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +66,42 @@ public class ReportDetailsActivity extends AppCompatActivity {
             habitId = bundle.getString(MainActivity.HABIT_ID);
             if (!TextUtils.isEmpty(habitId)) {
                 currentDate = AppGenerator.getCurrentDate(AppGenerator.formatYMD2);
-                ChartHelper chartHelper = new ChartHelper(this, chart);
+                chartHelper = new ChartHelper(this, chart);
                 chartHelper.initChart();
-                ArrayList<BarEntry> values = loadWeekData(habitId, currentDate);
-                chartHelper.setData(values, ChartHelper.MODE_WEEK);
+                ArrayList<BarEntry> values = loadMonthData(habitId, currentDate);
+                chartHelper.setData(values, ChartHelper.MODE_MONTH);
             }
+        }
+    }
+
+    @OnClick({R.id.tabWeek, R.id.tabMonth, R.id.tabYear})
+    public void loadReportByMode(View v) {
+        unSelect(selectedTab);
+        ArrayList<BarEntry> values = null;
+        switch (v.getId()) {
+            case R.id.tabWeek:
+                mode = ChartHelper.MODE_WEEK;
+                select(tabWeek);
+                selectedTab = tabWeek;
+                values = loadWeekData(habitId, currentDate);
+                break;
+            case R.id.tabMonth:
+                mode = ChartHelper.MODE_MONTH;
+                select(tabMonth);
+                selectedTab = tabMonth;
+                values = loadMonthData(habitId, currentDate);
+                break;
+            case R.id.tabYear:
+                mode = ChartHelper.MODE_YEAR;
+                select(tabYear);
+                selectedTab = tabYear;
+                values = loadYearData(habitId, currentDate);
+                break;
+        }
+
+        if (values != null) {
+            chartHelper.setData(values, mode);
+            chart.invalidate();
         }
     }
 
@@ -91,6 +144,8 @@ public class ReportDetailsActivity extends AppCompatActivity {
         HabitEntity hb = null;
         String start;
         String end;
+        String goalNumber = null;
+        int sumCount = 0;
         for (int m = 0; m < 12; m++) {
             start = year + "-" + (m + 1) + "-" + 1;
             end = year + "-" + (m + 1) + "-" + AppGenerator.getMaxDayInMonth(year, m);
@@ -102,7 +157,10 @@ public class ReportDetailsActivity extends AppCompatActivity {
                     .getHabitTrackingBetween(habitId, start, end);
 
             if (habitTracking != null) {
-                hb = habitTracking.getHabitEntity();
+                if (hb == null) {
+                    hb = habitTracking.getHabitEntity();
+                    goalNumber = hb.getMonitorNumber();
+                }
                 if (hb.getMonitorNumber() != null) {
                     // data per day
                     for (TrackingEntity track : habitTracking.getTrackingEntityList()) {
@@ -119,6 +177,10 @@ public class ReportDetailsActivity extends AppCompatActivity {
         for (int i = 1; i <= completedPerMonth.length; i++) {
             values.add(new BarEntry(i, completedPerMonth[i - 1]));
         }
+
+        tvGoal.setText(goalNumber);
+        tvSumCount.setText(String.valueOf(sumCount));
+
         return values;
     }
 
@@ -132,6 +194,8 @@ public class ReportDetailsActivity extends AppCompatActivity {
             mapDayInMonth.put(d, 0);
         }
 
+        int sum = 0;
+
         if (habit.getMonitorNumber() != null) {
             for (TrackingEntity track : trackList) {
 
@@ -140,6 +204,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
                     mapDayInMonth.put(track.getCurrentDate(),
                             mapDayInMonth.get(track.getCurrentDate()) + 1);
+                    sum += Integer.parseInt(track.getCount());
                 }
             }
         }
@@ -148,6 +213,30 @@ public class ReportDetailsActivity extends AppCompatActivity {
             values.add(new BarEntry(i, mapDayInMonth.get(days[i - 1])));
         }
 
+        tvGoal.setText(habitTracking.getHabitEntity().getMonitorNumber());
+        tvSumCount.setText(String.valueOf(sum));
+
         return values;
     }
+
+    public void select(View v) {
+        switch (mode) {
+            case ChartHelper.MODE_WEEK:
+                v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab_red));
+                break;
+            case ChartHelper.MODE_MONTH:
+                v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab_purple));
+                break;
+            case ChartHelper.MODE_YEAR:
+                v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab_blue));
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void unSelect(View v) {
+        v.setBackground(ContextCompat.getDrawable(this, android.R.color.transparent));
+    }
+
 }

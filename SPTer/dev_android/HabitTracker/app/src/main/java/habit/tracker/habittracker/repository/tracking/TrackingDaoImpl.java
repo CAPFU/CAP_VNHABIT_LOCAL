@@ -71,8 +71,10 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
 
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
+
                 HabitDaoImpl habitDao = new HabitDaoImpl(null);
                 habitTracking.setHabitEntity(habitDao.cursorToEntity(cursor));
+
                 while (!cursor.isAfterLast()) {
                     habitTracking.getTrackingEntityList().add(cursorToEntity(cursor));
                     cursor.moveToNext();
