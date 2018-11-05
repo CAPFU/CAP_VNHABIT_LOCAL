@@ -9,13 +9,16 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarEntry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import habit.tracker.habittracker.common.chart.ChartHelper;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.repository.Database;
+import habit.tracker.habittracker.repository.habit.DateTracking;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
 import habit.tracker.habittracker.repository.tracking.HabitTracking;
 import habit.tracker.habittracker.repository.tracking.TrackingEntity;
@@ -40,19 +43,16 @@ public class ReportDetailsActivity extends AppCompatActivity {
         if (bundle != null) {
             habitId = bundle.getString(MainActivity.HABIT_ID);
             if (!TextUtils.isEmpty(habitId)) {
-
-                currentDate = AppGenerator.getCurrentDate();
-                ArrayList<BarEntry> values = loadWeekData(currentDate);
-
+                currentDate = AppGenerator.getCurrentDate(AppGenerator.formatYMD2);
                 ChartHelper chartHelper = new ChartHelper(this, chart);
                 chartHelper.initChart();
-                chartHelper.setData(values);
+                ArrayList<BarEntry> values = loadWeekData(habitId, currentDate);
+                chartHelper.setData(values, ChartHelper.MODE_WEEK);
             }
         }
     }
 
-    private ArrayList<BarEntry> loadWeekData(String currentDate) {
-        ArrayList<BarEntry> values = new ArrayList<>();
+    public ArrayList<BarEntry> loadWeekData(String habitId, String currentDate) {
         String[] daysInWeek = AppGenerator.getDatesInWeek(currentDate);
 
         Database db = Database.getInstance(this);
@@ -61,41 +61,91 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 .getHabitTrackingBetween(habitId, daysInWeek[0], daysInWeek[6]);
         db.close();
 
+        return prepareDate(habitTracking, daysInWeek);
+    }
+
+    public ArrayList<BarEntry> loadMonthData(String habitId, String currentDate) {
+        String[] daysInMonth = AppGenerator.getDatesInMonth(currentDate, false);
+
+        Database db = Database.getInstance(this);
+        db.open();
+        HabitTracking habitTracking = Database.sTrackingImpl
+                .getHabitTrackingBetween(habitId, daysInMonth[0], daysInMonth[daysInMonth.length - 1]);
+        db.close();
+
+        return prepareDate(habitTracking, daysInMonth);
+    }
+
+    private ArrayList<BarEntry> loadYearData(String habitId, String currentDate) {
+        ArrayList<BarEntry> values = new ArrayList<>();
+        String[] arrDate = currentDate.split("-");
+
+        int year = Integer.parseInt(arrDate[0]);
+
+        Database db = new Database(this);
+        db.open();
+
+        int[] completedPerMonth = new int[12];
+
+        HabitTracking habitTracking;
+        HabitEntity hb = null;
+        String start;
+        String end;
+        for (int m = 0; m < 12; m++) {
+            start = year + "-" + (m + 1) + "-" + 1;
+            end = year + "-" + (m + 1) + "-" + AppGenerator.getMaxDayInMonth(year, m);
+            start = AppGenerator.format(start, AppGenerator.formatYMD2, AppGenerator.formatYMD2);
+            end = AppGenerator.format(end, AppGenerator.formatYMD2, AppGenerator.formatYMD2);
+
+            // data per month
+            habitTracking = Database.sTrackingImpl
+                    .getHabitTrackingBetween(habitId, start, end);
+
+            if (habitTracking != null) {
+                hb = habitTracking.getHabitEntity();
+                if (hb.getMonitorNumber() != null) {
+                    // data per day
+                    for (TrackingEntity track : habitTracking.getTrackingEntityList()) {
+                        if (track.getCount() != null
+                                && track.getCount().compareTo(hb.getMonitorNumber()) >= 0) {
+                            ++completedPerMonth[m];
+                        }
+                    }
+                }
+            }
+        }
+        db.close();
+
+        for (int i = 1; i <= completedPerMonth.length; i++) {
+            values.add(new BarEntry(i, completedPerMonth[i - 1]));
+        }
+        return values;
+    }
+
+    private ArrayList<BarEntry> prepareDate(HabitTracking habitTracking, String[] days) {
+        ArrayList<BarEntry> values = new ArrayList<>();
         HabitEntity habit = habitTracking.getHabitEntity();
         List<TrackingEntity> trackList = habitTracking.getTrackingEntityList();
-        List<TrackingEntity> doneList = new ArrayList<>();
 
-        for (TrackingEntity track : trackList) {
+        Map<String, Integer> mapDayInMonth = new HashMap<>(31);
+        for (String d : days) {
+            mapDayInMonth.put(d, 0);
+        }
 
-            if (track.getCount() != null
-                    && track.getCount().compareTo(habit.getMonitorNumber()) >= 0) {
-                doneList.add(track);
+        if (habit.getMonitorNumber() != null) {
+            for (TrackingEntity track : trackList) {
+
+                if (track.getCount() != null
+                        && track.getCount().compareTo(habit.getMonitorNumber()) >= 0) {
+
+                    mapDayInMonth.put(track.getCurrentDate(),
+                            mapDayInMonth.get(track.getCurrentDate()) + 1);
+                }
             }
         }
 
-        int[] count = new int[7];
-        for (int i = 0; i < doneList.size(); i++) {
-            String diw = doneList.get(i).getCurrentDate();
-
-            if (diw.equals(daysInWeek[0])) {
-                ++count[0];
-            } else if (diw.equals(daysInWeek[1])) {
-                ++count[1];
-            } else if (diw.equals(daysInWeek[2])) {
-                ++count[2];
-            } else if (diw.equals(daysInWeek[3])) {
-                ++count[3];
-            } else if (diw.equals(daysInWeek[4])) {
-                ++count[4];
-            } else if (diw.equals(daysInWeek[5])) {
-                ++count[5];
-            } else if (diw.equals(daysInWeek[6])) {
-                ++count[6];
-            }
-        }
-
-        for (int i = 1; i <= 7; i++) {
-            values.add(new BarEntry(i, count[i - 1]));
+        for (int i = 1; i <= days.length; i++) {
+            values.add(new BarEntry(i, mapDayInMonth.get(days[i - 1])));
         }
 
         return values;

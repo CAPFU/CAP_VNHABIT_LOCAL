@@ -35,7 +35,7 @@ public class RemindRecyclerViewAdaper extends RecyclerView.Adapter<RemindRecycle
     @Override
     public void onBindViewHolder(@NonNull ReminderViewHolder holder, int position) {
         Reminder reminder = data.get(position);
-        String dspStr = AppGenerator.convertFormat(
+        String dspStr = AppGenerator.format(
                 reminder.getReminderTime(),
                 AppGenerator.formatYMD,
                 AppGenerator.formatDMY) + " " + reminder.getRemindText();

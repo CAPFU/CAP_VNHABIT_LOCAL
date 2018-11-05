@@ -55,7 +55,7 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
     }
 
     public HabitTracking getHabitTrackingBetween(String habitId, String startDate, String endDate) {
-        HabitTracking res = new HabitTracking();
+        HabitTracking habitTracking = new HabitTracking();
         try {
             Cursor cursor = super.rawQuery(
                     "SELECT * FROM " + HabitSchema.HABIT_TABLE + " INNER JOIN " + TRACKING_TABLE
@@ -69,16 +69,16 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
                             + HabitSchema.HABIT_TABLE + "." + HabitSchema.HABIT_ID + " = '" + habitId + "'"
                     , null);
 
-            if (cursor != null) {
+            if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
                 HabitDaoImpl habitDao = new HabitDaoImpl(null);
-                res.setHabitEntity(habitDao.cursorToEntity(cursor));
+                habitTracking.setHabitEntity(habitDao.cursorToEntity(cursor));
                 while (!cursor.isAfterLast()) {
-                    res.getTrackingEntityList().add(cursorToEntity(cursor));
+                    habitTracking.getTrackingEntityList().add(cursorToEntity(cursor));
                     cursor.moveToNext();
                 }
                 cursor.close();
-                return res;
+                return habitTracking;
             }
         } catch (SQLiteConstraintException ex) {
         }

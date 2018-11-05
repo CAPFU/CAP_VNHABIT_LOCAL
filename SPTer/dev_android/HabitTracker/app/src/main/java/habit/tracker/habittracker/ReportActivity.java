@@ -300,8 +300,8 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
     private ArrayList<BarEntry> loadWeekData(String currentDate) {
         ArrayList<BarEntry> values = new ArrayList<>();
         String[] daysInWeek = AppGenerator.getDatesInWeek(currentDate);
-        String startDate = AppGenerator.convertFormat(daysInWeek[0], AppGenerator.formatYMD2, AppGenerator.formatDMY2);
-        String endDate = AppGenerator.convertFormat(daysInWeek[6], AppGenerator.formatYMD2, AppGenerator.formatDMY2);
+        String startDate = AppGenerator.format(daysInWeek[0], AppGenerator.formatYMD2, AppGenerator.formatDMY2);
+        String endDate = AppGenerator.format(daysInWeek[6], AppGenerator.formatYMD2, AppGenerator.formatDMY2);
         time.setText(startDate + " - " + endDate);
 
         Database db = new Database(this);
@@ -366,14 +366,10 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
 
     private ArrayList<BarEntry> loadMonthData(String currentDate) {
         ArrayList<BarEntry> values = new ArrayList<>();
-        String[] strs = currentDate.split("-");
-        int year = Integer.parseInt(strs[0]);
-        int month = Integer.parseInt(strs[1]);
-        int date = Integer.parseInt(strs[2]);
-        String[] daysInMonth = AppGenerator.getDatesInMonth(year, month, date, false);
+        String[] daysInMonth = AppGenerator.getDatesInMonth(currentDate, false);
 
-        String startDate = AppGenerator.convertFormat(daysInMonth[0], AppGenerator.formatYMD2, AppGenerator.formatDMY2);
-        String endDate = AppGenerator.convertFormat(daysInMonth[daysInMonth.length - 1], AppGenerator.formatYMD2, AppGenerator.formatDMY2);
+        String startDate = AppGenerator.format(daysInMonth[0], AppGenerator.formatYMD2, AppGenerator.formatDMY2);
+        String endDate = AppGenerator.format(daysInMonth[daysInMonth.length - 1], AppGenerator.formatYMD2, AppGenerator.formatDMY2);
         time.setText(startDate + " - " + endDate);
 
         Database db = new Database(this);
@@ -437,8 +433,6 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         Database db = new Database(this);
         db.open();
 
-
-        List<List<DateTracking>> yearData = new ArrayList<>();
         List<DateTracking> monthData;
 
         int[] completePerMonth = new int[12];
@@ -452,7 +446,6 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         for (int m = 0; m < 12; m++) {
             monthData = Database.sHabitDaoImpl.getHabitsBetween(
                     year + "-" + (m + 1) + "-" + 1, year + "-" + (m + 1) + "-" + AppGenerator.getMaxDayInMonth(year, m));
-            yearData.add(monthData);
 
             for (DateTracking item : monthData) {
                 hb = item.getHabitEntity();

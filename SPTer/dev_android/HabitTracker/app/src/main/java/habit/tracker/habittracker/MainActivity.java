@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                         int month = ca.get(Calendar.MONTH) + 1;
                         int date = ca.get(Calendar.DATE);
                         String currentDate = year + "-" + month + "-" + date;
-                        currentDate = AppGenerator.convertFormat(currentDate, AppGenerator.formatYMD2, AppGenerator.formatYMD2);
+                        currentDate = AppGenerator.format(currentDate, AppGenerator.formatYMD2, AppGenerator.formatYMD2);
 
                         if (isTodayHabit(year, month - 1, date, habit)) {
 
@@ -365,7 +365,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             tvDate.setText("Hôm qua");
         }
         else {
-            tvDate.setText(AppGenerator.convertFormat(date, AppGenerator.formatYMD2, AppGenerator.formatDMY2));
+            tvDate.setText(AppGenerator.format(date, AppGenerator.formatYMD2, AppGenerator.formatDMY2));
         }
     }
 }

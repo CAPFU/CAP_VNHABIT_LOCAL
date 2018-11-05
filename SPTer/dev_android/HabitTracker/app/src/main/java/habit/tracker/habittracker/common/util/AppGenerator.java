@@ -18,12 +18,10 @@ public class AppGenerator {
     public static final String formatDMY = "dd-MM-yyyy HH:mm:ss";
     public static final String formatDMY2 = "dd/MM/yyyy";
 
-    public static String getCurrentDate() {
-        Calendar ca = Calendar.getInstance();
-        int year = ca.get(Calendar.YEAR);
-        int month = ca.get(Calendar.MONTH) + 1;
-        int day = ca.get(Calendar.DAY_OF_MONTH);
-        return year + "-" + month + "-" + day;
+    public static String getCurrentDate(String format) {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat fm = new SimpleDateFormat(format, Locale.getDefault());
+        return fm.format(date);
     }
 
     public static String getNewId() {
@@ -187,16 +185,11 @@ public class AppGenerator {
         return week;
     }
 
-    /**
-     *
-     * @param year
-     * @param month start from 0
-     * @param date
-     * @param limit : only return date from start date if true
-     * @return
-     */
-    public static String[] getDatesInMonth(int year, int month, int date, boolean limit) {
-        String currentDate = year + "-" + month + "-" + date;
+    public static String[] getDatesInMonth(String currentDate, boolean limit) {
+        String[] arr = currentDate.split("-");
+        int year = Integer.parseInt(arr[0]);
+        int month = Integer.parseInt(arr[1]);
+        int date = Integer.parseInt(arr[2]);
         Calendar ca = Calendar.getInstance();
         ca.set(year, month - 1, date);
 
@@ -226,7 +219,7 @@ public class AppGenerator {
         return daysInMonth;
     }
 
-    public static String convertFormat(String dateTime, String fm1, String fm2) {
+    public static String format(String dateTime, String fm1, String fm2) {
         try {
             SimpleDateFormat fm = new SimpleDateFormat(fm1, Locale.getDefault());
             Date d = fm.parse(dateTime);

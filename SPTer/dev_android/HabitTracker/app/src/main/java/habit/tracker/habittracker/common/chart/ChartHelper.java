@@ -18,16 +18,22 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.model.GradientColor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import habit.tracker.habittracker.R;
+import habit.tracker.habittracker.common.util.AppGenerator;
+import habit.tracker.habittracker.repository.Database;
+import habit.tracker.habittracker.repository.habit.HabitEntity;
+import habit.tracker.habittracker.repository.tracking.HabitTracking;
+import habit.tracker.habittracker.repository.tracking.TrackingEntity;
 
 public class ChartHelper implements OnChartValueSelectedListener {
 
     Context context;
     BarChart chart;
 
-    private int mode = 0;
     public static final int MODE_WEEK = 0;
     public static final int MODE_MONTH = 1;
     public static final int MODE_YEAR = 2;
@@ -41,6 +47,7 @@ public class ChartHelper implements OnChartValueSelectedListener {
         chart.setOnChartValueSelectedListener(this);
 
         chart.setDrawBarShadow(false);
+
         chart.setDrawValueAboveBar(true);
 
         chart.getDescription().setEnabled(false);
@@ -56,7 +63,6 @@ public class ChartHelper implements OnChartValueSelectedListener {
         // chart.setDrawYLabels(false);
 
         IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter();
-
         XAxis xAxis = chart.getXAxis();
         xAxis.setLabelCount(10);
         xAxis.setValueFormatter(xAxisFormatter);
@@ -65,12 +71,11 @@ public class ChartHelper implements OnChartValueSelectedListener {
         xAxis.setGranularity(1f); // only intervals of 1 day
 
         IAxisValueFormatter custom = new MyAxisValueFormatter();
-
         YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setLabelCount(5, false);
+        leftAxis.setLabelCount(2, false);
         leftAxis.setValueFormatter(custom);
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-        leftAxis.setSpaceTop(15f);
+        leftAxis.setSpaceTop(0f);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
         YAxis rightAxis = chart.getAxisRight();
@@ -84,7 +89,7 @@ public class ChartHelper implements OnChartValueSelectedListener {
         chart.setMarker(mv); // Set the marker to the chart
     }
 
-    public void setData(ArrayList<BarEntry> values) {
+    public void setData(ArrayList<BarEntry> values, int mode) {
         BarDataSet set1;
         int startColor1 = ContextCompat.getColor(context, R.color.red1);
         int endColor1 = ContextCompat.getColor(context, R.color.red2);

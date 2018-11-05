@@ -72,11 +72,8 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
         type = -1;
         vType = btnTypeAll;
 
-        Calendar ca = Calendar.getInstance();
-        int year = ca.get(Calendar.YEAR);
-        int month = ca.get(Calendar.MONTH) + 1;
-        int date = ca.get(Calendar.DATE);
-        dates = AppGenerator.getDatesInMonth(year, month, date, true);
+        dates = AppGenerator.getDatesInMonth(
+                AppGenerator.getCurrentDate(AppGenerator.formatYMD2), true);
         String[] displayDates = convertDisplayDate(dates);
         pickerDate.setMinValue(0);
         pickerDate.setMaxValue(displayDates.length - 1);
