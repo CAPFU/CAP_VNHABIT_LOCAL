@@ -33,10 +33,19 @@ public class ReportDetailsActivity extends AppCompatActivity {
     @BindView(R.id.next)
     View next;
 
+    @BindView(R.id.minusCount)
+    View imgMinusCount;
+    @BindView(R.id.addCount)
+    View imgAddCount;
+
+    @BindView(R.id.tvCount)
+    TextView tvCount;
     @BindView(R.id.tvGoal)
     TextView tvGoal;
     @BindView(R.id.tvSumCount)
     TextView tvSumCount;
+    @BindView(R.id.tvDescription)
+    TextView tvDescription;
 
     @BindView(R.id.tabWeek)
     View tabWeek;
@@ -54,12 +63,18 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
     ChartHelper chartHelper;
 
+    private HabitEntity habitEntity;
     private String habitId;
+    private String firstCurrentDate;
     private String currentDate;
     private String startReportDate;
     private String endReportDate;
+
     private int timeLine = 0;
     private int mode = 0;
+
+    int curDayCount = 0;
+    int curSumCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +84,10 @@ public class ReportDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_report_details);
         ButterKnife.bind(this);
 
+        mode = ChartHelper.MODE_WEEK;
+        currentDate = AppGenerator.getCurrentDate(AppGenerator.formatYMD2);
+        firstCurrentDate = currentDate;
+
         tvCurrentTime.setText("Hôm nay");
         selectedTab = tabWeek;
 
@@ -76,11 +95,22 @@ public class ReportDetailsActivity extends AppCompatActivity {
         if (bundle != null) {
             habitId = bundle.getString(MainActivity.HABIT_ID);
             if (!TextUtils.isEmpty(habitId)) {
-                currentDate = AppGenerator.getCurrentDate(AppGenerator.formatYMD2);
+
+                Database db = Database.getInstance(this);
+                db.open();
+                habitEntity = Database.sHabitDaoImpl.getHabit(habitId);
+                TrackingEntity trackingEntity = Database.sTrackingImpl.getTracking(habitId, currentDate);
+                db.close();
+
+                if (trackingEntity != null) {
+                    tvCount.setText(trackingEntity.getCount() + " " + habitEntity.getMonitorUnit());
+                    tvGoal.setText(habitEntity.getMonitorNumber() + " " + habitEntity.getMonitorUnit());
+                }
+
                 chartHelper = new ChartHelper(this, chart);
                 chartHelper.initChart();
-                ArrayList<BarEntry> values = loadWeekData(currentDate);
-                chartHelper.setData(values, ChartHelper.MODE_WEEK);
+                ArrayList<BarEntry> values = loadData(currentDate);
+                chartHelper.setData(values, mode);
             }
         }
     }
@@ -118,15 +148,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
         timeLine--;
         currentDate = AppGenerator.getPreDate(currentDate, AppGenerator.formatYMD2);
 
-        if (timeLine == 0) {
-            tvCurrentTime.setText("Hôm nay");
-        } else if (timeLine == -1) {
-            tvCurrentTime.setText("Hôm qua");
-        } else {
-            tvCurrentTime.setText(
-                    AppGenerator.format(currentDate, AppGenerator.formatYMD2, AppGenerator.formatDMY2));
-        }
-
         // current date is before the start date of report
         if (currentDate.compareTo(startReportDate) < 0) {
             ArrayList<BarEntry> values = loadData(currentDate);
@@ -143,15 +164,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
         if (timeLine > 0) {
             timeLine = 0;
             return;
-        } else {
-            if (timeLine == 0) {
-                tvCurrentTime.setText("Hôm nay");
-            } else if (timeLine == -1) {
-                tvCurrentTime.setText("Hôm qua");
-            } else {
-                tvCurrentTime.setText(
-                        AppGenerator.format(currentDate, AppGenerator.formatYMD2, AppGenerator.formatDMY2));
-            }
         }
 
         // current date is after the start date of report
@@ -162,8 +174,19 @@ public class ReportDetailsActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.minusCount)
+    public void minusCount(View v) {
+
+    }
+
+    @OnClick(R.id.addCount)
+    public void addCount(View v) {
+
+    }
+
     private ArrayList<BarEntry> loadData(String currentTime) {
         ArrayList<BarEntry> values = null;
+
         switch (mode) {
             case ChartHelper.MODE_WEEK:
                 values = loadWeekData(currentTime);
@@ -177,6 +200,8 @@ public class ReportDetailsActivity extends AppCompatActivity {
             default:
                 break;
         }
+
+        updateUI();
         return values;
     }
 
@@ -227,7 +252,8 @@ public class ReportDetailsActivity extends AppCompatActivity {
         HabitEntity hb = null;
         String start;
         String end;
-        int sumCount = 0;
+
+        curSumCount = 0;
         for (int m = 0; m < 12; m++) {
             start = year + "-" + (m + 1) + "-" + 1;
             end = year + "-" + (m + 1) + "-" + AppGenerator.getMaxDayInMonth(year, m);
@@ -241,14 +267,19 @@ public class ReportDetailsActivity extends AppCompatActivity {
             if (habitTracking != null) {
                 if (hb == null) {
                     hb = habitTracking.getHabitEntity();
-                    tvGoal.setText(hb.getMonitorNumber());
                 }
                 // data per day in month
                 for (TrackingEntity track : habitTracking.getTrackingEntityList()) {
-                    if (track.getCount().compareTo(hb.getMonitorNumber()) >= 0) {
-                        ++completedPerMonth[m];
+                    if (track.getCount() != null) {
+                        if (track.getCount().compareTo(hb.getMonitorNumber()) >= 0) {
+                            ++completedPerMonth[m];
+                        }
+                        curSumCount += Integer.parseInt(track.getCount());
                     }
-                    sumCount += Integer.parseInt(track.getCount());
+
+                    if (track.getCurrentDate().equals(currentDate)) {
+                        curDayCount = Integer.parseInt(track.getCount());
+                    }
                 }
             }
         }
@@ -257,8 +288,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
         for (int i = 1; i <= completedPerMonth.length; i++) {
             values.add(new BarEntry(i, completedPerMonth[i - 1]));
         }
-
-        tvSumCount.setText(String.valueOf(sumCount));
 
         return values;
     }
@@ -271,33 +300,67 @@ public class ReportDetailsActivity extends AppCompatActivity {
             mapDayInMonth.put(d, 0);
         }
 
-        int sumCount = 0;
+        curSumCount = 0;
         if (habitTracking != null) {
             HabitEntity habit = habitTracking.getHabitEntity();
             List<TrackingEntity> trackList = habitTracking.getTrackingEntityList();
+
             if (habit.getMonitorNumber() != null) {
+
                 for (TrackingEntity track : trackList) {
 
-                    if (track.getCount() != null
-                            && track.getCount().compareTo(habit.getMonitorNumber()) >= 0) {
-
+                    if (track.getCount().compareTo(habit.getMonitorNumber()) >= 0) {
                         mapDayInMonth.put(track.getCurrentDate(),
                                 mapDayInMonth.get(track.getCurrentDate()) + 1);
-                        sumCount += Integer.parseInt(track.getCount());
+                        curSumCount += Integer.parseInt(track.getCount());
+                    }
+
+                    if (track.getCurrentDate().equals(currentDate)) {
+                        curDayCount = Integer.parseInt(track.getCount());
                     }
                 }
             }
-
-            tvGoal.setText(habitTracking.getHabitEntity().getMonitorNumber());
         }
 
         for (int i = 1; i <= days.length; i++) {
             values.add(new BarEntry(i, mapDayInMonth.get(days[i - 1])));
         }
 
-        tvSumCount.setText(String.valueOf(sumCount));
-
         return values;
+    }
+
+    private void updateUI() {
+        if (timeLine == 0) {
+            tvCurrentTime.setText("Hôm nay");
+        } else if (timeLine == -1) {
+            tvCurrentTime.setText("Hôm qua");
+        } else {
+            tvCurrentTime.setText(
+                    AppGenerator.format(currentDate, AppGenerator.formatYMD2, AppGenerator.formatDMY2));
+        }
+
+        tvCount.setText(String.valueOf(curDayCount) + " " + habitEntity.getMonitorUnit());
+
+        tvSumCount.setText(String.valueOf(curSumCount) + " " + habitEntity.getMonitorUnit());
+
+        String pre = "";
+        if (firstCurrentDate.compareTo(startReportDate) > -1
+                && firstCurrentDate.compareTo(endReportDate) < 1) {
+            switch (mode) {
+                case ChartHelper.MODE_WEEK:
+                    pre = "Tuần này ";
+                    break;
+                case ChartHelper.MODE_MONTH:
+                    pre = "Tháng này ";
+                    break;
+                case ChartHelper.MODE_YEAR:
+                    pre = "Năm này ";
+                    break;
+            }
+        }
+        String des = pre +
+                startReportDate.replace("-", ".") + " - " + endReportDate.replace("-", ".");
+        tvDescription.setText(des);
     }
 
     public void select(View v) {
