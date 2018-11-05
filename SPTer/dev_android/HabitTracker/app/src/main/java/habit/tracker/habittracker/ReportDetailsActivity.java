@@ -139,7 +139,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
         ArrayList<BarEntry> values = loadData(currentDate);
         if (values != null && values.size() > 0) {
             chartHelper.setData(values, mode);
-            chart.invalidate();
+//            chart.invalidate();
         }
     }
 
@@ -152,7 +152,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
         if (currentDate.compareTo(startReportDate) < 0) {
             ArrayList<BarEntry> values = loadData(currentDate);
             chartHelper.setData(values, mode);
-            chart.invalidate();
+//            chart.invalidate();
         }
     }
 
@@ -170,18 +170,40 @@ public class ReportDetailsActivity extends AppCompatActivity {
         if (currentDate.compareTo(endReportDate) > 0) {
             ArrayList<BarEntry> values = loadData(currentDate);
             chartHelper.setData(values, mode);
-            chart.invalidate();
+//            chart.invalidate();
         }
     }
 
-    @OnClick(R.id.minusCount)
-    public void minusCount(View v) {
+    @OnClick({R.id.minusCount, R.id.addCount})
+    public void onChangeCount(View v) {
+        int value = Integer.parseInt(tvCount.getText().toString());
+        switch (v.getId()) {
+            case R.id.minusCount:
+                value = value - 1 < 0 ? 0 : value - 1;
+                break;
+            case R.id.addCount:
+                value++;
+                break;
+        }
+        tvCount.setText(String.valueOf(value));
 
-    }
+        Database db = Database.getInstance(this);
+        db.open();
+        TrackingEntity newRecord =
+                Database.sTrackingImpl.getTracking(this.habitId, this.currentDate);
 
-    @OnClick(R.id.addCount)
-    public void addCount(View v) {
+        if (newRecord == null) {
+            newRecord = new TrackingEntity();
+            newRecord.setTrackingId(AppGenerator.getNewId());
+            newRecord.setHabitId(this.habitId);
+            newRecord.setCurrentDate(this.currentDate);
+            newRecord.setCount(String.valueOf(value));
+        }
+        Database.sTrackingImpl.saveTracking(newRecord);
+        db.close();
 
+        ArrayList<BarEntry> values = loadData(currentDate);
+        chartHelper.setData(values, mode);
     }
 
     private ArrayList<BarEntry> loadData(String currentTime) {
@@ -253,6 +275,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
         String start;
         String end;
 
+        curDayCount = 0;
         curSumCount = 0;
         for (int m = 0; m < 12; m++) {
             start = year + "-" + (m + 1) + "-" + 1;
@@ -270,12 +293,10 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 }
                 // data per day in month
                 for (TrackingEntity track : habitTracking.getTrackingEntityList()) {
-                    if (track.getCount() != null) {
-                        if (track.getCount().compareTo(hb.getMonitorNumber()) >= 0) {
-                            ++completedPerMonth[m];
-                        }
-                        curSumCount += Integer.parseInt(track.getCount());
+                    if (track.getCount().compareTo(hb.getMonitorNumber()) >= 0) {
+                        ++completedPerMonth[m];
                     }
+                    curSumCount += Integer.parseInt(track.getCount());
 
                     if (track.getCurrentDate().equals(currentDate)) {
                         curDayCount = Integer.parseInt(track.getCount());
@@ -300,24 +321,22 @@ public class ReportDetailsActivity extends AppCompatActivity {
             mapDayInMonth.put(d, 0);
         }
 
+        curDayCount = 0;
         curSumCount = 0;
         if (habitTracking != null) {
             HabitEntity habit = habitTracking.getHabitEntity();
             List<TrackingEntity> trackList = habitTracking.getTrackingEntityList();
 
-            if (habit.getMonitorNumber() != null) {
+            for (TrackingEntity track : trackList) {
 
-                for (TrackingEntity track : trackList) {
+                if (track.getCount().compareTo(habit.getMonitorNumber()) >= 0) {
+                    mapDayInMonth.put(track.getCurrentDate(),
+                            mapDayInMonth.get(track.getCurrentDate()) + 1);
+                    curSumCount += Integer.parseInt(track.getCount());
+                }
 
-                    if (track.getCount().compareTo(habit.getMonitorNumber()) >= 0) {
-                        mapDayInMonth.put(track.getCurrentDate(),
-                                mapDayInMonth.get(track.getCurrentDate()) + 1);
-                        curSumCount += Integer.parseInt(track.getCount());
-                    }
-
-                    if (track.getCurrentDate().equals(currentDate)) {
-                        curDayCount = Integer.parseInt(track.getCount());
-                    }
+                if (track.getCurrentDate().equals(currentDate)) {
+                    curDayCount = Integer.parseInt(track.getCount());
                 }
             }
         }

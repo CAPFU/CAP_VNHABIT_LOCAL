@@ -107,8 +107,10 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
     public TrackingEntity getTracking(String habitId, String currentDate) {
         final String selectionArgs[] = {habitId, currentDate};
         final String selection = HABIT_ID + " = ? AND " + CURRENT_DATE + " = ?";
+
         TrackingEntity entity;
         cursor = super.query(TRACKING_TABLE, TRACKING_COLUMNS, selection, selectionArgs, TRACKING_ID);
+
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             entity = cursorToEntity(cursor);
