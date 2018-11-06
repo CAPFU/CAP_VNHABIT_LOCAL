@@ -39,6 +39,8 @@ public class TrackingCalendarAdapter extends RecyclerView.Adapter<TrackingCalend
         } else {
             holder.tvNumber.setBackground(ContextCompat.getDrawable(context, android.R.color.transparent));
         }
+
+        holder.tvNumber.setText( data.get(pos).getText() );
     }
 
     @Override

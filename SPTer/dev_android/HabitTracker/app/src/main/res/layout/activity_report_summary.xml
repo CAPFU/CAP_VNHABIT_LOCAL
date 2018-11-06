@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="15dp"
+        android:background="@color/gray"
         >
         <TextView
             android:id="@+id/tvHabitName"
@@ -118,13 +119,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:text="Đạt được:"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 android:text="40"/>
         </LinearLayout>
         <LinearLayout
@@ -136,13 +137,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:text="Chuổi hiện tại:"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 android:text="7"/>
         </LinearLayout>
         <LinearLayout
@@ -156,12 +157,12 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Chuỗi dài nhất:"
-                android:textSize="18sp" />
+                android:textSize="15sp" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 android:text="15"/>
         </LinearLayout>
     </LinearLayout>

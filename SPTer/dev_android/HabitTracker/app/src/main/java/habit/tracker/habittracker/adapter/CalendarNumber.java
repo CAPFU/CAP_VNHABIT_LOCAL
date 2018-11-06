@@ -4,6 +4,11 @@ public class CalendarNumber {
     private String text;
     boolean isSelected = false;
 
+    public CalendarNumber(String text, boolean isSelected) {
+        this.text = text;
+        this.isSelected = isSelected;
+    }
+
     public String getText() {
         return text;
     }
