@@ -1,5 +1,6 @@
 package habit.tracker.habittracker;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -79,6 +80,9 @@ public class ReportDetailsActivity extends AppCompatActivity {
     BarChart chart;
 
     ChartHelper chartHelper;
+
+    @BindView(R.id.imgEditHabit)
+    View imgEditHabit;
 
     private HabitEntity habitEntity;
     private String habitId;
@@ -254,6 +258,13 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
         ArrayList<BarEntry> values = loadData(currentDate);
         chartHelper.setData(values, mode);
+    }
+
+    @OnClick(R.id.imgEditHabit)
+    public void selectEditHabit(View v) {
+        Intent intent = new Intent(this, HabitActivity.class);
+        intent.putExtra(MainActivity.HABIT_ID, this.habitId);
+        startActivity(intent);
     }
 
     private ArrayList<BarEntry> loadData(String currentTime) {

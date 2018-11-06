@@ -220,7 +220,7 @@
         android:layout_weight="1">
 
         <ImageView
-            android:id="@+id/report"
+            android:id="@+id/imgEditHabit"
             android:padding="10dp"
             app:srcCompat="@drawable/tab_edit"
             android:layout_weight="1"
