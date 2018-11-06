@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         ButterKnife.bind(this);
 
         Calendar ca = Calendar.getInstance();
-        currentDate = ca.get(Calendar.YEAR) + "-" + (ca.get(Calendar.MONTH) + 1) + "-" + ca.get(Calendar.DATE);
+        currentDate = AppGenerator.getCurrentDate(AppGenerator.formatYMD2);
         firstCurrentDate = currentDate;
         initData();
     }
@@ -167,14 +167,14 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         Tracking tracking = new Tracking();
         tracking.setTrackingId(item.getTrackId());
         tracking.setHabitId(item.getHabitId());
-        tracking.setCurrentDate(currentDate);
+        tracking.setCurrentDate(this.currentDate);
         tracking.setCount(String.valueOf(item.getCount()));
         trackingData.getTrackingList().add(tracking);
-
         if (!Database.sTrackingImpl
-                .updateTrackCount(Database.sTrackingImpl.convert(tracking))) {
+                .updateTracking(Database.sTrackingImpl.convert(tracking))) {
             return;
         }
+        db.close();
 
         VnHabitApiService service = VnHabitApiUtils.getApiService();
         service.replace(trackingData).enqueue(new Callback<ResponseBody>() {
@@ -186,7 +186,6 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             public void onFailure(Call<ResponseBody> call, Throwable t) {
             }
         });
-        db.close();
     }
 
     @Override

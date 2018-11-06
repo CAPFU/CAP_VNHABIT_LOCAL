@@ -85,9 +85,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
     View tabCalendar;
 
     private HabitEntity habitEntity;
-    private String habitId;
-    private String habitColor;
-
     private String firstCurrentDate;
     private String currentDate;
     private String startReportDate;
@@ -119,8 +116,8 @@ public class ReportDetailsActivity extends AppCompatActivity {
         Bundle data = getIntent().getExtras();
         if (data != null) {
 
-            habitId = data.getString(MainActivity.HABIT_ID);
-            habitColor = data.getString(MainActivity.HABIT_COLOR);
+            String habitId = data.getString(MainActivity.HABIT_ID);
+            String habitColor = data.getString(MainActivity.HABIT_COLOR);
             vHeader.setBackgroundColor(ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 100));
 
             if (!TextUtils.isEmpty(habitId)) {
@@ -204,14 +201,13 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 break;
         }
 
-        curDayCount = 0;
-
         // get today tracking record of current habit
         Database db = Database.getInstance(this);
         db.open();
         TrackingEntity todayTracking = Database.sTrackingImpl
-                .getTracking(this.habitId, this.currentDate);
+                .getTracking(this.habitEntity.getHabitId(), this.currentDate);
         db.close();
+        curDayCount = 0;
         if (todayTracking != null) {
             curDayCount = Integer.parseInt(todayTracking.getCount());
         }
@@ -229,48 +225,55 @@ public class ReportDetailsActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.minusCount, R.id.addCount})
-    public void onChangeCount(View v) {
-        int value = Integer.parseInt(tvCount.getText().toString());
+    public void onCountChanged(View v) {
+
+        int goalNumber = Integer.parseInt(habitEntity.getMonitorNumber());
+        boolean above = curDayCount >= goalNumber;
+
         switch (v.getId()) {
             case R.id.minusCount:
-                value = value - 1 < 0 ? 0 : value - 1;
+                curDayCount = curDayCount - 1 < 0 ? 0 : curDayCount - 1;
                 break;
             case R.id.addCount:
-                value++;
+                curDayCount++;
                 break;
         }
-        tvCount.setText(String.valueOf(value));
 
         Database db = Database.getInstance(this);
         db.open();
         TrackingEntity newRecord =
-                Database.sTrackingImpl.getTracking(this.habitId, this.currentDate);
-
+                Database.sTrackingImpl.getTracking(this.habitEntity.getHabitId(), this.currentDate);
+        // init new record
         if (newRecord == null) {
             newRecord = new TrackingEntity();
             newRecord.setTrackingId(AppGenerator.getNewId());
-            newRecord.setHabitId(this.habitId);
+            newRecord.setHabitId(this.habitEntity.getHabitId());
             newRecord.setCurrentDate(this.currentDate);
-            newRecord.setCount(String.valueOf(value));
         }
+        newRecord.setCount(String.valueOf(curDayCount));
         Database.sTrackingImpl.saveTracking(newRecord);
         db.close();
 
-        ArrayList<BarEntry> values = loadData(currentDate);
-        chartHelper.setData(values, mode);
+        if ((!above && curDayCount == goalNumber)
+                || (above && goalNumber - curDayCount == 1)) {
+
+            ArrayList<BarEntry> values = loadData(currentDate);
+            chartHelper.setData(values, mode);
+        }
+        updateUI();
     }
 
     @OnClick(R.id.tabEditHabit)
     public void selectEditHabit(View v) {
         Intent intent = new Intent(this, HabitActivity.class);
-        intent.putExtra(MainActivity.HABIT_ID, this.habitId);
+        intent.putExtra(MainActivity.HABIT_ID, this.habitEntity.getHabitId());
         startActivity(intent);
     }
 
     @OnClick(R.id.tabCalendar)
     public void selectCalendar(View v) {
         Intent intent = new Intent(this, ReportSummaryActivity.class);
-        intent.putExtra(MainActivity.HABIT_ID, this.habitId);
+        intent.putExtra(MainActivity.HABIT_ID, this.habitEntity.getHabitId());
         startActivity(intent);
     }
 
@@ -302,7 +305,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
         Database db = Database.getInstance(this);
         db.open();
         HabitTracking habitTracking = Database.sTrackingImpl
-                .getHabitTrackingBetween(habitId, startReportDate, endReportDate);
+                .getHabitTrackingBetween(this.habitEntity.getHabitId(), startReportDate, endReportDate);
         db.close();
 
         return prepareData(habitTracking, daysInWeek);
@@ -317,7 +320,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
         Database db = Database.getInstance(this);
         db.open();
         HabitTracking habitTracking = Database.sTrackingImpl
-                .getHabitTrackingBetween(habitId, startReportDate, endReportDate);
+                .getHabitTrackingBetween(this.habitEntity.getHabitId(), startReportDate, endReportDate);
         db.close();
 
         return prepareData(habitTracking, daysInMonth);
@@ -349,7 +352,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
             // data per month
             habitTracking = Database.sTrackingImpl
-                    .getHabitTrackingBetween(habitId, start, end);
+                    .getHabitTrackingBetween(this.habitEntity.getHabitId(), start, end);
 
             if (habitTracking != null) {
                 if (hb == null) {
@@ -437,24 +440,10 @@ public class ReportDetailsActivity extends AppCompatActivity {
     }
 
     public void select(View v) {
-//        switch (mode) {
-//            case ChartHelper.MODE_WEEK:
-//                v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab_red));
-//                break;
-//            case ChartHelper.MODE_MONTH:
-//                v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab_purple));
-//                break;
-//            case ChartHelper.MODE_YEAR:
-//                v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab_blue));
-//                break;
-//            default:
-//                break;
-//        }
         v.setVisibility(View.VISIBLE);
     }
 
     public void unSelect(View v) {
-//        v.setBackground(ContextCompat.getDrawable(this, android.R.color.transparent));
         v.setVisibility(View.INVISIBLE);
     }
 }
