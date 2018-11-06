@@ -1,7 +1,10 @@
 package habit.tracker.habittracker;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -27,6 +30,12 @@ import habit.tracker.habittracker.repository.tracking.HabitTracking;
 import habit.tracker.habittracker.repository.tracking.TrackingEntity;
 
 public class ReportDetailsActivity extends AppCompatActivity {
+
+    @BindView(R.id.header)
+    View vHeader;
+
+    @BindView(R.id.tvHabitName)
+    TextView tvHabitName;
 
     @BindView(R.id.pre)
     View pre;
@@ -65,6 +74,8 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
     private HabitEntity habitEntity;
     private String habitId;
+    private String habitColor;
+
     private String firstCurrentDate;
     private String currentDate;
     private String startReportDate;
@@ -88,29 +99,41 @@ public class ReportDetailsActivity extends AppCompatActivity {
         currentDate = AppGenerator.getCurrentDate(AppGenerator.formatYMD2);
         firstCurrentDate = currentDate;
 
+        curDayCount = 0;
+
         tvCurrentTime.setText("Hôm nay");
         selectedTab = tabWeek;
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            habitId = bundle.getString(MainActivity.HABIT_ID);
+        Bundle data = getIntent().getExtras();
+        if (data != null) {
+
+            habitId = data.getString(MainActivity.HABIT_ID);
+            habitColor = data.getString(MainActivity.HABIT_COLOR);
+            vHeader.setBackgroundColor(ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 155));
+
             if (!TextUtils.isEmpty(habitId)) {
 
                 Database db = Database.getInstance(this);
                 db.open();
                 habitEntity = Database.sHabitDaoImpl.getHabit(habitId);
-                TrackingEntity trackingEntity = Database.sTrackingImpl.getTracking(habitId, currentDate);
+                TrackingEntity trackingEntity = Database.sTrackingImpl
+                        .getTracking(habitId, currentDate);
                 db.close();
 
                 if (trackingEntity != null) {
-                    tvCount.setText(trackingEntity.getCount() + " " + habitEntity.getMonitorUnit());
-                    tvGoal.setText(habitEntity.getMonitorNumber() + " " + habitEntity.getMonitorUnit());
+                    curDayCount = Integer.parseInt(trackingEntity.getCount());
+                    tvHabitName.setText(habitEntity.getHabitName());
                 }
 
+                ArrayList<BarEntry> values = loadData(currentDate);
                 chartHelper = new ChartHelper(this, chart);
                 chartHelper.initChart();
-                ArrayList<BarEntry> values = loadData(currentDate);
+                int startColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 50);
+                int endColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 225);
+                chartHelper.setChartColor(startColor, endColor);
                 chartHelper.setData(values, mode);
+
+                updateUI();
             }
         }
     }
@@ -139,39 +162,44 @@ public class ReportDetailsActivity extends AppCompatActivity {
         ArrayList<BarEntry> values = loadData(currentDate);
         if (values != null && values.size() > 0) {
             chartHelper.setData(values, mode);
-//            chart.invalidate();
         }
     }
 
-    @OnClick(R.id.pre)
-    public void pre(View v) {
-        timeLine--;
-        currentDate = AppGenerator.getPreDate(currentDate, AppGenerator.formatYMD2);
+    @OnClick({R.id.pre, R.id.next})
+    public void onDateChanged(View v) {
+        switch (v.getId()) {
+            case R.id.pre:
+                timeLine--;
+                currentDate = AppGenerator.getPreDate(currentDate, AppGenerator.formatYMD2);
+                break;
+            case R.id.next:
+                timeLine++;
+                currentDate = AppGenerator.getNextDate(currentDate, AppGenerator.formatYMD2);
+                break;
+        }
+
+        curDayCount = 0;
+
+        // get today tracking record of current habit
+        Database db = Database.getInstance(this);
+        db.open();
+        TrackingEntity todayTracking = Database.sTrackingImpl
+                .getTracking(this.habitId, this.currentDate);
+        db.close();
+        if (todayTracking != null) {
+            curDayCount = Integer.parseInt(todayTracking.getCount());
+        }
 
         // current date is before the start date of report
-        if (currentDate.compareTo(startReportDate) < 0) {
+        if (currentDate.compareTo(startReportDate) < 0
+                || currentDate.compareTo(endReportDate) > 0) {
+
+            curSumCount = 0;
+
             ArrayList<BarEntry> values = loadData(currentDate);
             chartHelper.setData(values, mode);
-//            chart.invalidate();
         }
-    }
-
-    @OnClick(R.id.next)
-    public void next(View v) {
-        timeLine++;
-        currentDate = AppGenerator.getNextDate(currentDate, AppGenerator.formatYMD2);
-
-        if (timeLine > 0) {
-            timeLine = 0;
-            return;
-        }
-
-        // current date is after the start date of report
-        if (currentDate.compareTo(endReportDate) > 0) {
-            ArrayList<BarEntry> values = loadData(currentDate);
-            chartHelper.setData(values, mode);
-//            chart.invalidate();
-        }
+        updateUI();
     }
 
     @OnClick({R.id.minusCount, R.id.addCount})
@@ -222,8 +250,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
             default:
                 break;
         }
-
-        updateUI();
         return values;
     }
 
@@ -275,8 +301,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
         String start;
         String end;
 
-        curDayCount = 0;
-        curSumCount = 0;
         for (int m = 0; m < 12; m++) {
             start = year + "-" + (m + 1) + "-" + 1;
             end = year + "-" + (m + 1) + "-" + AppGenerator.getMaxDayInMonth(year, m);
@@ -297,10 +321,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
                         ++completedPerMonth[m];
                     }
                     curSumCount += Integer.parseInt(track.getCount());
-
-                    if (track.getCurrentDate().equals(currentDate)) {
-                        curDayCount = Integer.parseInt(track.getCount());
-                    }
                 }
             }
         }
@@ -321,8 +341,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
             mapDayInMonth.put(d, 0);
         }
 
-        curDayCount = 0;
-        curSumCount = 0;
         if (habitTracking != null) {
             HabitEntity habit = habitTracking.getHabitEntity();
             List<TrackingEntity> trackList = habitTracking.getTrackingEntityList();
@@ -333,10 +351,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
                     mapDayInMonth.put(track.getCurrentDate(),
                             mapDayInMonth.get(track.getCurrentDate()) + 1);
                     curSumCount += Integer.parseInt(track.getCount());
-                }
-
-                if (track.getCurrentDate().equals(currentDate)) {
-                    curDayCount = Integer.parseInt(track.getCount());
                 }
             }
         }

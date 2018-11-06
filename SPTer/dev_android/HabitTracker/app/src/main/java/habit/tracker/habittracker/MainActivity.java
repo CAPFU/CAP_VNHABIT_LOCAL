@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     public static final int USE_FILTER = 2;
 
     public static final String HABIT_ID = "HABIT_ID";
+    public static final String HABIT_COLOR = "habit_color";
 
     List<TrackingItem> trackingItemList = new ArrayList<>();
     HabitRecyclerViewAdapter trackingAdapter;
@@ -196,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         } else {
             Intent intent = new Intent(this, ReportDetailsActivity.class);
             intent.putExtra(HABIT_ID, trackingItemList.get(position).getHabitId());
+            intent.putExtra(HABIT_COLOR, trackingItemList.get(position).getColor());
             startActivity(intent);
         }
     }
