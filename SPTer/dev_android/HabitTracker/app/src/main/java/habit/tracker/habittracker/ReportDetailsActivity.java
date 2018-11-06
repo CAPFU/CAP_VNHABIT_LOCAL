@@ -1,6 +1,7 @@
 package habit.tracker.habittracker;
 
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
@@ -56,6 +57,13 @@ public class ReportDetailsActivity extends AppCompatActivity {
     @BindView(R.id.tvDescription)
     TextView tvDescription;
 
+    @BindView(R.id.tabWeekHL)
+    View tabWeekHL;
+    @BindView(R.id.tabMonthHL)
+    View tabMonthHL;
+    @BindView(R.id.tabYearHL)
+    View tabYearHL;
+    View selectedTabHL;
     @BindView(R.id.tabWeek)
     View tabWeek;
     @BindView(R.id.tabMonth)
@@ -109,7 +117,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
             habitId = data.getString(MainActivity.HABIT_ID);
             habitColor = data.getString(MainActivity.HABIT_COLOR);
-            vHeader.setBackgroundColor(ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 155));
+            vHeader.setBackgroundColor(ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 100));
 
             if (!TextUtils.isEmpty(habitId)) {
 
@@ -125,11 +133,25 @@ public class ReportDetailsActivity extends AppCompatActivity {
                     tvHabitName.setText(habitEntity.getHabitName());
                 }
 
+                // get color theme
+                int startColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 50);
+                int endColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 225);
+
+                // tab select high line
+                GradientDrawable gd = new GradientDrawable(
+                        GradientDrawable.Orientation.LEFT_RIGHT,
+                        new int[] {startColor, endColor});
+                gd.setCornerRadius(0f);
+                tabWeekHL.setBackground(gd);
+                tabMonthHL.setBackground(gd);
+                tabYearHL.setBackground(gd);
+                select(tabWeekHL);
+                selectedTabHL = tabWeekHL;
+
+                // innit chart
                 ArrayList<BarEntry> values = loadData(currentDate);
                 chartHelper = new ChartHelper(this, chart);
                 chartHelper.initChart();
-                int startColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 50);
-                int endColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 225);
                 chartHelper.setChartColor(startColor, endColor);
                 chartHelper.setData(values, mode);
 
@@ -140,22 +162,22 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
     @OnClick({R.id.tabWeek, R.id.tabMonth, R.id.tabYear})
     public void loadReportByMode(View v) {
-        unSelect(selectedTab);
+        unSelect(selectedTabHL);
         switch (v.getId()) {
             case R.id.tabWeek:
                 mode = ChartHelper.MODE_WEEK;
-                select(tabWeek);
-                selectedTab = tabWeek;
+                select(tabWeekHL);
+                selectedTabHL = tabWeekHL;
                 break;
             case R.id.tabMonth:
                 mode = ChartHelper.MODE_MONTH;
-                select(tabMonth);
-                selectedTab = tabMonth;
+                select(tabMonthHL);
+                selectedTabHL = tabMonthHL;
                 break;
             case R.id.tabYear:
                 mode = ChartHelper.MODE_YEAR;
-                select(tabYear);
-                selectedTab = tabYear;
+                select(tabYearHL);
+                selectedTabHL = tabYearHL;
                 break;
         }
 
@@ -397,22 +419,24 @@ public class ReportDetailsActivity extends AppCompatActivity {
     }
 
     public void select(View v) {
-        switch (mode) {
-            case ChartHelper.MODE_WEEK:
-                v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab_red));
-                break;
-            case ChartHelper.MODE_MONTH:
-                v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab_purple));
-                break;
-            case ChartHelper.MODE_YEAR:
-                v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab_blue));
-                break;
-            default:
-                break;
-        }
+//        switch (mode) {
+//            case ChartHelper.MODE_WEEK:
+//                v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab_red));
+//                break;
+//            case ChartHelper.MODE_MONTH:
+//                v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab_purple));
+//                break;
+//            case ChartHelper.MODE_YEAR:
+//                v.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tab_blue));
+//                break;
+//            default:
+//                break;
+//        }
+        v.setVisibility(View.VISIBLE);
     }
 
     public void unSelect(View v) {
-        v.setBackground(ContextCompat.getDrawable(this, android.R.color.transparent));
+//        v.setBackground(ContextCompat.getDrawable(this, android.R.color.transparent));
+        v.setVisibility(View.INVISIBLE);
     }
 }

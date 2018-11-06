@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#ffffff"
     tools:context=".ReportDetailsActivity">
 
     <RelativeLayout
@@ -145,7 +146,6 @@
                 android:layout_height="match_parent"
                 android:textSize="18sp"
                 android:gravity="center"
-                android:background="@drawable/bg_tab_red"
                 android:text="Tuần"/>
             <TextView
                 android:id="@+id/tabMonth"
@@ -164,10 +164,35 @@
                 android:gravity="center"
                 android:text="Năm"/>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/tabHighLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tabTime"
+            android:orientation="horizontal">
+            <View
+                android:id="@+id/tabWeekHL"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="1dp"
+                android:visibility="invisible" />
+            <View
+                android:id="@+id/tabMonthHL"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="1dp"
+                android:visibility="invisible" />
+            <View
+                android:id="@+id/tabYearHL"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="1dp"
+                android:visibility="invisible" />
+        </LinearLayout>
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/chart"
-            android:layout_below="@id/tabTime"
+            android:layout_below="@id/tabHighLine"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="30dp"
