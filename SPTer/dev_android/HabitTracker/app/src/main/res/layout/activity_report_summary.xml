@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#ffffff"
-    tools:context=".ReportDetailsActivity">
+    tools:context=".ReportSummaryActivity">
 
     <RelativeLayout
         android:id="@+id/header"
@@ -86,138 +86,81 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="5dp"
-        android:orientation="horizontal">
+        android:layout_weight="6">
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:paddingStart="20dp"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/tvGoal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="18 Km"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvGoal"
-                android:textSize="14sp"
-                android:text="Mục tiêu đề ra"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:paddingStart="20dp"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/tvSumCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="10 Km"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvSumCount"
-                android:textSize="14sp"
-                android:text="Đã hoàn thành"/>
-        </RelativeLayout>
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="7"
-        android:padding="10dp">
+        android:layout_weight="2"
+        android:paddingBottom="30dp"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/tabTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
             <TextView
-                android:id="@+id/tabWeek"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:textSize="18sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Tuần"/>
+                android:textSize="18sp"
+                android:text="Đạt được:"/>
             <TextView
-                android:id="@+id/tabMonth"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:textSize="18sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Tháng"/>
-            <TextView
-                android:id="@+id/tabYear"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:textSize="18sp"
-                android:gravity="center"
-                android:text="Năm"/>
+                android:textSize="30sp"
+                android:text="40"/>
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/tabHighLine"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tabTime"
-            android:orientation="horizontal">
-            <View
-                android:id="@+id/tabWeekHL"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="1dp"
-                android:visibility="invisible" />
-            <View
-                android:id="@+id/tabMonthHL"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="1dp"
-                android:visibility="invisible" />
-            <View
-                android:id="@+id/tabYearHL"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="1dp"
-                android:visibility="invisible" />
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:text="Chuổi hiện tại:"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="30sp"
+                android:text="7"/>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/chart"
-            android:layout_below="@id/tabHighLine"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="30dp"
-            android:layout_above="@+id/tvDescription"
-            android:layout_marginTop="10dp"/>
-
-        <TextView
-            android:id="@+id/tvDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:text="Tuần này, 29.10.2018 - 04.11.2018"/>
-
-    </RelativeLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Chuỗi dài nhất:"
+                android:textSize="18sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="30sp"
+                android:text="15"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/tabs"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="5dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:padding="5dp">
 
         <ImageView
             android:id="@+id/tabEditHabit"
@@ -239,7 +182,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent" />
         <ImageView
-            android:id="@+id/tabCalendar"
             android:padding="10dp"
             app:srcCompat="@drawable/tab_calendar"
             android:layout_weight="1"

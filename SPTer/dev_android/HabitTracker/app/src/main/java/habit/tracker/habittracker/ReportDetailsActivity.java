@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -81,8 +79,10 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
     ChartHelper chartHelper;
 
-    @BindView(R.id.imgEditHabit)
-    View imgEditHabit;
+    @BindView(R.id.tabEditHabit)
+    View tabEditHabit;
+    @BindView(R.id.tabCalendar)
+    View tabCalendar;
 
     private HabitEntity habitEntity;
     private String habitId;
@@ -260,9 +260,16 @@ public class ReportDetailsActivity extends AppCompatActivity {
         chartHelper.setData(values, mode);
     }
 
-    @OnClick(R.id.imgEditHabit)
+    @OnClick(R.id.tabEditHabit)
     public void selectEditHabit(View v) {
         Intent intent = new Intent(this, HabitActivity.class);
+        intent.putExtra(MainActivity.HABIT_ID, this.habitId);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.tabCalendar)
+    public void selectCalendar(View v) {
+        Intent intent = new Intent(this, ReportSummaryActivity.class);
         intent.putExtra(MainActivity.HABIT_ID, this.habitId);
         startActivity(intent);
     }
