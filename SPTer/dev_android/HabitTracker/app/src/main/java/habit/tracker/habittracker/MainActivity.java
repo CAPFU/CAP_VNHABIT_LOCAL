@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     public static final int CREATE_NEW_HABIT = 0;
     public static final int UPDATE_HABIT = 1;
     public static final int USE_FILTER = 2;
+    private static final int REPORT = 3;
 
     public static final String HABIT_ID = "HABIT_ID";
     public static final String HABIT_COLOR = "habit_color";
@@ -80,15 +81,18 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         Calendar ca = Calendar.getInstance();
         currentDate = AppGenerator.getCurrentDate(AppGenerator.formatYMD2);
         firstCurrentDate = currentDate;
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        trackingAdapter = new HabitRecyclerViewAdapter(MainActivity.this, trackingItemList);
+        trackingAdapter.setClickListener(MainActivity.this);
+        recyclerView.setAdapter(trackingAdapter);
+
         initData();
     }
 
     private void initData() {
         trackingItemList.clear();
-        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        trackingAdapter = new HabitRecyclerViewAdapter(MainActivity.this, trackingItemList);
-        trackingAdapter.setClickListener(MainActivity.this);
-        recyclerView.setAdapter(trackingAdapter);
+
 
         String userId = MySharedPreference.getUserId(this);
 
@@ -197,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             Intent intent = new Intent(this, ReportDetailsActivity.class);
             intent.putExtra(HABIT_ID, trackingItemList.get(position).getHabitId());
             intent.putExtra(HABIT_COLOR, trackingItemList.get(position).getColor());
-            startActivity(intent);
+            startActivityForResult(intent, REPORT);
         }
     }
 
@@ -227,6 +231,8 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                 trackingAdapter.notifyDataSetChanged();
 
             }
+        } else if (requestCode == REPORT) {
+            initData();
         }
     }
 

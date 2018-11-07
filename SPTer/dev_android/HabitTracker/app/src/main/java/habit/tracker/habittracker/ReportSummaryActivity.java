@@ -7,18 +7,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.WindowManager;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import habit.tracker.habittracker.adapter.CalendarNumber;
 import habit.tracker.habittracker.adapter.TrackingCalendarAdapter;
+import habit.tracker.habittracker.common.util.AppGenerator;
 
 public class ReportSummaryActivity extends AppCompatActivity {
 
     @BindView(R.id.calendar)
-    RecyclerView calendar;
+    RecyclerView recyclerViewCalendar;
 
     TrackingCalendarAdapter calendarAdapter;
 
@@ -31,19 +37,52 @@ public class ReportSummaryActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         List<CalendarNumber> data = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
-            data.add(new CalendarNumber(String.valueOf(i+1), false));
+
+        String currentDate = AppGenerator.getCurrentDate(AppGenerator.formatYMD2);
+        String[] datesInMonth = AppGenerator.getDatesInMonth(currentDate, false);
+        Calendar calendar = Calendar.getInstance();
+        try {
+            SimpleDateFormat format = new SimpleDateFormat(AppGenerator.formatYMD2, Locale.getDefault());
+            Date d = format.parse(datesInMonth[0]);
+            calendar.setTimeInMillis(d.getTime());
+
+            int dayInW = calendar.get(Calendar.DAY_OF_WEEK);
+            int headPadding = getPadding(dayInW);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        data.get(0).setText("Hai");
-        data.get(1).setText("Ba");
-        data.get(2).setText("Tư");
-        data.get(3).setText("Năm");
-        data.get(4).setText("Sáu");
-        data.get(5).setText("Bảy");
-        data.get(6).setText("CN");
+
 
         calendarAdapter = new TrackingCalendarAdapter(this, data);
-        calendar.setLayoutManager(new GridLayoutManager(this, 7));
-        calendar.setAdapter(calendarAdapter);
+        recyclerViewCalendar.setLayoutManager(new GridLayoutManager(this, 7));
+        recyclerViewCalendar.setAdapter(calendarAdapter);
+    }
+
+    private int getPadding(int dayInW) {
+        int padding = 0;
+        switch (dayInW) {
+            case Calendar.MONDAY:
+                break;
+            case Calendar.TUESDAY:
+                padding = 1;
+                break;
+            case Calendar.WEDNESDAY:
+                padding = 2;
+                break;
+            case Calendar.THURSDAY:
+                padding = 3;
+                break;
+            case Calendar.FRIDAY:
+                padding = 4;
+                break;
+            case Calendar.SATURDAY:
+                padding = 5;
+                break;
+            case Calendar.SUNDAY:
+                padding = 6;
+                break;
+        }
+        return padding;
     }
 }

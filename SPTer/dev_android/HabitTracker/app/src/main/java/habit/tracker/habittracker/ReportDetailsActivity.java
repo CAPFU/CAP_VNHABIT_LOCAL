@@ -22,12 +22,20 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import habit.tracker.habittracker.api.VnHabitApiUtils;
+import habit.tracker.habittracker.api.model.tracking.Tracking;
+import habit.tracker.habittracker.api.model.tracking.TrackingList;
+import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.chart.ChartHelper;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
 import habit.tracker.habittracker.repository.tracking.HabitTracking;
 import habit.tracker.habittracker.repository.tracking.TrackingEntity;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ReportDetailsActivity extends AppCompatActivity {
 
@@ -241,17 +249,17 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
         Database db = Database.getInstance(this);
         db.open();
-        TrackingEntity newRecord =
+        TrackingEntity record =
                 Database.sTrackingImpl.getTracking(this.habitEntity.getHabitId(), this.currentDate);
         // init new record
-        if (newRecord == null) {
-            newRecord = new TrackingEntity();
-            newRecord.setTrackingId(AppGenerator.getNewId());
-            newRecord.setHabitId(this.habitEntity.getHabitId());
-            newRecord.setCurrentDate(this.currentDate);
+        if (record == null) {
+            record = new TrackingEntity();
+            record.setTrackingId(AppGenerator.getNewId());
+            record.setHabitId(this.habitEntity.getHabitId());
+            record.setCurrentDate(this.currentDate);
         }
-        newRecord.setCount(String.valueOf(curDayCount));
-        Database.sTrackingImpl.saveTracking(newRecord);
+        record.setCount(String.valueOf(curDayCount));
+        Database.sTrackingImpl.saveTracking(record);
         db.close();
 
         if ((!above && curDayCount == goalNumber)
@@ -261,6 +269,24 @@ public class ReportDetailsActivity extends AppCompatActivity {
             chartHelper.setData(values, mode);
         }
         updateUI();
+
+        TrackingList trackingData = new TrackingList();
+        Tracking tracking = new Tracking();
+        tracking.setTrackingId(record.getTrackingId());
+        tracking.setHabitId(record.getHabitId());
+        tracking.setCurrentDate(this.currentDate);
+        tracking.setCount(String.valueOf(record.getCount()));
+        trackingData.getTrackingList().add(tracking);
+        VnHabitApiService service = VnHabitApiUtils.getApiService();
+        service.replace(trackingData).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            }
+        });
     }
 
     @OnClick(R.id.tabEditHabit)

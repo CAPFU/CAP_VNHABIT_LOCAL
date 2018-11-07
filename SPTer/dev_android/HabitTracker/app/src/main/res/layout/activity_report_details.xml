@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="15dp"
         >
         <TextView
             android:id="@+id/tvHabitName"
@@ -22,7 +22,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="15dp"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:text="Chạy bộ"/>
 
         <TextView
@@ -62,7 +62,7 @@
             android:layout_below="@+id/tvCurrentTime"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="25dp"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:text="04"/>
         <ImageView
             android:id="@+id/minusCount"
@@ -99,13 +99,13 @@
                 android:id="@+id/tvGoal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:text="18 Km"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvGoal"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:text="Mục tiêu đề ra"/>
         </RelativeLayout>
         <RelativeLayout
@@ -117,13 +117,13 @@
                 android:id="@+id/tvSumCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:text="10 Km"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvSumCount"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:text="Đã hoàn thành"/>
         </RelativeLayout>
     </LinearLayout>
@@ -138,13 +138,15 @@
             android:id="@+id/tabTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="2dp"
+            >
             <TextView
                 android:id="@+id/tabWeek"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:gravity="center"
                 android:text="Tuần"/>
             <TextView
@@ -152,7 +154,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:gravity="center"
                 android:text="Tháng"/>
             <TextView
@@ -160,7 +162,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:gravity="center"
                 android:text="Năm"/>
         </LinearLayout>
@@ -206,7 +208,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="30dp"
             android:gravity="center"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:text="Tuần này, 29.10.2018 - 04.11.2018"/>
 
     </RelativeLayout>
