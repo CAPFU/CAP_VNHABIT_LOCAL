@@ -29,7 +29,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import habit.tracker.habittracker.adapter.RemindRecyclerViewAdaper;
+import habit.tracker.habittracker.adapter.RemindRecyclerViewAdapter;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.reminder.Reminder;
@@ -199,7 +199,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     RecyclerView rvRemind;
     List<Reminder> remindDispList = new ArrayList<>();
     List<Reminder> remindAddNew = new ArrayList<>();
-    RemindRecyclerViewAdaper remindAdapter;
+    RemindRecyclerViewAdapter remindAdapter;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -270,7 +270,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         endDay = calendar.get(Calendar.DATE);
 
         // init remind list
-        remindAdapter = new RemindRecyclerViewAdaper(this, remindDispList);
+        remindAdapter = new RemindRecyclerViewAdapter(this, remindDispList);
         rvRemind.setLayoutManager(new LinearLayoutManager(this));
         rvRemind.setOnClickListener(null);
         rvRemind.setAdapter(remindAdapter);

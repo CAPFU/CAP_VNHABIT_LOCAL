@@ -163,7 +163,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
 
         chart.getDescription().setEnabled(false);
 
-        // if more than 60 entries are displayed in the chart, no values will be
+        // if more than 60 entries are displayed in the chart, no calendarItemList will be
         // drawn
         chart.setMaxVisibleValueCount(60);
 

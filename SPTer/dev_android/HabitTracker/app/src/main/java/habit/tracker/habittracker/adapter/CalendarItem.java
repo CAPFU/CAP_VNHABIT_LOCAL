@@ -1,16 +1,22 @@
 package habit.tracker.habittracker.adapter;
 
-public class CalendarNumber {
+public class CalendarItem {
     private String text;
-    boolean isSelected = false;
+    boolean isSelected;
+    boolean isClickable;
 
-    public CalendarNumber(String text, boolean isSelected) {
+    public CalendarItem(String text, boolean isSelected, boolean isClickable) {
         this.text = text;
         this.isSelected = isSelected;
+        this.isClickable = isClickable;
     }
 
     public String getText() {
         return text;
+    }
+
+    public boolean isClickable() {
+        return isClickable;
     }
 
     public boolean isSelected() {
@@ -23,5 +29,9 @@ public class CalendarNumber {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public void setClickable(boolean clickable) {
+        isClickable = clickable;
     }
 }

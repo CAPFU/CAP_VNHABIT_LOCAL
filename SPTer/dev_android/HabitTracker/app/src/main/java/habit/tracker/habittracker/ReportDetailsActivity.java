@@ -58,7 +58,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
     @BindView(R.id.addCount)
     View imgAddCount;
 
-    @BindView(R.id.tvCount)
+    @BindView(R.id.tvTrackCount)
     TextView tvCount;
     @BindView(R.id.tvGoal)
     TextView tvGoal;

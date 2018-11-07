@@ -6,12 +6,10 @@ import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
-
-import com.github.mikephil.charting.data.BarEntry;
+import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,7 +23,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import habit.tracker.habittracker.adapter.CalendarNumber;
+import habit.tracker.habittracker.adapter.CalendarItem;
 import habit.tracker.habittracker.adapter.TrackingCalendarAdapter;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.repository.Database;
@@ -33,16 +31,22 @@ import habit.tracker.habittracker.repository.habit.HabitEntity;
 import habit.tracker.habittracker.repository.tracking.HabitTracking;
 import habit.tracker.habittracker.repository.tracking.TrackingEntity;
 
-public class ReportSummaryActivity extends AppCompatActivity {
+public class ReportSummaryActivity extends AppCompatActivity implements TrackingCalendarAdapter.OnItemClickListener {
 
     @BindView(R.id.header)
     View vHeader;
+
+    @BindView(R.id.tvCurrentTime)
+    TextView tvCurrentTime;
+    @BindView(R.id.tvTrackCount)
+    TextView tvTrackCount;
 
     @BindView(R.id.calendar)
     RecyclerView recyclerViewCalendar;
 
     private HabitEntity habitEntity;
     TrackingCalendarAdapter calendarAdapter;
+    List<CalendarItem> calendarItemList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,23 +57,22 @@ public class ReportSummaryActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         // UI
-        Bundle data = getIntent().getExtras();
-        if (data != null) {
-            String habitId = data.getString(MainActivity.HABIT_ID);
-            String habitColor = data.getString(MainActivity.HABIT_COLOR);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            String habitId = bundle.getString(MainActivity.HABIT_ID);
+            String habitColor = bundle.getString(MainActivity.HABIT_COLOR);
 
             Database db = Database.getInstance(this);
             db.open();
-            habitEntity = Database.sHabitDaoImpl.getHabit(habitId);
+            this.habitEntity = Database.sHabitDaoImpl.getHabit(habitId);
             db.close();
 
             vHeader.setBackgroundColor(ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 100));
         }
 
         // data
-        List<CalendarNumber> values = new ArrayList<>();
-        List<CalendarNumber> head = new ArrayList<>();
-        List<CalendarNumber> tail = new ArrayList<>();
+        List<CalendarItem> head = new ArrayList<>();
+        List<CalendarItem> tail = new ArrayList<>();
 
         String currentDate = AppGenerator.getCurrentDate(AppGenerator.formatYMD2);
         String[] datesInMonth = AppGenerator.getDatesInMonth(currentDate, false);
@@ -81,52 +84,83 @@ public class ReportSummaryActivity extends AppCompatActivity {
             calendar.setTimeInMillis(d.getTime());
 
             int dayInW = calendar.get(Calendar.DAY_OF_WEEK);
+
             int padding = getPadding(dayInW);
             for (int i = 0; i < padding; i++) {
-                head.add(new CalendarNumber(null, false));
+                head.add(new CalendarItem(null, false, false));
             }
 
             d = format.parse(datesInMonth[datesInMonth.length - 1]);
             calendar.setTimeInMillis(d.getTime());
             dayInW = calendar.get(Calendar.DAY_OF_WEEK);
-            padding = getPadding(dayInW);
 
+            padding = getPadding(dayInW);
             for (int i = 0; i < padding; i++) {
-                tail.add(new CalendarNumber(null, false));
+                tail.add(new CalendarItem(null, false, false));
             }
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        values.add(new CalendarNumber("Hai", false));
-        values.add(new CalendarNumber("Ba", false));
-        values.add(new CalendarNumber("Tư", false));
-        values.add(new CalendarNumber("Năm", false));
-        values.add(new CalendarNumber("Sáu", false));
-        values.add(new CalendarNumber("Bảy", false));
-        values.add(new CalendarNumber("CN", false));
+        calendarItemList.add(new CalendarItem("Hai", false, false));
+        calendarItemList.add(new CalendarItem("Ba", false, false));
+        calendarItemList.add(new CalendarItem("Tư", false, false));
+        calendarItemList.add(new CalendarItem("Năm", false, false));
+        calendarItemList.add(new CalendarItem("Sáu", false, false));
+        calendarItemList.add(new CalendarItem("Bảy", false, false));
+        calendarItemList.add(new CalendarItem("CN", false, false));
 
         // add pre month item
-        values.addAll(head);
+        calendarItemList.addAll(head);
 
         Map<String, TrackingEntity> mapValues = loadMonthData(currentDate);
+        boolean[] watchDay = new boolean[7];
+        watchDay[0] = habitEntity.getMon().equals("1");
+        watchDay[1] = habitEntity.getTue().equals("1");
+        watchDay[2] = habitEntity.getWed().equals("1");
+        watchDay[3] = habitEntity.getThu().equals("1");
+        watchDay[4] = habitEntity.getFri().equals("1");
+        watchDay[5] = habitEntity.getSat().equals("1");
+        watchDay[6] = habitEntity.getSun().equals("1");
 
         // add days in month
+        boolean isClickable;
+        int pos;
         for (int i = 0; i < datesInMonth.length; i++) {
-            if (mapValues.containsKey(datesInMonth[i])) {
-                values.add(new CalendarNumber(String.valueOf(i + 1), true));
+
+            pos = (head.size() + i + 1) % 7 - 1;
+
+            if (pos >= 0) {
+                isClickable = watchDay[pos];
             } else {
-                values.add(new CalendarNumber(String.valueOf(i + 1), false));
+                isClickable = watchDay[6];
+            }
+
+            if (mapValues.containsKey(datesInMonth[i])) {
+                calendarItemList.add(new CalendarItem(String.valueOf(i + 1), true, isClickable));
+            } else {
+                calendarItemList.add(new CalendarItem(String.valueOf(i + 1), false, isClickable));
             }
         }
 
         // add next month item
-        values.addAll(tail);
+        calendarItemList.addAll(tail);
 
-        calendarAdapter = new TrackingCalendarAdapter(this, values);
+        calendarAdapter = new TrackingCalendarAdapter(this, calendarItemList);
+        calendarAdapter.setClickListener(this);
         recyclerViewCalendar.setLayoutManager(new GridLayoutManager(this, 7));
         recyclerViewCalendar.setAdapter(calendarAdapter);
+    }
+
+    @Override
+    public void onItemClick(View v, int position) {
+
+    }
+
+    private boolean checkClickable(int position) {
+
+        return false;
     }
 
     public Map<String, TrackingEntity> loadMonthData(String currentDate) {
