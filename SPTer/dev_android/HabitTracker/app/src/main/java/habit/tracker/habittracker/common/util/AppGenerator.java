@@ -20,6 +20,16 @@ public class AppGenerator {
     public static final String formatDMY = "dd-MM-yyyy HH:mm:ss";
     public static final String formatDMY2 = "dd/MM/yyyy";
 
+    public static Date getDate(String date, String format) {
+        try {
+            DateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
+            return dateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static String getCurrentDate(String format) {
         Date date = new Date(System.currentTimeMillis());
         SimpleDateFormat fm = new SimpleDateFormat(format, Locale.getDefault());
@@ -118,9 +128,9 @@ public class AppGenerator {
         return format(year + "-" + arrDate[1] + "-" + arrDate[2], formatYMD2, formatYMD2);
     }
 
-    public static String getPreDate(String currentDate, boolean[] limit) {
+    public static String getPreDate(String currentDate, boolean[] availDaysInWeek) {
         String preDate = null;
-        while (preDate == null || !isValidTrackingDay(preDate, limit)) {
+        while (preDate == null || !isValidTrackingDay(preDate, availDaysInWeek)) {
             preDate = getPreDate(currentDate, formatYMD2);
             currentDate = preDate;
         }
@@ -131,6 +141,7 @@ public class AppGenerator {
         if (TextUtils.isEmpty(day)) {
             return false;
         }
+
         Calendar calendar = Calendar.getInstance();
         try {
             SimpleDateFormat fm = new SimpleDateFormat(formatYMD2, Locale.getDefault());
@@ -264,5 +275,12 @@ public class AppGenerator {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static int countDayBetween(String d1, String d2) {
+        Date date1 = getDate(d1, formatYMD2);
+        Date date2 = getDate(d2, formatYMD2);
+        long off = date2.getTime() - date1.getTime();
+        return (int) (off / MILLISECOND_IN_DAY);
     }
 }

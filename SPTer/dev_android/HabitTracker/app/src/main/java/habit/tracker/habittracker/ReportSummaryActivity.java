@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import habit.tracker.habittracker.adapter.CalendarItem;
+import habit.tracker.habittracker.adapter.TrackingCalendarItem;
 import habit.tracker.habittracker.adapter.TrackingCalendarAdapter;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.tracking.Tracking;
@@ -67,20 +68,24 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
     TextView tvTotalCount;
     @BindView(R.id.tvCurrentChain)
     TextView tvCurrentChain;
+    @BindView(R.id.tvBestTrackingChain)
+    TextView tvBestTrackingChain;
 
     private HabitEntity habitEntity;
     TrackingCalendarAdapter calendarAdapter;
-    List<CalendarItem> calendarItemList = new ArrayList<>();
+    List<TrackingCalendarItem> trackingCalendarItemList = new ArrayList<>();
 
     int timeLine = 0;
+    String firstCurTrackingDate;
     String currentTrackingDate;
+    String lastDayPreMonth;
+    String firstDayNextMonth;
     int curTrackingCount;
-    int curDayNumber;
     int totalCount = 0;
-    boolean[] trackingWeek = new boolean[7];
+    boolean[] availDaysInWeek = new boolean[7];
 
     List<TrackingEntity> curTrackingChain = new ArrayList<>();
-    List<TrackingEntity> longestTrackingChain = new ArrayList<>();
+    List<TrackingEntity> bestTrackingChain = new ArrayList<>();
 
     Database db = Database.getInstance(this);
 
@@ -101,6 +106,7 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
             String habitId = bundle.getString(MainActivity.HABIT_ID);
             String habitColor = bundle.getString(MainActivity.HABIT_COLOR);
             currentTrackingDate = AppGenerator.getCurrentDate(AppGenerator.formatYMD2);
+            firstCurTrackingDate = currentTrackingDate;
             habitEntity = Database.getHabitDb().getHabit(habitId);
             TrackingEntity trackingEntity = Database.getTrackingDb().getTracking(habitId, currentTrackingDate);
             totalList = Database.getTrackingDb().getRecordByHabit(habitId);
@@ -110,81 +116,120 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
             }
             vHeader.setBackgroundColor(ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 100));
 
-            trackingWeek[0] = habitEntity.getMon().equals("1");
-            trackingWeek[1] = habitEntity.getTue().equals("1");
-            trackingWeek[2] = habitEntity.getWed().equals("1");
-            trackingWeek[3] = habitEntity.getThu().equals("1");
-            trackingWeek[4] = habitEntity.getFri().equals("1");
-            trackingWeek[5] = habitEntity.getSat().equals("1");
-            trackingWeek[6] = habitEntity.getSun().equals("1");
+            availDaysInWeek[0] = habitEntity.getMon().equals("1");
+            availDaysInWeek[1] = habitEntity.getTue().equals("1");
+            availDaysInWeek[2] = habitEntity.getWed().equals("1");
+            availDaysInWeek[3] = habitEntity.getThu().equals("1");
+            availDaysInWeek[4] = habitEntity.getFri().equals("1");
+            availDaysInWeek[5] = habitEntity.getSat().equals("1");
+            availDaysInWeek[6] = habitEntity.getSun().equals("1");
         }
 
-        // get current tracking chain
+        // <1> get nearest/longest tracking chain
+        String curDay = currentTrackingDate;
+        String preDay;
+
+        List<List<TrackingEntity>> groupList = new ArrayList<>();
+
         if (totalList != null && totalList.size() > 0) {
             int k = totalList.size() - 1;
-            String curD = currentTrackingDate;
+            curTrackingChain.add(totalList.get(k));
+            k--;
             while (k >= 0) {
-                String d = totalList.get(k).getCurrentDate();
-                if (d.equals(currentTrackingDate)) {
+                preDay = AppGenerator.getPreDate(curDay, availDaysInWeek);
+                if (preDay.equals(totalList.get(k).getCurrentDate())) {
                     curTrackingChain.add(totalList.get(k));
-                    k--;
-                    while (k >= 0) {
-                        String preDay = AppGenerator.getPreDate(curD, trackingWeek);
-                        if (preDay.equals(totalList.get(k).getCurrentDate())) {
-                            curTrackingChain.add(totalList.get(k));
-                        } else {
-                            break;
-                        }
-                        k--;
-                    }
+                } else {
                     break;
                 }
+                curDay = preDay;
                 k--;
             }
+
+            groupList.add(new ArrayList<TrackingEntity>());
+            preDay = currentTrackingDate;
+            for (int i = totalList.size() - 1; i >= 0; i--) {
+                if (!preDay.equals(totalList.get(i).getCurrentDate())) {
+                    groupList.add(new ArrayList<TrackingEntity>());
+                }
+                groupList.get(groupList.size() - 1).add(totalList.get(i));
+                preDay = AppGenerator.getPreDate(totalList.get(i).getCurrentDate(), availDaysInWeek);
+            }
+            int l = 0;
+            for (List<TrackingEntity> chain : groupList) {
+                if (chain.size() > l) {
+                    bestTrackingChain = chain;
+                    l = chain.size();
+                }
+            }
         }
+        // </1>
 
         // <init calendar>
-        List<CalendarItem> head = new ArrayList<>();
-        List<CalendarItem> tail = new ArrayList<>();
+        calendarAdapter = new TrackingCalendarAdapter(this, trackingCalendarItemList);
+        calendarAdapter.setClickListener(this);
+        recyclerViewCalendar.setLayoutManager(new GridLayoutManager(this, 7));
+        recyclerViewCalendar.setAdapter(calendarAdapter);
+        loadCalendar(currentTrackingDate);
+        // </init calendar>
+
+        // init other view
+        updateUI();
+    }
+
+    private void loadCalendar(String currentTrackingDate) {
+        trackingCalendarItemList.clear();
+        List<TrackingCalendarItem> head = new ArrayList<>();
+        List<TrackingCalendarItem> tail = new ArrayList<>();
 
         String[] datesInMonth = AppGenerator.getDatesInMonth(currentTrackingDate, false);
         Calendar calendar = Calendar.getInstance();
+        firstDayNextMonth = AppGenerator.getNextDate(datesInMonth[datesInMonth.length - 1], AppGenerator.formatYMD2);
+        lastDayPreMonth = AppGenerator.getPreDate(datesInMonth[0], AppGenerator.formatYMD2);
 
         try {
+            String cur = datesInMonth[0];
+            String next;
+            String pre;
+
             SimpleDateFormat format = new SimpleDateFormat(AppGenerator.formatYMD2, Locale.getDefault());
             Date d = format.parse(datesInMonth[0]);
             calendar.setTimeInMillis(d.getTime());
 
             int dayInW = calendar.get(Calendar.DAY_OF_WEEK);
-
             int padding = getPadding(dayInW);
             for (int i = 0; i < padding; i++) {
-                head.add(new CalendarItem(null, null, false, false));
+                pre = AppGenerator.getPreDate(cur, AppGenerator.formatYMD2);
+                head.add(new TrackingCalendarItem(pre.split("-")[2], pre, false, true));
+                cur = pre;
             }
+            Collections.reverse(head);
 
             d = format.parse(datesInMonth[datesInMonth.length - 1]);
             calendar.setTimeInMillis(d.getTime());
             dayInW = calendar.get(Calendar.DAY_OF_WEEK);
-
-            padding = getPadding(dayInW);
+            padding = 6 - getPadding(dayInW);
+            cur = datesInMonth[datesInMonth.length - 1];
             for (int i = 0; i < padding; i++) {
-                tail.add(new CalendarItem(null, null, false, false));
+                next = AppGenerator.getNextDate(cur, AppGenerator.formatYMD2);
+                tail.add(new TrackingCalendarItem(next.split("-")[2], next, false, true));
+                cur = next;
             }
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        calendarItemList.add(new CalendarItem("Hai", null, false, false));
-        calendarItemList.add(new CalendarItem("Ba", null, false, false));
-        calendarItemList.add(new CalendarItem("Tư", null, false, false));
-        calendarItemList.add(new CalendarItem("Năm", null, false, false));
-        calendarItemList.add(new CalendarItem("Sáu", null, false, false));
-        calendarItemList.add(new CalendarItem("Bảy", null, false, false));
-        calendarItemList.add(new CalendarItem("CN", null, false, false));
+        trackingCalendarItemList.add(new TrackingCalendarItem("Hai", null, false, false, true));
+        trackingCalendarItemList.add(new TrackingCalendarItem("Ba", null, false, false, true));
+        trackingCalendarItemList.add(new TrackingCalendarItem("Tư", null, false, false, true));
+        trackingCalendarItemList.add(new TrackingCalendarItem("Năm", null, false, false, true));
+        trackingCalendarItemList.add(new TrackingCalendarItem("Sáu", null, false, false, true));
+        trackingCalendarItemList.add(new TrackingCalendarItem("Bảy", null, false, false, true));
+        trackingCalendarItemList.add(new TrackingCalendarItem("CN", null, false, false, true));
 
         // add pre month item
-        calendarItemList.addAll(head);
+        trackingCalendarItemList.addAll(head);
 
         Map<String, TrackingEntity> mapValues = loadData(currentTrackingDate);
         boolean[] watchDay = new boolean[7];
@@ -197,51 +242,39 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
         watchDay[6] = habitEntity.getSun().equals("1");
 
         // add days in month
-        boolean isClickable;
-        int pos;
+//        boolean isClickable;
+//        int pos;
         for (int i = 0; i < datesInMonth.length; i++) {
-
-            pos = (head.size() + i + 1) % 7 - 1;
-
-            if (pos >= 0) {
-                isClickable = watchDay[pos];
-            } else {
-                isClickable = watchDay[6];
-            }
+//            pos = (head.size() + i + 1) % 7 - 1;
+//            if (pos >= 0) {
+//                isClickable = watchDay[pos];
+//            } else {
+//                isClickable = watchDay[6];
+//            }
 
             if (mapValues.containsKey(datesInMonth[i])) {
-                calendarItemList.add(new CalendarItem(String.valueOf(i + 1), datesInMonth[i], true, isClickable));
+                trackingCalendarItemList.add(new TrackingCalendarItem(String.valueOf(i + 1), datesInMonth[i], true, false));
             } else {
-                calendarItemList.add(new CalendarItem(String.valueOf(i + 1), datesInMonth[i], false, isClickable));
-            }
-            if (datesInMonth[i].equals(currentTrackingDate)) {
-                curDayNumber = i + 1;
+                trackingCalendarItemList.add(new TrackingCalendarItem(String.valueOf(i + 1), datesInMonth[i], false, false));
             }
         }
 
         // add next month item
-        calendarItemList.addAll(tail);
-
-        calendarAdapter = new TrackingCalendarAdapter(this, calendarItemList);
-        calendarAdapter.setClickListener(this);
-        recyclerViewCalendar.setLayoutManager(new GridLayoutManager(this, 7));
-        recyclerViewCalendar.setAdapter(calendarAdapter);
-        // </init calendar>
-
-        // init other view
-        updateUI();
+        trackingCalendarItemList.addAll(tail);
+        calendarAdapter.notifyDataSetChanged();
     }
-
 
     @Override
     public void onItemClick(View v, int position) {
-        CalendarItem item = calendarItemList.get(position);
+        TrackingCalendarItem item = trackingCalendarItemList.get(position);
         currentTrackingDate = item.getDate();
 
-        timeLine = Integer.parseInt(item.getText()) - curDayNumber;
+        timeLine = AppGenerator.countDayBetween(item.getDate(), firstCurTrackingDate);
+        if (currentTrackingDate.compareTo(firstDayNextMonth) < 0) {
+            timeLine *= -1;
+        }
 
-        TrackingEntity trackingEntity = Database.trackingImpl.getTracking(habitEntity.getHabitId(), currentTrackingDate);
-
+        TrackingEntity trackingEntity = Database.getTrackingDb().getTracking(habitEntity.getHabitId(), currentTrackingDate);
         curTrackingCount = 0;
         if (trackingEntity != null) {
             curTrackingCount = Integer.parseInt(trackingEntity.getCount());
@@ -263,18 +296,15 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
                 break;
         }
 
-        if (timeLine > 0) {
-            timeLine = 0;
-            return;
-        }
+        if (timeLine <= 0) {
+            // get today tracking record of current habit
+            TrackingEntity todayTracking = Database.trackingImpl
+                    .getTracking(this.habitEntity.getHabitId(), this.currentTrackingDate);
 
-        // get today tracking record of current habit
-        TrackingEntity todayTracking = Database.trackingImpl
-                .getTracking(this.habitEntity.getHabitId(), this.currentTrackingDate);
-
-        curTrackingCount = 0;
-        if (todayTracking != null) {
-            curTrackingCount = Integer.parseInt(todayTracking.getCount());
+            curTrackingCount = 0;
+            if (todayTracking != null) {
+                curTrackingCount = Integer.parseInt(todayTracking.getCount());
+            }
         }
 
         updateUI();
@@ -282,6 +312,9 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
 
     @OnClick({R.id.minusCount, R.id.addCount})
     public void onTrackingCountChanged(View v) {
+        if (timeLine > 0 || !AppGenerator.isValidTrackingDay(currentTrackingDate, availDaysInWeek)) {
+            return;
+        }
 
         switch (v.getId()) {
             case R.id.minusCount:
@@ -330,6 +363,8 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
     private void updateUI() {
         if (timeLine == 0) {
             tvCurrentTime.setText("Hôm nay");
+        } else if (timeLine == 1) {
+            tvCurrentTime.setText("Ngày mai");
         } else if (timeLine == -1) {
             tvCurrentTime.setText("Hôm qua");
         } else {
@@ -337,11 +372,23 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
                     AppGenerator.format(currentTrackingDate, AppGenerator.formatYMD2, AppGenerator.formatDMY2));
         }
 
-        tvTrackCount.setText(String.valueOf(curTrackingCount));
+        if (timeLine <= 0 && AppGenerator.isValidTrackingDay(currentTrackingDate, availDaysInWeek)) {
+            tvTrackCount.setText(String.valueOf(curTrackingCount));
+        } else {
+            tvTrackCount.setText("--");
+        }
 
         tvTotalCount.setText(String.valueOf(totalCount));
 
         tvCurrentChain.setText(String.valueOf(curTrackingChain.size()));
+
+        tvBestTrackingChain.setText(String.valueOf(bestTrackingChain.size()));
+
+        // reload calendar
+        if ((currentTrackingDate.compareTo(lastDayPreMonth) <= 0
+                || currentTrackingDate.compareTo(firstDayNextMonth) >= 0) && currentTrackingDate.compareTo(firstCurTrackingDate) <= 0) {
+            loadCalendar(currentTrackingDate);
+        }
     }
 
     public Map<String, TrackingEntity> loadData(String currentDate) {
@@ -352,20 +399,20 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
         Map<String, TrackingEntity> mapDayInMonth = new HashMap<>(31);
 
         HabitTracking habitTracking = Database.trackingImpl
-                .getHabitTrackingBetween(this.habitEntity.getHabitId(), startReportDate, endReportDate);
+                .getHabitTrackingBetween(habitEntity.getHabitId(), startReportDate, endReportDate);
 
-        for (TrackingEntity entity : habitTracking.getTrackingEntityList()) {
-            mapDayInMonth.put(entity.getCurrentDate(), entity);
-            totalCount += entity.getIntCount();
-        }
+        if (habitTracking != null) {
 
-        if (habitTracking.getHabitEntity() != null) {
+            totalCount = habitTracking.getTrackingEntityList().size();
+
+            for (TrackingEntity entity : habitTracking.getTrackingEntityList()) {
+                mapDayInMonth.put(entity.getCurrentDate(), entity);
+//            totalCount += entity.getIntCount();
+            }
+
             habitEntity = habitTracking.getHabitEntity();
         }
 
-        if (mapDayInMonth.size() == 0) {
-            return null;
-        }
         return mapDayInMonth;
     }
 

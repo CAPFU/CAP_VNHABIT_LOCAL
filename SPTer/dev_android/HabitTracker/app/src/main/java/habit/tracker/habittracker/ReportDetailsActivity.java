@@ -59,7 +59,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
     View imgAddCount;
 
     @BindView(R.id.tvTrackCount)
-    TextView tvCount;
+    TextView tvTrackCount;
     @BindView(R.id.tvGoal)
     TextView tvGoal;
     @BindView(R.id.tvSumCount)
@@ -100,7 +100,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
     private String currentTrackingDate;
     private String startReportDate;
     private String endReportDate;
-    private boolean[] trackingWeek = new boolean[7];
+    private boolean[] availDaysInWeek = new boolean[7];
 
     private int timeLine = 0;
     private int mode = 0;
@@ -146,13 +146,13 @@ public class ReportDetailsActivity extends AppCompatActivity {
                     tvHabitName.setText(habitEntity.getHabitName());
                 }
 
-                trackingWeek[0] = habitEntity.getMon().equals("1");
-                trackingWeek[1] = habitEntity.getTue().equals("1");
-                trackingWeek[2] = habitEntity.getWed().equals("1");
-                trackingWeek[3] = habitEntity.getThu().equals("1");
-                trackingWeek[4] = habitEntity.getFri().equals("1");
-                trackingWeek[5] = habitEntity.getSat().equals("1");
-                trackingWeek[6] = habitEntity.getSun().equals("1");
+                availDaysInWeek[0] = habitEntity.getMon().equals("1");
+                availDaysInWeek[1] = habitEntity.getTue().equals("1");
+                availDaysInWeek[2] = habitEntity.getWed().equals("1");
+                availDaysInWeek[3] = habitEntity.getThu().equals("1");
+                availDaysInWeek[4] = habitEntity.getFri().equals("1");
+                availDaysInWeek[5] = habitEntity.getSat().equals("1");
+                availDaysInWeek[6] = habitEntity.getSun().equals("1");
 
                 // get color theme
                 int startColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 50);
@@ -263,7 +263,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
     @OnClick({R.id.minusCount, R.id.addCount})
     public void onTrackingCountChanged(View v) {
-        if (!AppGenerator.isValidTrackingDay(currentTrackingDate, trackingWeek)) {
+        if (!AppGenerator.isValidTrackingDay(currentTrackingDate, availDaysInWeek)) {
             return;
         }
 
@@ -497,10 +497,10 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
         tvGoal.setText(habitEntity.getMonitorNumber() + " " + habitEntity.getMonitorUnit());
 
-        if (AppGenerator.isValidTrackingDay(currentTrackingDate, trackingWeek)) {
-            tvCount.setText(String.valueOf(curTrackingCount) + " " + habitEntity.getMonitorUnit());
+        if (AppGenerator.isValidTrackingDay(currentTrackingDate, availDaysInWeek)) {
+            tvTrackCount.setText(String.valueOf(curTrackingCount) + " " + habitEntity.getMonitorUnit());
         } else {
-            tvCount.setText("--");
+            tvTrackCount.setText("--");
         }
 
         tvSumCount.setText(String.valueOf(curSumCount) + " " + habitEntity.getMonitorUnit());

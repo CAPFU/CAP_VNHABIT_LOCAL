@@ -92,7 +92,7 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
         List<TrackingEntity> list = new ArrayList<>();
         final String selectionArgs[] = {String.valueOf(habitId)};
         final String selection = HABIT_ID + " = ?";
-        cursor = super.query(TRACKING_TABLE, TRACKING_COLUMNS, selection, selectionArgs, TRACKING_ID);
+        cursor = super.query(TRACKING_TABLE, TRACKING_COLUMNS, selection, selectionArgs, CURRENT_DATE);
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
