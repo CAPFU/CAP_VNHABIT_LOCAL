@@ -1,5 +1,7 @@
 package habit.tracker.habittracker.common.util;
 
+import android.text.TextUtils;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -86,7 +88,7 @@ public class AppGenerator {
         if (month < 1 || month > 12) {
             return currentDate;
         }
-        return formatDate(arrDate[0] + "-" + month + "-" + arrDate[2]);
+        return format(arrDate[0] + "-" + month + "-" + arrDate[2], formatYMD2, formatYMD2);
     }
 
     public static String getNextMonth(String currentDate) {
@@ -95,7 +97,7 @@ public class AppGenerator {
         if (month < 1 || month > 12) {
             return currentDate;
         }
-        return formatDate(arrDate[0] + "-" + month + "-" + arrDate[2]);
+        return format(arrDate[0] + "-" + month + "-" + arrDate[2], formatYMD2, formatYMD2);
     }
 
     public static String getPreYear(String currentDate) {
@@ -104,7 +106,7 @@ public class AppGenerator {
         if (year < 1970) {
             return currentDate;
         }
-        return formatDate(year + "-" + arrDate[1] + "-" + arrDate[2]);
+        return format(year + "-" + arrDate[1] + "-" + arrDate[2], formatYMD2, formatYMD2);
     }
 
     public static String getNextYear(String currentDate) {
@@ -113,17 +115,50 @@ public class AppGenerator {
         if (year > 2020) {
             return currentDate;
         }
-        return formatDate(year + "-" + arrDate[1] + "-" + arrDate[2]);
+        return format(year + "-" + arrDate[1] + "-" + arrDate[2], formatYMD2, formatYMD2);
     }
 
-    private static String formatDate(String currentDate) {
+    public static String getPreDate(String currentDate, boolean[] limit) {
+        String preDate = null;
+        while (preDate == null || !isValidTrackingDay(preDate, limit)) {
+            preDate = getPreDate(currentDate, formatYMD2);
+            currentDate = preDate;
+        }
+        return preDate;
+    }
+
+    public static boolean isValidTrackingDay(String day, boolean[] week) {
+        if (TextUtils.isEmpty(day)) {
+            return false;
+        }
+        Calendar calendar = Calendar.getInstance();
         try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            return dateFormat.format(dateFormat.parse(currentDate));
+            SimpleDateFormat fm = new SimpleDateFormat(formatYMD2, Locale.getDefault());
+            Date d = fm.parse(day);
+            calendar.setTime(d);
         } catch (ParseException e) {
             e.printStackTrace();
-            return null;
+            return false;
         }
+
+        int diw = calendar.get(Calendar.DAY_OF_WEEK);
+        switch (diw) {
+            case Calendar.MONDAY:
+                return week[0];
+            case Calendar.TUESDAY:
+                return week[1];
+            case Calendar.WEDNESDAY:
+                return week[2];
+            case Calendar.THURSDAY:
+                return week[3];
+            case Calendar.FRIDAY:
+                return week[4];
+            case Calendar.SATURDAY:
+                return week[5];
+            case Calendar.SUNDAY:
+                return week[6];
+        }
+        return false;
     }
 
     /**
