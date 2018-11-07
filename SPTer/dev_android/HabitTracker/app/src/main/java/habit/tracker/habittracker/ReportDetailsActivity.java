@@ -319,6 +319,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
     public void selectCalendar(View v) {
         Intent intent = new Intent(this, ReportSummaryActivity.class);
         intent.putExtra(MainActivity.HABIT_ID, this.habitEntity.getHabitId());
+        intent.putExtra(MainActivity.HABIT_COLOR, this.habitEntity.getHabitColor());
         startActivity(intent);
     }
 

@@ -70,6 +70,42 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     View btnReport;
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == CREATE_NEW_HABIT || requestCode == UPDATE_HABIT) {
+            if (resultCode == RESULT_OK) {
+                loadData(true);
+            }
+        } else if (requestCode == USE_FILTER) {
+            if (resultCode == RESULT_OK) {
+                Bundle filter = data.getExtras();
+                String type = filter.getString("type");
+                String target = filter.getString("target");
+                String group = filter.getString("group");
+
+                List<TrackingItem> filteredList = new ArrayList<>();
+                for (int i = 0; i < trackingItemList.size(); i++) {
+                    if ((target.equals("-1") || target.equals(trackingItemList.get(i).getTarget()))
+                            && (type.equals("-1") || type.equals(String.valueOf(trackingItemList.get(i).getHabitType())))
+                            && (group.equals("-1") || group.equals(trackingItemList.get(i).getGroup()))
+                            ) {
+                        filteredList.add(trackingItemList.get(i));
+                    }
+                }
+                trackingAdapter.setData(filteredList);
+                trackingAdapter.notifyDataSetChanged();
+
+            }
+        } else if (requestCode == REPORT) {
+            if (currentDate.equals(firstCurrentDate)) {
+                loadData(true);
+            } else {
+                loadData(false);
+                updateData(trackingItemList, trackingAdapter, currentDate);
+            }
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -87,10 +123,10 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         trackingAdapter.setClickListener(MainActivity.this);
         recyclerView.setAdapter(trackingAdapter);
 
-        initData(true);
+        loadData(true);
     }
 
-    private void initData(final boolean display) {
+    private void loadData(final boolean display) {
         trackingItemList.clear();
 
         String userId = MySharedPreference.getUserId(this);
@@ -204,42 +240,6 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             intent.putExtra(HABIT_ID, trackingItemList.get(position).getHabitId());
             intent.putExtra(HABIT_COLOR, trackingItemList.get(position).getColor());
             startActivityForResult(intent, REPORT);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == CREATE_NEW_HABIT || requestCode == UPDATE_HABIT) {
-            if (resultCode == RESULT_OK) {
-                initData(true);
-            }
-        } else if (requestCode == USE_FILTER) {
-            if (resultCode == RESULT_OK) {
-                Bundle filter = data.getExtras();
-                String type = filter.getString("type");
-                String target = filter.getString("target");
-                String group = filter.getString("group");
-
-                List<TrackingItem> filteredList = new ArrayList<>();
-                for (int i = 0; i < trackingItemList.size(); i++) {
-                    if ((target.equals("-1") || target.equals(trackingItemList.get(i).getTarget()))
-                            && (type.equals("-1") || type.equals(String.valueOf(trackingItemList.get(i).getHabitType())))
-                            && (group.equals("-1") || group.equals(trackingItemList.get(i).getGroup()))
-                            ) {
-                        filteredList.add(trackingItemList.get(i));
-                    }
-                }
-                trackingAdapter.setData(filteredList);
-                trackingAdapter.notifyDataSetChanged();
-
-            }
-        } else if (requestCode == REPORT) {
-            if (currentDate.equals(firstCurrentDate)) {
-                initData(true);
-            } else {
-                initData(false);
-                updateData(trackingItemList, trackingAdapter, currentDate);
-            }
         }
     }
 
