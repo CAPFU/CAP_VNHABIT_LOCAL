@@ -65,6 +65,8 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
 
     @BindView(R.id.tvTotalCount)
     TextView tvTotalCount;
+    @BindView(R.id.tvCurrentChain)
+    TextView tvCurrentChain;
 
     private HabitEntity habitEntity;
     TrackingCalendarAdapter calendarAdapter;
@@ -75,6 +77,8 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
     int curTrackingCount;
     int curDayNumber;
     int totalCount = 0;
+    boolean[] trackingWeek = new boolean[7];
+
     List<TrackingEntity> curTrackingChain = new ArrayList<>();
     List<TrackingEntity> longestTrackingChain = new ArrayList<>();
 
@@ -105,13 +109,36 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
                 curTrackingCount = Integer.parseInt(trackingEntity.getCount());
             }
             vHeader.setBackgroundColor(ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 100));
+
+            trackingWeek[0] = habitEntity.getMon().equals("1");
+            trackingWeek[1] = habitEntity.getTue().equals("1");
+            trackingWeek[2] = habitEntity.getWed().equals("1");
+            trackingWeek[3] = habitEntity.getThu().equals("1");
+            trackingWeek[4] = habitEntity.getFri().equals("1");
+            trackingWeek[5] = habitEntity.getSat().equals("1");
+            trackingWeek[6] = habitEntity.getSun().equals("1");
         }
 
         // get current tracking chain
         if (totalList != null && totalList.size() > 0) {
             int k = totalList.size() - 1;
+            String curD = currentTrackingDate;
             while (k >= 0) {
-
+                String d = totalList.get(k).getCurrentDate();
+                if (d.equals(currentTrackingDate)) {
+                    curTrackingChain.add(totalList.get(k));
+                    k--;
+                    while (k >= 0) {
+                        String preDay = AppGenerator.getPreDate(curD, trackingWeek);
+                        if (preDay.equals(totalList.get(k).getCurrentDate())) {
+                            curTrackingChain.add(totalList.get(k));
+                        } else {
+                            break;
+                        }
+                        k--;
+                    }
+                    break;
+                }
                 k--;
             }
         }
@@ -313,6 +340,8 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
         tvTrackCount.setText(String.valueOf(curTrackingCount));
 
         tvTotalCount.setText(String.valueOf(totalCount));
+
+        tvCurrentChain.setText(String.valueOf(curTrackingChain.size()));
     }
 
     public Map<String, TrackingEntity> loadData(String currentDate) {
