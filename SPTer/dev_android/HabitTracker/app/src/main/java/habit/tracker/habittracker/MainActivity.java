@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     public static final int USE_FILTER = 2;
     private static final int REPORT = 3;
 
-    public static final String HABIT_ID = "HABIT_ID";
+    public static final String HABIT_ID = "habit_id";
     public static final String HABIT_COLOR = "habit_color";
 
     List<TrackingItem> trackingItemList = new ArrayList<>();
@@ -87,12 +87,11 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         trackingAdapter.setClickListener(MainActivity.this);
         recyclerView.setAdapter(trackingAdapter);
 
-        initData();
+        initData(true);
     }
 
-    private void initData() {
+    private void initData(final boolean display) {
         trackingItemList.clear();
-
 
         String userId = MySharedPreference.getUserId(this);
 
@@ -140,11 +139,14 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                             item.setTarget(habit.getHabitTarget());
                             item.setGroup(habit.getGroupId());
 
-                            trackingItemList.add(item);
+                            if (display) {
+                                trackingItemList.add(item);
+                            }
                         }
                     }
-                    trackingAdapter.notifyDataSetChanged();
-
+                    if (display) {
+                        trackingAdapter.notifyDataSetChanged();
+                    }
 
                     for (Habit habit : habitList) {
                         Database.sHabitDaoImpl.saveUpdateHabit(Database.sHabitDaoImpl.convert(habit));
@@ -209,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CREATE_NEW_HABIT || requestCode == UPDATE_HABIT) {
             if (resultCode == RESULT_OK) {
-                initData();
+                initData(true);
             }
         } else if (requestCode == USE_FILTER) {
             if (resultCode == RESULT_OK) {
@@ -232,7 +234,12 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
             }
         } else if (requestCode == REPORT) {
-            initData();
+            if (currentDate.equals(firstCurrentDate)) {
+                initData(true);
+            } else {
+                initData(false);
+                updateData(trackingItemList, trackingAdapter, currentDate);
+            }
         }
     }
 
@@ -242,11 +249,19 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         int month = Integer.parseInt(arr[1]);
         int date = Integer.parseInt(arr[2]);
         Schedule schedule = new Schedule(year, month, date);
-        List<HabitEntity> habitEntities = Database.sHabitDaoImpl.fetchTodayHabit(schedule, currentDate);
+
+        Database db = Database.getInstance(this);
+        db.open();
+        List<HabitEntity> habitEntities = Database
+                .sHabitDaoImpl.fetchTodayHabit(schedule, currentDate);
+
         boolean isDataSetChanged = false;
         for (HabitEntity habit : habitEntities) {
+
             // get tracking records on current date
-            TrackingEntity record = Database.sTrackingImpl.getTracking(habit.getHabitId(), currentDate);
+            TrackingEntity record = Database.sTrackingImpl
+                    .getTracking(habit.getHabitId(), currentDate);
+
             if (record == null) {
                 record = getTodayTracking(habit.getHabitId(), currentDate, 0);
                 Database.sTrackingImpl.saveTracking(record);
@@ -269,6 +284,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                 isDataSetChanged = true;
             }
         }
+        db.close();
 
         trackingAdapter.setEditable(currentDate.compareTo(firstCurrentDate) < 1);
 //        if (isDataSetChanged) {
@@ -295,8 +311,6 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     @OnClick(R.id.imgNext)
     public void next(ImageView img) {
         String nextDate = AppGenerator.getNextDate(currentDate, AppGenerator.formatYMD2);
-        Database db = new Database(this);
-        db.open();
         if (nextDate != null) {
             dayStack++;
             updateTitle(nextDate);
@@ -304,14 +318,11 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             trackingItemList.clear();
             updateData(trackingItemList, trackingAdapter, currentDate);
         }
-        db.close();
     }
 
     @OnClick(R.id.imgBack)
     public void back(ImageView img) {
         String preDate = AppGenerator.getPreDate(currentDate, AppGenerator.formatYMD2);
-        Database db = new Database(this);
-        db.open();
         if (preDate != null) {
             dayStack--;
             updateTitle(preDate);
@@ -319,18 +330,14 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             trackingItemList.clear();
             updateData(trackingItemList, trackingAdapter, currentDate);
         }
-        db.close();
     }
 
     public void backToCurrent(View v) {
-        Database db = new Database(this);
-        db.open();
         dayStack = 0;
         updateTitle(firstCurrentDate);
         currentDate = firstCurrentDate;
         trackingItemList.clear();
         updateData(trackingItemList, trackingAdapter, currentDate);
-        db.close();
     }
 
     @OnClick(R.id.report)

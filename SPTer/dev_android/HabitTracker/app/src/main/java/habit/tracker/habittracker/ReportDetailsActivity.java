@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -39,6 +40,8 @@ import retrofit2.Response;
 
 public class ReportDetailsActivity extends AppCompatActivity {
 
+    private static final int UPDATE = 0;
+
     @BindView(R.id.header)
     View vHeader;
 
@@ -46,9 +49,9 @@ public class ReportDetailsActivity extends AppCompatActivity {
     TextView tvHabitName;
 
     @BindView(R.id.pre)
-    View pre;
+    View btnPreDate;
     @BindView(R.id.next)
-    View next;
+    View btnNextDate;
 
     @BindView(R.id.minusCount)
     View imgMinusCount;
@@ -169,6 +172,16 @@ public class ReportDetailsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == UPDATE) {
+            ArrayList<BarEntry> values = loadData(currentDate);
+            chartHelper.setData(values, mode);
+            updateUI();
+        }
+    }
+
     @OnClick({R.id.tabWeek, R.id.tabMonth, R.id.tabYear})
     public void loadReportByMode(View v) {
         unSelect(selectedTabHL);
@@ -209,12 +222,18 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 break;
         }
 
+        if (timeLine > 0) {
+            timeLine = 0;
+            return;
+        }
+
         // get today tracking record of current habit
         Database db = Database.getInstance(this);
         db.open();
         TrackingEntity todayTracking = Database.sTrackingImpl
                 .getTracking(this.habitEntity.getHabitId(), this.currentDate);
         db.close();
+
         curDayCount = 0;
         if (todayTracking != null) {
             curDayCount = Integer.parseInt(todayTracking.getCount());
@@ -293,7 +312,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
     public void selectEditHabit(View v) {
         Intent intent = new Intent(this, HabitActivity.class);
         intent.putExtra(MainActivity.HABIT_ID, this.habitEntity.getHabitId());
-        startActivity(intent);
+        startActivityForResult(intent, UPDATE);
     }
 
     @OnClick(R.id.tabCalendar)
@@ -334,6 +353,10 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 .getHabitTrackingBetween(this.habitEntity.getHabitId(), startReportDate, endReportDate);
         db.close();
 
+        if (habitTracking.getHabitEntity() != null) {
+            this.habitEntity = habitTracking.getHabitEntity();
+        }
+
         return prepareData(habitTracking, daysInWeek);
     }
 
@@ -348,6 +371,10 @@ public class ReportDetailsActivity extends AppCompatActivity {
         HabitTracking habitTracking = Database.sTrackingImpl
                 .getHabitTrackingBetween(this.habitEntity.getHabitId(), startReportDate, endReportDate);
         db.close();
+
+        if (habitTracking.getHabitEntity() != null) {
+            this.habitEntity = habitTracking.getHabitEntity();
+        }
 
         return prepareData(habitTracking, daysInMonth);
     }
@@ -386,10 +413,15 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 }
                 // data per day in month
                 for (TrackingEntity track : habitTracking.getTrackingEntityList()) {
-                    if (track.getCount().compareTo(hb.getMonitorNumber()) >= 0) {
+
+                    if (Integer.parseInt(track.getCount()) >= Integer.parseInt(hb.getMonitorNumber())) {
                         ++completedPerMonth[m];
                     }
                     curSumCount += Integer.parseInt(track.getCount());
+                }
+
+                if (habitTracking.getHabitEntity() != null) {
+                    this.habitEntity = habitTracking.getHabitEntity();
                 }
             }
         }
@@ -416,7 +448,8 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
             for (TrackingEntity track : trackList) {
 
-                if (track.getCount().compareTo(habit.getMonitorNumber()) >= 0) {
+                if (Integer.parseInt(track.getCount()) >= Integer.parseInt(habit.getMonitorNumber())) {
+
                     mapDayInMonth.put(track.getCurrentDate(),
                             mapDayInMonth.get(track.getCurrentDate()) + 1);
                     curSumCount += Integer.parseInt(track.getCount());
@@ -440,6 +473,14 @@ public class ReportDetailsActivity extends AppCompatActivity {
             tvCurrentTime.setText(
                     AppGenerator.format(currentDate, AppGenerator.formatYMD2, AppGenerator.formatDMY2));
         }
+
+        if (timeLine == 0) {
+            btnNextDate.setVisibility(View.INVISIBLE);
+        } else {
+            btnNextDate.setVisibility(View.VISIBLE);
+        }
+
+        tvGoal.setText(habitEntity.getMonitorNumber() + " " + habitEntity.getMonitorUnit());
 
         tvCount.setText(String.valueOf(curDayCount) + " " + habitEntity.getMonitorUnit());
 
@@ -471,5 +512,10 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
     public void unSelect(View v) {
         v.setVisibility(View.INVISIBLE);
+    }
+
+    public void showEmpty(View view) {
+        Intent intent = new Intent(this, EmptyActivity.class);
+        startActivity(intent);
     }
 }
