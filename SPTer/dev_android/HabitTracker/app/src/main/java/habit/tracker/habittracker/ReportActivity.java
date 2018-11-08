@@ -455,10 +455,12 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         TrackingEntity tr;
 
         Map<String, Integer> habitNumber = new HashMap<>();
-
+        String start;
+        String end;
         for (int m = 0; m < 12; m++) {
-            monthData = Database.habitDaoImpl.getHabitsBetween(
-                    year + "-" + (m + 1) + "-" + 1, year + "-" + (m + 1) + "-" + AppGenerator.getMaxDayInMonth(year, m));
+            start = AppGenerator.getDate(year, m + 1, 1, AppGenerator.YMD_SHORT);
+            end = AppGenerator.getDate(year, m + 1, AppGenerator.getMaxDayInMonth(year, m), AppGenerator.YMD_SHORT);
+            monthData = Database.getHabitDb().getHabitsBetween(start, end);
 
             for (DateTracking item : monthData) {
                 hb = item.getHabitEntity();
@@ -468,8 +470,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
 
                         && tr.getCount() != null
 
-                        && tr.getCount().compareTo(hb.getMonitorNumber()) >= 0 )
-                {
+                        && tr.getCount().compareTo(hb.getMonitorNumber()) >= 0) {
                     completeRecord += 1;
                     ++completePerMonth[m];
                     habitNumber.put(hb.getHabitId(), 0);
