@@ -131,8 +131,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
         if (data != null) {
 
             String habitId = data.getString(MainActivity.HABIT_ID);
-            String habitColor = data.getString(MainActivity.HABIT_COLOR);
-            vHeader.setBackgroundColor(ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 100));
 
             if (!TextUtils.isEmpty(habitId)) {
 
@@ -155,31 +153,40 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 availDaysInWeek[5] = habitEntity.getSat().equals("1");
                 availDaysInWeek[6] = habitEntity.getSun().equals("1");
 
-                // get color theme
-                int startColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 50);
-                int endColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 225);
-
-                // tab select high line
-                GradientDrawable gd = new GradientDrawable(
-                        GradientDrawable.Orientation.LEFT_RIGHT,
-                        new int[] {startColor, endColor});
-                gd.setCornerRadius(0f);
-                tabWeekHL.setBackground(gd);
-                tabMonthHL.setBackground(gd);
-                tabYearHL.setBackground(gd);
+                // init time tab
                 select(tabWeekHL);
                 selectedTabHL = tabWeekHL;
+
+                initThemeUI(habitEntity);
 
                 // innit chart
                 ArrayList<BarEntry> values = loadData(currentDate);
                 chartHelper = new ChartHelper(this, chart);
                 chartHelper.initChart();
-                chartHelper.setChartColor(startColor, endColor);
                 chartHelper.setData(values, mode);
 
                 updateUI();
             }
         }
+    }
+
+    private void initThemeUI(HabitEntity habitEntity) {
+        String habitColor = habitEntity.getHabitColor();
+
+        // get color theme
+        int startColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 50);
+        int endColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 225);
+
+        // tab select high line
+        GradientDrawable gd = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[] {startColor, endColor});
+        gd.setCornerRadius(0f);
+        tabWeekHL.setBackground(gd);
+        tabMonthHL.setBackground(gd);
+        tabYearHL.setBackground(gd);
+
+        chartHelper.setChartColor(startColor, endColor);
+
+        vHeader.setBackgroundColor(ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 100));
     }
 
     @Override
@@ -193,6 +200,11 @@ public class ReportDetailsActivity extends AppCompatActivity {
             }
 
             if (!delete) {
+                Database db = Database.getInstance(this);
+                db.open();
+                habitEntity = Database.getHabitDb().getHabit(habitEntity.getHabitId());
+                db.close();
+
                 ArrayList<BarEntry> values = loadData(currentDate);
                 chartHelper.setData(values, mode);
                 updateUI();

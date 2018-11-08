@@ -166,7 +166,7 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
         // </1>
 
         // <init calendar>
-        calendarAdapter = new TrackingCalendarAdapter(this, trackingCalendarItemList);
+        calendarAdapter = new TrackingCalendarAdapter(this, trackingCalendarItemList, habitEntity.getHabitColor());
         calendarAdapter.setClickListener(this);
         recyclerViewCalendar.setLayoutManager(new GridLayoutManager(this, 7));
         recyclerViewCalendar.setAdapter(calendarAdapter);
