@@ -203,6 +203,8 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 habitEntity = Database.getHabitDb().getHabit(habitEntity.getHabitId());
                 db.close();
 
+                initDefaultUI(habitEntity);
+
                 ArrayList<BarEntry> values = loadData(currentDate);
                 chartHelper.setData(values, mode);
                 updateUI();
