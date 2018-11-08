@@ -118,51 +118,20 @@ public class ReportDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_report_details);
         ButterKnife.bind(this);
 
-        mode = ChartHelper.MODE_WEEK;
-        currentDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
-        firstCurrentDate = currentDate;
-
-        curTrackingCount = 0;
-
-        tvCurrentTime.setText("Hôm nay");
-        selectedTab = tabWeek;
-
         Bundle data = getIntent().getExtras();
         if (data != null) {
-
             String habitId = data.getString(MainActivity.HABIT_ID);
 
             if (!TextUtils.isEmpty(habitId)) {
-
                 Database db = Database.getInstance(this);
                 db.open();
                 habitEntity = Database.getHabitDb().getHabit(habitId);
-                TrackingEntity trackingEntity = Database.getTrackingDb().getTracking(habitId, currentDate);
                 db.close();
 
-                if (trackingEntity != null) {
-                    curTrackingCount = Integer.parseInt(trackingEntity.getCount());
-                    tvHabitName.setText(habitEntity.getHabitName());
-                }
+                initDefaultUI(habitEntity);
 
-                availDaysInWeek[0] = habitEntity.getMon().equals("1");
-                availDaysInWeek[1] = habitEntity.getTue().equals("1");
-                availDaysInWeek[2] = habitEntity.getWed().equals("1");
-                availDaysInWeek[3] = habitEntity.getThu().equals("1");
-                availDaysInWeek[4] = habitEntity.getFri().equals("1");
-                availDaysInWeek[5] = habitEntity.getSat().equals("1");
-                availDaysInWeek[6] = habitEntity.getSun().equals("1");
-
-                // init time tab
-                select(tabWeekHL);
-                selectedTabHL = tabWeekHL;
-
-                initThemeUI(habitEntity);
-
-                // innit chart
+                // load chart data (default is week)
                 ArrayList<BarEntry> values = loadData(currentDate);
-                chartHelper = new ChartHelper(this, chart);
-                chartHelper.initChart();
                 chartHelper.setData(values, mode);
 
                 updateUI();
@@ -170,20 +139,49 @@ public class ReportDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void initThemeUI(HabitEntity habitEntity) {
-        String habitColor = habitEntity.getHabitColor();
+    private void initDefaultUI(HabitEntity habitEntity) {
+        mode = ChartHelper.MODE_WEEK;
+        currentDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
+        firstCurrentDate = currentDate;
+        tvHabitName.setText(habitEntity.getHabitName());
 
-        // get color theme
+//        tvCurrentTime.setText("Hôm nay");
+
+        Database db = Database.getInstance(this);
+        db.open();
+        habitEntity = Database.getHabitDb().getHabit(habitEntity.getHabitId());
+        TrackingEntity currentTrackingList = Database.getTrackingDb().getTracking(habitEntity.getHabitId(), currentDate);
+        db.close();
+
+        if (currentTrackingList != null) {
+            curTrackingCount = Integer.parseInt(currentTrackingList.getCount());
+        }
+
+        availDaysInWeek[0] = habitEntity.getMon().equals("1");
+        availDaysInWeek[1] = habitEntity.getTue().equals("1");
+        availDaysInWeek[2] = habitEntity.getWed().equals("1");
+        availDaysInWeek[3] = habitEntity.getThu().equals("1");
+        availDaysInWeek[4] = habitEntity.getFri().equals("1");
+        availDaysInWeek[5] = habitEntity.getSat().equals("1");
+        availDaysInWeek[6] = habitEntity.getSun().equals("1");
+
+        String habitColor = habitEntity.getHabitColor();
         int startColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 50);
         int endColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 225);
 
-        // tab select high line
+        // init time tab
+        selectedTab = tabWeek;
         GradientDrawable gd = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[] {startColor, endColor});
         gd.setCornerRadius(0f);
         tabWeekHL.setBackground(gd);
         tabMonthHL.setBackground(gd);
         tabYearHL.setBackground(gd);
+        select(tabWeekHL);
+        selectedTabHL = tabWeekHL;
 
+        // init chart
+        chartHelper = new ChartHelper(this, chart);
+        chartHelper.initChart();
         chartHelper.setChartColor(startColor, endColor);
 
         vHeader.setBackgroundColor(ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 100));
