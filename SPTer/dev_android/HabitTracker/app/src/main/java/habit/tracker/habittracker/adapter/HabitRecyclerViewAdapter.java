@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,8 +121,8 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         }
 
         String color = item.getColor();
-        if (color != null && color.equals(context.getString(R.color.color0))) {
-            color = context.getString(R.color.gray1);
+        if (TextUtils.isEmpty(color) || color.equals(context.getString(R.color.color0))) {
+            color = context.getString(R.color.gray2);
         }
         holder.layout.setBackground(getBackground(color));
         holder.background.setBackground(getBackground(color));
@@ -138,8 +139,8 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         holder.tvHabitType.setText(item.getHabitTypeName());
 
         String color = item.getColor();
-        if (color != null && color.equals(context.getString(R.color.color0))) {
-            color = context.getString(R.color.gray1);
+        if (TextUtils.isEmpty(color) || color.equals(context.getString(R.color.color0))) {
+            color = context.getString(R.color.gray2);
         }
         holder.layout.setBackground(getBackground(color));
         holder.background.setBackground(getBackground(color));

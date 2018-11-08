@@ -1,5 +1,6 @@
 package habit.tracker.habittracker;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -139,13 +140,12 @@ public class ReportDetailsActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("ResourceType")
     private void initDefaultUI(HabitEntity habitEntity) {
         mode = ChartHelper.MODE_WEEK;
         currentDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
         firstCurrentDate = currentDate;
         tvHabitName.setText(habitEntity.getHabitName());
-
-//        tvCurrentTime.setText("Hôm nay");
 
         Database db = Database.getInstance(this);
         db.open();
@@ -166,6 +166,9 @@ public class ReportDetailsActivity extends AppCompatActivity {
         availDaysInWeek[6] = habitEntity.getSun().equals("1");
 
         String habitColor = habitEntity.getHabitColor();
+        if (TextUtils.isEmpty(habitColor) || habitColor.equals(getString(R.color.color0))) {
+            habitColor = getString(R.color.gray2);
+        }
         int startColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 50);
         int endColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 225);
 
@@ -283,7 +286,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.minusCount, R.id.addCount})
-    public void onTrackingCountChanged(View v) {
+    public void onCountChanged(View v) {
         if (!AppGenerator.isValidTrackingDay(currentDate, availDaysInWeek)) {
             return;
         }
@@ -315,10 +318,9 @@ public class ReportDetailsActivity extends AppCompatActivity {
         Database.trackingImpl.saveTracking(record);
         db.close();
 
+        ArrayList<BarEntry> values = loadData(currentDate);
         if ((!above && curTrackingCount == goalNumber)
                 || (above && goalNumber - curTrackingCount == 1)) {
-
-            ArrayList<BarEntry> values = loadData(currentDate);
             chartHelper.setData(values, mode);
         }
 
