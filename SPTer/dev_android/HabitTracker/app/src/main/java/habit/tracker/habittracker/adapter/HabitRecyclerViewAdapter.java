@@ -75,10 +75,10 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             return new ViewHolderAdd(view);
         } else if (TYPE_COUNT == viewType) {
             View view = mInflater.inflate(R.layout.item_habit_count, parent, false);
-            return new ViewHolderCount(view);
+            return new CountTypeViewHolder(view);
         } else if (TYPE_CHECK == viewType) {
             View view = mInflater.inflate(R.layout.item_habit_check, parent, false);
-            return new ViewHolderCheck(view);
+            return new CheckTypeViewHolder(view);
         } else {
             throw new RuntimeException("unknown view type");
         }
@@ -90,10 +90,10 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             case TYPE_ADD:
                 break;
             case TYPE_COUNT:
-                initLayoutCount((ViewHolderCount) holder, mData.get(position));
+                initLayoutCount((CountTypeViewHolder) holder, mData.get(position));
                 break;
             case TYPE_CHECK:
-                initLayoutCheck((ViewHolderCheck) holder, mData.get(position));
+                initLayoutCheck((CheckTypeViewHolder) holder, mData.get(position));
                 break;
         }
     }
@@ -107,7 +107,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     @SuppressLint("ResourceType")
-    private void initLayoutCount(ViewHolderCount holder, TrackingItem item) {
+    private void initLayoutCount(CountTypeViewHolder holder, TrackingItem item) {
         holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
         holder.tvHabitType.setText(item.getHabitTypeName());
@@ -133,7 +133,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     @SuppressLint("ResourceType")
-    private void initLayoutCheck(ViewHolderCheck holder, TrackingItem item) {
+    private void initLayoutCheck(CheckTypeViewHolder holder, TrackingItem item) {
         holder.tvCategory.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
         holder.tvHabitType.setText(item.getHabitTypeName());
@@ -157,7 +157,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    public class ViewHolderCount extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class CountTypeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         RelativeLayout layout;
         View background;
         TextView tvCategory;
@@ -168,7 +168,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         View btnPlus;
         View btnMinus;
 
-        ViewHolderCount(View itemView) {
+        CountTypeViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             layout = itemView.findViewById(R.id.rl_habit);
@@ -187,6 +187,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         @Override
         public void onClick(View view) {
             if (!isEditable) {
+                mClickListener.onItemClick(view, TYPE_COUNT, getAdapterPosition());
                 return;
             }
 
@@ -213,7 +214,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    public class ViewHolderCheck extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class CheckTypeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         RelativeLayout layout;
         View background;
         TextView tvCategory;
@@ -222,7 +223,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         ImageView imgCheck;
         boolean isCheck = false;
 
-        ViewHolderCheck(View itemView) {
+        CheckTypeViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             layout = itemView.findViewById(R.id.rl_habit);
@@ -237,6 +238,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         @Override
         public void onClick(View view) {
             if (!isEditable) {
+                mClickListener.onTrackingValueChanged(view, TYPE_CHECK, getAdapterPosition(), 1);
                 return;
             }
 

@@ -358,6 +358,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
         intent.putExtra(MainActivity.HABIT_ID, this.habitEntity.getHabitId());
         intent.putExtra(MainActivity.HABIT_COLOR, this.habitEntity.getHabitColor());
         startActivity(intent);
+        finish();
     }
 
     private ArrayList<BarEntry> loadData(String currentTime) {

@@ -46,6 +46,8 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
     @BindView(R.id.header)
     View vHeader;
 
+    @BindView(R.id.tvHabitName)
+    TextView tvHabitName;
     @BindView(R.id.tvCurrentTime)
     TextView tvCurrentTime;
     @BindView(R.id.tvTrackCount)
@@ -241,17 +243,7 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
         watchDay[5] = habitEntity.getSat().equals("1");
         watchDay[6] = habitEntity.getSun().equals("1");
 
-        // add days in month
-//        boolean isClickable;
-//        int pos;
         for (int i = 0; i < datesInMonth.length; i++) {
-//            pos = (head.size() + i + 1) % 7 - 1;
-//            if (pos >= 0) {
-//                isClickable = watchDay[pos];
-//            } else {
-//                isClickable = watchDay[6];
-//            }
-
             if (mapValues.containsKey(datesInMonth[i])) {
                 trackingCalendarItemList.add(new TrackingCalendarItem(String.valueOf(i + 1), datesInMonth[i], true, false));
             } else {
@@ -377,6 +369,8 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
         } else {
             tvTrackCount.setText("--");
         }
+
+        tvHabitName.setText(habitEntity.getHabitName());
 
         tvTotalCount.setText(String.valueOf(totalCount));
 

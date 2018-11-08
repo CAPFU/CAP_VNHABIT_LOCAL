@@ -64,10 +64,13 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
     }
 
     @Override
-    public List<HabitEntity> fetchHabit() {
+    public List<HabitEntity> getHabitByUser(String userId) {
         List<HabitEntity> list = new ArrayList<>();
-        cursor = super.query(HABIT_TABLE, HABIT_COLUMNS, null, null, null);
-        if (cursor != null) {
+        final String selectionArgs[] = {userId};
+        final String selection = HabitSchema.USER_ID + " = ?";
+
+        cursor = super.query(HABIT_TABLE, HABIT_COLUMNS, selection, selectionArgs, null);
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 list.add(cursorToEntity(cursor));
@@ -76,6 +79,19 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
             cursor.close();
         }
         return list;
+    }
+
+    public int countHabitByUser(String userId) {
+        int count = 0;
+        final String sql = "select count(*) as count from " + HABIT_TABLE + " where " + USER_ID + " = '" + userId + "'";
+        cursor = super.rawQuery(sql, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            if (cursor.getColumnIndex("count") != -1) {
+                count = cursor.getInt(cursor.getColumnIndexOrThrow("count"));
+            }
+        }
+        return count;
     }
 
     public List<HabitEntity> getTodayHabit(TrackingDate date, String currentDate) {
