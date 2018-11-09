@@ -533,8 +533,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         habit.setMonitorUnit(monitorUnit);
         habit.setMonitorNumber(monitorNumber);
 
-        habit.setStartDate(startHabitDate);
-        habit.setEndDate(endHabitDate);
+        habit.setStartDate(enableHabitLimitTime[0]? startHabitDate: null);
+        habit.setEndDate(enableHabitLimitTime[1]? endHabitDate: null);
         habit.setCreatedDate(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
 
         habit.setHabitColor(habitColorCode);

@@ -76,6 +76,8 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         setContentView(R.layout.activity_report);
         ButterKnife.bind(this);
 
+        selectedTab = tabWeek;
+
         int startColor = ContextCompat.getColor(this, R.color.red1);
         int endColor = ContextCompat.getColor(this, R.color.red2);
         switch (mode) {

@@ -275,11 +275,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 break;
         }
 
-//        if (timeLine > 0) {
-//            timeLine = 0;
-//            return;
-//        }
-
         Database db = Database.getInstance(this);
         db.open();
         TrackingEntity todayTracking = Database.getTrackingDb()
@@ -539,8 +534,8 @@ public class ReportDetailsActivity extends AppCompatActivity {
         String des = null;
         switch (mode) {
             case ChartHelper.MODE_WEEK:
-                des = "Tuần này " + AppGenerator.format(habitStartDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT)
-                        + " - " + AppGenerator.format(habitEndDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT);
+                des = "Tuần này " + AppGenerator.format(startReportDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT)
+                        + " - " + AppGenerator.format(endReportDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT);
                 break;
             case ChartHelper.MODE_MONTH:
                 des = "Tháng " + currentTrackingDate.split("-")[1] + ", " + currentTrackingDate.split("-")[0];
