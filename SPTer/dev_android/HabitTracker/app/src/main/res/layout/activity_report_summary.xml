@@ -203,6 +203,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent" />
         <ImageView
+            android:id="@+id/tabChart"
             android:padding="7dp"
             app:srcCompat="@drawable/tab_chart"
             android:alpha="0.5"

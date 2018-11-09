@@ -41,8 +41,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ReportDetailsActivity extends AppCompatActivity {
-    private static final int UPDATE = 0;
-
     @BindView(R.id.header)
     View vHeader;
 
@@ -161,7 +159,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
         mode = ChartHelper.MODE_WEEK;
         currentTrackingDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
         firstCurrentDate = currentTrackingDate;
-        tvHabitName.setText(habitEntity.getHabitName());
 
         Database db = Database.getInstance(this);
         db.open();
@@ -174,8 +171,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
             curTrackingCount = Integer.parseInt(currentTrackingList.getCount());
         }
 
-        tvSumCount.setText(curSumCount + " " + habitEntity.getMonitorUnit());
-
         availDaysInWeek[0] = habitEntity.getMon().equals("1");
         availDaysInWeek[1] = habitEntity.getTue().equals("1");
         availDaysInWeek[2] = habitEntity.getWed().equals("1");
@@ -184,7 +179,13 @@ public class ReportDetailsActivity extends AppCompatActivity {
         availDaysInWeek[5] = habitEntity.getSat().equals("1");
         availDaysInWeek[6] = habitEntity.getSun().equals("1");
 
+        tvHabitName.setText(habitEntity.getHabitName());
+        tvSumCount.setText(curSumCount + " " + habitEntity.getMonitorUnit());
+
         String habitColor = habitEntity.getHabitColor();
+
+        vHeader.setBackgroundColor(ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 100));
+
         if (TextUtils.isEmpty(habitColor) || habitColor.equals(getString(R.color.color0))) {
             habitColor = getString(R.color.gray2);
         }
@@ -205,15 +206,12 @@ public class ReportDetailsActivity extends AppCompatActivity {
         chartHelper = new ChartHelper(this, chart);
         chartHelper.initChart();
         chartHelper.setChartColor(startColor, endColor);
-
-        vHeader.setBackgroundColor(ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 100));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == UPDATE) {
-
+        if (requestCode == HabitActivity.REQUEST_UPDATE) {
             boolean delete = false;
             if (data != null) {
                 delete = data.getBooleanExtra("delete", false);
@@ -321,7 +319,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 break;
         }
 
-        // save to db
+        // save to appDatabase
         Database db = Database.getInstance(this);
         db.open();
         TrackingEntity record =
@@ -558,14 +556,14 @@ public class ReportDetailsActivity extends AppCompatActivity {
     public void editHabitDetails(View v) {
         Intent intent = new Intent(this, HabitActivity.class);
         intent.putExtra(MainActivity.HABIT_ID, this.habitEntity.getHabitId());
-        startActivityForResult(intent, UPDATE);
+        startActivityForResult(intent, HabitActivity.REQUEST_UPDATE);
     }
 
     @OnClick(R.id.tabCalendar)
     public void showOnCalendar(View v) {
         Intent intent = new Intent(this, ReportSummaryActivity.class);
-        intent.putExtra(MainActivity.HABIT_ID, this.habitEntity.getHabitId());
-        intent.putExtra(MainActivity.HABIT_COLOR, this.habitEntity.getHabitColor());
+        intent.putExtra(MainActivity.HABIT_ID, habitEntity.getHabitId());
+        intent.putExtra(MainActivity.HABIT_COLOR, habitEntity.getHabitColor());
         startActivity(intent);
         finish();
     }
