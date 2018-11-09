@@ -40,7 +40,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ReportDetailsActivity extends AppCompatActivity {
-
     private static final int UPDATE = 0;
 
     @BindView(R.id.header)
@@ -65,7 +64,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
     TextView tvGoal;
     @BindView(R.id.tvSumCount)
     TextView tvSumCount;
-    @BindView(R.id.tvDescription)
+    @BindView(R.id.tvChartDescription)
     TextView tvDescription;
 
     @BindView(R.id.tabWeekHL)
@@ -85,10 +84,8 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
     @BindView(R.id.tvCurrentTime)
     TextView tvCurrentTime;
-
     @BindView(R.id.chart)
     BarChart chart;
-
     ChartHelper chartHelper;
 
     @BindView(R.id.tabEditHabit)
@@ -242,6 +239,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
         if (values != null && values.size() > 0) {
             chartHelper.setData(values, mode);
         }
+        updateUI();
     }
 
     @OnClick({R.id.pre, R.id.next})
@@ -275,10 +273,9 @@ public class ReportDetailsActivity extends AppCompatActivity {
         }
 
         // current date is before the start date of report
+        ArrayList<BarEntry> values = loadData(currentDate);
         if (currentDate.compareTo(startReportDate) < 0
                 || currentDate.compareTo(endReportDate) > 0) {
-
-            ArrayList<BarEntry> values = loadData(currentDate);
             chartHelper.setData(values, mode);
         }
 
@@ -498,7 +495,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 if (Integer.parseInt(track.getCount()) >= Integer.parseInt(habit.getMonitorNumber())) {
                     mapDayInMonth.put(track.getCurrentDate(),
                             mapDayInMonth.get(track.getCurrentDate()) + 1);
-//                    curSumCount += Integer.parseInt(track.getCount());
                 }
                 curSumCount += Integer.parseInt(track.getCount());
             }
@@ -543,23 +539,19 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
         tvSumCount.setText(String.valueOf(curSumCount) + " " + habitEntity.getMonitorUnit());
 
-        String pre = "";
-        if (firstCurrentDate.compareTo(startReportDate) > -1
-                && firstCurrentDate.compareTo(endReportDate) < 1) {
-            switch (mode) {
-                case ChartHelper.MODE_WEEK:
-                    pre = "Tuần này ";
-                    break;
-                case ChartHelper.MODE_MONTH:
-                    pre = "Tháng này ";
-                    break;
-                case ChartHelper.MODE_YEAR:
-                    pre = "Năm này ";
-                    break;
-            }
+        String des = null;
+        switch (mode) {
+            case ChartHelper.MODE_WEEK:
+                des = "Tuần này " + AppGenerator.format(startHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT)
+                        + " - " + AppGenerator.format(endHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT);
+                break;
+            case ChartHelper.MODE_MONTH:
+                des = "Tháng " + currentDate.split("-")[1] + ", " + currentDate.split("-")[0];
+                break;
+            case ChartHelper.MODE_YEAR:
+                des = "Năm " + currentDate.split("-")[0];
+                break;
         }
-        String des = pre +
-                startReportDate.replace("-", ".") + " - " + endReportDate.replace("-", ".");
         tvDescription.setText(des);
     }
 

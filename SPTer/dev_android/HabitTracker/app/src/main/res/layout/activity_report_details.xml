@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
-        android:layout_marginBottom="15dp"
-        >
+        android:gravity="center"
+        android:layout_marginBottom="15dp">
         <TextView
             android:id="@+id/tvHabitName"
             android:layout_width="wrap_content"
@@ -197,16 +197,16 @@
             android:layout_below="@id/tabHighLine"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="30dp"
-            android:layout_above="@+id/tvDescription"
+            android:layout_marginBottom="10dp"
+            android:layout_above="@+id/tvChartDescription"
             android:layout_marginTop="10dp"/>
 
         <TextView
-            android:id="@+id/tvDescription"
+            android:id="@+id/tvChartDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="10dp"
             android:gravity="center"
             android:textSize="13sp"
             android:text="Tuần này, 29.10.2018 - 04.11.2018"/>
@@ -230,7 +230,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent" />
         <ImageView
-            android:onClick="showEmpty"
             android:padding="10dp"
             app:srcCompat="@drawable/tab_description"
             android:alpha="0.5"
@@ -238,7 +237,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent" />
         <ImageView
-            android:onClick="showEmpty"
             android:padding="10dp"
             app:srcCompat="@drawable/tab_chart"
             android:layout_weight="1"

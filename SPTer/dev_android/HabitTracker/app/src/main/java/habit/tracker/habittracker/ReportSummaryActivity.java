@@ -397,9 +397,7 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
 
         // reload calendar
         if ((currentTrackingDate.compareTo(lastDayPreMonth) <= 0
-                || currentTrackingDate.compareTo(firstDayNextMonth) >= 0)
-//                && currentTrackingDate.compareTo(firstCurTrackingDate) <=
-                ) {
+                || currentTrackingDate.compareTo(firstDayNextMonth) >= 0)) {
             loadCalendar(currentTrackingDate);
         }
     }
@@ -420,7 +418,6 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
 
             for (TrackingEntity entity : habitTracking.getTrackingEntityList()) {
                 mapDayInMonth.put(entity.getCurrentDate(), entity);
-//            totalCount += entity.getIntCount();
             }
 
             habitEntity = habitTracking.getHabitEntity();
