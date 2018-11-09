@@ -137,6 +137,24 @@ public class ReportDetailsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        Database db = Database.getInstance(this);
+        db.open();
+        habitEntity = Database.getHabitDb().getHabit(habitEntity.getHabitId());
+        db.close();
+
+        initDefaultUI(habitEntity);
+
+        // load chart data (default is week)
+        ArrayList<BarEntry> values = loadData(currentDate);
+        chartHelper.setData(values, mode);
+
+        updateUI();
+    }
+
     @SuppressLint("ResourceType")
     private void initDefaultUI(HabitEntity habitEntity) {
         mode = ChartHelper.MODE_WEEK;
@@ -342,22 +360,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
         });
     }
 
-    @OnClick(R.id.tabEditHabit)
-    public void selectEditHabit(View v) {
-        Intent intent = new Intent(this, HabitActivity.class);
-        intent.putExtra(MainActivity.HABIT_ID, this.habitEntity.getHabitId());
-        startActivityForResult(intent, UPDATE);
-    }
-
-    @OnClick(R.id.tabCalendar)
-    public void selectCalendar(View v) {
-        Intent intent = new Intent(this, ReportSummaryActivity.class);
-        intent.putExtra(MainActivity.HABIT_ID, this.habitEntity.getHabitId());
-        intent.putExtra(MainActivity.HABIT_COLOR, this.habitEntity.getHabitColor());
-        startActivity(intent);
-        finish();
-    }
-
     private ArrayList<BarEntry> loadData(String currentTime) {
         ArrayList<BarEntry> values = null;
 
@@ -415,7 +417,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
             startHabitDate = habitEntity.getStartDate();
             endHabitDate = habitEntity.getEndDate();
         }
-
         return prepareData(habitTracking, daysInMonth);
     }
 
@@ -553,6 +554,22 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 break;
         }
         tvDescription.setText(des);
+    }
+
+    @OnClick(R.id.tabEditHabit)
+    public void editHabitDetails(View v) {
+        Intent intent = new Intent(this, HabitActivity.class);
+        intent.putExtra(MainActivity.HABIT_ID, this.habitEntity.getHabitId());
+        startActivityForResult(intent, UPDATE);
+    }
+
+    @OnClick(R.id.tabCalendar)
+    public void showOnCalendar(View v) {
+        Intent intent = new Intent(this, ReportSummaryActivity.class);
+        intent.putExtra(MainActivity.HABIT_ID, this.habitEntity.getHabitId());
+        intent.putExtra(MainActivity.HABIT_COLOR, this.habitEntity.getHabitColor());
+        startActivity(intent);
+        finish();
     }
 
     public void select(View v) {
