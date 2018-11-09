@@ -18,10 +18,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,8 +29,8 @@ import habit.tracker.habittracker.common.chart.ChartHelper;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
 import habit.tracker.habittracker.repository.Database;
-import habit.tracker.habittracker.repository.habit.DateTracking;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
+import habit.tracker.habittracker.repository.habit.HabitTracking;
 import habit.tracker.habittracker.repository.tracking.TrackingEntity;
 
 
@@ -110,11 +109,11 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
             Database db = Database.getInstance(this);
             db.open();
             String userId = MySharedPreference.getUserId(this);
-            int countHabit = Database.getHabitDb().countHabitByUser(userId);
-            int countTracking = Database.getTrackingDb().countTrackByUser(userId);
+            int sumHabit = Database.getHabitDb().countHabitByUser(userId);
+            int sumTracking = Database.getTrackingDb().countTrackByUser(userId);
             db.close();
-            tvTotal.setText(String.valueOf(countHabit));
-            tvTotalDone.setText(String.valueOf(countTracking));
+            tvTotal.setText(String.valueOf(sumHabit));
+            tvTotalDone.setText(String.valueOf(sumTracking));
 
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             currentDate = dateFormat.format(dateFormat.parse(currentDate));
@@ -215,50 +214,26 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
 
         Database db = new Database(this);
         db.open();
-
-        // get all completed habits in one week
-        List<DateTracking> weekData = Database
-                .habitDaoImpl.getHabitsBetween(daysInWeek[0], daysInWeek[6]);
+        List<HabitTracking> weekData = Database.getHabitDb().getHabitsBetween(daysInWeek[0], daysInWeek[6]);
         db.close();
 
-        Map<String, Integer> countHabit = new HashMap<>();
-        List<DateTracking> completedList = new ArrayList<>();
-        HabitEntity hb;
-        TrackingEntity tr;
-        for (DateTracking item : weekData) {
-            hb = item.getHabitEntity();
-            tr = item.getTrackingEntity();
-
-            if (hb.getMonitorNumber() != null
-
-                    && tr.getCount() != null
-
-                    && tr.getCount().compareTo(hb.getMonitorNumber()) >= 0 )
-            {
-                completedList.add(item);
-            }
-
-            countHabit.put(hb.getHabitId(), 0);
-        }
-
+        List<TrackingEntity> meetGoalTrackingList = getMeetGoalTrackingList(weekData);
         int[] count = new int[7];
-        for (int i = 0; i < completedList.size(); i++) {
-            String diw = completedList.get(i)
-                    .getTrackingEntity().getCurrentDate();
-
-            if (diw.equals(daysInWeek[0])) {
+        for (int i = 0; i < meetGoalTrackingList.size(); i++) {
+            String date = meetGoalTrackingList.get(i).getCurrentDate();
+            if (date.equals(daysInWeek[0])) {
                 ++count[0];
-            } else if (diw.equals(daysInWeek[1])) {
+            } else if (date.equals(daysInWeek[1])) {
                 ++count[1];
-            } else if (diw.equals(daysInWeek[2])) {
+            } else if (date.equals(daysInWeek[2])) {
                 ++count[2];
-            } else if (diw.equals(daysInWeek[3])) {
+            } else if (date.equals(daysInWeek[3])) {
                 ++count[3];
-            } else if (diw.equals(daysInWeek[4])) {
+            } else if (date.equals(daysInWeek[4])) {
                 ++count[4];
-            } else if (diw.equals(daysInWeek[5])) {
+            } else if (date.equals(daysInWeek[5])) {
                 ++count[5];
-            } else if (diw.equals(daysInWeek[6])) {
+            } else if (date.equals(daysInWeek[6])) {
                 ++count[6];
             }
         }
@@ -279,39 +254,17 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         Database db = new Database(this);
         db.open();
 
-        List<DateTracking> total = Database
-                .habitDaoImpl.getHabitsBetween(
-                        daysInMonth[0], daysInMonth[daysInMonth.length - 1]);
+        List<HabitTracking> monthData = Database.getHabitDb().getHabitsBetween(daysInMonth[0], daysInMonth[daysInMonth.length - 1]);
 
-        Map<String, Integer> countHabit = new HashMap<>();
-        List<DateTracking> completedList = new ArrayList<>();
-        HabitEntity hb;
-        TrackingEntity tr;
-        for (DateTracking item : total) {
-            hb = item.getHabitEntity();
-            tr = item.getTrackingEntity();
-
-            if (hb.getMonitorNumber() != null
-
-                    && tr.getCount() != null
-
-                    && tr.getCount().compareTo(hb.getMonitorNumber()) >= 0 )
-            {
-                completedList.add(item);
-            }
-            countHabit.put(hb.getHabitId(), 0);
-        }
-
+        List<TrackingEntity> meetGoalTrackingList = getMeetGoalTrackingList(monthData);
         int[] count = new int[daysInMonth.length];
-        for (DateTracking item : completedList) {
-            tr = item.getTrackingEntity();
+        for (TrackingEntity item : meetGoalTrackingList) {
             for (int i = 0; i < daysInMonth.length; i++) {
-                if (tr.getCurrentDate().equals(daysInMonth[i])) {
+                if (item.getCurrentDate().equals(daysInMonth[i])) {
                     ++count[i];
                 }
             }
         }
-
         for (int i = 1; i <= count.length; i++) {
             values.add(new BarEntry(i, count[i - 1]));
         }
@@ -321,55 +274,46 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
 
     private ArrayList<BarEntry> loadYearData(String currentDate) {
         ArrayList<BarEntry> values = new ArrayList<>();
-        String[] arrDate = currentDate.split("-");
-
-        int year = Integer.parseInt(arrDate[0]);
-        int month = Integer.parseInt(arrDate[1]);
-        int date = Integer.parseInt(arrDate[2]);
-
-        String t = "Tháng 01" + "/" + year + " - " + "Tháng 12" + "/" + year;
-        time.setText(t);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(AppGenerator.getDate(currentDate.split("-")[0] + "-12-01", AppGenerator.YMD_SHORT));
+        time.setText("Năm " + calendar.get(Calendar.YEAR));
 
         Database db = new Database(this);
         db.open();
 
-        List<DateTracking> monthData;
+        List<HabitTracking> yearData = Database.getHabitDb().getHabitsBetween(
+                calendar.get(Calendar.YEAR) + "-01-01", calendar.get(Calendar.YEAR) + "-12-" + calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 
-        int[] completePerMonth = new int[12];
-        int completeRecord = 0;
-
-        HabitEntity hb;
-        TrackingEntity tr;
-
-        Map<String, Integer> habitNumber = new HashMap<>();
-        String start;
-        String end;
-        for (int m = 0; m < 12; m++) {
-            start = AppGenerator.getDate(year, m + 1, 1, AppGenerator.YMD_SHORT);
-            end = AppGenerator.getDate(year, m + 1, AppGenerator.getMaxDayInMonth(year, m), AppGenerator.YMD_SHORT);
-            monthData = Database.getHabitDb().getHabitsBetween(start, end);
-
-            for (DateTracking item : monthData) {
-                hb = item.getHabitEntity();
-                tr = item.getTrackingEntity();
-
-                if (hb.getMonitorNumber() != null
-
-                        && tr.getCount() != null
-
-                        && tr.getCount().compareTo(hb.getMonitorNumber()) >= 0) {
-                    completeRecord += 1;
-                    ++completePerMonth[m];
-                    habitNumber.put(hb.getHabitId(), 0);
+        String[] months = new String[]{"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
+        int[] count = new int[12];
+        List<TrackingEntity> meetGoalTrackingList = getMeetGoalTrackingList(yearData);
+        for (TrackingEntity item : meetGoalTrackingList) {
+            for (int i = 0; i < months.length; i++) {
+                if (item.getCurrentDate().split("-")[1].equals(months[i])) {
+                    count[i]++;
                 }
             }
         }
-
-        for (int i = 1; i <= completePerMonth.length; i++) {
-            values.add(new BarEntry(i, completePerMonth[i - 1]));
+        for (int i = 1; i <= count.length; i++) {
+            values.add(new BarEntry(i, count[i - 1]));
         }
         db.close();
         return values;
+    }
+
+    private List<TrackingEntity> getMeetGoalTrackingList(List<HabitTracking> data) {
+        HabitEntity habitEntity;
+        List<TrackingEntity> meetGoalTrackingList = new ArrayList<>();
+        for (HabitTracking item : data) {
+            habitEntity = item.getHabit();
+            for (TrackingEntity trackingEntity : item.getTrackingList()) {
+                if (habitEntity.getMonitorNumber() != null && trackingEntity.getCount() != null
+                        && Integer.parseInt(trackingEntity.getCount()) >= Integer.parseInt(habitEntity.getMonitorNumber())) {
+                    meetGoalTrackingList.add(trackingEntity);
+                }
+            }
+        }
+        return meetGoalTrackingList;
     }
 
     public void select(View v) {

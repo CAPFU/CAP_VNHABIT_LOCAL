@@ -261,7 +261,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
         // start and end date
         startHabitDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
-        endHabitDate = null;
+        endHabitDate = AppGenerator.getNextDate(startHabitDate, AppGenerator.YMD_SHORT);
 
         // init remind list
         remindAdapter = new RemindRecyclerViewAdapter(this, remindDispList);
