@@ -29,13 +29,13 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
     public HabitDaoImpl() {}
 
     @Override
-    public List<HabitTracking> getHabitsBetween(String startDate, String endDate) {
+    public List<HabitTracking> getHabitTrackingBetween(String startDate, String endDate) {
         List<HabitTracking> list = new ArrayList<>();
         try {
             final String sql = "SELECT " + getParams(HABIT_COLUMNS, "h", false) + getParams(TRACKING_COLUMNS, "t", true)
                     + " FROM " + HABIT_TABLE + " h INNER JOIN " + TRACKING_TABLE + " t "
-                    + " ON " +
-                    "h." + HabitSchema.HABIT_ID + " = t." + TrackingSchema.HABIT_ID
+                    + " ON "
+                    + "h." + HabitSchema.HABIT_ID + " = t." + TrackingSchema.HABIT_ID
                     + " WHERE t." + TrackingSchema.CURRENT_DATE
                     + " BETWEEN '" + startDate + "' AND '" + endDate + "'";
 

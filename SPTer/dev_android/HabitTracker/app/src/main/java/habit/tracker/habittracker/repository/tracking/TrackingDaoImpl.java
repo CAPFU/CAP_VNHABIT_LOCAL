@@ -59,26 +59,25 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
     }
 
     public HabitTracking getHabitTrackingBetween(String habitId, String startDate, String endDate) {
+        HabitTracking habitTracking = null;
         try {
-            Cursor cursor = super.rawQuery(
-                    "SELECT * FROM " + HabitSchema.HABIT_TABLE + " INNER JOIN " + TRACKING_TABLE
-                            + " ON "
-                            + TrackingSchema.TRACKING_TABLE + "." + TrackingSchema.HABIT_ID + " = " + HabitSchema.HABIT_TABLE + "." + HabitSchema.HABIT_ID
-                            + " WHERE "
-                            + TrackingSchema.TRACKING_TABLE + "." + TrackingSchema.CURRENT_DATE
-                            + " BETWEEN "
-                            + "'" + startDate + "' AND '" + endDate + "'"
-                            + " AND "
-                            + HabitSchema.HABIT_TABLE + "." + HabitSchema.HABIT_ID + " = '" + habitId + "'"
-                    , null);
+            final String sql = "SELECT " + getParams(HabitSchema.HABIT_COLUMNS, "h", false) + getParams(TRACKING_COLUMNS, "t", true)
+                    + " FROM " + HabitSchema.HABIT_TABLE + " h INNER JOIN " + TRACKING_TABLE + " t "
+                    + " ON "
+                    + "h." + HabitSchema.HABIT_ID + " = t." + TrackingSchema.HABIT_ID
+                    + " WHERE "
+                    + "t." + HABIT_ID + " = '" + habitId + "'"
+                    + " AND t." + TrackingSchema.CURRENT_DATE + " BETWEEN '" + startDate + "' AND '" + endDate + "'";
+
+            Cursor cursor = super.rawQuery(sql, null);
 
             if (cursor != null && cursor.getCount() > 0) {
-                HabitTracking habitTracking = new HabitTracking();
-                HabitDaoImpl habitDao = new HabitDaoImpl();
-
                 cursor.moveToFirst();
+                HabitDaoImpl habitDao = new HabitDaoImpl();
+                habitTracking = new HabitTracking();
                 habitTracking.setHabit(habitDao.cursorToEntity(cursor));
-
+                habitTracking.getTrackingList().add(cursorToEntity(cursor));
+                cursor.moveToNext();
                 while (!cursor.isAfterLast()) {
                     habitTracking.getTrackingList().add(cursorToEntity(cursor));
                     cursor.moveToNext();
@@ -88,7 +87,7 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
             }
         } catch (SQLiteConstraintException ex) {
         }
-        return null;
+        return habitTracking;
     }
 
     public int countTrackByUser(String userId) {

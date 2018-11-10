@@ -214,7 +214,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
 
         Database db = new Database(this);
         db.open();
-        List<HabitTracking> weekData = Database.getHabitDb().getHabitsBetween(daysInWeek[0], daysInWeek[6]);
+        List<HabitTracking> weekData = Database.getHabitDb().getHabitTrackingBetween(daysInWeek[0], daysInWeek[6]);
         db.close();
 
         List<TrackingEntity> meetGoalTrackingList = getMeetGoalTrackingList(weekData);
@@ -254,7 +254,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         Database db = new Database(this);
         db.open();
 
-        List<HabitTracking> monthData = Database.getHabitDb().getHabitsBetween(daysInMonth[0], daysInMonth[daysInMonth.length - 1]);
+        List<HabitTracking> monthData = Database.getHabitDb().getHabitTrackingBetween(daysInMonth[0], daysInMonth[daysInMonth.length - 1]);
 
         List<TrackingEntity> meetGoalTrackingList = getMeetGoalTrackingList(monthData);
         int[] count = new int[daysInMonth.length];
@@ -281,7 +281,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         Database db = new Database(this);
         db.open();
 
-        List<HabitTracking> yearData = Database.getHabitDb().getHabitsBetween(
+        List<HabitTracking> yearData = Database.getHabitDb().getHabitTrackingBetween(
                 calendar.get(Calendar.YEAR) + "-01-01", calendar.get(Calendar.YEAR) + "-12-" + calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 
         String[] months = new String[]{"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
