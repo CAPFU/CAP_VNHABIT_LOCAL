@@ -10,7 +10,7 @@ include_once '../../config/Database.php';
 include_once '../../models/Reminder.php';
 include_once '../../models/MonitorDate.php';
 include_once '../../models/Habit.php';
-include_once '../../HabitSuggestion.php';
+include_once '../../models/HabitSuggestion.php';
 
 // Instantiate DB & connect
 $database = new Database();
@@ -42,7 +42,13 @@ $habit->habit_color = $data->habit_color;
 $habit->habit_description = $data->habit_description;
 
 $habitSuggestion->habit_name_id = $data->habit_name_id;
+$habitSuggestion->habit_name_uni = $data->habit_name;
+$habitSuggestion->habit_name = $data->habit_name_ascii;
+$habitSuggestion->habit_name_count = $data->habit_name_count;
 $habitSuggestion->updateCount();
+if ($habitSuggestion->find($data->habit_name)->rowCount() == 0) {
+    $habitSuggestion->create();
+}
 
 if ($habit->create()) {
     $date->monitor_id = $data->monitor_id;
