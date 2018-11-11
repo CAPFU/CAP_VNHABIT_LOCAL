@@ -32,7 +32,7 @@ public class HabitSuggestRecylViewAdapter extends RecyclerView.Adapter<HabitSugg
     @NonNull
     @Override
     public HabitSuggestionViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = mLayoutInflater.inflate(R.layout.item_habit_sugggestion, null);
+        View v = mLayoutInflater.inflate(R.layout.item_habit_sugggestion, viewGroup, false);
         return new HabitSuggestionViewHolder(v);
     }
 
@@ -48,7 +48,7 @@ public class HabitSuggestRecylViewAdapter extends RecyclerView.Adapter<HabitSugg
         return data.size();
     }
 
-    public class HabitSuggestionViewHolder extends RecyclerView.ViewHolder {
+    public class HabitSuggestionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.tvHabitName)
         TextView tvHabitName;
         @BindView(R.id.tvHabitNameCount)
@@ -57,6 +57,12 @@ public class HabitSuggestRecylViewAdapter extends RecyclerView.Adapter<HabitSugg
         public HabitSuggestionViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mItemClickListener.onItemClick(v, getAdapterPosition());
         }
     }
 }

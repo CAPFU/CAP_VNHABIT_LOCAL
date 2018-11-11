@@ -3,7 +3,9 @@ package habit.tracker.habittracker.api.model.habit;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.text.Normalizer;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import habit.tracker.habittracker.api.model.reminder.Reminder;
 import habit.tracker.habittracker.api.model.tracking.Tracking;
@@ -83,6 +85,15 @@ public class Habit implements TrackingDateInWeek {
     @SerializedName("tracks")
     @Expose
     private List<Tracking> tracksList;
+    @SerializedName("habit_name_id")
+    @Expose
+    private String habitSearchNameId;
+    @SerializedName("habit_name_ascii")
+    @Expose
+    private String habitNameAscii;
+    @SerializedName("habit_name_count")
+    @Expose
+    private int habitNameCount;
 
     public String getHabitId() {
         return habitId;
@@ -144,6 +155,10 @@ public class Habit implements TrackingDateInWeek {
         return habitDescription;
     }
 
+    public int getHabitNameCount() {
+        return habitNameCount;
+    }
+
     public String getMon() {
         return mon;
     }
@@ -178,6 +193,14 @@ public class Habit implements TrackingDateInWeek {
 
     public List<Tracking> getTracksList() {
         return tracksList;
+    }
+
+    public String getHabitSearchNameId() {
+        return habitSearchNameId;
+    }
+
+    public String getHabitNameAscii() {
+        return habitNameAscii;
     }
 
     public void setHabitId(String habitId) {
@@ -274,5 +297,19 @@ public class Habit implements TrackingDateInWeek {
 
     public void setTracksList(List<Tracking> tracksList) {
         this.tracksList = tracksList;
+    }
+
+    public void setHabitSearchNameId(String habitNameId) {
+        this.habitSearchNameId = habitNameId;
+    }
+
+    public void setHabitNameAscii(String habitName) {
+        String temp = Normalizer.normalize(habitName.trim(), Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        this.habitNameAscii = pattern.matcher(temp).replaceAll("").toLowerCase();
+    }
+
+    public void setHabitNameCount(int habitNameCount) {
+        this.habitNameCount = habitNameCount;
     }
 }

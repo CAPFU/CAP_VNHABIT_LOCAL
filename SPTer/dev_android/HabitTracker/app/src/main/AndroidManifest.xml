@@ -45,6 +45,9 @@
         <activity android:name=".FilterMainActivity" />
         <activity android:name=".ReportDetailsActivity" />
         <activity android:name=".ReportCalendarActivity" />
+        <activity android:name=".TestActivity">
+
+        </activity>
     </application>
 
 </manifest>

@@ -10,6 +10,7 @@ include_once '../../config/Database.php';
 include_once '../../models/Reminder.php';
 include_once '../../models/MonitorDate.php';
 include_once '../../models/Habit.php';
+include_once '../../HabitSuggestion.php';
 
 // Instantiate DB & connect
 $database = new Database();
@@ -19,6 +20,7 @@ $db = $database->connect();
 $reminder = new Reminder($db);
 $habit = new Habit($db);
 $date = new MonitorDate($db);
+$habitSuggestion = new HabitSuggestion($db);
 $error = true;
 
 // Get raw posted data
@@ -38,6 +40,9 @@ $habit->end_date = $data->end_date;
 $habit->created_date = $data->created_date;
 $habit->habit_color = $data->habit_color;
 $habit->habit_description = $data->habit_description;
+
+$habitSuggestion->habit_name_id = $data->habit_name_id;
+$habitSuggestion->updateCount();
 
 if ($habit->create()) {
     $date->monitor_id = $data->monitor_id;

@@ -71,11 +71,28 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     View btnReport;
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
+        currentDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
+        firstCurrentDate = currentDate;
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        trackingAdapter = new HabitRecyclerViewAdapter(MainActivity.this, trackingItemList);
+        trackingAdapter.setClickListener(MainActivity.this);
+        recyclerView.setAdapter(trackingAdapter);
+        loadData();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CREATE_NEW_HABIT || requestCode == UPDATE_HABIT) {
-
             if (resultCode == RESULT_OK) {
-                loadData(true);
+                loadData();
             }
 
         } else if (requestCode == USE_FILTER) {
@@ -99,40 +116,14 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
             }
         } else if (requestCode == REPORT) {
-            if (currentDate.equals(firstCurrentDate)) {
-                loadData(true);
-            } else {
-                loadData(false);
-                updateData(trackingItemList, trackingAdapter, currentDate);
-            }
+            loadData();
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
-
-        ButterKnife.bind(this);
-
-        currentDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
-        firstCurrentDate = currentDate;
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        trackingAdapter = new HabitRecyclerViewAdapter(MainActivity.this, trackingItemList);
-        trackingAdapter.setClickListener(MainActivity.this);
-        recyclerView.setAdapter(trackingAdapter);
-
-        loadData(true);
-    }
-
-    private void loadData(final boolean display) {
+    private void loadData() {
         trackingItemList.clear();
 
         String userId = MySharedPreference.getUserId(this);
-
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
         mService.getHabit(userId).enqueue(new Callback<HabitResponse>() {
             @Override
@@ -143,9 +134,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                     db.open();
 
                     List<Habit> habitList = response.body().getHabit();
-
                     for (Habit habit : habitList) {
-
                         Calendar ca = Calendar.getInstance();
                         ca.setTimeInMillis(System.currentTimeMillis());
                         int year = ca.get(Calendar.YEAR);
@@ -176,10 +165,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                                     habit.getHabitColor());
                             item.setTarget(habit.getHabitTarget());
                             item.setGroup(habit.getGroupId());
-
-                            if (display) {
-                                trackingItemList.add(item);
-                            }
+                            trackingItemList.add(item);
                         }
                     }
 
@@ -188,10 +174,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                     }
                     db.close();
                 }
-
-                if (display) {
-                    trackingAdapter.notifyDataSetChanged();
-                }
+                trackingAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -246,7 +229,9 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         }
     }
 
-    public void updateData(List<TrackingItem> trackingItemList, HabitRecyclerViewAdapter trackingAdapter, String currentDate) {
+    public void updateData() {
+        trackingItemList.clear();
+
         String[] arr = currentDate.split("-");
         int year = Integer.parseInt(arr[0]);
         int month = Integer.parseInt(arr[1]);
@@ -293,16 +278,14 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     }
 
     public TrackingEntity getTodayTracking(String habitId, String currentDate, int defaultVal) {
-        TrackingEntity todayTracking = Database.trackingImpl
-                .getTracking(habitId, currentDate);
-
+        TrackingEntity todayTracking = Database.getTrackingDb().getTracking(habitId, currentDate);
         if (todayTracking == null) {
             todayTracking = new TrackingEntity();
             todayTracking.setTrackingId(AppGenerator.getNewId());
             todayTracking.setHabitId(habitId);
             todayTracking.setCount(String.valueOf(defaultVal));
             todayTracking.setCurrentDate(currentDate);
-            todayTracking.setDescription(currentDate);
+            todayTracking.setDescription(null);
             Database.trackingImpl.saveTracking(todayTracking);
         }
         return todayTracking;
@@ -316,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             updateTitle(nextDate);
             currentDate = nextDate;
             trackingItemList.clear();
-            updateData(trackingItemList, trackingAdapter, currentDate);
+            updateData();
         }
     }
 
@@ -328,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             updateTitle(preDate);
             currentDate = preDate;
             trackingItemList.clear();
-            updateData(trackingItemList, trackingAdapter, currentDate);
+            updateData();
         }
     }
 
@@ -337,7 +320,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         updateTitle(firstCurrentDate);
         currentDate = firstCurrentDate;
         trackingItemList.clear();
-        updateData(trackingItemList, trackingAdapter, currentDate);
+        updateData();
     }
 
     @OnClick(R.id.report)
