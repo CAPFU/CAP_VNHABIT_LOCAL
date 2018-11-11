@@ -1,4 +1,4 @@
-package habit.tracker.habittracker.adapter;
+package habit.tracker.habittracker.adapter.calendar;
 
 public class TrackingCalendarItem {
     private String text;

@@ -1,4 +1,4 @@
-package habit.tracker.habittracker.common.util;
+package habit.tracker.habittracker.common.habitreminder;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -12,10 +12,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import habit.tracker.habittracker.common.receiver.ReminderReceiver;
 import habit.tracker.habittracker.api.model.reminder.Reminder;
+import habit.tracker.habittracker.common.util.AppGenerator;
 
-public class ReminderManager {
+public class HabitReminderManager {
     public static final String REMIND_ID = "remind_id";
     public static final String REMIND_TEXT = "remind_text";
     public static final String HABIT_NAME = "habit_name";
@@ -27,7 +27,7 @@ public class ReminderManager {
     private List<Reminder> remindersList;
     Calendar caStart = Calendar.getInstance();
 
-    public ReminderManager(Context context, List<Reminder> remindAddNew) {
+    public HabitReminderManager(Context context, List<Reminder> remindAddNew) {
         this.context = context;
         this.remindersList = remindAddNew;
     }
@@ -85,7 +85,7 @@ public class ReminderManager {
     private void remind(Reminder reminder, RepeatType repeatType, int year, int month, int day, int hour, int minute) {
         alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        Intent intent = new Intent(context, ReminderReceiver.class);
+        Intent intent = new Intent(context, HabitReminderServiceReceiver.class);
         intent.putExtra(REMIND_ID, reminder.getHabitId());
         intent.putExtra(REMIND_TEXT, reminder.getRemindText());
         intent.putExtra(HABIT_NAME, reminder.getHabitName());

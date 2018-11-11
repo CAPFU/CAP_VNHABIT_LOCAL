@@ -347,7 +347,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
         tracking.setCount(String.valueOf(record.getCount()));
         trackingData.getTrackingList().add(tracking);
         VnHabitApiService service = VnHabitApiUtils.getApiService();
-        service.replace(trackingData).enqueue(new Callback<ResponseBody>() {
+        service.updateTracking(trackingData).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
             }
@@ -560,7 +560,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
     @OnClick(R.id.tabCalendar)
     public void showOnCalendar(View v) {
-        Intent intent = new Intent(this, ReportSummaryActivity.class);
+        Intent intent = new Intent(this, ReportCalendarActivity.class);
         intent.putExtra(MainActivity.HABIT_ID, habitEntity.getHabitId());
         intent.putExtra(MainActivity.HABIT_COLOR, habitEntity.getHabitColor());
         startActivity(intent);

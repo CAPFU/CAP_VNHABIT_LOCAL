@@ -7,9 +7,9 @@ import java.util.List;
 
 import habit.tracker.habittracker.api.model.reminder.Reminder;
 import habit.tracker.habittracker.api.model.tracking.Tracking;
-import habit.tracker.habittracker.common.TrackingDate;
+import habit.tracker.habittracker.repository.habit.TrackingDateInWeek;
 
-public class Habit implements TrackingDate {
+public class Habit implements TrackingDateInWeek {
 
     @SerializedName("habit_id")
     @Expose

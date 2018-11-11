@@ -11,7 +11,6 @@ import java.util.List;
 import habit.tracker.habittracker.api.model.tracking.Tracking;
 import habit.tracker.habittracker.repository.MyDatabaseHelper;
 import habit.tracker.habittracker.repository.habit.HabitDaoImpl;
-import habit.tracker.habittracker.repository.habit.HabitEntity;
 import habit.tracker.habittracker.repository.habit.HabitSchema;
 import habit.tracker.habittracker.repository.habit.HabitTracking;
 

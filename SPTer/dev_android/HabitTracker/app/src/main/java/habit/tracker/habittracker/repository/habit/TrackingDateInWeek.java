@@ -1,6 +1,6 @@
-package habit.tracker.habittracker.common;
+package habit.tracker.habittracker.repository.habit;
 
-public interface TrackingDate {
+public interface TrackingDateInWeek {
     String getMon();
 
     String getTue();

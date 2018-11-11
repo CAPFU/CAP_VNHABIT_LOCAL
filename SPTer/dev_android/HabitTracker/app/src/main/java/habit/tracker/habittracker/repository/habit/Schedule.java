@@ -1,8 +1,8 @@
-package habit.tracker.habittracker.common;
+package habit.tracker.habittracker.repository.habit;
 
 import java.util.Calendar;
 
-public class Schedule implements TrackingDate {
+public class Schedule implements TrackingDateInWeek {
     private String mon;
     private String tue;
     private String wed;

@@ -1,4 +1,4 @@
-package habit.tracker.habittracker.adapter;
+package habit.tracker.habittracker.adapter.habit;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -22,7 +22,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import habit.tracker.habittracker.R;
-import habit.tracker.habittracker.TrackingItem;
 
 public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int TYPE_CHECK = 0;

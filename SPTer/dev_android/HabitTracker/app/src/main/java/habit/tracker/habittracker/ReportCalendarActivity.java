@@ -26,8 +26,8 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import habit.tracker.habittracker.adapter.TrackingCalendarAdapter;
-import habit.tracker.habittracker.adapter.TrackingCalendarItem;
+import habit.tracker.habittracker.adapter.calendar.TrackingCalendarAdapter;
+import habit.tracker.habittracker.adapter.calendar.TrackingCalendarItem;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.tracking.Tracking;
 import habit.tracker.habittracker.api.model.tracking.TrackingList;
@@ -42,7 +42,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ReportSummaryActivity extends AppCompatActivity implements TrackingCalendarAdapter.OnItemClickListener {
+public class ReportCalendarActivity extends AppCompatActivity implements TrackingCalendarAdapter.OnItemClickListener {
 
     @BindView(R.id.header)
     View vHeader;
@@ -124,7 +124,7 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_report_summary);
+        setContentView(R.layout.activity_report_calendar);
         ButterKnife.bind(this);
 
         Bundle bundle = getIntent().getExtras();
@@ -377,7 +377,7 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
         tracking.setCount(String.valueOf(record.getCount()));
         trackingData.getTrackingList().add(tracking);
         VnHabitApiService service = VnHabitApiUtils.getApiService();
-        service.replace(trackingData).enqueue(new Callback<ResponseBody>() {
+        service.updateTracking(trackingData).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
             }
@@ -430,8 +430,7 @@ public class ReportSummaryActivity extends AppCompatActivity implements Tracking
 
         Map<String, TrackingEntity> mapDayInMonth = new HashMap<>(31);
 
-        HabitTracking habitTracking = Database.getTrackingDb()
-                .getHabitTrackingBetween(habitEntity.getHabitId(), startReportDate, endReportDate);
+        HabitTracking habitTracking = Database.getTrackingDb().getHabitTrackingBetween(habitEntity.getHabitId(), startReportDate, endReportDate);
 
         if (habitTracking != null) {
             totalCount = habitTracking.getTrackingList().size();

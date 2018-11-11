@@ -1,4 +1,4 @@
-package habit.tracker.habittracker.common;
+package habit.tracker.habittracker.common.validator;
 
 import android.text.TextUtils;
 

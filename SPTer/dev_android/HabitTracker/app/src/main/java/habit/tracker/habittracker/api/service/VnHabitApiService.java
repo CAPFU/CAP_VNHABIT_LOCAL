@@ -7,6 +7,7 @@ import habit.tracker.habittracker.api.model.group.GroupResponse;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.habit.HabitResponse;
 import habit.tracker.habittracker.api.model.habit.HabitResult;
+import habit.tracker.habittracker.api.model.search.SearchResponse;
 import habit.tracker.habittracker.api.model.tracking.Tracking;
 import habit.tracker.habittracker.api.model.tracking.TrackingList;
 import habit.tracker.habittracker.api.model.tracking.TrackingResult;
@@ -49,5 +50,8 @@ public interface VnHabitApiService {
     Call<GroupResponse> addNewGroup(@Body Group group);
 
     @POST("tracking/create_update.php")
-    Call<ResponseBody> replace(@Body TrackingList trackingList);
+    Call<ResponseBody> updateTracking(@Body TrackingList trackingList);
+
+    @GET("search/habit_search.php")
+    Call<SearchResponse> searchHabitName(@Query("search") String searchKey);
 }

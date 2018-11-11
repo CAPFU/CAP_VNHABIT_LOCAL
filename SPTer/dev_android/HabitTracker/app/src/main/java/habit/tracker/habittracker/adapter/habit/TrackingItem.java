@@ -1,4 +1,4 @@
-package habit.tracker.habittracker;
+package habit.tracker.habittracker.adapter.habit;
 
 public class TrackingItem {
     private String trackId;

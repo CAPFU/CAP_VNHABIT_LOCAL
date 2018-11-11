@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import habit.tracker.habittracker.api.model.habit.Habit;
-import habit.tracker.habittracker.common.TrackingDate;
 import habit.tracker.habittracker.repository.MyDatabaseHelper;
 import habit.tracker.habittracker.repository.tracking.TrackingDaoImpl;
 import habit.tracker.habittracker.repository.tracking.TrackingEntity;
@@ -104,7 +103,7 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
         return count;
     }
 
-    public List<HabitEntity> getTodayHabit(TrackingDate date, String currentDate) {
+    public List<HabitEntity> getTodayHabit(TrackingDateInWeek date, String currentDate) {
         List<HabitEntity> list = new ArrayList<>();
 
         final String sql = "SELECT * FROM " + HabitSchema.HABIT_TABLE + " WHERE ( '" + currentDate + "' >= " + HabitSchema.START_DATE + ")"
@@ -124,7 +123,7 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
         return list;
     }
 
-    private String getTodayCond(TrackingDate date) {
+    private String getTodayCond(TrackingDateInWeek date) {
         String str = "";
         if (date.getMon().equals("1")) {
             str = HabitSchema.MON;

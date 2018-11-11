@@ -35,11 +35,11 @@ import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.reminder.Reminder;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
-import habit.tracker.habittracker.common.Validator;
-import habit.tracker.habittracker.common.ValidatorType;
+import habit.tracker.habittracker.common.validator.Validator;
+import habit.tracker.habittracker.common.validator.ValidatorType;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
-import habit.tracker.habittracker.common.util.ReminderManager;
+import habit.tracker.habittracker.common.habitreminder.HabitReminderManager;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.group.GroupEntity;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
@@ -581,8 +581,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     Toast.makeText(HabitActivity.this, "Tạo thói quen thành công", Toast.LENGTH_LONG).show();
                     HabitActivity.this.setResult(HabitActivity.RESULT_OK);
-                    ReminderManager reminderManager = new ReminderManager(HabitActivity.this, remindDispList);
-                    reminderManager.start();
+                    HabitReminderManager habitReminderManager = new HabitReminderManager(HabitActivity.this, remindDispList);
+                    habitReminderManager.start();
                     finish();
                 }
 
@@ -598,8 +598,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     HabitActivity.this.setResult(HabitActivity.RESULT_OK);
-                    ReminderManager reminderManager = new ReminderManager(HabitActivity.this, remindDispList);
-                    reminderManager.start();
+                    HabitReminderManager habitReminderManager = new HabitReminderManager(HabitActivity.this, remindDispList);
+                    habitReminderManager.start();
                     finish();
                 }
 

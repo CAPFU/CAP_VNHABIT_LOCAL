@@ -18,7 +18,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import habit.tracker.habittracker.adapter.HabitRecyclerViewAdapter;
+import habit.tracker.habittracker.adapter.habit.HabitRecyclerViewAdapter;
+import habit.tracker.habittracker.adapter.habit.TrackingItem;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.habit.HabitResponse;
@@ -26,8 +27,8 @@ import habit.tracker.habittracker.api.model.tracking.Tracking;
 import habit.tracker.habittracker.api.model.tracking.TrackingList;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.util.AppGenerator;
-import habit.tracker.habittracker.common.Schedule;
-import habit.tracker.habittracker.common.TrackingDate;
+import habit.tracker.habittracker.repository.habit.Schedule;
+import habit.tracker.habittracker.repository.habit.TrackingDateInWeek;
 import habit.tracker.habittracker.common.util.MySharedPreference;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
@@ -37,7 +38,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static habit.tracker.habittracker.adapter.HabitRecyclerViewAdapter.TYPE_ADD;
+import static habit.tracker.habittracker.adapter.habit.HabitRecyclerViewAdapter.TYPE_ADD;
 
 public class MainActivity extends AppCompatActivity implements HabitRecyclerViewAdapter.ItemClickListener {
     public static final int CREATE_NEW_HABIT = 0;
@@ -221,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         db.close();
 
         VnHabitApiService service = VnHabitApiUtils.getApiService();
-        service.replace(trackingData).enqueue(new Callback<ResponseBody>() {
+        service.updateTracking(trackingData).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
             }
@@ -356,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         startActivity(intent);
     }
 
-    public boolean isTodayHabit(int year, int month, int date, TrackingDate habit) {
+    public boolean isTodayHabit(int year, int month, int date, TrackingDateInWeek habit) {
         Calendar ca = Calendar.getInstance();
         ca.set(year, month, date);
         int toDay = ca.get(Calendar.DAY_OF_WEEK);

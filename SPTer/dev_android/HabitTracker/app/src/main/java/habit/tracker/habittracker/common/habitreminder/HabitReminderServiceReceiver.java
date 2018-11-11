@@ -1,4 +1,4 @@
-package habit.tracker.habittracker.common.receiver;
+package habit.tracker.habittracker.common.habitreminder;
 
 import android.app.AlarmManager;
 import android.app.NotificationManager;
@@ -16,19 +16,18 @@ import java.util.Locale;
 
 import habit.tracker.habittracker.R;
 import habit.tracker.habittracker.common.util.AppGenerator;
-import habit.tracker.habittracker.common.util.ReminderManager;
 
-public class ReminderReceiver extends BroadcastReceiver {
+public class HabitReminderServiceReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle extras = intent.getExtras();
 
         if (extras != null) {
-            String remindId = extras.getString(ReminderManager.REMIND_ID);
-            String remindText = extras.getString(ReminderManager.REMIND_TEXT);
-            String habitName = extras.getString(ReminderManager.HABIT_NAME);
-            String endTime = extras.getString(ReminderManager.END_TIME);
+            String remindId = extras.getString(HabitReminderManager.REMIND_ID);
+            String remindText = extras.getString(HabitReminderManager.REMIND_TEXT);
+            String habitName = extras.getString(HabitReminderManager.HABIT_NAME);
+            String endTime = extras.getString(HabitReminderManager.END_TIME);
 
             if (remindId == null || remindText == null || habitName == null) {
                 return;
@@ -40,7 +39,7 @@ public class ReminderReceiver extends BroadcastReceiver {
                     Date endDate = fm.parse(endTime);
                     if (endDate.getTime() < System.currentTimeMillis()) {
 
-                        Intent i = new Intent(context, ReminderReceiver.class);
+                        Intent i = new Intent(context, HabitReminderServiceReceiver.class);
                         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, Integer.parseInt(remindId), i, 0);
                         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                         if (alarmMgr != null) {
