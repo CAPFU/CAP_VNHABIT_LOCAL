@@ -66,7 +66,7 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
                     + "h." + HabitSchema.HABIT_ID + " = t." + TrackingSchema.HABIT_ID
                     + " WHERE "
                     + "t." + HABIT_ID + " = '" + habitId + "'"
-                    + " AND t." + TrackingSchema.CURRENT_DATE + " BETWEEN '" + startDate + "' AND '" + endDate + "'";
+                    + " AND t." + TrackingSchema.CURRENT_DATE + " BETWEEN '" + startDate + "' AND '" + endDate + "'  ORDER BY t." + CURRENT_DATE + " DESC";
 
             Cursor cursor = super.rawQuery(sql, null);
 
