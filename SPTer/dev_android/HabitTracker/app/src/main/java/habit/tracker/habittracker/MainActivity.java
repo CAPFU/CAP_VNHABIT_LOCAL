@@ -185,7 +185,6 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
     @Override
     public void onTrackingValueChanged(View view, int type, int position, int count) {
-        // update UI
         TrackingItem item = trackingItemList.get(position);
         item.setCount(count);
 
@@ -195,11 +194,11 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         Tracking tracking = new Tracking();
         tracking.setTrackingId(item.getTrackId());
         tracking.setHabitId(item.getHabitId());
-        tracking.setCurrentDate(this.currentDate);
         tracking.setCount(String.valueOf(item.getCount()));
+        tracking.setCurrentDate(currentDate);
+        tracking.setDescription(item.getDescription());
         trackingData.getTrackingList().add(tracking);
-        if (!Database.trackingImpl
-                .updateTracking(Database.trackingImpl.convert(tracking))) {
+        if (!Database.getTrackingDb().updateTracking(Database.getTrackingDb().convert(tracking))) {
             return;
         }
         db.close();
@@ -246,12 +245,11 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         for (HabitEntity habit : habitEntities) {
 
             // get tracking records on current date
-            TrackingEntity record = Database.getTrackingDb()
-                    .getTracking(habit.getHabitId(), currentDate);
+            TrackingEntity record = Database.getTrackingDb().getTracking(habit.getHabitId(), currentDate);
 
             if (record == null) {
                 record = getTodayTracking(habit.getHabitId(), currentDate, 0);
-                Database.getTrackingDb().saveTracking(record);
+//                Database.getTrackingDb().saveTracking(record);
             }
             TrackingItem item = new TrackingItem(
                     record.getTrackingId(),

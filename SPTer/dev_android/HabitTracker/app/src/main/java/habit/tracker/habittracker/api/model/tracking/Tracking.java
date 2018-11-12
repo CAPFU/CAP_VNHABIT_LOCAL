@@ -56,7 +56,7 @@ public class Tracking {
         this.count = count;
     }
 
-    public void setTrackingDescription(String trackingDescription) {
+    public void setDescription(String trackingDescription) {
         this.trackingDescription = trackingDescription;
     }
 }
