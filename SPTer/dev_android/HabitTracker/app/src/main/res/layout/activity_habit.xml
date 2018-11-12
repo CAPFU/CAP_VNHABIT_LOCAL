@@ -781,7 +781,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
                 android:paddingStart="7dp"
-                android:background="#ffffff"
+                android:background="@drawable/bg_border1"
                 />
         </RelativeLayout>
     </ScrollView>

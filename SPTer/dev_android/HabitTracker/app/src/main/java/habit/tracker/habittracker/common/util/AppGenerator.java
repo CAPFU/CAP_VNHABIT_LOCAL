@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import java.text.DateFormat;
+import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class AppGenerator {
     public static final long MILLISECOND_IN_DAY = 86400000;
@@ -305,5 +307,13 @@ public class AppGenerator {
         Date date2 = getDate(d2, YMD_SHORT);
         long off = date2.getTime() - date1.getTime();
         return (int) (off / MILLISECOND_IN_DAY);
+    }
+
+    public static String getSearchKey(String str) {
+        if (TextUtils.isEmpty(str))
+            return null;
+        String temp = Normalizer.normalize(str.trim(), Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(temp).replaceAll("").toLowerCase();
     }
 }

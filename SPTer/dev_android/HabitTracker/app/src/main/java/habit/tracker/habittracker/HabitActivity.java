@@ -252,13 +252,13 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                     selectSuggestion = false;
                     return;
                 }
-                if (TextUtils.isEmpty(s.toString())){
+                if (TextUtils.isEmpty(s.toString())) {
                     habitSuggestList.clear();
                     suggestAdapter.notifyDataSetChanged();
                     return;
                 }
                 VnHabitApiService mService = VnHabitApiUtils.getApiService();
-                mService.searchHabitName(s.toString().toLowerCase()).enqueue(new Callback<SearchResponse>() {
+                mService.searchHabitName(AppGenerator.getSearchKey(s.toString().trim())).enqueue(new Callback<SearchResponse>() {
                     @Override
                     public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
                         habitSuggestList.clear();
@@ -333,8 +333,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             setMonitorDate(btnSun);
 
             // set plan date
-            tvStartDate.setText(startHabitDate);
-            tvEndDate.setText(endHabitDate);
+            tvStartDate.setText(AppGenerator.format(startHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
+            tvEndDate.setText(AppGenerator.format(endHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
         }
     }
 
@@ -393,10 +393,6 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 // habit name
                 editHabitName.setText(habitEntity.getHabitName());
 
-                // habit stat and end date
-                startHabitDate = habitEntity.getStartDate();
-                endHabitDate = habitEntity.getEndDate();
-
                 // habit target
                 switch (habitEntity.getHabitTarget()) {
                     case TYPE_0:
@@ -432,12 +428,16 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
                 // start and end date of habit
                 if (habitEntity.getStartDate() != null) {
+                    startHabitDate = habitEntity.getStartDate();
                     setHabitDate(mStartDate);
-                    tvStartDate.setText(habitEntity.getStartDate());
+                    tvStartDate.setText(AppGenerator.format(startHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
                 }
                 if (habitEntity.getEndDate() != null) {
+                    endHabitDate = habitEntity.getEndDate();
                     setHabitDate(mEndDate);
-                    tvEndDate.setText(habitEntity.getEndDate());
+                    tvEndDate.setText(AppGenerator.format(endHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
+                } else {
+                    tvEndDate.setText(AppGenerator.format(endHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
                 }
 
                 // habit type
@@ -603,7 +603,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         habit.setMonitorUnit(monitorUnit);
         habit.setMonitorNumber(monitorNumber);
 
-        habit.setStartDate(enableHabitLimitTime[0]? startHabitDate: null);
+        habit.setStartDate(enableHabitLimitTime[0]? startHabitDate: AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
         habit.setEndDate(enableHabitLimitTime[1]? endHabitDate: null);
         habit.setCreatedDate(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
 
@@ -631,7 +631,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         if (!TextUtils.isEmpty(searchHabitName) && searchHabitName.equals(habit.getHabitName())) {
             habit.setHabitSearchNameId(searchHabitId);
         } else {
-            habit.setHabitNameAscii(habit.getHabitName());
+            habit.setHabitNameAscii(AppGenerator.getSearchKey(habit.getHabitName()));
             habit.setHabitNameCount(1);
         }
 

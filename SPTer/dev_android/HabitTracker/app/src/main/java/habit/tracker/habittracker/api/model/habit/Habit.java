@@ -304,9 +304,7 @@ public class Habit implements TrackingDateInWeek {
     }
 
     public void setHabitNameAscii(String habitName) {
-        String temp = Normalizer.normalize(habitName.trim(), Normalizer.Form.NFD);
-        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-        this.habitNameAscii = pattern.matcher(temp).replaceAll("").toLowerCase();
+        habitNameAscii = habitName;
     }
 
     public void setHabitNameCount(int habitNameCount) {
