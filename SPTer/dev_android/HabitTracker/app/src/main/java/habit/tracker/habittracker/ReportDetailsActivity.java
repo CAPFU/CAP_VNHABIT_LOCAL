@@ -193,7 +193,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
         // init time tab
         selectedTab = tabWeek;
-        GradientDrawable gd = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[] {startColor, endColor});
+        GradientDrawable gd = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[]{startColor, endColor});
         gd.setCornerRadius(0f);
         tabWeekHL.setBackground(gd);
         tabMonthHL.setBackground(gd);
@@ -379,14 +379,12 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
     public ArrayList<BarEntry> loadWeekData(String currentDate) {
         String[] daysInWeek = AppGenerator.getDatesInWeek(currentDate);
-
         startReportDate = daysInWeek[0];
         endReportDate = daysInWeek[6];
 
         Database db = Database.getInstance(this);
         db.open();
-        HabitTracking habitTracking = Database.getTrackingDb()
-                .getHabitTrackingBetween(habitEntity.getHabitId(), startReportDate, endReportDate);
+        HabitTracking habitTracking = Database.getTrackingDb().getHabitTrackingBetween(habitEntity.getHabitId(), startReportDate, currentDate);
         db.close();
 
         if (habitTracking != null && habitTracking.getHabit() != null) {
@@ -400,14 +398,12 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
     public ArrayList<BarEntry> loadMonthData(String currentDate) {
         String[] daysInMonth = AppGenerator.getDatesInMonth(currentDate, false);
-
         startReportDate = daysInMonth[0];
         endReportDate = daysInMonth[daysInMonth.length - 1];
 
         Database db = Database.getInstance(this);
         db.open();
-        HabitTracking habitTracking = Database.trackingImpl
-                .getHabitTrackingBetween(habitEntity.getHabitId(), startReportDate, endReportDate);
+        HabitTracking habitTracking = Database.trackingImpl.getHabitTrackingBetween(habitEntity.getHabitId(), startReportDate, currentDate);
         db.close();
 
         if (habitTracking != null && habitTracking.getHabit() != null) {
@@ -434,17 +430,13 @@ public class ReportDetailsActivity extends AppCompatActivity {
         HabitTracking habitTracking;
         HabitEntity hb = null;
         String start;
-        String end;
 
         for (int m = 0; m < 12; m++) {
             start = year + "-" + (m + 1) + "-" + 1;
-            end = year + "-" + (m + 1) + "-" + AppGenerator.getMaxDayInMonth(year, m);
             start = AppGenerator.format(start, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
-            end = AppGenerator.format(end, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
 
             // data per month
-            habitTracking = Database.trackingImpl
-                    .getHabitTrackingBetween(this.habitEntity.getHabitId(), start, end);
+            habitTracking = Database.trackingImpl.getHabitTrackingBetween(this.habitEntity.getHabitId(), start, currentDate);
 
             if (habitTracking != null) {
                 if (hb == null) {
@@ -454,9 +446,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 // data per day in month
                 for (TrackingEntity track : habitTracking.getTrackingList()) {
                     count = Integer.parseInt(track.getCount());
-//                    if (count >= Integer.parseInt(hb.getMonitorNumber())) {
-                        completedPerMonth[m] += count;
-//                    }
+                    completedPerMonth[m] += count;
                 }
                 if (habitTracking.getHabit() != null) {
                     habitEntity = habitTracking.getHabit();
@@ -489,8 +479,8 @@ public class ReportDetailsActivity extends AppCompatActivity {
             for (TrackingEntity track : trackList) {
                 count = Integer.parseInt(track.getCount());
 //                if (count >= Integer.parseInt(habit.getMonitorNumber())) {
-                    mapDayInMonth.put(track.getCurrentDate(),
-                            mapDayInMonth.get(track.getCurrentDate()) + count);
+                mapDayInMonth.put(track.getCurrentDate(),
+                        mapDayInMonth.get(track.getCurrentDate()) + count);
 //                }
             }
         }
