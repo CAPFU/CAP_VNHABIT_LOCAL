@@ -12,6 +12,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import habit.tracker.habittracker.adapter.RecyclerViewItemClickListener;
+import habit.tracker.habittracker.adapter.habitsuggestion.SuggestByGroupAdapter;
 import habit.tracker.habittracker.adapter.habitsuggestion.SuggestRecylViewAdapter;
 import habit.tracker.habittracker.api.model.search.HabitSuggestion;
 
@@ -21,7 +22,7 @@ public class SuggestionActivity extends AppCompatActivity implements RecyclerVie
     RecyclerView rvSuggestion;
 
     List<HabitSuggestion> data;
-    SuggestRecylViewAdapter adapter;
+    SuggestByGroupAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,19 +30,19 @@ public class SuggestionActivity extends AppCompatActivity implements RecyclerVie
         setContentView(R.layout.activity_suggestion);
         ButterKnife.bind(this);
 
-//        data = new ArrayList<>();
-//        data.add(new HabitSuggestion("Sức khỏe", true));
-//        data.add(new HabitSuggestion("1", "Chạy bộ", "chay bo", "12", false));
-//        data.add(new HabitSuggestion("2", "Hít đất", "hit dat", "16", false));
-//        data.add(new HabitSuggestion("3", "Đạp xe", "dap xe", "7", false));
-//        data.add(new HabitSuggestion("Học tập", true));
-//        data.add(new HabitSuggestion("4", "Học Tiếng Anh", "", "2", false));
-//        data.add(new HabitSuggestion("5", "Học Tiếng Hàn", "", "8", false));
-//        data.add(new HabitSuggestion("6", "Học Tiếng Nhật", "", "19", false));
-//
-//        adapter = new SuggestRecylViewAdapter(this, data, this);
-//        rvSuggestion.setLayoutManager(new LinearLayoutManager(this));
-//        rvSuggestion.setAdapter(adapter);
+        data = new ArrayList<>();
+        data.add(new HabitSuggestion("Sức khỏe", true));
+        data.add(new HabitSuggestion("1", "Chạy bộ", "chay bo", "12", false));
+        data.add(new HabitSuggestion("2", "Hít đất", "hit dat", "16", false));
+        data.add(new HabitSuggestion("3", "Đạp xe", "dap xe", "7", false));
+        data.add(new HabitSuggestion("Học tập", true));
+        data.add(new HabitSuggestion("4", "Học Tiếng Anh", "", "2", false));
+        data.add(new HabitSuggestion("5", "Học Tiếng Hàn", "", "8", false));
+        data.add(new HabitSuggestion("6", "Học Tiếng Nhật", "", "19", false));
+
+        adapter = new SuggestByGroupAdapter(this, data, this);
+        rvSuggestion.setLayoutManager(new LinearLayoutManager(this));
+        rvSuggestion.setAdapter(adapter);
     }
 
     @Override
