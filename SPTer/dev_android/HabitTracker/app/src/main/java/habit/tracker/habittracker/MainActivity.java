@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -85,14 +86,15 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         trackingAdapter = new HabitRecyclerViewAdapter(MainActivity.this, trackingItemList);
         trackingAdapter.setClickListener(MainActivity.this);
         recyclerView.setAdapter(trackingAdapter);
-        loadData();
+
+        initTrackingList();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CREATE_NEW_HABIT || requestCode == UPDATE_HABIT) {
             if (resultCode == RESULT_OK) {
-                loadData();
+                initTrackingList();
             }
 
         } else if (requestCode == USE_FILTER) {
@@ -116,12 +118,13 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
             }
         } else if (requestCode == REPORT) {
-            loadData();
+            initTrackingList();
         }
     }
 
-    private void loadData() {
+    private void initTrackingList() {
         trackingItemList.clear();
+
         String userId = MySharedPreference.getUserId(this);
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
         mService.getHabit(userId).enqueue(new Callback<HabitResponse>() {
@@ -139,35 +142,31 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                         int year = ca.get(Calendar.YEAR);
                         int month = ca.get(Calendar.MONTH) + 1;
                         int date = ca.get(Calendar.DATE);
-                        String currentDate = year + "-" + month + "-" + date;
-                        currentDate = AppGenerator.format(currentDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
-
                         if (isTodayHabit(year, month - 1, date, habit)) {
-
                             // update tracking noteItems from server
                             for (Tracking track : habit.getTracksList()) {
                                 Database.getTrackingDb().saveTracking(Database.trackingImpl.convert(track));
                             }
-
-                            // get today tracking record
-                            TrackingEntity todayTracking = getTodayTracking(habit.getHabitId(), currentDate, 0);
-                            TrackingItem item = new TrackingItem(
-                                    todayTracking.getTrackingId(),
-                                    habit.getHabitId(),
-                                    habit.getHabitName(),
-                                    habit.getHabitDescription(),
-                                    habit.getHabitType(),
-                                    Integer.parseInt(habit.getMonitorType()),
-                                    habit.getMonitorNumber(),
-                                    Integer.parseInt(todayTracking.getCount()),
-                                    habit.getMonitorUnit(),
-                                    habit.getHabitColor());
-                            item.setTarget(habit.getHabitTarget());
-                            item.setGroup(habit.getGroupId());
-                            trackingItemList.add(item);
+                            // create today tracking record list
+                            if (!TextUtils.isEmpty(habit.getEndDate()) && currentDate.compareTo(habit.getEndDate()) <= 0) {
+                                TrackingEntity todayTracking = getTodayTracking(habit.getHabitId(), currentDate, 0);
+                                trackingItemList.add(new TrackingItem(
+                                        todayTracking.getTrackingId(),
+                                        habit.getHabitId(),
+                                        habit.getHabitTarget(),
+                                        habit.getGroupId(),
+                                        habit.getHabitName(),
+                                        habit.getHabitDescription(),
+                                        habit.getHabitType(),
+                                        Integer.parseInt(habit.getMonitorType()),
+                                        habit.getMonitorNumber(),
+                                        Integer.parseInt(todayTracking.getCount()),
+                                        habit.getMonitorUnit(),
+                                        habit.getHabitColor())
+                                );
+                            }
                         }
                     }
-
                     for (Habit habit : habitList) {
                         Database.habitDaoImpl.saveUpdateHabit(Database.habitDaoImpl.convert(habit));
                     }
@@ -178,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
             @Override
             public void onFailure(Call<HabitResponse> call, Throwable t) {
-                updateData();
+                loadTrackingByCurrentDate();
             }
         });
     }
@@ -228,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         }
     }
 
-    public void updateData() {
+    public void loadTrackingByCurrentDate() {
         trackingItemList.clear();
         String[] arr = currentDate.split("-");
         int year = Integer.parseInt(arr[0]);
@@ -245,9 +244,11 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             if (record == null) {
                 record = getTodayTracking(habit.getHabitId(), currentDate, 0);
             }
-            TrackingItem item = new TrackingItem(
+            trackingItemList.add(new TrackingItem(
                     record.getTrackingId(),
                     habit.getHabitId(),
+                    habit.getHabitTarget(),
+                    habit.getGroupId(),
                     habit.getHabitName(),
                     habit.getHabitDescription(),
                     habit.getHabitType(),
@@ -255,10 +256,8 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                     habit.getMonitorNumber(),
                     Integer.parseInt(record.getCount()),
                     habit.getMonitorUnit(),
-                    habit.getHabitColor());
-            item.setTarget(habit.getHabitTarget());
-            item.setGroup(habit.getGroupId());
-            trackingItemList.add(item);
+                    habit.getHabitColor())
+            );
         }
         db.close();
         trackingAdapter.setEditableItemCount(currentDate.compareTo(firstCurrentDate) < 1);
@@ -274,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             todayTracking.setCount(String.valueOf(defaultVal));
             todayTracking.setCurrentDate(currentDate);
             todayTracking.setDescription(null);
-            Database.getTrackingDb().saveTracking(todayTracking);
+//            Database.getTrackingDb().saveTracking(todayTracking);
         }
         return todayTracking;
     }
@@ -287,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             updateTitle(nextDate);
             currentDate = nextDate;
             trackingItemList.clear();
-            updateData();
+            loadTrackingByCurrentDate();
         }
     }
 
@@ -299,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             updateTitle(preDate);
             currentDate = preDate;
             trackingItemList.clear();
-            updateData();
+            loadTrackingByCurrentDate();
         }
     }
 
@@ -308,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         updateTitle(firstCurrentDate);
         currentDate = firstCurrentDate;
         trackingItemList.clear();
-        updateData();
+        loadTrackingByCurrentDate();
     }
 
     @OnClick(R.id.report)

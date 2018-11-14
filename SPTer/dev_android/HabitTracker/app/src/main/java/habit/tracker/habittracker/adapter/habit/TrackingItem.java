@@ -18,9 +18,11 @@ public class TrackingItem {
 
     public TrackingItem() {}
 
-    public TrackingItem(String trackId, String habitId, String name, String description, String habitType, int monitorType, String number, int count, String unit, String color) {
+    public TrackingItem(String trackId, String habitId, String target, String group, String name, String description, String habitType, int monitorType, String number, int count, String unit, String color) {
         this.trackId = trackId;
         this.habitId = habitId;
+        this.target = target;
+        this.group = group;
         this.name = name;
         this.description = description;
         this.habitType = Integer.parseInt(habitType);
