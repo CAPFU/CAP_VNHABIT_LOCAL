@@ -535,7 +535,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
                         + " - " + AppGenerator.format(endReportDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT);
                 break;
             case ChartHelper.MODE_MONTH:
-                des = "Tháng " + currentTrackingDate.split("-")[1] + ", " + currentTrackingDate.split("-")[0];
+                des = "Tháng " + currentTrackingDate.split("-")[1] + "/ " + currentTrackingDate.split("-")[0];
                 break;
             case ChartHelper.MODE_YEAR:
                 des = "Năm " + currentTrackingDate.split("-")[0];

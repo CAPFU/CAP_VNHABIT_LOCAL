@@ -254,7 +254,7 @@ public class ReportCalendarActivity extends AppCompatActivity implements Trackin
             e.printStackTrace();
         }
 
-        tvCalendarHead.setText("Tháng " + (calendar.get(Calendar.MONTH) + 1) + ", " + calendar.get(Calendar.YEAR));
+        tvCalendarHead.setText("Tháng " + (calendar.get(Calendar.MONTH) + 1) + "/ " + calendar.get(Calendar.YEAR));
 
         trackingCalendarItemList.add(new TrackingCalendarItem("Hai", null, false, false, true));
         trackingCalendarItemList.add(new TrackingCalendarItem("Ba", null, false, false, true));
