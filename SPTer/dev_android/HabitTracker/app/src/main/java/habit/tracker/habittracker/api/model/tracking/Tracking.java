@@ -36,7 +36,7 @@ public class Tracking {
         return count;
     }
 
-    public String getTrackingDescription() {
+    public String getDescription() {
         return trackingDescription;
     }
 

@@ -2,6 +2,7 @@ package habit.tracker.habittracker;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -10,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -219,8 +221,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_habit);
         ButterKnife.bind(this);
 
@@ -307,8 +308,41 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
         // init remind list
         remindAdapter = new RemindRecyclerViewAdapter(this, remindDisplayList);
+        remindAdapter.setListener(new RecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, final int position) {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(HabitActivity.this);
+                builder1.setMessage("Xóa nhắc nhở này");
+                builder1.setCancelable(true);
+                builder1.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        HabitReminderManager manager = new HabitReminderManager(HabitActivity.this);
+                        manager.cancelReminder(Integer.parseInt(remindDisplayList.get(position).getReminderId()));
+                        remindDisplayList.remove(position);
+                        remindAdapter.notifyDataSetChanged();
+                        dialog.cancel();
+                    }
+                });
+
+                builder1.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+                final AlertDialog alertDialog = builder1.create();
+                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @SuppressLint("ResourceType")
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(HabitActivity.this.getString(R.color.colorAccent)));
+                        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor(HabitActivity.this.getString(R.color.colorAccent)));
+                    }
+                });
+                alertDialog.show();
+            }
+        });
         rvRemind.setLayoutManager(new LinearLayoutManager(this));
-        rvRemind.setOnClickListener(null);
         rvRemind.setAdapter(remindAdapter);
 
         // load habit from local trackingItemList
@@ -650,7 +684,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         }
         db.close();
 
-        // call API to syn data
+        // call API to syn noteItems
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
         // create new habit
         if (createMode == MODE_CREATE) {

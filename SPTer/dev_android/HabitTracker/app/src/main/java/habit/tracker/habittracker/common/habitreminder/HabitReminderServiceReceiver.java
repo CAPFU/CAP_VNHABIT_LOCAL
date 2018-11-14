@@ -38,7 +38,6 @@ public class HabitReminderServiceReceiver extends BroadcastReceiver {
                     SimpleDateFormat fm = new SimpleDateFormat(AppGenerator.YMD, Locale.getDefault());
                     Date endDate = fm.parse(endTime);
                     if (endDate.getTime() < System.currentTimeMillis()) {
-
                         Intent i = new Intent(context, HabitReminderServiceReceiver.class);
                         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, Integer.parseInt(remindId), i, 0);
                         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

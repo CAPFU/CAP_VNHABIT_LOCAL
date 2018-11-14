@@ -45,7 +45,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         this.mData = mData;
     }
 
-    public void setEditable(boolean editable) {
+    public void setEditableItemCount(boolean editable) {
         isEditable = editable;
     }
 

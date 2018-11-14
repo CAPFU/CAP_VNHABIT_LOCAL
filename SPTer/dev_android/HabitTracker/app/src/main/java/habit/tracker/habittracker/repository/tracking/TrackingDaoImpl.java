@@ -203,12 +203,13 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
         return initialValues;
     }
 
-    public TrackingEntity convert(Tracking track) {
+    public TrackingEntity convert(Tracking record) {
         TrackingEntity entity = new TrackingEntity();
-        entity.setTrackingId(track.getTrackingId());
-        entity.setHabitId(track.getHabitId());
-        entity.setCount(track.getCount());
-        entity.setCurrentDate(track.getCurrentDate());
+        entity.setTrackingId(record.getTrackingId());
+        entity.setHabitId(record.getHabitId());
+        entity.setCount(record.getCount());
+        entity.setCurrentDate(record.getCurrentDate());
+        entity.setDescription(record.getDescription());
         return entity;
     }
 

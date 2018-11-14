@@ -27,6 +27,10 @@ public class HabitReminderManager {
     private List<Reminder> remindersList;
     Calendar caStart = Calendar.getInstance();
 
+    public HabitReminderManager(Context context) {
+        this.context = context;
+    }
+
     public HabitReminderManager(Context context, List<Reminder> remindAddNew) {
         this.context = context;
         this.remindersList = remindAddNew;
@@ -126,6 +130,15 @@ public class HabitReminderManager {
         if (interval > 0) {
             alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, startTime,
                     interval, alarmIntent);
+        }
+    }
+
+    public void cancelReminder(int requestCode) {
+        Intent i = new Intent(context, HabitReminderServiceReceiver.class);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, requestCode, i, 0);
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmMgr != null) {
+            alarmMgr.cancel(alarmIntent);
         }
     }
 }

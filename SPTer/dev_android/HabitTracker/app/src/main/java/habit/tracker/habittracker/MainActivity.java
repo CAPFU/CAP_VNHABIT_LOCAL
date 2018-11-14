@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     HabitRecyclerViewAdapter trackingAdapter;
     String currentDate;
     String firstCurrentDate;
-    int dayStack = 0;
+    int timeLine = 0;
 
     @BindView(R.id.rvMenu)
     RecyclerView recyclerView;
@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
     private void loadData() {
         trackingItemList.clear();
-
         String userId = MySharedPreference.getUserId(this);
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
         mService.getHabit(userId).enqueue(new Callback<HabitResponse>() {
@@ -145,9 +144,9 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
                         if (isTodayHabit(year, month - 1, date, habit)) {
 
-                            // update tracking data from server
+                            // update tracking noteItems from server
                             for (Tracking track : habit.getTracksList()) {
-                                Database.trackingImpl.saveTracking(Database.trackingImpl.convert(track));
+                                Database.getTrackingDb().saveTracking(Database.trackingImpl.convert(track));
                             }
 
                             // get today tracking record
@@ -179,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
             @Override
             public void onFailure(Call<HabitResponse> call, Throwable t) {
+                updateData();
             }
         });
     }
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     public void onTrackingValueChanged(View view, int type, int position, int count) {
         TrackingItem item = trackingItemList.get(position);
         item.setCount(count);
-
+        // save to db local
         Database db = Database.getInstance(this);
         db.open();
         TrackingList trackingData = new TrackingList();
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             return;
         }
         db.close();
-
+        // save to server
         VnHabitApiService service = VnHabitApiUtils.getApiService();
         service.updateTracking(trackingData).enqueue(new Callback<ResponseBody>() {
             @Override
@@ -230,26 +230,20 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
     public void updateData() {
         trackingItemList.clear();
-
         String[] arr = currentDate.split("-");
         int year = Integer.parseInt(arr[0]);
         int month = Integer.parseInt(arr[1]);
         int date = Integer.parseInt(arr[2]);
         Schedule schedule = new Schedule(year, month, date);
-
         Database db = Database.getInstance(this);
         db.open();
         List<HabitEntity> habitEntities = Database.getHabitDb().getTodayHabit(schedule, currentDate);
 
-        boolean isDataSetChanged = false;
         for (HabitEntity habit : habitEntities) {
-
             // get tracking records on current date
             TrackingEntity record = Database.getTrackingDb().getTracking(habit.getHabitId(), currentDate);
-
             if (record == null) {
                 record = getTodayTracking(habit.getHabitId(), currentDate, 0);
-//                Database.getTrackingDb().saveTracking(record);
             }
             TrackingItem item = new TrackingItem(
                     record.getTrackingId(),
@@ -265,13 +259,9 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             item.setTarget(habit.getHabitTarget());
             item.setGroup(habit.getGroupId());
             trackingItemList.add(item);
-            if (!isDataSetChanged) {
-                isDataSetChanged = true;
-            }
         }
         db.close();
-
-        trackingAdapter.setEditable(currentDate.compareTo(firstCurrentDate) < 1);
+        trackingAdapter.setEditableItemCount(currentDate.compareTo(firstCurrentDate) < 1);
         trackingAdapter.notifyDataSetChanged();
     }
 
@@ -284,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
             todayTracking.setCount(String.valueOf(defaultVal));
             todayTracking.setCurrentDate(currentDate);
             todayTracking.setDescription(null);
-            Database.trackingImpl.saveTracking(todayTracking);
+            Database.getTrackingDb().saveTracking(todayTracking);
         }
         return todayTracking;
     }
@@ -293,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     public void loadNextDateHabit(View v) {
         String nextDate = AppGenerator.getNextDate(currentDate, AppGenerator.YMD_SHORT);
         if (nextDate != null) {
-            dayStack++;
+            timeLine++;
             updateTitle(nextDate);
             currentDate = nextDate;
             trackingItemList.clear();
@@ -305,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     public void loadPreDateHabit(View v) {
         String preDate = AppGenerator.getPreDate(currentDate, AppGenerator.YMD_SHORT);
         if (preDate != null) {
-            dayStack--;
+            timeLine--;
             updateTitle(preDate);
             currentDate = preDate;
             trackingItemList.clear();
@@ -314,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     }
 
     public void backToCurrent(View v) {
-        dayStack = 0;
+        timeLine = 0;
         updateTitle(firstCurrentDate);
         currentDate = firstCurrentDate;
         trackingItemList.clear();
@@ -352,11 +342,11 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     }
 
     private void updateTitle(String date) {
-        if (dayStack == 0) {
+        if (timeLine == 0) {
             tvDate.setText("Hôm nay");
-        } else if (dayStack == 1) {
+        } else if (timeLine == 1) {
             tvDate.setText("Ngày mai");
-        } else if (dayStack == -1) {
+        } else if (timeLine == -1) {
             tvDate.setText("Hôm qua");
         }
         else {

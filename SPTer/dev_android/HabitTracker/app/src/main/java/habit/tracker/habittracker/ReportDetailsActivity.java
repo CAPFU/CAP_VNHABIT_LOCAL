@@ -91,6 +91,9 @@ public class ReportDetailsActivity extends AppCompatActivity {
     @BindView(R.id.tabCalendar)
     View tabCalendar;
 
+    @BindView(R.id.tabAddJournal)
+    View tabAddDiary;
+
     private HabitEntity habitEntity;
     private String firstCurrentDate;
     private String currentTrackingDate;
@@ -126,7 +129,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
                 initDefaultUI(habitEntity);
 
-                // load chart data (default is week)
+                // load chart noteItems (default is week)
                 ArrayList<BarEntry> values = loadData(currentTrackingDate);
                 chartHelper.setData(values, mode);
 
@@ -146,7 +149,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
         initDefaultUI(habitEntity);
 
-        // load chart data (default is week)
+        // load chart noteItems (default is week)
         ArrayList<BarEntry> values = loadData(currentTrackingDate);
         chartHelper.setData(values, mode);
 
@@ -435,7 +438,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
             start = year + "-" + (m + 1) + "-" + 1;
             start = AppGenerator.format(start, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
 
-            // data per month
+            // noteItems per month
             habitTracking = Database.trackingImpl.getHabitTrackingBetween(this.habitEntity.getHabitId(), start, currentDate);
 
             if (habitTracking != null) {
@@ -443,7 +446,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
                     hb = habitTracking.getHabit();
                 }
                 int count;
-                // data per day in month
+                // noteItems per day in month
                 for (TrackingEntity track : habitTracking.getTrackingList()) {
                     count = Integer.parseInt(track.getCount());
                     completedPerMonth[m] += count;
@@ -553,6 +556,14 @@ public class ReportDetailsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ReportCalendarActivity.class);
         intent.putExtra(MainActivity.HABIT_ID, habitEntity.getHabitId());
         intent.putExtra(MainActivity.HABIT_COLOR, habitEntity.getHabitColor());
+        startActivity(intent);
+        finish();
+    }
+
+    @OnClick(R.id.tabAddJournal)
+    public void addJournal(View v) {
+        Intent intent = new Intent(this, NoteActivity.class);
+        intent.putExtra(MainActivity.HABIT_ID, habitEntity.getHabitId());
         startActivity(intent);
         finish();
     }
