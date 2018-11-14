@@ -41,6 +41,8 @@ import retrofit2.Response;
 
 public class NoteActivity extends AppCompatActivity implements RecyclerViewItemClickListener {
 
+    @BindView(R.id.llHeader)
+    View llHeader;
     @BindView(R.id.tvGroup)
     TextView tvGroup;
     @BindView(R.id.rvNote)
@@ -57,6 +59,7 @@ public class NoteActivity extends AppCompatActivity implements RecyclerViewItemC
 
     boolean isEdit = true;
 
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,11 +80,12 @@ public class NoteActivity extends AppCompatActivity implements RecyclerViewItemC
         trackingEntities = Database.getTrackingDb().getRecordByHabit(habitId);
         db.close();
 
+        llHeader.setBackgroundColor(Color.parseColor(habitEntity.getHabitColor()));
+
         for (TrackingEntity entity : trackingEntities) {
             if (!TextUtils.isEmpty(entity.getDescription())) {
-                noteItems.add(new NoteItem(entity.getTrackingId(),
-                        AppGenerator.format(entity.getCurrentDate(),
-                                AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT), entity.getDescription()));
+                noteItems.add(new NoteItem(entity.getTrackingId(), entity.getCurrentDate(),
+                        AppGenerator.format(entity.getCurrentDate(), AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT), entity.getDescription()));
             }
             if (imgAddNote.getVisibility() != View.INVISIBLE
                     && currentDate.equals(entity.getCurrentDate())
@@ -184,7 +188,7 @@ public class NoteActivity extends AppCompatActivity implements RecyclerViewItemC
     private void deleteNote(int position) {
         NoteItem noteItem = noteItems.get(position);
         updateData(null, noteItem.getTrackId());
-        if (noteItem.getDate().equals(currentDate)) {
+        if (noteItem.getDefDate().equals(currentDate)) {
             imgAddNote.setVisibility(View.VISIBLE);
         }
         noteItems.remove(position);
@@ -192,7 +196,7 @@ public class NoteActivity extends AppCompatActivity implements RecyclerViewItemC
     }
 
     private void addTodayNote(String newNote, TrackingEntity trackingEntity) {
-        noteItems.add(new NoteItem(trackingEntity.getTrackingId(),
+        noteItems.add(new NoteItem(trackingEntity.getTrackingId(), trackingEntity.getCurrentDate(),
                 AppGenerator.format(trackingEntity.getCurrentDate(), AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT), newNote));
         noteRecyclerViewAdapter.notifyDataSetChanged();
         imgAddNote.setVisibility(View.INVISIBLE);

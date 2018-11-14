@@ -40,7 +40,7 @@
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:src="@drawable/group"
-        android:layout_margin="5dp"
+        android:layout_margin="7dp"
         />
 
 </LinearLayout>
