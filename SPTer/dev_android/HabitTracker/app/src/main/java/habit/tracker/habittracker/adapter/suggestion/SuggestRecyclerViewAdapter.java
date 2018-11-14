@@ -1,7 +1,6 @@
-package habit.tracker.habittracker.adapter.habitsuggestion;
+package habit.tracker.habittracker.adapter.suggestion;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,13 +16,13 @@ import habit.tracker.habittracker.R;
 import habit.tracker.habittracker.adapter.RecyclerViewItemClickListener;
 import habit.tracker.habittracker.api.model.search.HabitSuggestion;
 
-public class SuggestByGroupAdapter extends RecyclerView.Adapter<SuggestByGroupAdapter.HabitSuggestionViewHolder> {
+public class SuggestRecyclerViewAdapter extends RecyclerView.Adapter<SuggestRecyclerViewAdapter.HabitSuggestionViewHolder> {
     private Context context;
     private List<HabitSuggestion> data;
     private LayoutInflater mLayoutInflater;
     private RecyclerViewItemClickListener mItemClickListener;
 
-    public SuggestByGroupAdapter(Context context, List<HabitSuggestion> data, RecyclerViewItemClickListener mItemClickListener) {
+    public SuggestRecyclerViewAdapter(Context context, List<HabitSuggestion> data, RecyclerViewItemClickListener mItemClickListener) {
         this.context = context;
         this.data = data;
         this.mItemClickListener = mItemClickListener;
@@ -32,21 +31,16 @@ public class SuggestByGroupAdapter extends RecyclerView.Adapter<SuggestByGroupAd
 
     @NonNull
     @Override
-    public SuggestByGroupAdapter.HabitSuggestionViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int position) {
-        View v = mLayoutInflater.inflate(R.layout.item_group_header, viewGroup, false);
+    public HabitSuggestionViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View v = mLayoutInflater.inflate(R.layout.item_habit_sugggestion, viewGroup, false);
         return new HabitSuggestionViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SuggestByGroupAdapter.HabitSuggestionViewHolder viewHolder, int position) {
-        if (data.get(position).isHeader()) {
-            viewHolder.tvGroup.setTextSize(16);
-            viewHolder.tvGroup.setTypeface(Typeface.DEFAULT_BOLD);
-            viewHolder.tvGroup.setText(data.get(position).getGroup());
-        } else {
-            viewHolder.tvGroup.setTextSize(13);
-            viewHolder.tvGroup.setText(data.get(position).getHabitNameUni());
-        }
+    public void onBindViewHolder(@NonNull HabitSuggestionViewHolder viewHolder, int position) {
+        HabitSuggestion suggestion = data.get(position);
+        viewHolder.tvHabitName.setText(suggestion.getHabitNameUni());
+        viewHolder.tvHabitNameCount.setText(suggestion.getHabitNameCount());
     }
 
     @Override
@@ -55,12 +49,15 @@ public class SuggestByGroupAdapter extends RecyclerView.Adapter<SuggestByGroupAd
     }
 
     public class HabitSuggestionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.tvGroup)
-        TextView tvGroup;
+        @BindView(R.id.tvHabitName)
+        TextView tvHabitName;
+        @BindView(R.id.tvHabitNameCount)
+        TextView tvHabitNameCount;
 
         public HabitSuggestionViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
         }
 
         @Override

@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import habit.tracker.habittracker.adapter.RecyclerViewItemClickListener;
 import habit.tracker.habittracker.adapter.RemindRecyclerViewAdapter;
-import habit.tracker.habittracker.adapter.habitsuggestion.SuggestRecylViewAdapter;
+import habit.tracker.habittracker.adapter.search.SearchRecyclerViewAdapter;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.reminder.Reminder;
@@ -60,9 +60,10 @@ import retrofit2.Response;
 import static habit.tracker.habittracker.common.AppContrant.RES_OK;
 
 public class HabitActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+    public static final int REQUEST_UPDATE = 0;
     public static final int SELECT_GROUP = 1;
     public static final int ADD_REMINDER = 2;
-    public static final int REQUEST_UPDATE = 0;
+    public static final int GET_SUGGEST = 3;
 
     public static final String TYPE_0 = "0";
     public static final String TYPE_1 = "1";
@@ -80,13 +81,13 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     EditText editHabitName;
     @BindView(R.id.rvHabitSuggestion)
     RecyclerView rvHabitSuggestion;
-    SuggestRecylViewAdapter suggestAdapter;
+    SearchRecyclerViewAdapter suggestAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     List<HabitSuggestion> habitSuggestList = new ArrayList<>();
     String initHabitId;
     String searchHabitId;
     String searchHabitName;
-    boolean selectSuggestion = true;
+    boolean selectedSuggestion = true;
 
     @BindView(R.id.btn_suggestHabit)
     View btnSuggestHabit;
@@ -228,12 +229,12 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         setContentView(R.layout.activity_habit);
         ButterKnife.bind(this);
 
-        suggestAdapter = new SuggestRecylViewAdapter(this, habitSuggestList, new RecyclerViewItemClickListener() {
+        suggestAdapter = new SearchRecyclerViewAdapter(this, habitSuggestList, new RecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 searchHabitId = habitSuggestList.get(position).getHabitNameId();
                 searchHabitName = habitSuggestList.get(position).getHabitNameUni();
-                selectSuggestion = true;
+                selectedSuggestion = true;
                 editHabitName.setText(searchHabitName);
                 habitSuggestList.clear();
                 suggestAdapter.notifyDataSetChanged();
@@ -252,8 +253,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (selectSuggestion) {
-                    selectSuggestion = false;
+                if (selectedSuggestion) {
+                    selectedSuggestion = false;
                     return;
                 }
                 if (TextUtils.isEmpty(s.toString())) {
@@ -269,7 +270,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                         if (response.body().getResult().equals(RES_OK)) {
                             for (HabitSuggestion sg : response.body().getSearchResult()) {
                                 habitSuggestList.add(
-                                        new HabitSuggestion(sg.getHabitNameId(), sg.getHabitNameUni(), sg.getHabitName(), sg.getHabitNameCount(), false));
+                                        new HabitSuggestion(sg.getHabitNameId(), sg.getGroupId(), sg.getHabitNameUni(), sg.getHabitName(), sg.getHabitNameCount(), false));
                             }
                         }
                         suggestAdapter.notifyDataSetChanged();
@@ -378,13 +379,15 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_GROUP) {
+        if (requestCode == SELECT_GROUP) {
+            if (resultCode == RESULT_OK) {
                 if (data != null && data.getExtras() != null) {
                     savedGroupId = data.getStringExtra(GroupActivity.GROUP_ID);
                     tvGroupName.setText(data.getStringExtra(GroupActivity.GROUP_NAME));
                 }
-            } else if (requestCode == ADD_REMINDER) {
+            }
+        } else if (requestCode == ADD_REMINDER) {
+            if (resultCode == RESULT_OK) {
                 if (data != null && data.getExtras() != null) {
                     String remindType = String.valueOf(
                             data.getIntExtra(ReminderCreateActivity.REMIND_TYPE, -1));
@@ -402,6 +405,15 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                     remindDisplayList.add(reminder);
                     remindAddNew.add(reminder);
                     remindAdapter.notifyDataSetChanged();
+                }
+            }
+        } else if (requestCode == GET_SUGGEST) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    searchHabitId = data.getStringExtra(SuggestionActivity.SUGGEST_HABIT_ID);
+                    searchHabitName = data.getStringExtra(SuggestionActivity.SUGGEST_HABIT_NAME_UNI);
+                    selectedSuggestion = true;
+                    editHabitName.setText(searchHabitName);
                 }
             }
         }
@@ -730,7 +742,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     @OnClick(R.id.btn_suggestHabit)
     public void showSuggestHabitByGroup(View v) {
         Intent intent = new Intent(this, SuggestionActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, GET_SUGGEST);
     }
 
     @OnClick({R.id.btn_back})

@@ -1,4 +1,4 @@
-package habit.tracker.habittracker.adapter.habitsuggestion;
+package habit.tracker.habittracker.adapter.search;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -16,13 +16,13 @@ import habit.tracker.habittracker.R;
 import habit.tracker.habittracker.adapter.RecyclerViewItemClickListener;
 import habit.tracker.habittracker.api.model.search.HabitSuggestion;
 
-public class SuggestRecylViewAdapter extends RecyclerView.Adapter<SuggestRecylViewAdapter.HabitSuggestionViewHolder> {
+public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecyclerViewAdapter.HabitSuggestionViewHolder> {
     private Context context;
     private List<HabitSuggestion> data;
     private LayoutInflater mLayoutInflater;
     private RecyclerViewItemClickListener mItemClickListener;
 
-    public SuggestRecylViewAdapter(Context context, List<HabitSuggestion> data, RecyclerViewItemClickListener mItemClickListener) {
+    public SearchRecyclerViewAdapter(Context context, List<HabitSuggestion> data, RecyclerViewItemClickListener mItemClickListener) {
         this.context = context;
         this.data = data;
         this.mItemClickListener = mItemClickListener;

@@ -1,11 +1,13 @@
-package habit.tracker.habittracker.adapter.habitsuggestion;
+package habit.tracker.habittracker.adapter.suggestion;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -16,13 +18,13 @@ import habit.tracker.habittracker.R;
 import habit.tracker.habittracker.adapter.RecyclerViewItemClickListener;
 import habit.tracker.habittracker.api.model.search.HabitSuggestion;
 
-public class HabitSuggestRecylViewAdapter extends RecyclerView.Adapter<HabitSuggestRecylViewAdapter.HabitSuggestionViewHolder> {
+public class SuggestByGroupAdapter extends RecyclerView.Adapter<SuggestByGroupAdapter.HabitSuggestionViewHolder> {
     private Context context;
     private List<HabitSuggestion> data;
     private LayoutInflater mLayoutInflater;
     private RecyclerViewItemClickListener mItemClickListener;
 
-    public HabitSuggestRecylViewAdapter(Context context, List<HabitSuggestion> data, RecyclerViewItemClickListener mItemClickListener) {
+    public SuggestByGroupAdapter(Context context, List<HabitSuggestion> data, RecyclerViewItemClickListener mItemClickListener) {
         this.context = context;
         this.data = data;
         this.mItemClickListener = mItemClickListener;
@@ -31,16 +33,27 @@ public class HabitSuggestRecylViewAdapter extends RecyclerView.Adapter<HabitSugg
 
     @NonNull
     @Override
-    public HabitSuggestionViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = mLayoutInflater.inflate(R.layout.item_habit_sugggestion, viewGroup, false);
+    public SuggestByGroupAdapter.HabitSuggestionViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int position) {
+        View v = mLayoutInflater.inflate(R.layout.item_suggest_by_group, viewGroup, false);
         return new HabitSuggestionViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HabitSuggestionViewHolder viewHolder, int position) {
-        HabitSuggestion suggestion = data.get(position);
-        viewHolder.tvHabitName.setText(suggestion.getHabitNameUni());
-        viewHolder.tvHabitNameCount.setText(suggestion.getHabitNameCount());
+    public void onBindViewHolder(@NonNull SuggestByGroupAdapter.HabitSuggestionViewHolder viewHolder, int position) {
+        HabitSuggestion item = data.get(position);
+        if (data.get(position).isHeader()) {
+            viewHolder.tvGroup.setTextSize(12);
+            viewHolder.tvGroup.setTypeface(Typeface.DEFAULT_BOLD);
+            viewHolder.tvGroup.setPadding(0, 20, 0, 0);
+            viewHolder.tvGroup.setText(item.getGroup());
+            viewHolder.tvHabitNameCount.setVisibility(View.INVISIBLE);
+            viewHolder.imgUser.setVisibility(View.INVISIBLE);
+        } else {
+            viewHolder.tvGroup.setTextSize(12);
+            viewHolder.tvGroup.setPadding(20, 7, 0, 0);
+            viewHolder.tvGroup.setText(item.getHabitNameUni());
+            viewHolder.tvHabitNameCount.setText(item.getHabitNameCount());
+        }
     }
 
     @Override
@@ -49,10 +62,12 @@ public class HabitSuggestRecylViewAdapter extends RecyclerView.Adapter<HabitSugg
     }
 
     public class HabitSuggestionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.tvHabitName)
-        TextView tvHabitName;
+        @BindView(R.id.tvGroup)
+        TextView tvGroup;
         @BindView(R.id.tvHabitNameCount)
         TextView tvHabitNameCount;
+        @BindView(R.id.imgUser)
+        ImageView imgUser;
 
         public HabitSuggestionViewHolder(@NonNull View itemView) {
             super(itemView);

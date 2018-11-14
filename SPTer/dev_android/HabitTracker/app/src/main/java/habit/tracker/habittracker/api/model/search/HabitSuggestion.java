@@ -7,9 +7,11 @@ public class HabitSuggestion {
     @SerializedName("habit_name_id")
     @Expose
     private String habitNameId;
+    @SerializedName("group_id")
+    private String groupId;
     @SerializedName("habit_name_uni")
     @Expose
-    private String habit_name_uni;
+    private String habitNameUni;
     @SerializedName("habit_name")
     @Expose
     private String habitName;
@@ -19,14 +21,16 @@ public class HabitSuggestion {
     private String group;
     private boolean isHeader = false;
 
-    public HabitSuggestion(String group, boolean isHeader) {
-        this.group = group;
+    public HabitSuggestion(String id, String name, boolean isHeader) {
+        this.groupId = id;
+        this.group = name;
         this.isHeader = isHeader;
     }
 
-    public HabitSuggestion(String habitNameId, String habit_name_uni, String habitName, String habitNameCount, boolean isHeader) {
+    public HabitSuggestion(String habitNameId, String groupId, String habitNameUni, String habitName, String habitNameCount, boolean isHeader) {
         this.habitNameId = habitNameId;
-        this.habit_name_uni = habit_name_uni;
+        this.groupId = groupId;
+        this.habitNameUni = habitNameUni;
         this.habitName = habitName;
         this.habitNameCount = habitNameCount;
         this.isHeader = isHeader;
@@ -36,8 +40,12 @@ public class HabitSuggestion {
         return habitNameId;
     }
 
+    public String getGroupId() {
+        return groupId;
+    }
+
     public String getHabitNameUni() {
-        return habit_name_uni;
+        return habitNameUni;
     }
 
     public String getHabitName() {
@@ -60,8 +68,12 @@ public class HabitSuggestion {
         this.habitNameId = habitNameId;
     }
 
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
     public void setHabitNameUni(String habit_name_uni) {
-        this.habit_name_uni = habit_name_uni;
+        this.habitNameUni = habit_name_uni;
     }
 
     public void setHabitName(String habitName) {

@@ -169,11 +169,9 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
 
     @Override
     public boolean updateTracking(TrackingEntity entity) {
-        final String selectionArgs[] = {String.valueOf(entity.getTrackingId())};
-        final String selection = TRACKING_ID + " = ?";
         setContentValue(entity);
         try {
-            boolean res = super.update(TRACKING_TABLE, getContentValue(), selection, selectionArgs) > 0;
+            boolean res = super.replace(TRACKING_TABLE, getContentValue()) > 0;
             return res;
         } catch (SQLiteConstraintException ex) {
             return false;
