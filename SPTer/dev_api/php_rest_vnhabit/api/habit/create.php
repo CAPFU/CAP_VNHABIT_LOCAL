@@ -47,6 +47,7 @@ $habitSuggestion->habit_name = $data->habit_name_ascii;
 $habitSuggestion->habit_name_count = $data->habit_name_count;
 $habitSuggestion->updateCount();
 if ($habitSuggestion->find($data->habit_name)->rowCount() == 0) {
+    $habitSuggestion->habit_name_id = $data->habit_id;
     $habitSuggestion->create();
 }
 
