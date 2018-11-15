@@ -57,7 +57,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static habit.tracker.habittracker.common.AppContrant.RES_OK;
+import static habit.tracker.habittracker.common.AppConstant.RES_OK;
 
 public class HabitActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     public static final int REQUEST_UPDATE = 0;
