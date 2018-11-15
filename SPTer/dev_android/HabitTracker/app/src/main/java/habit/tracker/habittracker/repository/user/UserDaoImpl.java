@@ -155,7 +155,7 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
         initialValues.put(USER_ICON, userEntity.getUserIcon());
         initialValues.put(AVATAR, userEntity.getAvatar());
         initialValues.put(USER_DESCRIPTION, userEntity.getUserDescription());
-        initialValues.put(CREATED_DATE, userEntity.getCreatedDate());
+        initialValues.put(USER_CREATED_DATE, userEntity.getCreatedDate());
     }
 
     private ContentValues getContentValue() {
