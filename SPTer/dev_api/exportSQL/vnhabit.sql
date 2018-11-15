@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 15, 2018 at 12:40 PM
+-- Generation Time: Nov 15, 2018 at 12:56 PM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -220,6 +220,13 @@ CREATE TABLE `user` (
   `user_description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_date` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `user_icon`, `avatar`, `user_description`, `created_date`) VALUES
+('bc4c8ed5-a0', 'user01', '12345678', '', 'user01@mail.com', '0000-00-00', 0, '', '', '', '2018-11-15');
 
 --
 -- Indexes for dumped tables

@@ -35,6 +35,8 @@ public class User {
     @SerializedName("user_description")
     @Expose
     private String userDescription;
+    @SerializedName("created_date")
+    @Expose
     private String createdDate;
 
     public User() {

@@ -144,7 +144,8 @@ public class LoginActivity extends BaseActivity {
                         userEntity.setUserIcon(user.getUserIcon());
                         userEntity.setAvatar(user.getAvatar());
                         userEntity.setUserDescription(user.getUserDescription());
-                        Database.userDaoImpl.saveUser(userEntity);
+                        userEntity.setCreatedDate(user.getCreatedDate());
+                        Database.getUserDb().saveUser(userEntity);
                         db.close();
                         showMainScreen(user.getUserId(), user.getUsername());
                     }
