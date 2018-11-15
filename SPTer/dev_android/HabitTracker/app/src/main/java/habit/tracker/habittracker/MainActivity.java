@@ -58,10 +58,8 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
     @BindView(R.id.rvMenu)
     RecyclerView recyclerView;
-
     @BindView(R.id.imgFilter)
     ImageView imgFilter;
-
     @BindView(R.id.tvDate)
     TextView tvDate;
     @BindView(R.id.imgNext)
@@ -69,9 +67,9 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     @BindView(R.id.imgBack)
     ImageView imgBack;
     @BindView(R.id.report)
-    View btnReport;
+    ImageView btnReport;
     @BindView(R.id.tabSuggestion)
-    View tabSuggestion;
+    ImageView tabSuggestion;
 
     boolean isReStart = false;
 
