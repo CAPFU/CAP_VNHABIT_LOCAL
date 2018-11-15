@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     @BindView(R.id.tabSuggestion)
     View tabSuggestion;
 
+    boolean isReStart = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +94,10 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
     @Override
     protected void onRestart() {
-        initTrackingList();
+        if (isReStart) {
+            isReStart = false;
+            initTrackingList();
+        }
         super.onRestart();
     }
 
@@ -330,6 +335,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
     @OnClick(R.id.tabSuggestion)
     public void showSuggestion(View view) {
+        isReStart = true;
         Intent intent = new Intent(this, SuggestionByLevelActivity.class);
         startActivity(intent);
     }
