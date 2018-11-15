@@ -46,7 +46,8 @@
         <activity android:name=".ReportDetailsActivity" />
         <activity android:name=".ReportCalendarActivity" />
         <activity android:name=".NoteActivity" />
-        <activity android:name=".SuggestionActivity"></activity>
+        <activity android:name=".SuggestionByGroupActivity" />
+        <activity android:name=".SuggestionByLevelActivity"></activity>
     </application>
 
 </manifest>

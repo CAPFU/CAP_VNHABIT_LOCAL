@@ -5,6 +5,8 @@ import habit.tracker.habittracker.api.model.group.GroupResponse;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.habit.HabitResponse;
 import habit.tracker.habittracker.api.model.search.SearchResponse;
+import habit.tracker.habittracker.api.model.suggestion.HabitSuggestion;
+import habit.tracker.habittracker.api.model.suggestion.SuggestByLevelReponse;
 import habit.tracker.habittracker.api.model.tracking.TrackingList;
 import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.model.user.UserResponse;
@@ -50,4 +52,10 @@ public interface VnHabitApiService {
 
     @GET("search/read.php")
     Call<SearchResponse> getAllHabitSuggestion();
+
+    @POST("search/update_track_status.php")
+    Call<ResponseBody> updateTrackNameStatus(@Body HabitSuggestion habitSuggestion);
+
+    @GET("search/get_suggest_by_level.php")
+    Call<SuggestByLevelReponse> getHabitSuggestByLevel();
 }

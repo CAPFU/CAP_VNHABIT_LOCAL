@@ -25,7 +25,8 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
         super(db);
     }
 
-    public HabitDaoImpl() {}
+    public HabitDaoImpl() {
+    }
 
     @Override
     public List<HabitTracking> getHabitTrackingBetween(String startDate, String endDate) {
@@ -90,9 +91,28 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
         return list;
     }
 
+    public List<HabitEntity> getActiveHabitByUser(String userId, String currentDate) {
+        List<HabitEntity> list = new ArrayList<>();
+        final String sql = "SELECT * FROM " + HABIT_TABLE
+                + " WHERE " + USER_ID + " = '" + userId + "'"
+                + " AND (" + END_DATE + " IS NULL"
+                + " OR " + currentDate + " <= " + END_DATE;
+
+        cursor = super.rawQuery(sql, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                list.add(cursorToEntity(cursor));
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        return list;
+    }
+
     public int countHabitByUser(String userId) {
         int count = 0;
-        final String sql = "SELECT count(*) as count FROM " + HABIT_TABLE + " WHERE " + USER_ID + " = '" + userId + "'";
+        final String sql = "SELECT count(*) AS count FROM " + HABIT_TABLE + " WHERE " + USER_ID + " = '" + userId + "'";
         cursor = super.rawQuery(sql, null);
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -259,6 +279,9 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
             if (cursor.getColumnIndex(SUN) != 1) {
                 habitEntity.setSun(cursor.getString(cursor.getColumnIndexOrThrow(SUN)));
             }
+            if (cursor.getColumnIndex(LAST_DATE_SYN) != 1) {
+                habitEntity.setSun(cursor.getString(cursor.getColumnIndexOrThrow(LAST_DATE_SYN)));
+            }
         }
         return habitEntity;
     }
@@ -339,6 +362,7 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
         initialValues.put(FRI, habitEntity.getFri());
         initialValues.put(SAT, habitEntity.getSat());
         initialValues.put(SUN, habitEntity.getSun());
+        initialValues.put(LAST_DATE_SYN, habitEntity.getLastDateSyn());
     }
 
     @Override
@@ -355,9 +379,5 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
             }
         }
         return str;
-    }
-
-    public String getParam(String column, String alias) {
-        return alias + "." + column;
     }
 }

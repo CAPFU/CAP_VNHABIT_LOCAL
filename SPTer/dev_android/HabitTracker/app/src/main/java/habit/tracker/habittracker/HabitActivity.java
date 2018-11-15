@@ -354,13 +354,17 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         Bundle data = getIntent().getExtras();
         if (data != null) {
             initHabitId = data.getString(MainActivity.HABIT_ID, null);
+            searchHabitId = data.getString(SuggestionByLevelActivity.SUGGEST_NAME_ID, null);
+            searchHabitName = data.getString(SuggestionByLevelActivity.SUGGEST_NAME, null);
+            editHabitName.setText(searchHabitName);
+            selectedSuggestion = true;
+        }
+        if (!TextUtils.isEmpty(initHabitId)) {
             if (initHabitId != null) {
-
-                // mode CREATE
-                createMode = 1;
+                // mode UPDATE
+                createMode = MODE_UPDATE;
                 initFromSavedHabit(initHabitId);
             }
-
         } else {
             // init monitor date
             setMonitorDate(btnMon);
@@ -410,8 +414,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         } else if (requestCode == GET_SUGGEST) {
             if (resultCode == RESULT_OK) {
                 if (data != null) {
-                    searchHabitId = data.getStringExtra(SuggestionActivity.SUGGEST_HABIT_ID);
-                    searchHabitName = data.getStringExtra(SuggestionActivity.SUGGEST_HABIT_NAME_UNI);
+                    searchHabitId = data.getStringExtra(SuggestionByGroupActivity.SUGGEST_HABIT_ID);
+                    searchHabitName = data.getStringExtra(SuggestionByGroupActivity.SUGGEST_HABIT_NAME_UNI);
                     selectedSuggestion = true;
                     editHabitName.setText(searchHabitName);
                 }
@@ -741,7 +745,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
     @OnClick(R.id.btn_suggestHabit)
     public void showSuggestHabitByGroup(View v) {
-        Intent intent = new Intent(this, SuggestionActivity.class);
+        Intent intent = new Intent(this, SuggestionByGroupActivity.class);
         startActivityForResult(intent, GET_SUGGEST);
     }
 
@@ -961,12 +965,10 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     }
 
     public void check(ImageView img) {
-//        img.setImageResource(R.drawable.ck_checked);
         img.setImageResource(R.drawable.rd_checked);
     }
 
     public void uncheck(ImageView img) {
-//        img.setImageResource(R.drawable.ck_unchecked);
         img.setImageResource(R.drawable.rd_unchecked);
     }
 

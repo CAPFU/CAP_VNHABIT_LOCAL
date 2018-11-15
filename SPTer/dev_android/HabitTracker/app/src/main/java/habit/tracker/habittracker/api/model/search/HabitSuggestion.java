@@ -18,12 +18,20 @@ public class HabitSuggestion {
     @SerializedName("habit_name_count")
     @Expose
     private String habitNameCount;
-    private String group;
-    private boolean isHeader = false;
+    @SerializedName("total_track")
+    @Expose
+    private int totalTrack;
 
-    public HabitSuggestion(String id, String name, boolean isHeader) {
-        this.groupId = id;
-        this.group = name;
+    @SerializedName("success_track")
+    @Expose
+    private int successTrack;
+
+    private String group;
+    private boolean isHeader;
+
+    public HabitSuggestion(String groupId, String group, boolean isHeader) {
+        this.groupId = groupId;
+        this.group = group;
         this.isHeader = isHeader;
     }
 
@@ -56,6 +64,14 @@ public class HabitSuggestion {
         return habitNameCount;
     }
 
+    public int getTotalTrack() {
+        return totalTrack;
+    }
+
+    public int getSuccessTrack() {
+        return successTrack;
+    }
+
     public String getGroup() {
         return group;
     }
@@ -82,6 +98,14 @@ public class HabitSuggestion {
 
     public void setHabitNameCount(String habitNameCount) {
         this.habitNameCount = habitNameCount;
+    }
+
+    public void setTotalTrack(int totalTrack) {
+        this.totalTrack = totalTrack;
+    }
+
+    public void setSuccessTrack(int successTrack) {
+        this.successTrack = successTrack;
     }
 
     public void setGroup(String group) {

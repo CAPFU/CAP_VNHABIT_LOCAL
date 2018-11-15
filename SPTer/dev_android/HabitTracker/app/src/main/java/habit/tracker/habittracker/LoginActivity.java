@@ -19,6 +19,7 @@ import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.model.user.UserResponse;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
+import habit.tracker.habittracker.common.pushservice.PushDataService;
 import habit.tracker.habittracker.common.validator.Validator;
 import habit.tracker.habittracker.common.validator.ValidatorType;
 import habit.tracker.habittracker.common.util.MySharedPreference;
@@ -46,7 +47,9 @@ public class LoginActivity extends BaseActivity {
     Button btnLogin;
     @BindView(R.id.link_register)
     TextView linkRegister;
-    private boolean isSignUp = false;
+    private boolean justSignUp = false;
+
+    PushDataService pushDataService;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -54,12 +57,12 @@ public class LoginActivity extends BaseActivity {
             if (resultCode == RESULT_OK) {
                 if (data != null) {
                     edUsername.setText(data.getStringExtra(USERNAME));
-                    isSignUp = true;
+                    justSignUp = true;
                 }
             }
         } else if (requestCode == GUIDE) {
             if (resultCode == RESULT_OK) {
-                isSignUp = false;
+                justSignUp = false;
             }
         }
     }
@@ -67,7 +70,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (!isSignUp && MySharedPreference.getUserId(this) != null) {
+        if (!justSignUp && MySharedPreference.getUserId(this) != null) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -166,12 +169,14 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void showMainScreen(String userId, String username) {
-        if (isSignUp || MySharedPreference.getUserId(this) == null) {
-            MySharedPreference.saveUser(LoginActivity.this, userId, username);
+        if (justSignUp || MySharedPreference.getUserId(this) == null) {
+            MySharedPreference.saveUser(this, userId, username);
+            pushDataService = new PushDataService(this, userId);
+            pushDataService.start();
             startActivityForResult(new Intent(this, GuideActivity.class), GUIDE);
         } else {
-            MySharedPreference.saveUser(LoginActivity.this, userId, username);
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            MySharedPreference.saveUser(this, userId, username);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
         }

@@ -70,12 +70,13 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     ImageView imgBack;
     @BindView(R.id.report)
     View btnReport;
+    @BindView(R.id.tabSuggestion)
+    View tabSuggestion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
@@ -86,8 +87,13 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         trackingAdapter = new HabitRecyclerViewAdapter(MainActivity.this, trackingItemList);
         trackingAdapter.setClickListener(MainActivity.this);
         recyclerView.setAdapter(trackingAdapter);
-
         initTrackingList();
+    }
+
+    @Override
+    protected void onRestart() {
+        initTrackingList();
+        super.onRestart();
     }
 
     @Override
@@ -168,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                         }
                     }
                     for (Habit habit : habitList) {
-                        Database.habitDaoImpl.saveUpdateHabit(Database.habitDaoImpl.convert(habit));
+                        Database.getHabitDb().saveUpdateHabit(Database.getHabitDb().convert(habit));
                     }
                     db.close();
                 }
@@ -320,6 +326,12 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     public void showFilter(View v) {
         Intent intent = new Intent(this, FilterMainActivity.class);
         startActivityForResult(intent, USE_FILTER);
+    }
+
+    @OnClick(R.id.tabSuggestion)
+    public void showSuggestion(View view) {
+        Intent intent = new Intent(this, SuggestionByLevelActivity.class);
+        startActivity(intent);
     }
 
     public void showEmpty(View v) {

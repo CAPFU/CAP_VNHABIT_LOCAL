@@ -305,8 +305,8 @@ public class AppGenerator {
     public static int countDayBetween(String d1, String d2) {
         Date date1 = getDate(d1, YMD_SHORT);
         Date date2 = getDate(d2, YMD_SHORT);
-        long off = date2.getTime() - date1.getTime();
-        return (int) (off / MILLISECOND_IN_DAY);
+        long offset = date2.getTime() - date1.getTime();
+        return (int) (offset / MILLISECOND_IN_DAY);
     }
 
     public static String getSearchKey(String str) {

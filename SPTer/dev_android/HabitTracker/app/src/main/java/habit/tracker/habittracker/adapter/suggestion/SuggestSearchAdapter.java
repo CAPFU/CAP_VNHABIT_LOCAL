@@ -16,13 +16,13 @@ import habit.tracker.habittracker.R;
 import habit.tracker.habittracker.adapter.RecyclerViewItemClickListener;
 import habit.tracker.habittracker.api.model.search.HabitSuggestion;
 
-public class SuggestRecyclerViewAdapter extends RecyclerView.Adapter<SuggestRecyclerViewAdapter.HabitSuggestionViewHolder> {
+public class SuggestSearchAdapter extends RecyclerView.Adapter<SuggestSearchAdapter.HabitSuggestionViewHolder> {
     private Context context;
     private List<HabitSuggestion> data;
     private LayoutInflater mLayoutInflater;
     private RecyclerViewItemClickListener mItemClickListener;
 
-    public SuggestRecyclerViewAdapter(Context context, List<HabitSuggestion> data, RecyclerViewItemClickListener mItemClickListener) {
+    public SuggestSearchAdapter(Context context, List<HabitSuggestion> data, RecyclerViewItemClickListener mItemClickListener) {
         this.context = context;
         this.data = data;
         this.mItemClickListener = mItemClickListener;

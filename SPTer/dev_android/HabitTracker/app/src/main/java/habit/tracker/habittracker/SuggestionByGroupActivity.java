@@ -6,11 +6,10 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SuggestionActivity extends AppCompatActivity implements RecyclerViewItemClickListener {
+public class SuggestionByGroupActivity extends AppCompatActivity implements RecyclerViewItemClickListener {
     public static final String SUGGEST_HABIT_ID = "suggest_habit_id";
     public static final String SUGGEST_HABIT_NAME_UNI = "suggest_habit_name_uni";
 
@@ -44,7 +43,8 @@ public class SuggestionActivity extends AppCompatActivity implements RecyclerVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_suggestion);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_suggestion_by_group);
         ButterKnife.bind(this);
 
         groupsList = new ArrayList<>();
@@ -125,7 +125,7 @@ public class SuggestionActivity extends AppCompatActivity implements RecyclerVie
             public void onResponse(Call<GroupResponse> call, Response<GroupResponse> response) {
                 if (response.body().getResult().equals("1")) {
                     groupsList.addAll(response.body().getGroupList());
-                    Database db = new Database(SuggestionActivity.this);
+                    Database db = new Database(SuggestionByGroupActivity.this);
                     db.open();
                     for (Group group : groupsList) {
                         Database.getGroupDb().save(group);
@@ -138,7 +138,7 @@ public class SuggestionActivity extends AppCompatActivity implements RecyclerVie
 
             @Override
             public void onFailure(Call<GroupResponse> call, Throwable t) {
-                Database db = new Database(SuggestionActivity.this);
+                Database db = new Database(SuggestionByGroupActivity.this);
                 db.open();
                 List<GroupEntity> entities = Database.getGroupDb().fetchGroup();
                 for (GroupEntity entity: entities) {
