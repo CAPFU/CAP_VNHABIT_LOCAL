@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 15, 2018 at 12:56 PM
+-- Generation Time: Nov 15, 2018 at 01:35 PM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -124,6 +124,13 @@ CREATE TABLE `habit` (
   `habit_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `habit`
+--
+
+INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
+('b468337e-b8', 'd233c193-6e', NULL, '30cfb386-0f', 'Chạy bộ', 0, 0, 1, 'Lần', 5, '2018-11-15', NULL, '2018-11-15', '#78ed872a', 'chat bo');
+
 -- --------------------------------------------------------
 
 --
@@ -145,15 +152,7 @@ CREATE TABLE `habit_suggestion` (
 --
 
 INSERT INTO `habit_suggestion` (`habit_name_id`, `group_id`, `habit_name_uni`, `habit_name`, `habit_name_count`, `total_track`, `success_track`) VALUES
-('1', '1', 'Chạy bộ', 'chay bo', 8, 13, 10),
-('2', '4', 'Đọc sách', 'doc sach', 36, 400, 390),
-('3', '4', 'Đi chợ', 'di cho', 8, 20, 20),
-('4', '2', 'Về quê', 've que', 6, 1000, 910),
-('5', '2', 'Hút thuốc', 'hut thuoc', 64, 200, 180),
-('6', '1', 'Uống rượu bia', 'uong ruou bia', 47, 100, 81),
-('7', '6', 'Thức khuya', 'thuc khuya', 37, 50, 7),
-('8', '3', 'Đi làm trễ', 'di lam tre', 9, 300, 190),
-('9', '5', 'Đọctruyện', 'doctruyen', 29, 100, 12);
+('1', '1', 'Chạy bộ', 'chay bo', 10, 13, 10);
 
 -- --------------------------------------------------------
 
@@ -172,6 +171,13 @@ CREATE TABLE `monitor_date` (
   `sat` tinyint(1) DEFAULT '1',
   `sun` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `monitor_date`
+--
+
+INSERT INTO `monitor_date` (`monitor_id`, `habit_id`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`) VALUES
+('30cfb386-0f', 'b468337e-b8', 1, 1, 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -201,6 +207,13 @@ CREATE TABLE `tracking` (
   `tracking_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `tracking`
+--
+
+INSERT INTO `tracking` (`tracking_id`, `habit_id`, `current_date`, `count`, `tracking_description`) VALUES
+('1fdc3568-b8', 'b468337e-b8', '2018-11-15', 2, 'chat bo');
+
 -- --------------------------------------------------------
 
 --
@@ -226,7 +239,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `user_icon`, `avatar`, `user_description`, `created_date`) VALUES
-('bc4c8ed5-a0', 'user01', '12345678', '', 'user01@mail.com', '0000-00-00', 0, '', '', '', '2018-11-15');
+('d233c193-6e', 'user01', '12345678', '', 'user01@mail.com', '0000-00-00', 0, '', '', '', '2018-11-15');
 
 --
 -- Indexes for dumped tables

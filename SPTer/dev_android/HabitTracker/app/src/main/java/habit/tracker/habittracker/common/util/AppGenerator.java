@@ -312,7 +312,7 @@ public class AppGenerator {
     public static String getSearchKey(String str) {
         if (TextUtils.isEmpty(str))
             return null;
-        String temp = Normalizer.normalize(str.trim(), Normalizer.Form.NFD);
+        String temp = Normalizer.normalize(str.toLowerCase().trim(), Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(temp).replaceAll("").toLowerCase();
     }

@@ -680,12 +680,12 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             }
         }
         habit.setReminderList(remindDisplayList);
-
-        // only update when user not update habit name after selecting a suggestion name
+        habit.setHabitNameAscii(AppGenerator.getSearchKey(habit.getHabitName()));
+        // update
         if (!TextUtils.isEmpty(searchHabitName) && searchHabitName.equals(habit.getHabitName())) {
             habit.setHabitSearchNameId(searchHabitId);
         } else {
-            habit.setHabitNameAscii(AppGenerator.getSearchKey(habit.getHabitName()));
+            // create
             habit.setHabitNameCount(1);
         }
 
@@ -704,9 +704,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         }
         db.close();
 
-        // call API to syn noteItems
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
-        // create new habit
+        // CREATE new habit
         if (createMode == MODE_CREATE) {
             mService.addHabit(habit).enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -724,7 +723,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 }
             });
         }
-        // update habit
+        // UPDATE habit
         else if (createMode == MODE_UPDATE) {
             mService.updateHabit(habit).enqueue(new Callback<ResponseBody>() {
                 @Override
