@@ -147,6 +147,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
                 selectedTab = tabYear;
                 break;
         }
+        currentDate = firstCurrentDate;
         ArrayList<BarEntry> values = loadData(currentDate);
         if (values != null && values.size() > 0) {
             chartHelper.setData(values, mode);
@@ -187,17 +188,17 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         chartHelper.setData(values, mode);
     }
 
-    private ArrayList<BarEntry> loadData(String currentTime) {
+    private ArrayList<BarEntry> loadData(String currentDate) {
         ArrayList<BarEntry> values = null;
         switch (mode) {
             case MODE_WEEK:
-                values = loadWeekData(currentTime);
+                values = loadWeekData(currentDate);
                 break;
             case MODE_MONTH:
-                values = loadMonthData(currentTime);
+                values = loadMonthData(currentDate);
                 break;
             case MODE_YEAR:
-                values = loadYearData(currentTime);
+                values = loadYearData(currentDate);
                 break;
             default:
                 break;
