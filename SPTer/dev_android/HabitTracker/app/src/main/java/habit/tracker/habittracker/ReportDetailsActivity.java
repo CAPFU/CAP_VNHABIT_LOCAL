@@ -422,7 +422,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
         int year = Integer.parseInt(arrDate[0]);
         startReportDate = year + "-" + "01-01";
-        endReportDate = year + "-01-" + AppGenerator.getMaxDayInMonth(year, 12);
+        endReportDate = year + "-12-" + AppGenerator.getMaxDayInMonth(year, 12);
 
         Database db = new Database(this);
         db.open();
@@ -431,14 +431,14 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
         HabitTracking habitTracking;
         HabitEntity hb = null;
-        String start;
-
+        String startMonth, endMonth, date;
         for (int m = 0; m < 12; m++) {
-            start = year + "-" + (m + 1) + "-" + 1;
-            start = AppGenerator.format(start, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
+            date = year + "-" + (m + 1) + "-01";
+            startMonth = AppGenerator.format(date, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
+            date = year + "-" + (m + 1) + "-" + AppGenerator.getMaxDayInMonth(year, m);
+            endMonth = AppGenerator.format(date, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
 
-            // noteItems per month
-            habitTracking = Database.trackingImpl.getHabitTrackingBetween(this.habitEntity.getHabitId(), start, currentDate);
+            habitTracking = Database.trackingImpl.getHabitTrackingBetween(this.habitEntity.getHabitId(), startMonth, endMonth);
 
             if (habitTracking != null) {
                 if (hb == null) {

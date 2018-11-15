@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                 trackingAdapter.notifyDataSetChanged();
 
             }
+
         } else if (requestCode == REPORT) {
             initTrackingList();
         }

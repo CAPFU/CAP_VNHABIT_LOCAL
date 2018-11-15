@@ -101,7 +101,11 @@ class PushDataReceiver extends BroadcastReceiver {
                             break;
 
                         case TYPE_MONTHLY:
+                            for (int i = 0; i < distance; i++) {
+
+                            }
                             break;
+
                         case TYPE_YEARLY:
                             break;
                     }

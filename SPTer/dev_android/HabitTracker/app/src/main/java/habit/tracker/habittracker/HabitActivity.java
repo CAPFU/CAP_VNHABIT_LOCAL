@@ -680,13 +680,14 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             }
         }
         habit.setReminderList(remindDisplayList);
+
         habit.setHabitNameAscii(AppGenerator.getSearchKey(habit.getHabitName()));
-        // update
-        if (!TextUtils.isEmpty(searchHabitName) && searchHabitName.equals(habit.getHabitName())) {
-            habit.setHabitSearchNameId(searchHabitId);
-        } else {
-            // create
+        if (TextUtils.isEmpty(searchHabitName) || !searchHabitName.equals(habit.getHabitName())) {
+            habit.setHabitSearchNameId(habit.getHabitId());
+            habit.setGroupId(habit.getGroupId());
             habit.setHabitNameCount(1);
+        } else {
+            habit.setHabitSearchNameId(searchHabitId);
         }
 
         // save habit
