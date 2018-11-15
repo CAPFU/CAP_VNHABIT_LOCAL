@@ -280,7 +280,7 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
                 habitEntity.setSun(cursor.getString(cursor.getColumnIndexOrThrow(SUN)));
             }
             if (cursor.getColumnIndex(LAST_DATE_SYN) != 1) {
-                habitEntity.setSun(cursor.getString(cursor.getColumnIndexOrThrow(LAST_DATE_SYN)));
+                habitEntity.setLastDateSyn(cursor.getString(cursor.getColumnIndexOrThrow(LAST_DATE_SYN)));
             }
         }
         return habitEntity;

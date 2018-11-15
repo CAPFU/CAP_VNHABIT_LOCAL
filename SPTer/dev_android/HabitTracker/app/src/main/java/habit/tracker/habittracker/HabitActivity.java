@@ -692,8 +692,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         // save habit
         Database db = new Database(HabitActivity.this);
         db.open();
-        if (Database.getHabitDb().saveUpdateHabit(
-                Database.getHabitDb().convert(habit))) {
+        if (Database.getHabitDb().saveUpdateHabit(Database.getHabitDb().convert(habit))) {
             // save reminder list
             for (Reminder reminder : remindAddNew) {
                 reminder.setHabitId(habit.getHabitId());
