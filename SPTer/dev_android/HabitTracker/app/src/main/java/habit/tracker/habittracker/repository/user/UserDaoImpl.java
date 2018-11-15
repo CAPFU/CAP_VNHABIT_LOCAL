@@ -59,8 +59,8 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
             if (cursor.getColumnIndex(USER_DESCRIPTION) != -1) {
                 userEntity.setUserDescription(cursor.getString(cursor.getColumnIndexOrThrow(USER_DESCRIPTION)));
             }
-            if (cursor.getColumnIndex(CREATED_DATE) != -1) {
-                userEntity.setUserDescription(cursor.getString(cursor.getColumnIndexOrThrow(CREATED_DATE)));
+            if (cursor.getColumnIndex(USER_CREATED_DATE) != -1) {
+                userEntity.setCreatedDate(cursor.getString(cursor.getColumnIndexOrThrow(USER_CREATED_DATE)));
             }
         }
         return userEntity;

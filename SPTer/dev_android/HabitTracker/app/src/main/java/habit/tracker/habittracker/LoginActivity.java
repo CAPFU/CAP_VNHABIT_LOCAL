@@ -143,12 +143,12 @@ public class LoginActivity extends BaseActivity {
                         userEntity.setPassword(user.getPassword());
                         userEntity.setUserIcon(user.getUserIcon());
                         userEntity.setAvatar(user.getAvatar());
-                        userEntity.setUserDescription(user.getUserDescription());
+                        userEntity.setUserDescription(user.getCreatedDate());
                         userEntity.setCreatedDate(user.getCreatedDate());
                         Database.getUserDb().saveUser(userEntity);
-                        db.close();
-                        showMainScreen(user.getUserId(), user.getUsername());
                     }
+                    db.close();
+                    showMainScreen(user.getUserId(), user.getUsername());
                 } else {
                     Toast.makeText(LoginActivity.this, "Đăng nhập không thành công!", Toast.LENGTH_SHORT).show();
                 }

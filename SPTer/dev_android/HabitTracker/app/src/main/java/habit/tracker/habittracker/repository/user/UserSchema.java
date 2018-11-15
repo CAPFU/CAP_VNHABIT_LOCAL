@@ -12,7 +12,7 @@ public interface UserSchema {
     String USER_ICON = "user_icon";
     String AVATAR = "avatar";
     String USER_DESCRIPTION = "user_description";
-    String CREATED_DATE = "created_date";
+    String USER_CREATED_DATE = "user_created_date";
 
     String CREATE_USER_TABLE =
             "CREATE TABLE IF NOT EXISTS " + USER_TABLE + " ("
@@ -26,7 +26,7 @@ public interface UserSchema {
                     + USER_ICON + " TEXT, "
                     + AVATAR + " TEXT, "
                     + USER_DESCRIPTION + " TEXT, "
-                    + CREATED_DATE + " TEXT"
+                    + USER_CREATED_DATE + " TEXT"
                     + ")";
-    String[] USER_COLUMNS = new String[]{USER_ID, USERNAME, EMAIL, PHONE, GENDER, DATE_OF_BIRTH, PASSWORD, USER_ICON, AVATAR, USER_DESCRIPTION, CREATED_DATE};
+    String[] USER_COLUMNS = new String[]{USER_ID, USERNAME, EMAIL, PHONE, GENDER, DATE_OF_BIRTH, PASSWORD, USER_ICON, AVATAR, USER_DESCRIPTION, USER_CREATED_DATE};
 }
