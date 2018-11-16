@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarEntry;
@@ -29,6 +30,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import habit.tracker.habittracker.common.OnSwipeTouchListener;
 import habit.tracker.habittracker.common.chart.ChartHelper;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
@@ -60,6 +62,9 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
     @BindView(R.id.chart)
     BarChart chart;
     ChartHelper chartHelper;
+
+    @BindView(R.id.chartContainer)
+    View chartContainer;
 
     public static final int MODE_WEEK = 0;
     public static final int MODE_MONTH = 1;
@@ -104,6 +109,21 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         chartHelper.setChartColor(startColor, endColor);
 
         initializeScreen();
+
+        chartContainer.setOnTouchListener(new OnSwipeTouchListener(this){
+            public void onSwipeTop() {
+                Toast.makeText(ReportActivity.this, "top", Toast.LENGTH_SHORT).show();
+            }
+            public void onSwipeRight() {
+                Toast.makeText(ReportActivity.this, "right", Toast.LENGTH_SHORT).show();
+            }
+            public void onSwipeLeft() {
+                Toast.makeText(ReportActivity.this, "left", Toast.LENGTH_SHORT).show();
+            }
+            public void onSwipeBottom() {
+                Toast.makeText(ReportActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initializeScreen() {

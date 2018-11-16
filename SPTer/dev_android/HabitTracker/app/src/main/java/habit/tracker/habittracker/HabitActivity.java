@@ -683,7 +683,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
         habit.setHabitNameAscii(AppGenerator.getSearchKey(habit.getHabitName()));
         if (TextUtils.isEmpty(searchHabitName) || !searchHabitName.equals(habit.getHabitName())) {
-            habit.setHabitSearchNameId(habit.getHabitId());
+            habit.setHabitSearchNameId(AppGenerator.getNewId());
             habit.setGroupId(habit.getGroupId());
             habit.setHabitNameCount(1);
         } else {

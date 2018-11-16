@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                                 Database.getTrackingDb().saveTracking(Database.trackingImpl.convert(track));
                             }
                             // create today tracking record list
-                            if (TextUtils.isEmpty(habit.getEndDate()) || currentDate.compareTo(habit.getEndDate()) <= 0) {
+                            if (currentDate.compareTo(habit.getStartDate()) >= 0 && (TextUtils.isEmpty(habit.getEndDate()) || currentDate.compareTo(habit.getEndDate()) <= 0)) {
 
                                 TrackingEntity todayTracking = getTodayTracking(habit.getHabitId(), currentDate, 0);
 
