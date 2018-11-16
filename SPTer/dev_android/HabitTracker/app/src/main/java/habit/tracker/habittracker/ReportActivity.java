@@ -1,8 +1,12 @@
 package habit.tracker.habittracker;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -32,11 +36,6 @@ import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
 import habit.tracker.habittracker.repository.habit.HabitTracking;
 import habit.tracker.habittracker.repository.tracking.TrackingEntity;
-
-import static habit.tracker.habittracker.HabitActivity.TYPE_1;
-import static habit.tracker.habittracker.HabitActivity.TYPE_2;
-import static habit.tracker.habittracker.HabitActivity.TYPE_3;
-import static habit.tracker.habittracker.common.AppConstant.TYPE_0;
 
 
 public class ReportActivity extends AppCompatActivity implements OnChartValueSelectedListener {
@@ -132,29 +131,47 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         }
     }
 
+    @SuppressLint("ResourceType")
     @OnClick({R.id.tabWeek, R.id.tabMonth, R.id.tabYear})
     public void loadReportByMode(View v) {
         unselect(selectedTab);
+
+        int startColor = Color.parseColor(getString(R.color.red1));
+        int endColor = Color.parseColor(getString(R.color.red2));
+
         switch (v.getId()) {
             case R.id.tabWeek:
                 mode = MODE_WEEK;
                 select(tabWeek);
                 selectedTab = tabWeek;
                 break;
+
             case R.id.tabMonth:
                 mode = MODE_MONTH;
                 select(tabMonth);
                 selectedTab = tabMonth;
+
+                startColor = Color.parseColor(getString(R.color.purple1));
+                endColor = Color.parseColor(getString(R.color.purple2));
                 break;
+
             case R.id.tabYear:
                 mode = MODE_YEAR;
                 select(tabYear);
                 selectedTab = tabYear;
+
+                startColor = Color.parseColor(getString(R.color.blue1));
+                endColor = Color.parseColor(getString(R.color.blue2));
                 break;
         }
         currentDate = firstCurrentDate;
         ArrayList<BarEntry> values = loadData(currentDate);
         if (values != null && values.size() > 0) {
+
+            GradientDrawable gd = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[]{startColor, endColor});
+            gd.setCornerRadius(0f);
+            chartHelper.setChartColor(startColor, endColor);
+
             chartHelper.setData(values, mode);
         }
     }

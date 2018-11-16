@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
                         date = ca.get(Calendar.DATE);
                         if (isTodayHabit(year, month - 1, date, habit)) {
 
-                            // update tracking noteItems from server
+                            // update tracking mData from server
                             for (Tracking track : habit.getTracksList()) {
                                 Database.getTrackingDb().saveTracking(Database.trackingImpl.convert(track));
                             }
@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         tracking.setHabitId(item.getHabitId());
         tracking.setCount(String.valueOf(item.getCount()));
         tracking.setCurrentDate(currentDate);
-        tracking.setDescription(item.getDescription());
+//        tracking.setDescription(item.getDescription());
         trackingData.getTrackingList().add(tracking);
         if (!Database.getTrackingDb().updateTracking(Database.getTrackingDb().convert(tracking))) {
             return;

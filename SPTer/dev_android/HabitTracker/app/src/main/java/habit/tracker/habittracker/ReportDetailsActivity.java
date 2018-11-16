@@ -131,7 +131,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
                 initDefaultUI(habitEntity);
 
-                // load chart noteItems (default is week)
+                // load chart mData (default is week)
                 ArrayList<BarEntry> values = loadData(currentDate);
                 chartStartReportDate = curStartReportDate;
                 chartEndReportDate = curEndReportDate;
@@ -154,7 +154,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
         initDefaultUI(habitEntity);
 
-        // load chart noteItems (default is week)
+        // load chart mData (default is week)
         ArrayList<BarEntry> values = loadData(currentDate);
         chartHelper.setData(values, mode);
 
@@ -285,8 +285,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
         Database db = Database.getInstance(this);
         db.open();
-        TrackingEntity todayTracking = Database.getTrackingDb()
-                .getTracking(habitEntity.getHabitId(), currentDate);
+        TrackingEntity todayTracking = Database.getTrackingDb().getTracking(habitEntity.getHabitId(), currentDate);
         db.close();
 
         curTrackingCount = 0;
@@ -316,9 +315,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 || !AppGenerator.isValidTrackingDay(currentDate, availDaysInWeek)) {
             return;
         }
-
-        int goalNumber = Integer.parseInt(habitEntity.getMonitorNumber());
-        boolean above = curTrackingCount >= goalNumber;
 
         switch (v.getId()) {
             case R.id.minusCount:
@@ -459,7 +455,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
                     hb = habitTracking.getHabit();
                 }
                 int count;
-                // noteItems per day in month
+                // mData per day in month
                 for (TrackingEntity track : habitTracking.getTrackingList()) {
                     count = Integer.parseInt(track.getCount());
                     completedPerMonth[m] += count;
@@ -514,6 +510,8 @@ public class ReportDetailsActivity extends AppCompatActivity {
             tvCurrentTime.setText("Hôm nay");
         } else if (timeLine == -1) {
             tvCurrentTime.setText("Hôm qua");
+        } else if (timeLine == 1) {
+            tvCurrentTime.setText("Ngày mai");
         } else {
             tvCurrentTime.setText(
                     AppGenerator.format(currentDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
