@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 15, 2018 at 04:34 PM
+-- Generation Time: Nov 16, 2018 at 06:17 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -129,9 +129,8 @@ CREATE TABLE `habit` (
 --
 
 INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
-('0fed0300-fd', 'd233c193-6e', NULL, '4a6b4e59-92', 'oooo', 1, 0, 0, NULL, 1, '2018-11-15', NULL, '2018-11-15', '#78ed872a', 'oooo'),
-('75f17201-ec', 'd233c193-6e', '1', '43dbee12-67', 'Chạy bộ', 0, 0, 1, 'Lần', 3, '2018-11-15', NULL, '2018-11-15', '#78af4553', 'bbb'),
-('df64a24e-8c', '1b153946-89', '1', '6807390d-a4', 'aaa', 0, 1, 1, 'km', 5, '2018-11-15', NULL, '2018-11-15', '#78ed872a', 'aaa');
+('75f17201-ec', 'd233c193-6e', '1', '43dbee12-67', 'Chạy bộ', 0, 1, 1, 'Lần', 3, '2018-11-12', NULL, '2018-11-16', '#78ed872a', 'bbb'),
+('df64a24e-8c', '1b153946-89', '1', '6807390d-a4', 'aaa', 0, 1, 1, 'km', 5, '2018-11-13', NULL, '2018-11-15', '#78ed872a', 'aaa');
 
 -- --------------------------------------------------------
 
@@ -154,8 +153,14 @@ CREATE TABLE `habit_suggestion` (
 --
 
 INSERT INTO `habit_suggestion` (`habit_name_id`, `group_id`, `habit_name_uni`, `habit_name`, `habit_name_count`, `total_track`, `success_track`) VALUES
-('', NULL, 'aaa', 'aaa', 1, 0, 0),
-('1', '1', 'Chạy bộ', 'chay bo', 12, 13, 10);
+('154fsd', '2', 'Đi chợ', 'di cho', 12, 34, 30),
+('1dv43fsd', '3', 'Đi bộ', 'di bo', 12, 90, 88),
+('1fsd', '1', 'Ăn kem', 'an kem', 12, 13, 10),
+('dasf', '1', 'Uống thuốc', 'uong thuoc', 1, 0, 0),
+('dsfgsd', '2', 'Chạy bộ', 'chay bo', 12, 13, 10),
+('fsd-345', '3', 'Uống rượu', 'uong ruou', 4, 34, 6),
+('fsd545', '3', 'Thức đêm', 'thuc dem', 44, 67, 19),
+('gfdh', '1', 'Hút thuốc', 'hut thuoc', 10, 100, 99);
 
 -- --------------------------------------------------------
 
@@ -181,7 +186,6 @@ CREATE TABLE `monitor_date` (
 
 INSERT INTO `monitor_date` (`monitor_id`, `habit_id`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`) VALUES
 ('43dbee12-67', '75f17201-ec', 1, 1, 1, 1, 1, 1, 1),
-('4a6b4e59-92', '0fed0300-fd', 1, 1, 1, 1, 1, 0, 0),
 ('6807390d-a4', 'df64a24e-8c', 1, 1, 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
@@ -217,9 +221,11 @@ CREATE TABLE `tracking` (
 --
 
 INSERT INTO `tracking` (`tracking_id`, `habit_id`, `current_date`, `count`, `tracking_description`) VALUES
-('115d8827-3e', '75f17201-ec', '2018-11-15', 1, 'bbb'),
-('71149640-e8', 'df64a24e-8c', '2018-11-15', 29, 'aaa'),
-('8902941c-41', '0fed0300-fd', '2018-11-15', 1, 'oooo');
+('115d8827-3e', '75f17201-ec', '2018-11-15', 3, NULL),
+('71149640-e8', 'df64a24e-8c', '2018-11-15', 5, NULL),
+('94c57d1b-d7', '75f17201-ec', '2018-11-16', 2, NULL),
+('a522ba52-85', '75f17201-ec', '2018-11-12', 1, 'hello'),
+('a91bf676-b1', '75f17201-ec', '2018-11-14', 0, 'home qua');
 
 -- --------------------------------------------------------
 
@@ -347,12 +353,6 @@ ALTER TABLE `habit`
   ADD CONSTRAINT `habit_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `habit_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `habit_ibfk_3` FOREIGN KEY (`monitor_id`) REFERENCES `monitor_date` (`monitor_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `habit_suggestion`
---
-ALTER TABLE `habit_suggestion`
-  ADD CONSTRAINT `habit_suggestion_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `monitor_date`
