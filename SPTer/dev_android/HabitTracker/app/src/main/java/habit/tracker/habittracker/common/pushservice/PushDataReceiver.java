@@ -81,12 +81,12 @@ class PushDataReceiver extends BroadcastReceiver {
                                 d = AppGenerator.getDate(lastSynDate, AppGenerator.YMD_SHORT);
                                 ca.setTime(d);
 
-                                // on monday we will check pre week data
+                                // on monday we will check moveToPre week data
                                 if (ca.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
                                     // one track per week
                                     totalCount++;
                                     diw = AppGenerator.getDatesInWeek(pre);
-                                    // get data from pre week
+                                    // get data from moveToPre week
                                     weekData = Database.getTrackingDb().getHabitTrackingBetween(habit.getHabitId(), diw[0], diw[6]);
                                     for (TrackingEntity entity : weekData.getTrackingList()) {
                                         sumPerWeek += entity.getIntCount();

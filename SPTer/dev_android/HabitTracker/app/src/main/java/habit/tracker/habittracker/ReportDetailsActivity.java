@@ -200,7 +200,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
         int startColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 50);
         int endColor = ColorUtils.setAlphaComponent(Color.parseColor(habitColor), 225);
 
-        // init time tab
+        // init tvDisplayTime tab
         selectedTab = tabWeek;
         GradientDrawable gd = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[]{startColor, endColor});
         gd.setCornerRadius(0f);

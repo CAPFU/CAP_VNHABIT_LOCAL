@@ -6,12 +6,13 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.ColorUtils;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarEntry;
@@ -30,7 +31,6 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import habit.tracker.habittracker.common.OnSwipeTouchListener;
 import habit.tracker.habittracker.common.chart.ChartHelper;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
@@ -41,12 +41,13 @@ import habit.tracker.habittracker.repository.tracking.TrackingEntity;
 
 
 public class ReportActivity extends AppCompatActivity implements OnChartValueSelectedListener {
+    private static final String DEBUG_TAG = "vnhb_debug";
     @BindView(R.id.pre)
-    View pre;
+    View imgPreDate;
     @BindView(R.id.next)
-    View next;
+    View imgNextDate;
     @BindView(R.id.displayTime)
-    TextView time;
+    TextView tvDisplayTime;
     @BindView(R.id.total)
     TextView tvTotal;
     @BindView(R.id.totalDone)
@@ -73,9 +74,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
     String currentDate;
     String firstCurrentDate;
 
-    public int getMode() {
-        return mode;
-    }
+    private GestureDetectorCompat gestureDetectorCompat = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,21 +108,62 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         chartHelper.setChartColor(startColor, endColor);
 
         initializeScreen();
+    }
 
-        chartContainer.setOnTouchListener(new OnSwipeTouchListener(this){
-            public void onSwipeTop() {
-                Toast.makeText(ReportActivity.this, "top", Toast.LENGTH_SHORT).show();
-            }
-            public void onSwipeRight() {
-                Toast.makeText(ReportActivity.this, "right", Toast.LENGTH_SHORT).show();
-            }
-            public void onSwipeLeft() {
-                Toast.makeText(ReportActivity.this, "left", Toast.LENGTH_SHORT).show();
-            }
-            public void onSwipeBottom() {
-                Toast.makeText(ReportActivity.this, "bottom", Toast.LENGTH_SHORT).show();
-            }
-        });
+    float touchX = 0;
+    float touchY = 0;
+    float boundTop = 0;
+    float boundBottom = 0;
+    float touchThresh = 100;
+    long lastTouchTime = 0;
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        int[] outLocation = new int[2];
+        chartContainer.getLocationOnScreen(outLocation);
+        boundTop = outLocation[0];
+        boundBottom = outLocation[0] + chartContainer.getHeight();
+        super.onWindowFocusChanged(hasFocus);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        int action = ev.getActionMasked();
+        switch (action) {
+            case (MotionEvent.ACTION_DOWN):
+                touchX = ev.getX();
+                touchY = ev.getY();
+                Log.d(DEBUG_TAG, "Action was DOWN");
+                return true;
+            case (MotionEvent.ACTION_MOVE):
+                if (ev.getY() > boundTop && ev.getY() < boundBottom) {
+
+                    if (System.currentTimeMillis() - lastTouchTime > 100) {
+
+                        if (ev.getX() - touchX > touchThresh && Math.abs(ev.getY() - touchY) < touchThresh) {
+                            moveToPre(imgPreDate);
+                            Log.d(DEBUG_TAG, "Action was MOVE: right");
+                        } else if (touchX - ev.getX() > touchThresh && Math.abs(ev.getY() - touchY) < touchThresh) {
+                            moveToNext(imgNextDate);
+                            Log.d(DEBUG_TAG, "Action was MOVE: left");
+                        }
+                        lastTouchTime = System.currentTimeMillis();
+                    }
+                }
+                Log.d(DEBUG_TAG, "Action was MOVE");
+                return true;
+            case (MotionEvent.ACTION_UP):
+                Log.d(DEBUG_TAG, "Action was UP");
+                return true;
+            case (MotionEvent.ACTION_CANCEL):
+                Log.d(DEBUG_TAG, "Action was CANCEL");
+                return true;
+            case (MotionEvent.ACTION_OUTSIDE):
+                Log.d(DEBUG_TAG, "Movement occurred outside bounds " +
+                        "of current screen element");
+                return true;
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     private void initializeScreen() {
@@ -154,7 +194,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
     @SuppressLint("ResourceType")
     @OnClick({R.id.tabWeek, R.id.tabMonth, R.id.tabYear})
     public void loadReportByMode(View v) {
-        unselect(selectedTab);
+        unSelect(selectedTab);
 
         int startColor = Color.parseColor(getString(R.color.red1));
         int endColor = Color.parseColor(getString(R.color.red2));
@@ -197,7 +237,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
     }
 
     @OnClick(R.id.pre)
-    public void pre(View v) {
+    public void moveToPre(View v) {
         switch (mode) {
             case MODE_WEEK:
                 currentDate = AppGenerator.getDayPreWeek(currentDate);
@@ -214,7 +254,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
     }
 
     @OnClick(R.id.next)
-    public void next(View v) {
+    public void moveToNext(View v) {
         switch (mode) {
             case MODE_WEEK:
                 currentDate = AppGenerator.getDayNextWeek(currentDate);
@@ -253,7 +293,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         String[] daysInWeek = AppGenerator.getDatesInWeek(currentDate);
         String startDate = AppGenerator.format(daysInWeek[0], AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT);
         String endDate = AppGenerator.format(daysInWeek[6], AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT);
-        time.setText(startDate + " - " + endDate);
+        tvDisplayTime.setText(startDate + " - " + endDate);
 
         Database db = new Database(this);
         db.open();
@@ -297,7 +337,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
 
         String startDate = AppGenerator.format(daysInMonth[0], AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT);
         String endDate = AppGenerator.format(daysInMonth[daysInMonth.length - 1], AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT);
-        time.setText(startDate + " - " + endDate);
+        tvDisplayTime.setText(startDate + " - " + endDate);
 
         Database db = new Database(this);
         db.open();
@@ -329,7 +369,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         ArrayList<BarEntry> values = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(AppGenerator.getDate(currentDate.split("-")[0] + "-12-01", AppGenerator.YMD_SHORT));
-        time.setText("Năm " + calendar.get(Calendar.YEAR));
+        tvDisplayTime.setText("Năm " + calendar.get(Calendar.YEAR));
 
         Database db = new Database(this);
         db.open();
@@ -406,7 +446,7 @@ public class ReportActivity extends AppCompatActivity implements OnChartValueSel
         }
     }
 
-    public void unselect(View v) {
+    public void unSelect(View v) {
         v.setBackground(ContextCompat.getDrawable(this, android.R.color.transparent));
     }
 
