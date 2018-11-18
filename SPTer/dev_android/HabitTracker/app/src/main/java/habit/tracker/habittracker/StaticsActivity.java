@@ -80,13 +80,7 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
     float touchThresh = 100;
     long lastTouchTime = 0;
 
-    Database db = Database.getInstance(this);
-
-    @Override
-    protected void onStart() {
-        db.open();
-        super.onStart();
-    }
+    Database appDatabase = Database.getInstance(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,9 +88,8 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_statics);
         ButterKnife.bind(this);
-
+        appDatabase.open();
         selectedTab = tabWeek;
-
         int startColor = ContextCompat.getColor(this, R.color.red1);
         int endColor = ContextCompat.getColor(this, R.color.red2);
         switch (mode) {
@@ -118,7 +111,6 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
         chartHelper = new ChartHelper(this, chart);
         chartHelper.initChart();
         chartHelper.setChartColor(startColor, endColor);
-
         initializeScreen();
     }
 
@@ -139,7 +131,7 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
                 touchX = ev.getX();
                 touchY = ev.getY();
                 Log.d(DEBUG_TAG, "DOWN");
-                return true;
+                break;
             case (MotionEvent.ACTION_MOVE):
                 if (ev.getY() > boundTop && ev.getY() < boundBottom) {
                     if (System.currentTimeMillis() - lastTouchTime > 100) {
@@ -154,16 +146,16 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
                     }
                 }
                 Log.d(DEBUG_TAG, "MOVE");
-                return true;
+                break;
             case (MotionEvent.ACTION_UP):
                 Log.d(DEBUG_TAG, "UP");
-                return true;
+                break;
             case (MotionEvent.ACTION_CANCEL):
                 Log.d(DEBUG_TAG, "CANCEL");
-                return true;
+                break;
             case (MotionEvent.ACTION_OUTSIDE):
                 Log.d(DEBUG_TAG, "OUTSIDE bounds of current screen element");
-                return true;
+                break;
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -458,7 +450,7 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
 
     @Override
     protected void onStop() {
-        db.close();
+        appDatabase.close();
         super.onStop();
     }
 }

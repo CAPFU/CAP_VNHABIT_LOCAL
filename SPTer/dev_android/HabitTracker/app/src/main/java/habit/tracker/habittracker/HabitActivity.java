@@ -946,7 +946,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             R.id.color9,
             R.id.color10})
     public void setHabitColor(View v) {
-        int idx = 0;
+        int idx;
         if (habitColor != null) {
             idx = Integer.parseInt(habitColor.getTag().toString());
             unPickColor(habitColor, colorsList.get(idx));

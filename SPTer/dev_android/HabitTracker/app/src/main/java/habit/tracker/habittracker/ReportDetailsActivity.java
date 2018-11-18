@@ -174,52 +174,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
         updateUI();
     }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        int[] outLocation = new int[2];
-        chartContainer.getLocationOnScreen(outLocation);
-        boundTop = outLocation[0];
-        boundBottom = outLocation[0] + chartContainer.getHeight();
-        super.onWindowFocusChanged(hasFocus);
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        int action = ev.getActionMasked();
-        switch (action) {
-            case (MotionEvent.ACTION_DOWN):
-                touchX = ev.getX();
-                touchY = ev.getY();
-                Log.d(DEBUG_TAG, "DOWN");
-                return true;
-            case (MotionEvent.ACTION_MOVE):
-                if (ev.getY() > boundTop && ev.getY() < boundBottom) {
-                    if (System.currentTimeMillis() - lastTouchTime > 100) {
-                        if (ev.getX() - touchX > touchThresh && Math.abs(ev.getY() - touchY) < touchThresh) {
-                            onDateChanged(imgPreDate);
-                            Log.d(DEBUG_TAG, "Action was MOVE: right");
-                        } else if (touchX - ev.getX() > touchThresh && Math.abs(ev.getY() - touchY) < touchThresh) {
-                            onDateChanged(imgNextDate);
-                            Log.d(DEBUG_TAG, "Action was MOVE: left");
-                        }
-                        lastTouchTime = System.currentTimeMillis();
-                    }
-                }
-                Log.d(DEBUG_TAG, "MOVE");
-                return true;
-            case (MotionEvent.ACTION_UP):
-                Log.d(DEBUG_TAG, "UP");
-                return true;
-            case (MotionEvent.ACTION_CANCEL):
-                Log.d(DEBUG_TAG, "CANCEL");
-                return true;
-            case (MotionEvent.ACTION_OUTSIDE):
-                Log.d(DEBUG_TAG, "OUTSIDE bounds of current screen element");
-                return true;
-        }
-        return super.dispatchTouchEvent(ev);
-    }
-
     @SuppressLint("ResourceType")
     private void initDefaultUI(HabitEntity habitEntity) {
         mode = ChartHelper.MODE_WEEK;
@@ -299,6 +253,73 @@ public class ReportDetailsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        int[] outLocation = new int[2];
+        chartContainer.getLocationOnScreen(outLocation);
+        boundTop = outLocation[0];
+        boundBottom = outLocation[0] + chartContainer.getHeight();
+        super.onWindowFocusChanged(hasFocus);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        int action = ev.getActionMasked();
+        switch (action) {
+            case (MotionEvent.ACTION_DOWN):
+                touchX = ev.getX();
+                touchY = ev.getY();
+                Log.d(DEBUG_TAG, "DOWN");
+                break;
+            case (MotionEvent.ACTION_MOVE):
+                if (ev.getY() > boundTop && ev.getY() < boundBottom) {
+                    if (System.currentTimeMillis() - lastTouchTime > 100) {
+                        if (ev.getX() - touchX > touchThresh && Math.abs(ev.getY() - touchY) < touchThresh) {
+                            currentDate = AppGenerator.getDayPreWeek(currentDate);
+                            timeLine -= 7;
+                            loadChartByDate(currentDate);
+                            Log.d(DEBUG_TAG, "Action was MOVE: right");
+                        } else if (touchX - ev.getX() > touchThresh && Math.abs(ev.getY() - touchY) < touchThresh) {
+                            currentDate = AppGenerator.getDayNextWeek(currentDate);
+                            timeLine += 7;
+                            loadChartByDate(currentDate);
+                            Log.d(DEBUG_TAG, "Action was MOVE: left");
+                        }
+                        lastTouchTime = System.currentTimeMillis();
+                    }
+                }
+                Log.d(DEBUG_TAG, "MOVE");
+                break;
+            case (MotionEvent.ACTION_UP):
+                Log.d(DEBUG_TAG, "UP");
+                break;
+            case (MotionEvent.ACTION_CANCEL):
+                Log.d(DEBUG_TAG, "CANCEL");
+                break;
+            case (MotionEvent.ACTION_OUTSIDE):
+                Log.d(DEBUG_TAG, "OUTSIDE bounds of current screen element");
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @OnClick({R.id.pre, R.id.next})
+    public void onDateChanged(View v) {
+        switch (v.getId()) {
+            case R.id.pre:
+                timeLine--;
+                currentDate = AppGenerator.getPreDate(currentDate, AppGenerator.YMD_SHORT);
+                break;
+            case R.id.next:
+                timeLine++;
+                currentDate = AppGenerator.getNextDate(currentDate, AppGenerator.YMD_SHORT);
+                break;
+        }
+
+        loadChartByDate(currentDate);
+        updateUI();
+    }
+
     @OnClick({R.id.tabWeek, R.id.tabMonth, R.id.tabYear})
     public void loadChartByTabTime(View v) {
         unSelect(selectedTabHL);
@@ -327,19 +348,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
         updateUI();
     }
 
-    @OnClick({R.id.pre, R.id.next})
-    public void onDateChanged(View v) {
-        switch (v.getId()) {
-            case R.id.pre:
-                timeLine--;
-                currentDate = AppGenerator.getPreDate(currentDate, AppGenerator.YMD_SHORT);
-                break;
-            case R.id.next:
-                timeLine++;
-                currentDate = AppGenerator.getNextDate(currentDate, AppGenerator.YMD_SHORT);
-                break;
-        }
-
+    private void loadChartByDate(String currentDate) {
         Database db = Database.getInstance(this);
         db.open();
         TrackingEntity todayTracking = Database.getTrackingDb().getTracking(habitEntity.getHabitId(), currentDate);
@@ -349,15 +358,12 @@ public class ReportDetailsActivity extends AppCompatActivity {
         if (todayTracking != null) {
             curTrackingCount = Integer.parseInt(todayTracking.getCount());
         }
-
         ArrayList<BarEntry> values = loadData(currentDate);
         if (currentDate.compareTo(chartStartReportDate) < 0 || currentDate.compareTo(chartEndReportDate) > 0) {
             chartHelper.setData(values, mode);
             chartStartReportDate = curStartReportDate;
             chartEndReportDate = curEndReportDate;
         }
-
-        updateUI();
     }
 
     @OnClick({R.id.minusCount, R.id.addCount})
