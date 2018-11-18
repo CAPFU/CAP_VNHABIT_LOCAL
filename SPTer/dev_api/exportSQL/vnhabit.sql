@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 18, 2018 at 10:18 AM
+-- Generation Time: Nov 18, 2018 at 05:34 PM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -92,13 +92,11 @@ CREATE TABLE `group` (
 --
 
 INSERT INTO `group` (`group_id`, `group_name`, `parent_id`, `group_icon`, `group_description`) VALUES
-('1', 'Sức khỏe', NULL, '', ''),
-('2', 'Tài chính', NULL, '', ''),
-('3', 'Gia đình', NULL, '', ''),
-('4', 'Học tập', NULL, '', ''),
-('5', 'Mua sắm', NULL, '', ''),
-('6', 'hhhhh', NULL, NULL, NULL),
-('7', 'abc', NULL, NULL, NULL);
+('1', 'Sức khỏe', NULL, NULL, NULL),
+('2', 'Tài chính', NULL, NULL, NULL),
+('3', 'Gia đình', NULL, NULL, NULL),
+('4', 'Học tập', NULL, NULL, NULL),
+('5', 'Mua sắm', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -124,6 +122,13 @@ CREATE TABLE `habit` (
   `habit_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `habit`
+--
+
+INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
+('7d4295d1-17', 'd233c193-6e', NULL, '58cefe15-1f', 'Chạy bộ', 0, 0, 1, 'km', 5, '2018-11-18', NULL, '2018-11-18', '#78e1385f', '');
+
 -- --------------------------------------------------------
 
 --
@@ -145,14 +150,13 @@ CREATE TABLE `habit_suggestion` (
 --
 
 INSERT INTO `habit_suggestion` (`habit_name_id`, `group_id`, `habit_name_uni`, `habit_name_ascii`, `habit_name_count`, `total_track`, `success_track`) VALUES
-('154fsd', '2', 'Đi chợ', 'di cho', 12, 34, 30),
-('1dv43fsd', '3', 'Đi bộ', 'di bo', 12, 90, 88),
-('1fsd', NULL, 'Ăn kem', 'an kem', 12, 13, 10),
-('dasf', '1', 'Uống thuốc', 'uong thuoc', 1, 0, 0),
-('dsfgsd', '2', 'Chạy bộ', 'chay bo', 12, 13, 10),
-('fsd-345', '3', 'Uống rượu', 'uong ruou', 4, 34, 6),
-('fsd545', '3', 'Thức đêm', 'thuc dem', 44, 67, 19),
-('gfdh', '1', 'Hút thuốc', 'hut thuoc', 10, 100, 99);
+('154fsd', '2', 'Đi chợ', 'di cho', 12, 35, 35),
+('1dv43fsd', '3', 'Đi bộ', 'di bo', 12, 90, 20),
+('dasf', '1', 'Đi Uống thuốc', 'di uong thuoc', 1, 200, 119),
+('dsfgsd', '2', 'Đi Chạy bộ', 'di chay bo', 13, 11, 10),
+('fsd-345', '3', 'Đi Uống rượu', 'di uong ruou', 4, 1000, 10),
+('fsd545', '3', 'Đi Thức đêm', 'di thuc dem', 44, 60, 59),
+('gfdh', '1', 'Đi Hút thuốc', 'di hut thuoc', 10, 100, 99);
 
 -- --------------------------------------------------------
 
@@ -171,6 +175,13 @@ CREATE TABLE `monitor_date` (
   `sat` tinyint(1) DEFAULT '1',
   `sun` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `monitor_date`
+--
+
+INSERT INTO `monitor_date` (`monitor_id`, `habit_id`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`) VALUES
+('58cefe15-1f', '7d4295d1-17', 1, 1, 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -200,6 +211,13 @@ CREATE TABLE `tracking` (
   `tracking_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `tracking`
+--
+
+INSERT INTO `tracking` (`tracking_id`, `habit_id`, `current_date`, `count`, `tracking_description`) VALUES
+('73a79271-9f', '7d4295d1-17', '2018-11-18', 2, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -217,16 +235,18 @@ CREATE TABLE `user` (
   `user_icon` text COLLATE utf8mb4_unicode_ci,
   `avatar` text COLLATE utf8mb4_unicode_ci,
   `user_description` text COLLATE utf8mb4_unicode_ci,
-  `created_date` text COLLATE utf8mb4_unicode_ci
+  `created_date` text COLLATE utf8mb4_unicode_ci,
+  `user_score` int(11) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `user_icon`, `avatar`, `user_description`, `created_date`) VALUES
-('1b153946-89', 'user03', '12345678', NULL, 'user02@mail.com', NULL, NULL, NULL, NULL, NULL, '2018-11-15'),
-('d233c193-6e', 'user01', '12345678', NULL, 'user01@mail.com', NULL, 0, NULL, NULL, NULL, '2018-11-15');
+INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `user_icon`, `avatar`, `user_description`, `created_date`, `user_score`) VALUES
+('1b153946-89', 'user02', '12345678', NULL, 'user02@mail.com', NULL, 1, NULL, NULL, NULL, '2018-11-15', 100),
+('d233c193-6e', 'user01', '12345678', NULL, 'user01@mail.com', NULL, 0, NULL, NULL, NULL, '2018-11-15', 200),
+('d233c195-hf', 'user03', '12345678', NULL, 'user03@mail.com', NULL, 0, NULL, NULL, NULL, '2018-11-15', 1000);
 
 --
 -- Indexes for dumped tables

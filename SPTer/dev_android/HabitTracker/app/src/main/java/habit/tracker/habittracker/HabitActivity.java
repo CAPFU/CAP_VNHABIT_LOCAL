@@ -294,7 +294,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                                 int hbLevel;
                                 int numOfUser;
                                 for (HabitSuggestion sg : searchResult) {
-                                    hbLevel = (sg.getSuccessTrack() / sg.getTotalTrack()) * 100;
+                                    hbLevel = (int) (((float)sg.getSuccessTrack() / (float)sg.getTotalTrack()) * 100);
                                     numOfUser = Integer.parseInt(sg.getHabitNameCount());
                                     if (hbLevel >= 80) {
                                         if (numOfUser > topLow) {
@@ -323,17 +323,17 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                                 tmpList.addAll(medList);
                                 tmpList.addAll(higList);
                                 if (userScore <= LOW_SCORE) {
-                                    suggestList.addAll(tmpList.size() >= 5 ? tmpList.subList(0, 4) : tmpList);
+                                    suggestList.addAll(tmpList.size() >= 5 ? tmpList.subList(0, 5) : tmpList);
                                 } else if (userScore < HIG_SCORE) {
                                     int size = lowList.size() + medList.size();
-                                    suggestList.addAll(tmpList.subList(size - 1, 0));
+                                    suggestList.addAll(tmpList.subList(size, 0));
                                     if (suggestList.size() < 5) {
                                         size = 5 - suggestList.size();
-                                        suggestList.addAll(higList.size() >= size ? higList.subList(0, size - 1) : higList);
+                                        suggestList.addAll(higList.size() >= size ? higList.subList(0, size) : higList);
                                     }
                                 } else {
                                     Collections.reverse(tmpList);
-                                    suggestList.addAll(tmpList.size() >= 5 ? tmpList.subList(0, 4) : tmpList);
+                                    suggestList.addAll(tmpList.size() >= 5 ? tmpList.subList(0, 5) : tmpList);
                                 }
                             }
 //                            for (HabitSuggestion sg : response.body().getSearchResult()) {

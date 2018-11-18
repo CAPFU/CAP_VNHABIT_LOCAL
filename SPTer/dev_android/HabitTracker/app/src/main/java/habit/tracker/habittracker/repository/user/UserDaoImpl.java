@@ -63,7 +63,7 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
                 userEntity.setCreatedDate(cursor.getString(cursor.getColumnIndexOrThrow(USER_CREATED_DATE)));
             }
             if (cursor.getColumnIndex(USER_SCORE) != -1) {
-                userEntity.setCreatedDate(cursor.getString(cursor.getColumnIndexOrThrow(USER_SCORE)));
+                userEntity.setUserScore(cursor.getString(cursor.getColumnIndexOrThrow(USER_SCORE)));
             }
         }
         return userEntity;

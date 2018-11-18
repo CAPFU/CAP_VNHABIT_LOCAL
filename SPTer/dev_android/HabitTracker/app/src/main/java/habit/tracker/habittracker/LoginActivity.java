@@ -144,6 +144,7 @@ public class LoginActivity extends BaseActivity {
                         userEntity.setAvatar(user.getAvatar());
                         userEntity.setUserDescription(user.getCreatedDate());
                         userEntity.setCreatedDate(user.getCreatedDate());
+                        userEntity.setUserScore(user.getUserScore());
                         Database.getUserDb().saveUser(userEntity);
                     }
                     db.close();

@@ -21,6 +21,7 @@ include_once '../../models/Model.php';
         public $avatar;
         public $user_description;
         public $created_date;
+        public $user_score;
 
         public function __construct($db) {
             $this->conn = $db;
