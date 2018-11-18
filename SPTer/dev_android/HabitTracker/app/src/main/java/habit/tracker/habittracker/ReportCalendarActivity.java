@@ -110,6 +110,7 @@ public class ReportCalendarActivity extends AppCompatActivity implements Trackin
     float boundTop = 0;
     float boundBottom = 0;
     float touchThresh = 100;
+    float touchTimeThresh = 50;
     long lastTouchTime = 0;
 
     @Override
@@ -321,9 +322,11 @@ public class ReportCalendarActivity extends AppCompatActivity implements Trackin
                 break;
             case (MotionEvent.ACTION_MOVE):
                 if (ev.getY() > boundTop && ev.getY() < boundBottom) {
-                    if (System.currentTimeMillis() - lastTouchTime > 100) {
+                    if (System.currentTimeMillis() - lastTouchTime > touchTimeThresh) {
                         if (ev.getX() - touchX > touchThresh && Math.abs(ev.getY() - touchY) < touchThresh) {
 
+                            currentDate = AppGenerator.getFirstDatePreMonth(currentDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
+                            loadCalendar(currentDate);
 
                             Log.d(DEBUG_TAG, "Action was MOVE: right");
                         } else if (touchX - ev.getX() > touchThresh && Math.abs(ev.getY() - touchY) < touchThresh) {

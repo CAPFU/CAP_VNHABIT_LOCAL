@@ -12,8 +12,9 @@ public class UserEntity {
     private String avatar;
     private String userDescription;
     private String createdDate;
+    private String userScore;
 
-    public UserEntity(String userId, String username, String email, String phone, String gender, String dateOfBirth, String password, String userIcon, String avatar, String userDescription) {
+    public UserEntity(String userId, String username, String email, String phone, String gender, String dateOfBirth, String password, String userIcon, String avatar, String userDescription, String userScore) {
         this.userId = userId;
         this.username = username;
         this.email = email;
@@ -24,6 +25,7 @@ public class UserEntity {
         this.userIcon = userIcon;
         this.avatar = avatar;
         this.userDescription = userDescription;
+        this.userScore = userScore;
     }
 
     public UserEntity(){
@@ -74,6 +76,10 @@ public class UserEntity {
         return createdDate;
     }
 
+    public String getUserScore() {
+        return userScore;
+    }
+
     public void setUserId(String userId) {
         this.userId = userId;
     }
@@ -116,5 +122,9 @@ public class UserEntity {
 
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public void setUserScore(String userScore) {
+        this.userScore = userScore;
     }
 }

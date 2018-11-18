@@ -322,6 +322,15 @@ public class AppGenerator {
         calendar.setTime(date);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + 1);
-        return getDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH), YMD_SHORT);
+        return getDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH), fmOut);
+    }
+
+    public static String getFirstDatePreMonth(String currentDate, String fmIn, String fmOut) {
+        Date date = getDate(currentDate, fmIn);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
+        return getDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH), fmOut);
     }
 }

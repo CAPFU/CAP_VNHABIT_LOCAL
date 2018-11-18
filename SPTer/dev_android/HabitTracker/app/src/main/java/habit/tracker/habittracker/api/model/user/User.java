@@ -38,17 +38,15 @@ public class User {
     @SerializedName("created_date")
     @Expose
     private String createdDate;
+    @SerializedName("user_score")
+    @Expose
+    private String userScore;
 
     public User() {
-//        phone = password = email = dateOfBirth = gender = userIcon = avatar = userDescription = "";
     }
 
     public String getUserId() {
         return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getUsername() {
@@ -59,6 +57,46 @@ public class User {
         return phone;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getUserIcon() {
+        return userIcon;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public String getUserDescription() {
+        return userDescription;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public String getUserScore() {
+        return userScore;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -67,67 +105,39 @@ public class User {
         this.phone = phone;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getDateOfBirth() {
-        return dateOfBirth;
-    }
-
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getGender() {
-        return gender;
     }
 
     public void setGender(String gender) {
         this.gender = gender;
     }
 
-    public String getUserIcon() {
-        return userIcon;
-    }
-
     public void setUserIcon(String userIcon) {
         this.userIcon = userIcon;
-    }
-
-    public String getAvatar() {
-        return avatar;
     }
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 
-    public String getUserDescription() {
-        return userDescription;
-    }
-
     public void setUserDescription(String userDescription) {
         this.userDescription = userDescription;
     }
 
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public void setUserScore(String userScore) {
+        this.userScore = userScore;
     }
 }

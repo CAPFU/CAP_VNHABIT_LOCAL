@@ -123,6 +123,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
     float boundTop = 0;
     float boundBottom = 0;
     float touchThresh = 100;
+    float touchTimeThresh = 50;
     long lastTouchTime = 0;
 
     @Override
@@ -273,7 +274,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 break;
             case (MotionEvent.ACTION_MOVE):
                 if (ev.getY() > boundTop && ev.getY() < boundBottom) {
-                    if (System.currentTimeMillis() - lastTouchTime > 100) {
+                    if (System.currentTimeMillis() - lastTouchTime > touchTimeThresh) {
                         if (ev.getX() - touchX > touchThresh && Math.abs(ev.getY() - touchY) < touchThresh) {
                             currentDate = AppGenerator.getDayPreWeek(currentDate);
                             timeLine -= 7;

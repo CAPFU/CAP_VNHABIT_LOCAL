@@ -62,6 +62,9 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
             if (cursor.getColumnIndex(USER_CREATED_DATE) != -1) {
                 userEntity.setCreatedDate(cursor.getString(cursor.getColumnIndexOrThrow(USER_CREATED_DATE)));
             }
+            if (cursor.getColumnIndex(USER_SCORE) != -1) {
+                userEntity.setCreatedDate(cursor.getString(cursor.getColumnIndexOrThrow(USER_SCORE)));
+            }
         }
         return userEntity;
     }
@@ -156,6 +159,7 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
         initialValues.put(AVATAR, userEntity.getAvatar());
         initialValues.put(USER_DESCRIPTION, userEntity.getUserDescription());
         initialValues.put(USER_CREATED_DATE, userEntity.getCreatedDate());
+        initialValues.put(USER_SCORE, userEntity.getUserScore());
     }
 
     private ContentValues getContentValue() {
@@ -176,6 +180,7 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
             entity.setUserIcon(user.getUserIcon());
             entity.setUserDescription(user.getUserDescription());
             entity.setCreatedDate(user.getCreatedDate());
+            entity.setUserScore(user.getUserScore());
             return entity;
         }
         return null;

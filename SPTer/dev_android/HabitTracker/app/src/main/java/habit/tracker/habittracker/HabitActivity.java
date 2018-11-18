@@ -27,8 +27,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -52,11 +56,15 @@ import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.group.GroupEntity;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
 import habit.tracker.habittracker.repository.reminder.ReminderEntity;
+import habit.tracker.habittracker.repository.user.UserEntity;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static habit.tracker.habittracker.common.AppConstant.HIG_SCORE;
+import static habit.tracker.habittracker.common.AppConstant.LOW_SCORE;
+import static habit.tracker.habittracker.common.AppConstant.MED_SCORE;
 import static habit.tracker.habittracker.common.AppConstant.RES_OK;
 
 public class HabitActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
@@ -83,7 +91,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     RecyclerView rvHabitSuggestion;
     SearchRecyclerViewAdapter suggestAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    List<HabitSuggestion> habitSuggestList = new ArrayList<>();
+    List<HabitSuggestion> suggestList = new ArrayList<>();
     String initHabitId;
     String suggestHabitNameId;
     String suggestHabitName;
@@ -229,14 +237,14 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         setContentView(R.layout.activity_habit);
         ButterKnife.bind(this);
 
-        suggestAdapter = new SearchRecyclerViewAdapter(this, habitSuggestList, new RecyclerViewItemClickListener() {
+        suggestAdapter = new SearchRecyclerViewAdapter(this, suggestList, new RecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                suggestHabitNameId = habitSuggestList.get(position).getHabitNameId();
-                suggestHabitName = habitSuggestList.get(position).getHabitNameUni();
+                suggestHabitNameId = suggestList.get(position).getHabitNameId();
+                suggestHabitName = suggestList.get(position).getHabitNameUni();
                 selectedSuggestion = true;
                 editHabitName.setText(suggestHabitName);
-                habitSuggestList.clear();
+                suggestList.clear();
                 suggestAdapter.notifyDataSetChanged();
             }
         });
@@ -258,7 +266,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                     return;
                 }
                 if (TextUtils.isEmpty(s.toString())) {
-                    habitSuggestList.clear();
+                    suggestList.clear();
                     suggestAdapter.notifyDataSetChanged();
                     return;
                 }
@@ -266,12 +274,72 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 mService.searchHabitName(AppGenerator.getSearchKey(s.toString().trim())).enqueue(new Callback<SearchResponse>() {
                     @Override
                     public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
-                        habitSuggestList.clear();
+                        suggestList.clear();
                         if (response.body().getResult().equals(RES_OK)) {
-                            for (HabitSuggestion sg : response.body().getSearchResult()) {
-                                habitSuggestList.add(
-                                        new HabitSuggestion(sg.getHabitNameId(), sg.getGroupId(), sg.getHabitNameUni(), sg.getHabitName(), sg.getHabitNameCount(), false));
+                            List<HabitSuggestion> searchResult = response.body().getSearchResult();
+                            Database db = Database.getInstance(HabitActivity.this);
+                            db.open();
+                            UserEntity user = Database.getUserDb().getUser(MySharedPreference.getUserId(HabitActivity.this));
+                            int userScore = Integer.parseInt(user.getUserScore());
+                            db.close();
+
+                            if (searchResult.size() > 0) {
+                                List<HabitSuggestion> lowList = new ArrayList<>();
+                                List<HabitSuggestion> medList = new ArrayList<>();
+                                List<HabitSuggestion> higList = new ArrayList<>();
+                                List<HabitSuggestion> tmpList = new ArrayList<>();
+                                int topLow = -1;
+                                int topMed = -1;
+                                int topHig = -1;
+                                int hbLevel;
+                                int numOfUser;
+                                for (HabitSuggestion sg : searchResult) {
+                                    hbLevel = (sg.getSuccessTrack() / sg.getTotalTrack()) * 100;
+                                    numOfUser = Integer.parseInt(sg.getHabitNameCount());
+                                    if (hbLevel >= 80) {
+                                        if (numOfUser > topLow) {
+                                            lowList.add(0, sg);
+                                            topLow = numOfUser;
+                                        } else {
+                                            lowList.add(sg);
+                                        }
+                                    } else if (hbLevel >= 50) {
+                                        if (numOfUser > topMed) {
+                                            medList.add(0, sg);
+                                            topMed = numOfUser;
+                                        } else {
+                                            medList.add(sg);
+                                        }
+                                    } else {
+                                        if (numOfUser > topHig) {
+                                            higList.add(0, sg);
+                                            topMed = numOfUser;
+                                        } else {
+                                            higList.add(sg);
+                                        }
+                                    }
+                                }
+                                tmpList.addAll(lowList);
+                                tmpList.addAll(medList);
+                                tmpList.addAll(higList);
+                                if (userScore <= LOW_SCORE) {
+                                    suggestList.addAll(tmpList.size() >= 5 ? tmpList.subList(0, 4) : tmpList);
+                                } else if (userScore < HIG_SCORE) {
+                                    int size = lowList.size() + medList.size();
+                                    suggestList.addAll(tmpList.subList(size - 1, 0));
+                                    if (suggestList.size() < 5) {
+                                        size = 5 - suggestList.size();
+                                        suggestList.addAll(higList.size() >= size ? higList.subList(0, size - 1) : higList);
+                                    }
+                                } else {
+                                    Collections.reverse(tmpList);
+                                    suggestList.addAll(tmpList.size() >= 5 ? tmpList.subList(0, 4) : tmpList);
+                                }
                             }
+//                            for (HabitSuggestion sg : response.body().getSearchResult()) {
+//                                suggestList.add(
+//                                        new HabitSuggestion(sg.getHabitNameId(), sg.getGroupId(), sg.getHabitNameUni(), sg.getHabitName(), sg.getHabitNameCount(), false));
+//                            }
                         }
                         suggestAdapter.notifyDataSetChanged();
                     }

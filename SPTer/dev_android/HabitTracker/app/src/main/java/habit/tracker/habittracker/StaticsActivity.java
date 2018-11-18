@@ -78,6 +78,7 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
     float boundTop = 0;
     float boundBottom = 0;
     float touchThresh = 100;
+    float touchTimeThresh = 50;
     long lastTouchTime = 0;
 
     Database appDatabase = Database.getInstance(this);
@@ -134,7 +135,7 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
                 break;
             case (MotionEvent.ACTION_MOVE):
                 if (ev.getY() > boundTop && ev.getY() < boundBottom) {
-                    if (System.currentTimeMillis() - lastTouchTime > 100) {
+                    if (System.currentTimeMillis() - lastTouchTime > touchTimeThresh) {
                         if (ev.getX() - touchX > touchThresh && Math.abs(ev.getY() - touchY) < touchThresh) {
                             moveToPre(imgPreDate);
                             Log.d(DEBUG_TAG, "Action was MOVE: right");
