@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 16, 2018 at 07:05 AM
+-- Generation Time: Nov 18, 2018 at 10:18 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -124,15 +124,6 @@ CREATE TABLE `habit` (
   `habit_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `habit`
---
-
-INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
-('75f17201-ec', 'd233c193-6e', '1', '43dbee12-67', 'Chạy bộ', 0, 1, 1, 'Lần', 3, '2018-11-12', NULL, '2018-11-16', '#78ed872a', 'bbb'),
-('a8fb1816-9d', 'd233c193-6e', NULL, 'b4682cb8-e9', 'jjjj', 0, 0, 0, NULL, 1, '2018-11-16', NULL, '2018-11-16', '#ffffffff', ''),
-('ca0f8248-35', 'd233c193-6e', NULL, '8cf0a0e2-66', 'ytryrt', 0, 0, 0, NULL, 1, '2018-11-16', NULL, '2018-11-16', '#ffffffff', '');
-
 -- --------------------------------------------------------
 
 --
@@ -143,7 +134,7 @@ CREATE TABLE `habit_suggestion` (
   `habit_name_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `group_id` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `habit_name_uni` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `habit_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `habit_name_ascii` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `habit_name_count` int(11) DEFAULT '0',
   `total_track` int(11) DEFAULT '0',
   `success_track` int(11) DEFAULT '0'
@@ -153,18 +144,15 @@ CREATE TABLE `habit_suggestion` (
 -- Dumping data for table `habit_suggestion`
 --
 
-INSERT INTO `habit_suggestion` (`habit_name_id`, `group_id`, `habit_name_uni`, `habit_name`, `habit_name_count`, `total_track`, `success_track`) VALUES
-('', NULL, 'ytryrt', 'ytryrt', 1, 0, 0),
+INSERT INTO `habit_suggestion` (`habit_name_id`, `group_id`, `habit_name_uni`, `habit_name_ascii`, `habit_name_count`, `total_track`, `success_track`) VALUES
 ('154fsd', '2', 'Đi chợ', 'di cho', 12, 34, 30),
 ('1dv43fsd', '3', 'Đi bộ', 'di bo', 12, 90, 88),
-('1fsd', '1', 'Ăn kem', 'an kem', 12, 13, 10),
+('1fsd', NULL, 'Ăn kem', 'an kem', 12, 13, 10),
 ('dasf', '1', 'Uống thuốc', 'uong thuoc', 1, 0, 0),
 ('dsfgsd', '2', 'Chạy bộ', 'chay bo', 12, 13, 10),
-('e3fda411-c9', NULL, 'jjjj', 'jjjj', 1, 0, 0),
 ('fsd-345', '3', 'Uống rượu', 'uong ruou', 4, 34, 6),
 ('fsd545', '3', 'Thức đêm', 'thuc dem', 44, 67, 19),
-('gfdh', '1', 'Hút thuốc', 'hut thuoc', 10, 100, 99),
-('sasda', NULL, 'jhk', 'jhk', 1, 0, 0);
+('gfdh', '1', 'Hút thuốc', 'hut thuoc', 10, 100, 99);
 
 -- --------------------------------------------------------
 
@@ -183,15 +171,6 @@ CREATE TABLE `monitor_date` (
   `sat` tinyint(1) DEFAULT '1',
   `sun` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `monitor_date`
---
-
-INSERT INTO `monitor_date` (`monitor_id`, `habit_id`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`) VALUES
-('43dbee12-67', '75f17201-ec', 1, 1, 1, 1, 1, 1, 1),
-('8cf0a0e2-66', 'ca0f8248-35', 1, 1, 1, 1, 1, 1, 1),
-('b4682cb8-e9', 'a8fb1816-9d', 1, 1, 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -220,16 +199,6 @@ CREATE TABLE `tracking` (
   `count` int(11) DEFAULT '0',
   `tracking_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `tracking`
---
-
-INSERT INTO `tracking` (`tracking_id`, `habit_id`, `current_date`, `count`, `tracking_description`) VALUES
-('115d8827-3e', '75f17201-ec', '2018-11-15', 3, NULL),
-('94c57d1b-d7', '75f17201-ec', '2018-11-16', 2, NULL),
-('a522ba52-85', '75f17201-ec', '2018-11-12', 1, 'hello'),
-('a91bf676-b1', '75f17201-ec', '2018-11-14', 0, 'home qua');
 
 -- --------------------------------------------------------
 

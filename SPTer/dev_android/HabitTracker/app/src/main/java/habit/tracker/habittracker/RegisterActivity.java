@@ -18,6 +18,7 @@ import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.model.user.UserResult;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
+import habit.tracker.habittracker.common.AppConstant;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.validator.Validator;
 import habit.tracker.habittracker.common.validator.ValidatorType;
@@ -39,6 +40,14 @@ public class RegisterActivity extends BaseActivity {
     EditText edPassword;
     @BindView(R.id.edit_conf_password)
     EditText edPasswordConfirm;
+
+    Database appDatabase = Database.getInstance(RegisterActivity.this);
+
+    @Override
+    protected void onStart() {
+        appDatabase.open();
+        super.onStart();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,19 +129,13 @@ public class RegisterActivity extends BaseActivity {
         mService.registerUser(user).enqueue(new Callback<UserResult>() {
             @Override
             public void onResponse(Call<UserResult> call, Response<UserResult> response) {
-                if (response.body().getResult().equals("1")) {
-                    Toast.makeText(RegisterActivity.this, "Đăng ký tài khoản thành công", Toast.LENGTH_SHORT).show();
-
-                    Database db = Database.getInstance(RegisterActivity.this);
-                    db.open();
+                if (response.body().getResult().equals(AppConstant.RES_OK)) {
                     Database.getUserDb().saveUser(Database.getUserDb().convert(user));
-                    db.close();
-
                     Intent intent = getIntent();
                     intent.putExtra(LoginActivity.USERNAME, user.getUsername());
                     RegisterActivity.this.setResult(RESULT_OK, intent);
+                    Toast.makeText(RegisterActivity.this, "Đăng ký tài khoản thành công", Toast.LENGTH_SHORT).show();
                     finish();
-
                 } else {
                     Toast.makeText(RegisterActivity.this, "Đăng ký không thành công", Toast.LENGTH_SHORT).show();
                 }
@@ -148,5 +151,11 @@ public class RegisterActivity extends BaseActivity {
     public void showEmpty(View v) {
         Intent i = new Intent(this, EmptyActivity.class);
         startActivity(i);
+    }
+
+    @Override
+    protected void onStop() {
+        appDatabase.close();
+        super.onStop();
     }
 }

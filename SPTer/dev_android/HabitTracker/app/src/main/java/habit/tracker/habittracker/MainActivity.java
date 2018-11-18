@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
         item.setCount(count);
         item.setTotalCount(totalCount);
 
-        // save to db local
+        // save to appDatabase local
         Database db = Database.getInstance(this);
         db.open();
         TrackingList trackingData = new TrackingList();
