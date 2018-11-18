@@ -41,7 +41,7 @@
         <receiver android:name=".common.habitreminder.HabitReminderServiceReceiver" />
 
         <activity android:name=".GuideActivity" />
-        <activity android:name=".ReportActivity" />
+        <activity android:name=".StaticsActivity" />
         <activity android:name=".FilterMainActivity" />
         <activity android:name=".ReportDetailsActivity" />
         <activity android:name=".ReportCalendarActivity" />

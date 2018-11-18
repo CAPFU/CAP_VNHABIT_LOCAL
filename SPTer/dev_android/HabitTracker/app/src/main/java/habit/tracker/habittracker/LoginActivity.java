@@ -19,6 +19,7 @@ import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.model.user.UserResponse;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
+import habit.tracker.habittracker.common.AppConstant;
 import habit.tracker.habittracker.common.pushservice.PushDataService;
 import habit.tracker.habittracker.common.validator.Validator;
 import habit.tracker.habittracker.common.validator.ValidatorType;
@@ -36,8 +37,6 @@ public class LoginActivity extends BaseActivity {
     public static final int SIGN_UP = 1;
 
     public static final String USERNAME = "username";
-
-    public static final String PASSWORD = "password";
 
     @BindView(R.id.edit_username)
     EditText edUsername;
@@ -128,7 +127,7 @@ public class LoginActivity extends BaseActivity {
         mService.getUser(username, password).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                if (response.body().getResult().equals("1")) {
+                if (response.body().getResult().equals(AppConstant.RES_OK)) {
                     User user = response.body().getData();
                     Database db = new Database(LoginActivity.this);
                     UserEntity userEntity = new UserEntity();

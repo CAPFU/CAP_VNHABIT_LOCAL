@@ -949,7 +949,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         int idx = 0;
         if (habitColor != null) {
             idx = Integer.parseInt(habitColor.getTag().toString());
-            unpickColor(habitColor, colorsList.get(idx));
+            unPickColor(habitColor, colorsList.get(idx));
         }
         idx = Integer.parseInt(v.getTag().toString());
         pickColor(v, colors[idx]);
@@ -993,7 +993,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         v.setBackground(getCircleCheckBackground(color));
     }
 
-    public void unpickColor(View v, String colorCode) {
+    public void unPickColor(View v, String colorCode) {
         v.setBackground(getCircleBackground(colorCode));
     }
 

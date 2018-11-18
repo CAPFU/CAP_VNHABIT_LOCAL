@@ -364,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
 
     @OnClick(R.id.report)
     public void report(View v) {
-        Intent intent = new Intent(this, ReportActivity.class);
+        Intent intent = new Intent(this, StaticsActivity.class);
         startActivity(intent);
     }
 
