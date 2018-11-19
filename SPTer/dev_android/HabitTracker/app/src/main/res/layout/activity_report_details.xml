@@ -130,6 +130,7 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/chartContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="7"
@@ -194,7 +195,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/chartContainer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_below="@id/tabHighLine"

@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +33,26 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
     public static String SUGGEST_NAME = "SuggestionByLevelActivity.pick_name";
     public static String SUGGEST_NAME_ID = "SuggestionByLevelActivity.suggest_name_id";
 
+
+    @BindView(R.id.tvUsername)
+    TextView tvUsername;
+    @BindView(R.id.tvStartedDate)
+    TextView tvStartedDate;
+    @BindView(R.id.tvContinueUsing)
+    TextView tvContinueUsing;
+    @BindView(R.id.tvLevel)
+    TextView tvLevel;
+    @BindView(R.id.tvUserScore)
+    TextView tvUserScore;
+    @BindView(R.id.tvBestContinue)
+    TextView tvBestContinue;
+    @BindView(R.id.tvCurrentContinue)
+    TextView tvCurrentContinue;
+
     @BindView(R.id.rvSuggestion)
     RecyclerView rvSuggestion;
 
+    UserEntity userEntity;
     List<HabitSuggestion> displaySuggestList = new ArrayList<>();
     SuggestByGroupAdapter suggestByGroupAdapter;
     VnHabitApiService mService = VnHabitApiUtils.getApiService();
@@ -57,7 +75,7 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
 
                     Database db = Database.getInstance(SuggestionByLevelActivity.this);
                     db.open();
-                    UserEntity userEntity = Database.getUserDb().getUser(MySharedPreference.getUserId(SuggestionByLevelActivity.this));
+                    userEntity = Database.getUserDb().getUser(MySharedPreference.getUserId(SuggestionByLevelActivity.this));
                     db.close();
                     int pendDate = AppGenerator.countDayBetween(userEntity.getCreatedDate(), AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
                     if (pendDate >= 30) {
@@ -83,6 +101,15 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
                     suggestByGroupAdapter = new SuggestByGroupAdapter(SuggestionByLevelActivity.this, displaySuggestList, SuggestionByLevelActivity.this);
                     rvSuggestion.setLayoutManager(new LinearLayoutManager(SuggestionByLevelActivity.this));
                     rvSuggestion.setAdapter(suggestByGroupAdapter);
+
+                    tvUsername.setText(userEntity.getUsername());
+                    tvStartedDate.setText(AppGenerator.format(userEntity.getCreatedDate(), AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
+                    tvContinueUsing.setText(userEntity.getContinueUsingDate());
+//                    tvLevel.setText("");
+                    tvUserScore.setText(userEntity.getUserScore());
+//                    tvBestContinue.setText("");
+//                    tvCurrentContinue.setText("");
+
                 }
             }
 

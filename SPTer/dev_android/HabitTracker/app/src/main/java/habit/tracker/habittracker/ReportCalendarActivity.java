@@ -109,8 +109,8 @@ public class ReportCalendarActivity extends AppCompatActivity implements Trackin
     float touchY = 0;
     float boundTop = 0;
     float boundBottom = 0;
-    float touchThresh = 100;
-    float touchTimeThresh = 50;
+    float touchThreshTime = 90;
+    float touchTimeThresh = 100;
     long lastTouchTime = 0;
 
     @Override
@@ -306,8 +306,8 @@ public class ReportCalendarActivity extends AppCompatActivity implements Trackin
     public void onWindowFocusChanged(boolean hasFocus) {
         int[] outLocation = new int[2];
         recyclerViewCalendar.getLocationOnScreen(outLocation);
-        boundTop = outLocation[0];
-        boundBottom = outLocation[0] + recyclerViewCalendar.getHeight();
+        boundTop = outLocation[1];
+        boundBottom = outLocation[1] + recyclerViewCalendar.getHeight();
         super.onWindowFocusChanged(hasFocus);
     }
 
@@ -323,17 +323,21 @@ public class ReportCalendarActivity extends AppCompatActivity implements Trackin
             case (MotionEvent.ACTION_MOVE):
                 if (ev.getY() > boundTop && ev.getY() < boundBottom) {
                     if (System.currentTimeMillis() - lastTouchTime > touchTimeThresh) {
-                        if (ev.getX() - touchX > touchThresh && Math.abs(ev.getY() - touchY) < touchThresh) {
+                        if (ev.getX() - touchX > touchThreshTime && Math.abs(ev.getY() - touchY) < touchThreshTime) {
 
-                            currentDate = AppGenerator.getFirstDatePreMonth(currentDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
-                            loadCalendar(currentDate);
-
+                            String pre = AppGenerator.getFirstDatePreMonth(currentDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
+                            timeLine = AppGenerator.countDayBetween(pre, currentDate) * -1;
+                            currentDate = pre;
+                            loadCalendarByDate(currentDate);
+                            updateUI();
                             Log.d(DEBUG_TAG, "Action was MOVE: right");
-                        } else if (touchX - ev.getX() > touchThresh && Math.abs(ev.getY() - touchY) < touchThresh) {
+                        } else if (touchX - ev.getX() > touchThreshTime && Math.abs(ev.getY() - touchY) < touchThreshTime) {
 
-                            currentDate = AppGenerator.getFirstDateNextMonth(currentDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
-                            loadCalendar(currentDate);
-
+                            String next = AppGenerator.getFirstDateNextMonth(currentDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
+                            timeLine = AppGenerator.countDayBetween(currentDate, next);
+                            currentDate = next;
+                            loadCalendarByDate(currentDate);
+                            updateUI();
                             Log.d(DEBUG_TAG, "Action was MOVE: left");
                         }
                         lastTouchTime = System.currentTimeMillis();
@@ -383,19 +387,19 @@ public class ReportCalendarActivity extends AppCompatActivity implements Trackin
                 currentDate = AppGenerator.getNextDate(currentDate, AppGenerator.YMD_SHORT);
                 break;
         }
+        loadCalendarByDate(currentDate);
+        updateUI();
+    }
 
+    private void loadCalendarByDate(String currentDate) {
         if (timeLine <= 0) {
             // get today tracking record of current habit
-            TrackingEntity todayTracking = Database.trackingImpl
-                    .getTracking(this.habitEntity.getHabitId(), this.currentDate);
-
+            TrackingEntity todayTracking = Database.trackingImpl.getTracking(habitEntity.getHabitId(), currentDate);
             curTrackingCount = 0;
             if (todayTracking != null) {
                 curTrackingCount = Integer.parseInt(todayTracking.getCount());
             }
         }
-
-        updateUI();
     }
 
     @OnClick({R.id.minusCount, R.id.addCount})

@@ -294,7 +294,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                                 int hbLevel;
                                 int numOfUser;
                                 for (HabitSuggestion sg : searchResult) {
-                                    hbLevel = (int) (((float)sg.getSuccessTrack() / (float)sg.getTotalTrack()) * 100);
+                                    hbLevel = (int) (((float) sg.getSuccessTrack() / (float) sg.getTotalTrack()) * 100);
                                     numOfUser = Integer.parseInt(sg.getHabitNameCount());
                                     if (hbLevel >= 80) {
                                         if (numOfUser > topLow) {

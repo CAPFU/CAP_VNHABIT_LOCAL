@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 18, 2018 at 05:34 PM
+-- Generation Time: Nov 19, 2018 at 05:47 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -216,7 +216,8 @@ CREATE TABLE `tracking` (
 --
 
 INSERT INTO `tracking` (`tracking_id`, `habit_id`, `current_date`, `count`, `tracking_description`) VALUES
-('73a79271-9f', '7d4295d1-17', '2018-11-18', 2, NULL);
+('73a79271-9f', '7d4295d1-17', '2018-11-18', 2, NULL),
+('cd850fbe-c0', '7d4295d1-17', '2018-11-19', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -235,7 +236,9 @@ CREATE TABLE `user` (
   `user_icon` text COLLATE utf8mb4_unicode_ci,
   `avatar` text COLLATE utf8mb4_unicode_ci,
   `user_description` text COLLATE utf8mb4_unicode_ci,
-  `created_date` text COLLATE utf8mb4_unicode_ci,
+  `created_date` date DEFAULT NULL,
+  `last_login_time` date DEFAULT NULL,
+  `continue_using_date` int(11) DEFAULT '0',
   `user_score` int(11) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -243,10 +246,10 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `user_icon`, `avatar`, `user_description`, `created_date`, `user_score`) VALUES
-('1b153946-89', 'user02', '12345678', NULL, 'user02@mail.com', NULL, 1, NULL, NULL, NULL, '2018-11-15', 100),
-('d233c193-6e', 'user01', '12345678', NULL, 'user01@mail.com', NULL, 0, NULL, NULL, NULL, '2018-11-15', 200),
-('d233c195-hf', 'user03', '12345678', NULL, 'user03@mail.com', NULL, 0, NULL, NULL, NULL, '2018-11-15', 1000);
+INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `user_icon`, `avatar`, `user_description`, `created_date`, `last_login_time`, `continue_using_date`, `user_score`) VALUES
+('1b153946-89', 'user02', '12345678', NULL, 'user02@mail.com', NULL, 1, NULL, NULL, NULL, '2018-11-11', NULL, 100, 100),
+('d233c193-6e', 'user01', '12345678', NULL, 'user01@mail.com', NULL, 0, NULL, NULL, NULL, '2018-11-12', NULL, 10, 200),
+('d233c195-hf', 'user03', '12345678', NULL, 'user03@mail.com', NULL, 0, NULL, NULL, NULL, '2018-11-10', NULL, 6, 1000);
 
 --
 -- Indexes for dumped tables

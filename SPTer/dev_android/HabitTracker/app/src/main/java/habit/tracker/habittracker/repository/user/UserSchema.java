@@ -14,6 +14,7 @@ public interface UserSchema {
     String USER_DESCRIPTION = "user_description";
     String USER_CREATED_DATE = "user_created_date";
     String USER_SCORE = "user_score";
+    String CONTINUE_USING_DATE = "continue_using_date";
 
     String CREATE_USER_TABLE =
             "CREATE TABLE IF NOT EXISTS " + USER_TABLE + " ("
@@ -28,7 +29,8 @@ public interface UserSchema {
                     + AVATAR + " TEXT, "
                     + USER_DESCRIPTION + " TEXT, "
                     + USER_CREATED_DATE + " TEXT, "
-                    + USER_SCORE + " TEXT"
+                    + USER_SCORE + " TEXT, "
+                    + CONTINUE_USING_DATE + " TEXT"
                     + ")";
-    String[] USER_COLUMNS = new String[]{USER_ID, USERNAME, EMAIL, PHONE, GENDER, DATE_OF_BIRTH, PASSWORD, USER_ICON, AVATAR, USER_DESCRIPTION, USER_CREATED_DATE, USER_SCORE};
+    String[] USER_COLUMNS = new String[]{USER_ID, USERNAME, EMAIL, PHONE, GENDER, DATE_OF_BIRTH, PASSWORD, USER_ICON, AVATAR, USER_DESCRIPTION, USER_CREATED_DATE, USER_SCORE, CONTINUE_USING_DATE};
 }

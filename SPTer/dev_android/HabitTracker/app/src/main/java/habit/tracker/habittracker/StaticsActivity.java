@@ -119,8 +119,8 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
     public void onWindowFocusChanged(boolean hasFocus) {
         int[] outLocation = new int[2];
         chartContainer.getLocationOnScreen(outLocation);
-        boundTop = outLocation[0];
-        boundBottom = outLocation[0] + chartContainer.getHeight();
+        boundTop = outLocation[1];
+        boundBottom = outLocation[1] + chartContainer.getHeight();
         super.onWindowFocusChanged(hasFocus);
     }
 

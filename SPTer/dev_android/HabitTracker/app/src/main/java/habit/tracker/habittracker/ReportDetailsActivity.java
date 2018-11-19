@@ -122,7 +122,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
     float touchY = 0;
     float boundTop = 0;
     float boundBottom = 0;
-    float touchThresh = 100;
+    float touchThresh = 70;
     float touchTimeThresh = 50;
     long lastTouchTime = 0;
 
@@ -258,8 +258,8 @@ public class ReportDetailsActivity extends AppCompatActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         int[] outLocation = new int[2];
         chartContainer.getLocationOnScreen(outLocation);
-        boundTop = outLocation[0];
-        boundBottom = outLocation[0] + chartContainer.getHeight();
+        boundTop = outLocation[1];
+        boundBottom = outLocation[1] + chartContainer.getHeight();
         super.onWindowFocusChanged(hasFocus);
     }
 

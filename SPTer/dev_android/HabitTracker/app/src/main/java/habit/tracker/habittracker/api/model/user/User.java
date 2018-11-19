@@ -41,6 +41,9 @@ public class User {
     @SerializedName("user_score")
     @Expose
     private String userScore;
+    @SerializedName("continue_using_date")
+    @Expose
+    private String continueUsingDate;
 
     public User() {
     }
@@ -93,6 +96,10 @@ public class User {
         return userScore;
     }
 
+    public String getContinueUsingDate() {
+        return continueUsingDate;
+    }
+
     public void setUserId(String userId) {
         this.userId = userId;
     }
@@ -139,5 +146,9 @@ public class User {
 
     public void setUserScore(String userScore) {
         this.userScore = userScore;
+    }
+
+    public void setContinueUsingDate(String continueUsingDate) {
+        this.continueUsingDate = continueUsingDate;
     }
 }

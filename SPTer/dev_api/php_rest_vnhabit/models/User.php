@@ -21,7 +21,9 @@ include_once '../../models/Model.php';
         public $avatar;
         public $user_description;
         public $created_date;
+        public $last_login_time;
         public $user_score;
+        public $continue_using_date;
 
         public function __construct($db) {
             $this->conn = $db;
@@ -42,8 +44,7 @@ include_once '../../models/Model.php';
         // Get Single User
         public function read_single() {
             // Create query
-            $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . 
-                ' WHERE username = :username and password = :password LIMIT 0,1';
+            $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . ' WHERE username = :username and password = :password LIMIT 0,1';
 
             // Prepare statement
             $stmt = $this->conn->prepare($query);
@@ -52,9 +53,12 @@ include_once '../../models/Model.php';
             // Execute query
             $stmt->execute();
             // get row count
-            $num = $stmt->rowCount();
-            if ($num == 1) {
+            $rowCount = $stmt->rowCount();
+            if ($rowCount == 1) {
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                $lastLoginTime = date("Y-m-d");
+
                 return $row;
             } else {
                 return NULL;

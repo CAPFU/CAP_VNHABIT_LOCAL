@@ -65,8 +65,52 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
             if (cursor.getColumnIndex(USER_SCORE) != -1) {
                 userEntity.setUserScore(cursor.getString(cursor.getColumnIndexOrThrow(USER_SCORE)));
             }
+            if (cursor.getColumnIndex(CONTINUE_USING_DATE) != -1) {
+                userEntity.setContinueUsingDate(cursor.getString(cursor.getColumnIndexOrThrow(CONTINUE_USING_DATE)));
+            }
         }
         return userEntity;
+    }
+
+    private void setContentValue(UserEntity userEntity) {
+        initialValues = new ContentValues();
+        initialValues.put(USER_ID, userEntity.getUserId());
+        initialValues.put(USERNAME, userEntity.getUsername());
+        initialValues.put(PASSWORD, userEntity.getPassword());
+        initialValues.put(EMAIL, userEntity.getEmail());
+        initialValues.put(PHONE, userEntity.getPhone());
+        initialValues.put(GENDER, userEntity.getGender());
+        initialValues.put(DATE_OF_BIRTH, userEntity.getDateOfBirth());
+        initialValues.put(USER_ICON, userEntity.getUserIcon());
+        initialValues.put(AVATAR, userEntity.getAvatar());
+        initialValues.put(USER_DESCRIPTION, userEntity.getUserDescription());
+        initialValues.put(USER_CREATED_DATE, userEntity.getCreatedDate());
+        initialValues.put(USER_SCORE, userEntity.getUserScore());
+        initialValues.put(CONTINUE_USING_DATE, userEntity.getContinueUsingDate());
+    }
+
+    private ContentValues getContentValue() {
+        return initialValues;
+    }
+
+    public UserEntity convert(User user) {
+        if (user != null) {
+            UserEntity entity = new UserEntity();
+            entity.setUserId(user.getUserId());
+            entity.setUsername(user.getUsername());
+            entity.setPassword(user.getPassword());
+            entity.setGender(user.getGender());
+            entity.setPhone(user.getPhone());
+            entity.setEmail(user.getEmail());
+            entity.setDateOfBirth(user.getDateOfBirth());
+            entity.setAvatar(user.getAvatar());
+            entity.setUserIcon(user.getUserIcon());
+            entity.setUserDescription(user.getUserDescription());
+            entity.setCreatedDate(user.getCreatedDate());
+            entity.setUserScore(user.getUserScore());
+            return entity;
+        }
+        return null;
     }
 
     @Override
@@ -145,45 +189,4 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
     public boolean deleteUser(String userId) {
         return false;
     }
-
-    private void setContentValue(UserEntity userEntity) {
-        initialValues = new ContentValues();
-        initialValues.put(USER_ID, userEntity.getUserId());
-        initialValues.put(USERNAME, userEntity.getUsername());
-        initialValues.put(PASSWORD, userEntity.getPassword());
-        initialValues.put(EMAIL, userEntity.getEmail());
-        initialValues.put(PHONE, userEntity.getPhone());
-        initialValues.put(GENDER, userEntity.getGender());
-        initialValues.put(DATE_OF_BIRTH, userEntity.getDateOfBirth());
-        initialValues.put(USER_ICON, userEntity.getUserIcon());
-        initialValues.put(AVATAR, userEntity.getAvatar());
-        initialValues.put(USER_DESCRIPTION, userEntity.getUserDescription());
-        initialValues.put(USER_CREATED_DATE, userEntity.getCreatedDate());
-        initialValues.put(USER_SCORE, userEntity.getUserScore());
-    }
-
-    private ContentValues getContentValue() {
-        return initialValues;
-    }
-
-    public UserEntity convert(User user) {
-        if (user != null) {
-            UserEntity entity = new UserEntity();
-            entity.setUserId(user.getUserId());
-            entity.setUsername(user.getUsername());
-            entity.setPassword(user.getPassword());
-            entity.setGender(user.getGender());
-            entity.setPhone(user.getPhone());
-            entity.setEmail(user.getEmail());
-            entity.setDateOfBirth(user.getDateOfBirth());
-            entity.setAvatar(user.getAvatar());
-            entity.setUserIcon(user.getUserIcon());
-            entity.setUserDescription(user.getUserDescription());
-            entity.setCreatedDate(user.getCreatedDate());
-            entity.setUserScore(user.getUserScore());
-            return entity;
-        }
-        return null;
-    }
-
 }
