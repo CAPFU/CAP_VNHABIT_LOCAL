@@ -104,7 +104,7 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
 
                     tvUsername.setText(userEntity.getUsername());
                     tvStartedDate.setText(AppGenerator.format(userEntity.getCreatedDate(), AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
-                    tvContinueUsing.setText(userEntity.getContinueUsingDate());
+                    tvContinueUsing.setText(userEntity.getContinueUsingCount());
 //                    tvLevel.setText("");
                     tvUserScore.setText(userEntity.getUserScore());
 //                    tvBestContinue.setText("");

@@ -58,10 +58,10 @@ class PushDataReceiver extends BroadcastReceiver {
 
                     switch (habit.getHabitType()) {
                         case TYPE_DAILY:
-                            TrackingEntity track;
+                            TrackingEntity trackingEntity;
                             for (int i = 0; i < distance; i++) {
-                                track = Database.getTrackingDb().getTracking(habit.getHabitId(), lastSynDate);
-                                if (Integer.parseInt(track.getCount()) >= Integer.parseInt(habit.getMonitorNumber())) {
+                                trackingEntity = Database.getTrackingDb().getTracking(habit.getHabitId(), lastSynDate);
+                                if (Integer.parseInt(trackingEntity.getCount()) >= Integer.parseInt(habit.getMonitorNumber())) {
                                     successCount++;
                                 }
                                 lastSynDate = AppGenerator.getNextDate(lastSynDate, AppGenerator.YMD_SHORT);

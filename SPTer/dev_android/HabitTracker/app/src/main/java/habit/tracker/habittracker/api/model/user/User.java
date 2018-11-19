@@ -38,12 +38,21 @@ public class User {
     @SerializedName("created_date")
     @Expose
     private String createdDate;
+    @SerializedName("last_login_time")
+    @Expose
+    private String lastLoginTime;
+    @SerializedName("continue_using_count")
+    @Expose
+    private String continueUsingCount;
+    @SerializedName("current_continue_using_count")
+    @Expose
+    private String currentContinueUsingCount;
+    @SerializedName("best_continue_using_count")
+    @Expose
+    private String bestContinueUsingCount;
     @SerializedName("user_score")
     @Expose
     private String userScore;
-    @SerializedName("continue_using_date")
-    @Expose
-    private String continueUsingDate;
 
     public User() {
     }
@@ -92,12 +101,24 @@ public class User {
         return createdDate;
     }
 
-    public String getUserScore() {
-        return userScore;
+    public String getLastLoginTime() {
+        return lastLoginTime;
     }
 
-    public String getContinueUsingDate() {
-        return continueUsingDate;
+    public String getContinueUsingCount() {
+        return continueUsingCount;
+    }
+
+    public String getCurrentContinueUsingCount() {
+        return currentContinueUsingCount;
+    }
+
+    public String getBestContinueUsingCount() {
+        return bestContinueUsingCount;
+    }
+
+    public String getUserScore() {
+        return userScore;
     }
 
     public void setUserId(String userId) {
@@ -144,11 +165,23 @@ public class User {
         this.createdDate = createdDate;
     }
 
-    public void setUserScore(String userScore) {
-        this.userScore = userScore;
+    public void setLastLoginTime(String lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
     }
 
-    public void setContinueUsingDate(String continueUsingDate) {
-        this.continueUsingDate = continueUsingDate;
+    public void setContinueUsingCount(String continueUsingDate) {
+        this.continueUsingCount = continueUsingDate;
+    }
+
+    public void setCurrentContinueUsingCount(String currentContinueUsingCount) {
+        this.currentContinueUsingCount = currentContinueUsingCount;
+    }
+
+    public void setBestContinueUsingCount(String bestContinueUsingCount) {
+        this.bestContinueUsingCount = bestContinueUsingCount;
+    }
+
+    public void setUserScore(String userScore) {
+        this.userScore = userScore;
     }
 }

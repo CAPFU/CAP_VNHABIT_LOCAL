@@ -144,7 +144,10 @@ public class LoginActivity extends BaseActivity {
                         userEntity.setAvatar(user.getAvatar());
                         userEntity.setUserDescription(user.getCreatedDate());
                         userEntity.setCreatedDate(user.getCreatedDate());
-                        userEntity.setContinueUsingDate(String.valueOf(Integer.parseInt(user.getContinueUsingDate()) + 1));
+                        userEntity.setLastLoginTime(user.getLastLoginTime());
+                        userEntity.setContinueUsingCount(user.getContinueUsingCount());
+                        userEntity.setCurrentContinueUsingCount(user.getCurrentContinueUsingCount());
+                        userEntity.setBestContinueUsingCount(user.getBestContinueUsingCount());
                         userEntity.setUserScore(user.getUserScore());
                         Database.getUserDb().saveUser(userEntity);
                     }

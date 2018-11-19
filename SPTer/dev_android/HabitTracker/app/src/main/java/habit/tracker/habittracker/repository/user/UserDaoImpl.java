@@ -62,11 +62,20 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
             if (cursor.getColumnIndex(USER_CREATED_DATE) != -1) {
                 userEntity.setCreatedDate(cursor.getString(cursor.getColumnIndexOrThrow(USER_CREATED_DATE)));
             }
+            if (cursor.getColumnIndex(LAST_LOGIN_TIME) != -1) {
+                userEntity.setLastLoginTime(cursor.getString(cursor.getColumnIndexOrThrow(LAST_LOGIN_TIME)));
+            }
+            if (cursor.getColumnIndex(CONTINUE_USING_COUNT) != -1) {
+                userEntity.setContinueUsingCount(cursor.getString(cursor.getColumnIndexOrThrow(CONTINUE_USING_COUNT)));
+            }
+            if (cursor.getColumnIndex(CURRENT_CONTINUE_USING_COUNT) != -1) {
+                userEntity.setCurrentContinueUsingCount(cursor.getString(cursor.getColumnIndexOrThrow(CURRENT_CONTINUE_USING_COUNT)));
+            }
+            if (cursor.getColumnIndex(BEST_CONTINUE_USING_COUNT) != -1) {
+                userEntity.setBestContinueUsingCount(cursor.getString(cursor.getColumnIndexOrThrow(BEST_CONTINUE_USING_COUNT)));
+            }
             if (cursor.getColumnIndex(USER_SCORE) != -1) {
                 userEntity.setUserScore(cursor.getString(cursor.getColumnIndexOrThrow(USER_SCORE)));
-            }
-            if (cursor.getColumnIndex(CONTINUE_USING_DATE) != -1) {
-                userEntity.setContinueUsingDate(cursor.getString(cursor.getColumnIndexOrThrow(CONTINUE_USING_DATE)));
             }
         }
         return userEntity;
@@ -85,8 +94,11 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
         initialValues.put(AVATAR, userEntity.getAvatar());
         initialValues.put(USER_DESCRIPTION, userEntity.getUserDescription());
         initialValues.put(USER_CREATED_DATE, userEntity.getCreatedDate());
+        initialValues.put(LAST_LOGIN_TIME, userEntity.getLastLoginTime());
+        initialValues.put(CONTINUE_USING_COUNT, userEntity.getContinueUsingCount());
+        initialValues.put(CURRENT_CONTINUE_USING_COUNT, userEntity.getCurrentContinueUsingCount());
+        initialValues.put(BEST_CONTINUE_USING_COUNT, userEntity.getBestContinueUsingCount());
         initialValues.put(USER_SCORE, userEntity.getUserScore());
-        initialValues.put(CONTINUE_USING_DATE, userEntity.getContinueUsingDate());
     }
 
     private ContentValues getContentValue() {
@@ -107,6 +119,10 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
             entity.setUserIcon(user.getUserIcon());
             entity.setUserDescription(user.getUserDescription());
             entity.setCreatedDate(user.getCreatedDate());
+            entity.setLastLoginTime(user.getLastLoginTime());
+            entity.setContinueUsingCount(user.getContinueUsingCount());
+            entity.setCurrentContinueUsingCount(user.getCurrentContinueUsingCount());
+            entity.setBestContinueUsingCount(user.getBestContinueUsingCount());
             entity.setUserScore(user.getUserScore());
             return entity;
         }
