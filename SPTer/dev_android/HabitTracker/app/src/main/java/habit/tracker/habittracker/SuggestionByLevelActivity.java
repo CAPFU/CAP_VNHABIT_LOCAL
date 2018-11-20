@@ -19,7 +19,10 @@ import habit.tracker.habittracker.adapter.suggestion.SuggestByGroupAdapter;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.search.HabitSuggestion;
 import habit.tracker.habittracker.api.model.suggestion.SuggestByLevelReponse;
+import habit.tracker.habittracker.api.model.user.User;
+import habit.tracker.habittracker.api.model.user.UserResponse;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
+import habit.tracker.habittracker.common.AppConstant;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
 import habit.tracker.habittracker.repository.Database;
@@ -64,6 +67,49 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
         setContentView(R.layout.activity_suggestion_by_level);
         ButterKnife.bind(this);
 
+        String[] userInfo = MySharedPreference.getUser(this);
+        mService.getUser(userInfo[1], userInfo[2]).enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.body().getResult().equals(AppConstant.RES_OK)) {
+                    User user = response.body().getData();
+                    Database db = new Database(SuggestionByLevelActivity.this);
+                    UserEntity userEntity = new UserEntity();
+                    db.open();
+                    if (user != null) {
+                        userEntity.setUserId(user.getUserId());
+                        userEntity.setUsername(user.getUsername());
+                        userEntity.setEmail(user.getEmail());
+                        userEntity.setPhone(user.getPhone());
+                        userEntity.setGender(user.getGender());
+                        userEntity.setDateOfBirth(user.getDateOfBirth());
+                        userEntity.setPassword(user.getPassword());
+                        userEntity.setUserIcon(user.getUserIcon());
+                        userEntity.setAvatar(user.getAvatar());
+                        userEntity.setUserDescription(user.getCreatedDate());
+                        userEntity.setCreatedDate(user.getCreatedDate());
+                        userEntity.setLastLoginTime(user.getLastLoginTime());
+                        userEntity.setContinueUsingCount(user.getContinueUsingCount());
+                        userEntity.setCurrentContinueUsingCount(user.getCurrentContinueUsingCount());
+                        userEntity.setBestContinueUsingCount(user.getBestContinueUsingCount());
+                        userEntity.setUserScore(user.getUserScore());
+                        Database.getUserDb().saveUser(userEntity);
+                    }
+                    db.close();
+
+                    loadHabitSuggestByLevel();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+            }
+        });
+
+
+    }
+
+    private void loadHabitSuggestByLevel() {
         mService.getHabitSuggestByLevel().enqueue(new Callback<SuggestByLevelReponse>() {
             @Override
             public void onResponse(Call<SuggestByLevelReponse> call, Response<SuggestByLevelReponse> response) {
@@ -77,7 +123,8 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
                     db.open();
                     userEntity = Database.getUserDb().getUser(MySharedPreference.getUserId(SuggestionByLevelActivity.this));
                     db.close();
-                    int pendDate = AppGenerator.countDayBetween(userEntity.getCreatedDate(), AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
+//                    int pendDate = AppGenerator.countDayBetween(userEntity.getCreatedDate(), AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
+                    int pendDate = Integer.parseInt(userEntity.getContinueUsingCount());
                     if (pendDate >= 30) {
                         level[2] = "Thói quen khó được nhiều người chọn (khuyên chọn)";
                     } else {
