@@ -325,6 +325,14 @@ public class AppGenerator {
         return getDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH), fmOut);
     }
 
+    public static String getFirstDateInMonth(String currentDate, String fmIn, String fmOut) {
+        Date date = getDate(currentDate, fmIn);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        return getDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH), fmOut);
+    }
+
     public static String getFirstDatePreMonth(String currentDate, String fmIn, String fmOut) {
         Date date = getDate(currentDate, fmIn);
         Calendar calendar = Calendar.getInstance();
@@ -332,5 +340,27 @@ public class AppGenerator {
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
         return getDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH), fmOut);
+    }
+
+    public static String getLastDateInMonth(String currentDate, String fmIn, String fmOut) {
+        Date date = getDate(currentDate, fmIn);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return getDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.getActualMaximum(Calendar.DAY_OF_WEEK), fmOut);
+    }
+
+    public static String getLastDateInYear(String currentDate, String fmIn, String fmOut) {
+        Date date = getDate(currentDate, fmIn);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.MONTH, 12);
+        return getDate(calendar.get(Calendar.YEAR), 12, calendar.getActualMaximum(Calendar.DAY_OF_WEEK), fmOut);
+    }
+
+    public static String getFirstDateNextYear(String currentDate, String fmIn, String fmOut) {
+        Date date = getDate(currentDate, fmIn);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return getDate(calendar.get(Calendar.YEAR) + 1, 1, 1, fmOut);
     }
 }

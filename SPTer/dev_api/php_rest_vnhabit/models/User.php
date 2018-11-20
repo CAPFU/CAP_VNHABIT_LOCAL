@@ -169,6 +169,17 @@ include_once '../../models/Model.php';
             return false;
         }
 
+        public function updateScore() {
+            $query = 'UPDATE ' . $this->table . ' SET user_score = user_score + :user_score WHERE user_id = :user_id';
+            $stmt = $this->conn->prepare($query);
+            $stmt = $this->bind_param($stmt, array('user_score' => $this->user_score, 'user_id' => $this->user_id));
+            if ($stmt->execute()) {
+                return true;
+            }
+            printf("Error: %s.\n", $stmt->error);
+            return false;
+        }
+
         // Detele user
         public function delete() {
             // create query
