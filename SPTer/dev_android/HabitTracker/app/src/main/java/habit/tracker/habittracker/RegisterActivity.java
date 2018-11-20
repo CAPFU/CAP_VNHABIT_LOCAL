@@ -104,12 +104,16 @@ public class RegisterActivity extends BaseActivity {
                 if (!validator.checkEqual(password, passwordConf, "Mật khẩu")) {
                     return;
                 }
-
                 newUser.setUsername(username);
                 newUser.setEmail(email);
                 newUser.setPassword(password);
                 newUser.setUserId(AppGenerator.getNewId());
                 newUser.setCreatedDate(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
+                newUser.setLastLoginTime(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
+                newUser.setContinueUsingCount("1");
+                newUser.setCurrentContinueUsingCount("1");
+                newUser.setBestContinueUsingCount("1");
+                newUser.setUserScore("2");
                 register(newUser);
                 break;
             case R.id.btn_fb_login:
