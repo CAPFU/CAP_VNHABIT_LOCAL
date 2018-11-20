@@ -14,6 +14,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class AppGenerator {
+    public static final long MILLISECOND_IN_MINUTE = 1000 * 60;
     public static final long MILLISECOND_IN_DAY = 86400000;
     public static final long MILLISECOND_IN_WEEK = 86400000 * 7;
 

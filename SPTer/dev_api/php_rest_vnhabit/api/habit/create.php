@@ -56,7 +56,7 @@ if ($found) {
     $habitSuggestion->updateCount();
 }
 
-// save to habit
+// save new habit
 if ($habit->create()) {
     $date->monitor_id = $data->monitor_id;
     $date->habit_id = $data->habit_id;
@@ -67,18 +67,20 @@ if ($habit->create()) {
     $date->fri = $data->fri;
     $date->sat = $data->sat;
     $date->sun = $data->sun;
-
-    // save to monitor_date
+    // save monitor_dates
     if ($date->create()) {
+
         $habit->monitor_id = $data->monitor_id;
         if ($habit->update()) {
+
+            // save reminders
             $arr_reminder = $data->reminders;
             for($i = 0; $i < count($arr_reminder); $i++) {
                 $item = $arr_reminder[$i];
-                $reminder->reminder_id = $item->reminder_id;
-                $reminder->habit_id = $data->habit_id;
+                $reminder->reminder_id = $item->server_id;
+                $reminder->habit_id = $item->habit_id;
                 $reminder->reminder_time = $item->reminder_time;
-                $reminder->repeat_time = $item->repeat_time;
+                $reminder->reminder_description = $item->reminder_description;
                 if ($reminder->create()) {
                     $error = false;
                 }

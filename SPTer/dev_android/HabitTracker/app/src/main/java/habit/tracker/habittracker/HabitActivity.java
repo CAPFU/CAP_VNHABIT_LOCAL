@@ -440,6 +440,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     }
 
     @Override
+    @SuppressLint("DefaultLocale")
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == SELECT_GROUP) {
             if (resultCode == RESULT_OK) {
@@ -451,8 +452,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         } else if (requestCode == ADD_REMINDER) {
             if (resultCode == RESULT_OK) {
                 if (data != null && data.getExtras() != null) {
-                    String remindType = String.valueOf(
-                            data.getIntExtra(ReminderCreateActivity.REMIND_TYPE, -1));
+                    String remindType = String.valueOf(data.getIntExtra(ReminderCreateActivity.REMIND_TYPE, -1));
                     String remindText = data.getStringExtra(ReminderCreateActivity.REMIND_TEXT);
                     String date = data.getStringExtra(ReminderCreateActivity.REMIND_DATE);
                     String format = "%02d";
@@ -730,16 +730,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         habit.setSat(String.valueOf(monitorDate[5] ? 1 : 0));
         habit.setSun(String.valueOf(monitorDate[6] ? 1 : 0));
 
-        // get reminder list
-        for (Reminder reminder : remindDisplayList) {
-            reminder.setHabitId(habit.getHabitId());
-            reminder.setHabitName(habit.getHabitName());
-            if (TextUtils.isEmpty(habit.getEndDate())) {
-                reminder.setEndDate(habit.getEndDate());
-            }
-        }
-        habit.setReminderList(remindDisplayList);
-
+        // suggestions
         habit.setHabitNameAscii(AppGenerator.getSearchKey(habit.getHabitName()));
         // user did'nt chose any suggestion habit
         if (TextUtils.isEmpty(suggestHabitName) || !suggestHabitName.equals(habit.getHabitName())) {
@@ -750,19 +741,24 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             habit.setHabitSearchNameId(suggestHabitNameId);
         }
 
-        // save habit
+        // set reminder list
+        for (Reminder reminder : remindAddNewList) {
+            reminder.setHabitId(habit.getHabitId());
+            reminder.setHabitName(habit.getHabitName());
+            if (!TextUtils.isEmpty(habit.getEndDate())) {
+                reminder.setEndDate(habit.getEndDate());
+            }
+        }
+        habit.setReminderList(remindAddNewList);
+
+        // SAVE HABIT
         Database db = new Database(HabitActivity.this);
         db.open();
         if (Database.getHabitDb().saveUpdateHabit(Database.getHabitDb().convert(habit))) {
-            // save reminder list
-            for (Reminder reminder : remindAddNewList) {
-                reminder.setHabitId(habit.getHabitId());
-                int remindId = Database.reminderImpl.addReminder(
-                        Database.reminderImpl.convert(reminder));
-                reminder.setReminderId(String.valueOf(remindId));
+            for (Reminder reminder : habit.getReminderList()) {
+                reminder.setReminderId(Database.getReminderDb().saveReminder(Database.getReminderDb().convert(reminder)));
             }
         }
-        db.close();
 
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
         // CREATE new habit
@@ -772,7 +768,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     Toast.makeText(HabitActivity.this, "Tạo thói quen thành công", Toast.LENGTH_LONG).show();
                     HabitActivity.this.setResult(HabitActivity.RESULT_OK);
-                    HabitReminderManager habitReminderManager = new HabitReminderManager(HabitActivity.this, remindDisplayList);
+                    HabitReminderManager habitReminderManager = new HabitReminderManager(HabitActivity.this, habit.getReminderList());
                     habitReminderManager.start();
                     finish();
                 }
@@ -789,7 +785,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     HabitActivity.this.setResult(HabitActivity.RESULT_OK);
-                    HabitReminderManager habitReminderManager = new HabitReminderManager(HabitActivity.this, remindDisplayList);
+                    HabitReminderManager habitReminderManager = new HabitReminderManager(HabitActivity.this, habit.getReminderList());
                     habitReminderManager.start();
                     finish();
                 }
@@ -800,6 +796,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 }
             });
         }
+        db.close();
     }
 
     @OnClick(R.id.btn_suggestHabit)

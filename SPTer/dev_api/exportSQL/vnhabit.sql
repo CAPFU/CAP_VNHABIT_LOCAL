@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 20, 2018 at 07:55 AM
+-- Generation Time: Nov 20, 2018 at 12:58 PM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -127,7 +127,8 @@ CREATE TABLE `habit` (
 --
 
 INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
-('7d4295d1-17', 'd233c193-6e', NULL, '58cefe15-1f', 'Chạy bộ', 0, 0, 1, 'km', 5, '2018-11-18', NULL, '2018-11-18', '#78e1385f', '');
+('3da48f98-01', '4e0819c9-33', '1', '1ed9504d-85', 'an com', 0, 0, 1, 'Lần', 3, '2018-11-20', NULL, '2018-11-20', '#789c4dd9', ''),
+('7d4295d1-17', 'd233c193-6e', '2', '58cefe15-1f', 'Chạy bộ', 0, 0, 1, 'km', 5, '2018-11-18', NULL, '2018-11-18', '#78e1385f', '');
 
 -- --------------------------------------------------------
 
@@ -152,6 +153,7 @@ CREATE TABLE `habit_suggestion` (
 INSERT INTO `habit_suggestion` (`habit_name_id`, `group_id`, `habit_name_uni`, `habit_name_ascii`, `habit_name_count`, `total_track`, `success_track`) VALUES
 ('154fsd', '2', 'Đi chợ', 'di cho', 12, 35, 35),
 ('1dv43fsd', '3', 'Đi bộ', 'di bo', 12, 90, 20),
+('a0fde794-38', NULL, 'an com', 'an com', 1, 0, 0),
 ('dasf', '1', 'Đi Uống thuốc', 'di uong thuoc', 1, 200, 119),
 ('dsfgsd', '2', 'Đi Chạy bộ', 'di chay bo', 13, 11, 10),
 ('fsd-345', '3', 'Đi Uống rượu', 'di uong ruou', 4, 1000, 10),
@@ -181,6 +183,7 @@ CREATE TABLE `monitor_date` (
 --
 
 INSERT INTO `monitor_date` (`monitor_id`, `habit_id`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`) VALUES
+('1ed9504d-85', '3da48f98-01', 1, 1, 1, 1, 1, 1, 1),
 ('58cefe15-1f', '7d4295d1-17', 1, 1, 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
@@ -193,9 +196,15 @@ CREATE TABLE `reminder` (
   `reminder_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `habit_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `reminder_time` text COLLATE utf8mb4_unicode_ci,
-  `repeat_time` int(11) DEFAULT NULL,
   `reminder_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `reminder`
+--
+
+INSERT INTO `reminder` (`reminder_id`, `habit_id`, `reminder_time`, `reminder_description`) VALUES
+('41675c3e-93', '3da48f98-01', '2018-11-20 00:00', 'dddd');
 
 -- --------------------------------------------------------
 
@@ -217,6 +226,7 @@ CREATE TABLE `tracking` (
 
 INSERT INTO `tracking` (`tracking_id`, `habit_id`, `current_date`, `count`, `tracking_description`) VALUES
 ('73a79271-9f', '7d4295d1-17', '2018-11-18', 2, NULL),
+('a95e76c6-6a', '3da48f98-01', '2018-11-20', 2, NULL),
 ('cd850fbe-c0', '7d4295d1-17', '2018-11-19', 1, NULL);
 
 -- --------------------------------------------------------
@@ -250,7 +260,8 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `user_icon`, `avatar`, `user_description`, `created_date`, `last_login_time`, `continue_using_count`, `current_continue_using_count`, `best_continue_using_count`, `user_score`) VALUES
 ('1b153946-89', 'user02', '12345678', NULL, 'user02@mail.com', NULL, 1, NULL, NULL, NULL, '2018-11-11', '0000-00-00', 100, 0, 0, 100),
-('d233c193-6e', 'user01', '12345678', NULL, 'user01@mail.com', NULL, 0, NULL, NULL, NULL, '2018-11-12', '2018-11-19', 2, 2, 2, 4),
+('4e0819c9-33', 'dat', '12345678', NULL, 'dat@mail.com', NULL, NULL, NULL, NULL, NULL, '2018-11-20', '2018-11-20', 30, 1, 1, 1000),
+('d233c193-6e', 'user01', '12345678', NULL, 'user01@mail.com', NULL, 0, NULL, NULL, NULL, '2018-11-12', '2018-11-20', 3, 3, 3, 6),
 ('d233c195-hf', 'user03', '12345678', NULL, 'user03@mail.com', NULL, 0, NULL, NULL, NULL, '2018-11-10', '0000-00-00', 6, 0, 0, 1000);
 
 --
