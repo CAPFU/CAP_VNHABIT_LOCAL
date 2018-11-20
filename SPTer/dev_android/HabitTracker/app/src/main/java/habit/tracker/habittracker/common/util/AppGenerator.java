@@ -363,4 +363,38 @@ public class AppGenerator {
         calendar.setTime(date);
         return getDate(calendar.get(Calendar.YEAR) + 1, 1, 1, fmOut);
     }
+
+    public static int getLevel(int score) {
+        if (score < 10) {
+            return 1;
+        }
+        if (score < 20) {
+            return 2;
+        }
+        if (score < 50){
+            return 3;
+        }
+        if (score < 120){
+            return 4;
+        }
+        if (score < 290){
+            return 5;
+        }
+        if (score < 700){
+            return 6;
+        }
+        if (score < 1690){
+            return 7;
+        }
+        if (score < 4080){
+            return 8;
+        }
+        if (score <9850){
+            return 9;
+        }
+        if (score < 23780){
+            return 10;
+        }
+        return 11;
+    }
 }

@@ -31,6 +31,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static habit.tracker.habittracker.common.util.AppGenerator.getLevel;
+
 public class SuggestionByLevelActivity extends AppCompatActivity implements RecyclerViewItemClickListener {
 
     public static String SUGGEST_NAME = "SuggestionByLevelActivity.pick_name";
@@ -122,15 +124,14 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
                     Database db = Database.getInstance(SuggestionByLevelActivity.this);
                     db.open();
                     userEntity = Database.getUserDb().getUser(MySharedPreference.getUserId(SuggestionByLevelActivity.this));
-                    db.close();
-//                    int pendDate = AppGenerator.countDayBetween(userEntity.getCreatedDate(), AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
-                    int pendDate = Integer.parseInt(userEntity.getContinueUsingCount());
-                    if (pendDate >= 30) {
-                        level[2] = "Thói quen khó được nhiều người chọn (khuyên chọn)";
-                    } else {
+                    int userLevel = AppGenerator.getLevel( Integer.parseInt(userEntity.getUserScore()) );
+                    if (userLevel <= 3) {
                         level[0] = "Thói quen dễ được nhiều người chọn (khuyên chọn)";
+                    } else if (userLevel <= 6){
+                        level[1] = "Thói quen trung bình được nhiều người chọn (khuyên chọn)";
+                    } else {
+                        level[2] = "Thói quen khó được nhiều người chọn (khuyên chọn)";
                     }
-
                     for (int i = 0; i < data.size(); i++) {
                         displaySuggestList.add(new HabitSuggestion(null, level[i], true));
                         curLevl = data.get(i);
@@ -155,6 +156,7 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
                     tvUserScore.setText(userEntity.getUserScore());
                     tvBestContinue.setText(userEntity.getBestContinueUsingCount());
                     tvCurrentContinue.setText(userEntity.getCurrentContinueUsingCount());
+                    db.close();
                 }
             }
 
@@ -173,39 +175,5 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
         intent.putExtra(SUGGEST_NAME, item.getHabitNameUni());
         startActivity(intent);
         finish();
-    }
-
-    private int getLevel(int score) {
-        if (score < 10) {
-            return 1;
-        }
-        if (score < 20) {
-            return 2;
-        }
-        if (score < 50){
-            return 3;
-        }
-        if (score < 120){
-            return 4;
-        }
-        if (score < 290){
-            return 5;
-        }
-        if (score < 700){
-            return 6;
-        }
-        if (score < 1690){
-            return 7;
-        }
-        if (score < 4080){
-            return 8;
-        }
-        if (score <9850){
-            return 9;
-        }
-        if (score < 23780){
-            return 10;
-        }
-        return 11;
     }
 }

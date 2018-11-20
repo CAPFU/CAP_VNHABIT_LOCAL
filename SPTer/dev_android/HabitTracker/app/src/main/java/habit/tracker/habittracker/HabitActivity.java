@@ -27,11 +27,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,11 +44,11 @@ import habit.tracker.habittracker.api.model.reminder.Reminder;
 import habit.tracker.habittracker.api.model.search.HabitSuggestion;
 import habit.tracker.habittracker.api.model.search.SearchResponse;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
-import habit.tracker.habittracker.common.validator.Validator;
-import habit.tracker.habittracker.common.validator.ValidatorType;
+import habit.tracker.habittracker.common.habitreminder.HabitReminderManager;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
-import habit.tracker.habittracker.common.habitreminder.HabitReminderManager;
+import habit.tracker.habittracker.common.validator.Validator;
+import habit.tracker.habittracker.common.validator.ValidatorType;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.group.GroupEntity;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
@@ -62,9 +59,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static habit.tracker.habittracker.common.AppConstant.HIG_SCORE;
-import static habit.tracker.habittracker.common.AppConstant.LOW_SCORE;
-import static habit.tracker.habittracker.common.AppConstant.MED_SCORE;
 import static habit.tracker.habittracker.common.AppConstant.RES_OK;
 
 public class HabitActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
@@ -279,8 +273,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                             List<HabitSuggestion> searchResult = response.body().getSearchResult();
                             Database db = Database.getInstance(HabitActivity.this);
                             db.open();
-                            UserEntity user = Database.getUserDb().getUser(MySharedPreference.getUserId(HabitActivity.this));
-                            int userScore = Integer.parseInt(user.getUserScore());
+                            UserEntity userEntity = Database.getUserDb().getUser(MySharedPreference.getUserId(HabitActivity.this));
+                            int userLevel = AppGenerator.getLevel(Integer.parseInt(userEntity.getUserScore()));
                             db.close();
 
                             if (searchResult.size() > 0) {
@@ -322,9 +316,9 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                                 tmpList.addAll(lowList);
                                 tmpList.addAll(medList);
                                 tmpList.addAll(higList);
-                                if (userScore <= LOW_SCORE) {
+                                if (userLevel <= 3) {
                                     suggestList.addAll(tmpList.size() >= 5 ? tmpList.subList(0, 5) : tmpList);
-                                } else if (userScore < HIG_SCORE) {
+                                } else if (userLevel < 6) {
                                     int size = lowList.size() + medList.size();
                                     suggestList.addAll(tmpList.subList(size, 0));
                                     if (suggestList.size() < 5) {
@@ -336,10 +330,6 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                                     suggestList.addAll(tmpList.size() >= 5 ? tmpList.subList(0, 5) : tmpList);
                                 }
                             }
-//                            for (HabitSuggestion sg : response.body().getSearchResult()) {
-//                                suggestList.add(
-//                                        new HabitSuggestion(sg.getHabitNameId(), sg.getGroupId(), sg.getHabitNameUni(), sg.getHabitName(), sg.getHabitNameCount(), false));
-//                            }
                         }
                         suggestAdapter.notifyDataSetChanged();
                     }
