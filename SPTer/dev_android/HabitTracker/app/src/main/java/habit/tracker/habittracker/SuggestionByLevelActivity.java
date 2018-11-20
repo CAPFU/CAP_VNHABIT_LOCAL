@@ -101,15 +101,13 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
                     suggestByGroupAdapter = new SuggestByGroupAdapter(SuggestionByLevelActivity.this, displaySuggestList, SuggestionByLevelActivity.this);
                     rvSuggestion.setLayoutManager(new LinearLayoutManager(SuggestionByLevelActivity.this));
                     rvSuggestion.setAdapter(suggestByGroupAdapter);
-
                     tvUsername.setText(userEntity.getUsername());
                     tvStartedDate.setText(AppGenerator.format(userEntity.getCreatedDate(), AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
                     tvContinueUsing.setText(userEntity.getContinueUsingCount());
-//                    tvLevel.setText("");
+                    tvLevel.setText(String.valueOf(getLevel(Integer.parseInt(userEntity.getUserScore()))));
                     tvUserScore.setText(userEntity.getUserScore());
-//                    tvBestContinue.setText("");
-//                    tvCurrentContinue.setText("");
-
+                    tvBestContinue.setText(userEntity.getBestContinueUsingCount());
+                    tvCurrentContinue.setText(userEntity.getCurrentContinueUsingCount());
                 }
             }
 
@@ -128,5 +126,39 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
         intent.putExtra(SUGGEST_NAME, item.getHabitNameUni());
         startActivity(intent);
         finish();
+    }
+
+    private int getLevel(int score) {
+        if (score < 10) {
+            return 1;
+        }
+        if (score < 20) {
+            return 2;
+        }
+        if (score < 50){
+            return 3;
+        }
+        if (score < 120){
+            return 4;
+        }
+        if (score < 290){
+            return 5;
+        }
+        if (score < 700){
+            return 6;
+        }
+        if (score < 1690){
+            return 7;
+        }
+        if (score < 4080){
+            return 8;
+        }
+        if (score <9850){
+            return 9;
+        }
+        if (score < 23780){
+            return 10;
+        }
+        return 11;
     }
 }
