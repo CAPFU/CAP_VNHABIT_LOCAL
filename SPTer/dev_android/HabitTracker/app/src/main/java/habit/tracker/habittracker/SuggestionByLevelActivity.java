@@ -15,6 +15,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import habit.tracker.habittracker.adapter.RecyclerViewItemClickListener;
+import habit.tracker.habittracker.adapter.suggestion.CustomLinearLayoutManager;
 import habit.tracker.habittracker.adapter.suggestion.SuggestByGroupAdapter;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.search.HabitSuggestion;
@@ -39,12 +40,12 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
     public static String SUGGEST_NAME_ID = "SuggestionByLevelActivity.suggest_name_id";
 
 
-    @BindView(R.id.tvUsername)
-    TextView tvUsername;
+//    @BindView(R.id.tvUsername)
+//    TextView tvUsername;
     @BindView(R.id.tvStartedDate)
     TextView tvStartedDate;
-    @BindView(R.id.tvContinueUsing)
-    TextView tvContinueUsing;
+//    @BindView(R.id.tvContinueUsing)
+//    TextView tvContinueUsing;
     @BindView(R.id.tvLevel)
     TextView tvLevel;
     @BindView(R.id.tvUserScore)
@@ -68,6 +69,12 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_suggestion_by_level);
         ButterKnife.bind(this);
+
+        suggestByGroupAdapter = new SuggestByGroupAdapter(this, displaySuggestList, this);
+        CustomLinearLayoutManager customLinearLayoutManager = new CustomLinearLayoutManager(this);
+        customLinearLayoutManager.setScrollEnabled(false);
+        rvSuggestion.setLayoutManager(customLinearLayoutManager);
+        rvSuggestion.setAdapter(suggestByGroupAdapter);
 
         String[] userInfo = MySharedPreference.getUser(this);
         mService.getUser(userInfo[1], userInfo[2]).enqueue(new Callback<UserResponse>() {
@@ -98,7 +105,6 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
                         Database.getUserDb().saveUser(userEntity);
                     }
                     db.close();
-
                     loadHabitSuggestByLevel();
                 }
             }
@@ -107,8 +113,6 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
             public void onFailure(Call<UserResponse> call, Throwable t) {
             }
         });
-
-
     }
 
     private void loadHabitSuggestByLevel() {
@@ -146,16 +150,14 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
                             ));
                         }
                     }
-                    suggestByGroupAdapter = new SuggestByGroupAdapter(SuggestionByLevelActivity.this, displaySuggestList, SuggestionByLevelActivity.this);
-                    rvSuggestion.setLayoutManager(new LinearLayoutManager(SuggestionByLevelActivity.this));
-                    rvSuggestion.setAdapter(suggestByGroupAdapter);
-                    tvUsername.setText(userEntity.getUsername());
+//                    tvUsername.setText(userEntity.getUsername());
                     tvStartedDate.setText(AppGenerator.format(userEntity.getCreatedDate(), AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
-                    tvContinueUsing.setText(userEntity.getContinueUsingCount());
+//                    tvContinueUsing.setText(userEntity.getContinueUsingCount());
                     tvLevel.setText(String.valueOf(getLevel(Integer.parseInt(userEntity.getUserScore()))));
                     tvUserScore.setText(userEntity.getUserScore());
                     tvBestContinue.setText(userEntity.getBestContinueUsingCount());
                     tvCurrentContinue.setText(userEntity.getCurrentContinueUsingCount());
+                    suggestByGroupAdapter.notifyDataSetChanged();
                     db.close();
                 }
             }
