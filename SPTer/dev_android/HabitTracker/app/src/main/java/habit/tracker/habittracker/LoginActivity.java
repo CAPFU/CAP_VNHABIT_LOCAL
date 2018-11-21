@@ -46,23 +46,28 @@ public class LoginActivity extends BaseActivity {
     Button btnLogin;
     @BindView(R.id.link_register)
     TextView linkRegister;
-    private boolean justSignUp = false;
+
+    private boolean backFromGuild = false;
+    private boolean backFromSignUp = false;
 
     PushDataService pushDataService;
     VnHabitApiService mService = VnHabitApiUtils.getApiService();
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        // back from sign up screen
         if (requestCode == SIGN_UP) {
             if (resultCode == RESULT_OK) {
                 if (data != null) {
                     edUsername.setText(data.getStringExtra(USERNAME));
-                    justSignUp = true;
+                    backFromSignUp = true;
                 }
             }
-        } else if (requestCode == GUIDE) {
+        }
+        // back from guide screen
+        else if (requestCode == GUIDE) {
             if (resultCode == RESULT_OK) {
-                justSignUp = false;
+                backFromGuild = true;
             }
         }
     }
@@ -70,9 +75,9 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (!justSignUp && MySharedPreference.getUserId(this) != null) {
+        if (!backFromSignUp && MySharedPreference.getUserId(this) != null) {
             String[] info = MySharedPreference.getUser(this);
-            updateUser(info[1], info[2]);
+            getUser(info[1], info[2], backFromGuild);
 
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
@@ -111,7 +116,8 @@ public class LoginActivity extends BaseActivity {
                         || !validator.checkEmpty("Mật khẩu", password)) {
                     return;
                 }
-                updateUser(username, password);
+                getUser(username, password, true);
+
                 break;
             case R.id.btn_fb_login:
                 showEmptyScreen();
@@ -126,7 +132,7 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    private void updateUser(final String username, final String password) {
+    private void getUser(final String username, final String password, final boolean isLogin) {
         mService.getUser(username, password).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
@@ -155,7 +161,10 @@ public class LoginActivity extends BaseActivity {
                         Database.getUserDb().saveUser(userEntity);
                     }
                     db.close();
-                    showMainScreen(user.getUserId(), user.getUsername(), user.getPassword());
+                    if (isLogin) {
+                        showMainScreen(user.getUserId(), user.getUsername(), user.getPassword());
+                    }
+
                 } else {
                     Toast.makeText(LoginActivity.this, "Đăng nhập không thành công!", Toast.LENGTH_SHORT).show();
                 }
@@ -177,7 +186,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void showMainScreen(String userId, String username, String password) {
-        if (justSignUp || MySharedPreference.getUserId(this) == null) {
+        if (backFromSignUp || MySharedPreference.getUserId(this) == null) {
             MySharedPreference.saveUser(this, userId, username, password);
             pushDataService = new PushDataService(this, userId);
             pushDataService.start();

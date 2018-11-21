@@ -268,7 +268,7 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
 
         List<HabitTracking> weekData = Database.getHabitDb().getHabitTracking(MySharedPreference.getUserId(this), daysInWeek[0], daysInWeek[6]);
 
-        List<TrackingEntity> meetGoalTrackingList = getMeetGoalDateList(weekData, currentDate, daysInWeek[0], daysInWeek[6]);
+        List<TrackingEntity> meetGoalTrackingList = getMeetGoalDateList(weekData, daysInWeek[0], daysInWeek[6]);
 
         int[] count = new int[7];
         for (int i = 0; i < meetGoalTrackingList.size(); i++) {
@@ -309,7 +309,7 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
 
         List<HabitTracking> monthData = Database.getHabitDb().getHabitTracking(MySharedPreference.getUserId(this), daysInMonth[0], daysInMonth[daysInMonth.length - 1]);
 
-        List<TrackingEntity> meetGoalTrackingList = getMeetGoalDateList(monthData, currentDate, daysInMonth[0], daysInMonth[daysInMonth.length - 1]);
+        List<TrackingEntity> meetGoalTrackingList = getMeetGoalDateList(monthData, daysInMonth[0], daysInMonth[daysInMonth.length - 1]);
 
         int[] count = new int[daysInMonth.length];
         for (TrackingEntity item : meetGoalTrackingList) {
@@ -340,7 +340,7 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
 
         List<HabitTracking> yearData = Database.getHabitDb().getHabitTracking(MySharedPreference.getUserId(this), startYearDate, endYearDate);
 
-        List<TrackingEntity> meetGoalTrackingList = getMeetGoalDateList(yearData, currentDate, startYearDate, endYearDate);
+        List<TrackingEntity> meetGoalTrackingList = getMeetGoalDateList(yearData, startYearDate, endYearDate);
 
         String[] months = new String[]{"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
         int[] count = new int[12];
@@ -361,31 +361,24 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
         return values;
     }
 
-    private List<TrackingEntity> getMeetGoalDateList(List<HabitTracking> data, String currentDate, String start, String end) {
+    private List<TrackingEntity> getMeetGoalDateList(List<HabitTracking> trackingData, String start, String end) {
         List<TrackingEntity> meetGoalTrackingList = new ArrayList<>();
         HabitEntity habitEntity;
-        TrackingEntity trackingEntity = null;
         int total = 0;
         int goal;
-        for (HabitTracking item : data) {
-            habitEntity = item.getHabit();
+        for (HabitTracking habitTracking : trackingData) {
+            habitEntity = habitTracking.getHabit();
             goal = Integer.parseInt(habitEntity.getMonitorNumber());
-            for (TrackingEntity tr : item.getTrackingList()) {
-                if (tr.getCurrentDate().compareTo(start) >= 0 && tr.getCurrentDate().compareTo(end) <= 0) {
-                    total += Integer.parseInt(tr.getCount());
-                    trackingEntity = tr;
+            for (TrackingEntity trackingEntity : habitTracking.getTrackingList()) {
+                if (trackingEntity.getCurrentDate().compareTo(start) >= 0 && trackingEntity.getCurrentDate().compareTo(end) <= 0) {
+                    total += Integer.parseInt(trackingEntity.getCount());
                     if (total >= goal) {
+                        meetGoalTrackingList.add(trackingEntity);
                         break;
                     }
                 }
             }
-            if (total >= goal) {
-                if (trackingEntity != null) {
-                    meetGoalTrackingList.add(trackingEntity);
-                }
-            }
             total = 0;
-            trackingEntity= null;
         }
         return meetGoalTrackingList;
     }

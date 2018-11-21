@@ -36,7 +36,8 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
                     + " FROM " + HABIT_TABLE + " h INNER JOIN " + TRACKING_TABLE + " t "
                     + " ON " + "h." + HabitSchema.HABIT_ID + " = t." + TrackingSchema.HABIT_ID
                     + " WHERE h." + USER_ID + " = '" + userId + "'"
-                    + " AND t." + TrackingSchema.CURRENT_DATE + " BETWEEN '" + startDate + "' AND '" + endDate + "'";
+                    + " AND t." + TrackingSchema.CURRENT_DATE + " BETWEEN '" + startDate + "' AND '" + endDate + "'" +
+                    " ORDER BY t." + TrackingSchema.CURRENT_DATE + " ASC";
 
             cursor = super.rawQuery(sql, null);
 
