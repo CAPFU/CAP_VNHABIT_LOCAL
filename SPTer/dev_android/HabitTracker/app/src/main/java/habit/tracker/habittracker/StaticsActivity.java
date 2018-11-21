@@ -19,13 +19,9 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -115,6 +111,13 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
         initializeScreen();
     }
 
+    private void initializeScreen() {
+        currentDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
+        firstCurrentDate = currentDate;
+        ArrayList<BarEntry> values = loadWeekData(currentDate);
+        chartHelper.setData(values, mode);
+    }
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         int[] outLocation = new int[2];
@@ -159,24 +162,6 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
                 break;
         }
         return super.dispatchTouchEvent(ev);
-    }
-
-    private void initializeScreen() {
-        try {
-            currentDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
-//            String userId = MySharedPreference.getUserId(this);
-//            int sumHabit = Database.getHabitDb().countHabitByUser(userId);
-//            int sumTracking = Database.getTrackingDb().countTrackByUser(userId);
-//            tvTotal.setText(String.valueOf(sumHabit));
-//            tvTotalDone.setText(String.valueOf(sumTracking));
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            currentDate = dateFormat.format(dateFormat.parse(currentDate));
-            firstCurrentDate = currentDate;
-            ArrayList<BarEntry> values = loadWeekData(currentDate);
-            chartHelper.setData(values, mode);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
 
     @SuppressLint("ResourceType")
@@ -281,7 +266,7 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
         String endDate = AppGenerator.format(daysInWeek[6], AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT);
         tvDisplayTime.setText(startDate + " - " + endDate);
 
-        List<HabitTracking> weekData = Database.getHabitDb().getHabitTrackingBetween(MySharedPreference.getUserId(this));
+        List<HabitTracking> weekData = Database.getHabitDb().getHabitTracking(MySharedPreference.getUserId(this), daysInWeek[0], daysInWeek[6]);
 
         List<TrackingEntity> meetGoalTrackingList = getMeetGoalDateList(weekData, currentDate, daysInWeek[0], daysInWeek[6]);
 
@@ -322,7 +307,7 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
         String endDate = AppGenerator.format(daysInMonth[daysInMonth.length - 1], AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT);
         tvDisplayTime.setText(startDate + " - " + endDate);
 
-        List<HabitTracking> monthData = Database.getHabitDb().getHabitTrackingBetween(MySharedPreference.getUserId(this));
+        List<HabitTracking> monthData = Database.getHabitDb().getHabitTracking(MySharedPreference.getUserId(this), daysInMonth[0], daysInMonth[daysInMonth.length - 1]);
 
         List<TrackingEntity> meetGoalTrackingList = getMeetGoalDateList(monthData, currentDate, daysInMonth[0], daysInMonth[daysInMonth.length - 1]);
 
@@ -350,12 +335,12 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
         calendar.setTime(AppGenerator.getDate(currentDate.split("-")[0] + "-12-01", AppGenerator.YMD_SHORT));
         tvDisplayTime.setText("Năm " + calendar.get(Calendar.YEAR));
 
-        String start = calendar.get(Calendar.YEAR) + "-01-01";
-        String end = calendar.get(Calendar.YEAR) + "-12-" + calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        String startYearDate = calendar.get(Calendar.YEAR) + "-01-01";
+        String endYearDate = calendar.get(Calendar.YEAR) + "-12-" + calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-        List<HabitTracking> yearData = Database.getHabitDb().getHabitTrackingBetween(MySharedPreference.getUserId(this));
+        List<HabitTracking> yearData = Database.getHabitDb().getHabitTracking(MySharedPreference.getUserId(this), startYearDate, endYearDate);
 
-        List<TrackingEntity> meetGoalTrackingList = getMeetGoalDateList(yearData, currentDate, start, end);
+        List<TrackingEntity> meetGoalTrackingList = getMeetGoalDateList(yearData, currentDate, startYearDate, endYearDate);
 
         String[] months = new String[]{"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
         int[] count = new int[12];

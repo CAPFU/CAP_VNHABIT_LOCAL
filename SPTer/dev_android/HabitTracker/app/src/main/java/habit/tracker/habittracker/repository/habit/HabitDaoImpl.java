@@ -29,13 +29,14 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
     }
 
     @Override
-    public List<HabitTracking> getHabitTrackingBetween(String startDate, String endDate) {
+    public List<HabitTracking> getHabitTracking(String userId, String startDate, String endDate) {
         List<HabitTracking> list = new ArrayList<>();
         try {
             final String sql = "SELECT " + getParams(HABIT_COLUMNS, "h", false) + getParams(TRACKING_COLUMNS, "t", true)
                     + " FROM " + HABIT_TABLE + " h INNER JOIN " + TRACKING_TABLE + " t "
                     + " ON " + "h." + HabitSchema.HABIT_ID + " = t." + TrackingSchema.HABIT_ID
-                    + " WHERE t." + TrackingSchema.CURRENT_DATE + " BETWEEN '" + startDate + "' AND '" + endDate + "'";
+                    + " WHERE h." + USER_ID + " = '" + userId + "'"
+                    + " AND t." + TrackingSchema.CURRENT_DATE + " BETWEEN '" + startDate + "' AND '" + endDate + "'";
 
             cursor = super.rawQuery(sql, null);
 
@@ -71,47 +72,47 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
         return list;
     }
 
-    public List<HabitTracking> getHabitTrackingBetween(String userId) {
-        List<HabitTracking> list = new ArrayList<>();
-        try {
-            final String sql = "SELECT " + getParams(HABIT_COLUMNS, "h", false) + getParams(TRACKING_COLUMNS, "t", true)
-                    + " FROM " + HABIT_TABLE + " h INNER JOIN " + TRACKING_TABLE + " t "
-                    + " ON " + "h." + HabitSchema.HABIT_ID + " = t." + TrackingSchema.HABIT_ID
-                    + " WHERE h." + USER_ID + " = '" + userId + "'";
-
-            cursor = super.rawQuery(sql, null);
-
-            if (cursor != null && cursor.getCount() > 0) {
-                TrackingDaoImpl trackingDao = new TrackingDaoImpl();
-                cursor.moveToFirst();
-                HabitTracking habitTracking = new HabitTracking();
-                HabitEntity habit = cursorToEntity(cursor);
-                TrackingEntity track = trackingDao.cursorToEntity(cursor);
-                habitTracking.setHabit(habit);
-                habitTracking.getTrackingList().add(track);
-                list.add(habitTracking);
-                cursor.moveToNext();
-                while (!cursor.isAfterLast()) {
-                    habit = cursorToEntity(cursor);
-                    track = trackingDao.cursorToEntity(cursor);
-                    if (list.get(list.size() - 1).getHabit().getHabitId().equals(habit.getHabitId())) {
-                        list.get(list.size() - 1).getTrackingList().add(track);
-                    } else {
-                        habitTracking = new HabitTracking();
-                        habitTracking.setHabit(habit);
-                        habitTracking.getTrackingList().add(track);
-                        list.add(habitTracking);
-                    }
-                    cursor.moveToNext();
-                }
-                cursor.close();
-                return list;
-            }
-
-        } catch (SQLiteConstraintException ex) {
-        }
-        return list;
-    }
+//    public List<HabitTracking> getHabitTracking(String userId) {
+//        List<HabitTracking> list = new ArrayList<>();
+//        try {
+//            final String sql = "SELECT " + getParams(HABIT_COLUMNS, "h", false) + getParams(TRACKING_COLUMNS, "t", true)
+//                    + " FROM " + HABIT_TABLE + " h INNER JOIN " + TRACKING_TABLE + " t "
+//                    + " ON " + "h." + HabitSchema.HABIT_ID + " = t." + TrackingSchema.HABIT_ID
+//                    + " WHERE h." + USER_ID + " = '" + userId + "'";
+//
+//            cursor = super.rawQuery(sql, null);
+//
+//            if (cursor != null && cursor.getCount() > 0) {
+//                TrackingDaoImpl trackingDao = new TrackingDaoImpl();
+//                cursor.moveToFirst();
+//                HabitTracking habitTracking = new HabitTracking();
+//                HabitEntity habit = cursorToEntity(cursor);
+//                TrackingEntity track = trackingDao.cursorToEntity(cursor);
+//                habitTracking.setHabit(habit);
+//                habitTracking.getTrackingList().add(track);
+//                list.add(habitTracking);
+//                cursor.moveToNext();
+//                while (!cursor.isAfterLast()) {
+//                    habit = cursorToEntity(cursor);
+//                    track = trackingDao.cursorToEntity(cursor);
+//                    if (list.get(list.size() - 1).getHabit().getHabitId().equals(habit.getHabitId())) {
+//                        list.get(list.size() - 1).getTrackingList().add(track);
+//                    } else {
+//                        habitTracking = new HabitTracking();
+//                        habitTracking.setHabit(habit);
+//                        habitTracking.getTrackingList().add(track);
+//                        list.add(habitTracking);
+//                    }
+//                    cursor.moveToNext();
+//                }
+//                cursor.close();
+//                return list;
+//            }
+//
+//        } catch (SQLiteConstraintException ex) {
+//        }
+//        return list;
+//    }
 
     @Override
     public List<HabitEntity> getHabitByUser(String userId) {
