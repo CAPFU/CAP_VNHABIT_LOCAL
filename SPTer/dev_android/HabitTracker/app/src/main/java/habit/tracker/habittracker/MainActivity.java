@@ -379,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements HabitRecyclerView
     @OnClick(R.id.tabSuggestion)
     public void showSuggestion(View view) {
         isReStart = true;
-        Intent intent = new Intent(this, SuggestionByLevelActivity.class);
+        Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
 

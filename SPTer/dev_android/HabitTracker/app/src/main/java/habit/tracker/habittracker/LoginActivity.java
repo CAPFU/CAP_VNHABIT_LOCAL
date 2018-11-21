@@ -151,7 +151,7 @@ public class LoginActivity extends BaseActivity {
                         userEntity.setPassword(user.getPassword());
                         userEntity.setUserIcon(user.getUserIcon());
                         userEntity.setAvatar(user.getAvatar());
-                        userEntity.setUserDescription(user.getCreatedDate());
+                        userEntity.setUserDescription(user.getUserDescription());
                         userEntity.setCreatedDate(user.getCreatedDate());
                         userEntity.setLastLoginTime(user.getLastLoginTime());
                         userEntity.setContinueUsingCount(user.getContinueUsingCount());

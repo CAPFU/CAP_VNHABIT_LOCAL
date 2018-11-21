@@ -3,7 +3,6 @@ package habit.tracker.habittracker;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
@@ -34,7 +33,7 @@ import retrofit2.Response;
 
 import static habit.tracker.habittracker.common.util.AppGenerator.getLevel;
 
-public class SuggestionByLevelActivity extends AppCompatActivity implements RecyclerViewItemClickListener {
+public class ProfileActivity extends AppCompatActivity implements RecyclerViewItemClickListener {
 
     public static String SUGGEST_NAME = "SuggestionByLevelActivity.pick_name";
     public static String SUGGEST_NAME_ID = "SuggestionByLevelActivity.suggest_name_id";
@@ -46,6 +45,8 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
     TextView tvStartedDate;
 //    @BindView(R.id.tvContinueUsing)
 //    TextView tvContinueUsing;
+    @BindView(R.id.tvUserDescription)
+    TextView tvUserDescription;
     @BindView(R.id.tvLevel)
     TextView tvLevel;
     @BindView(R.id.tvUserScore)
@@ -54,6 +55,8 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
     TextView tvBestContinue;
     @BindView(R.id.tvCurrentContinue)
     TextView tvCurrentContinue;
+    @BindView(R.id.tvTotalHabit)
+    TextView tvTotalHabit;
 
     @BindView(R.id.rvSuggestion)
     RecyclerView rvSuggestion;
@@ -67,7 +70,7 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_suggestion_by_level);
+        setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
 
         suggestByGroupAdapter = new SuggestByGroupAdapter(this, displaySuggestList, this);
@@ -82,7 +85,7 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if (response.body().getResult().equals(AppConstant.RES_OK)) {
                     User user = response.body().getData();
-                    Database db = new Database(SuggestionByLevelActivity.this);
+                    Database db = new Database(ProfileActivity.this);
                     UserEntity userEntity = new UserEntity();
                     db.open();
                     if (user != null) {
@@ -95,7 +98,7 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
                         userEntity.setPassword(user.getPassword());
                         userEntity.setUserIcon(user.getUserIcon());
                         userEntity.setAvatar(user.getAvatar());
-                        userEntity.setUserDescription(user.getCreatedDate());
+                        userEntity.setUserDescription(user.getUserDescription());
                         userEntity.setCreatedDate(user.getCreatedDate());
                         userEntity.setLastLoginTime(user.getLastLoginTime());
                         userEntity.setContinueUsingCount(user.getContinueUsingCount());
@@ -105,7 +108,7 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
                         Database.getUserDb().saveUser(userEntity);
                     }
                     db.close();
-                    loadHabitSuggestByLevel();
+                    initializeScreen();
                 }
             }
 
@@ -115,19 +118,21 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
         });
     }
 
-    private void loadHabitSuggestByLevel() {
+    private void initializeScreen() {
         mService.getHabitSuggestByLevel().enqueue(new Callback<SuggestByLevelReponse>() {
             @Override
             public void onResponse(Call<SuggestByLevelReponse> call, Response<SuggestByLevelReponse> response) {
                 if (response.body().getResult().equals("1")) {
+                    Database db = Database.getInstance(ProfileActivity.this);
+                    db.open();
+
                     // 0: low, 1: med, 2: hig
                     List<List<HabitSuggestion>> data = response.body().getData();
                     List<HabitSuggestion> curLevl;
                     String[] level = new String[]{"Thói quen dễ được nhiều người chọn", "Thói quen trung bình được nhiều người chọn", "Thói quen khó được nhiều người chọn"};
-
-                    Database db = Database.getInstance(SuggestionByLevelActivity.this);
-                    db.open();
-                    userEntity = Database.getUserDb().getUser(MySharedPreference.getUserId(SuggestionByLevelActivity.this));
+                    String userId = MySharedPreference.getUserId(ProfileActivity.this);
+                    userEntity = Database.getUserDb().getUser(userId);
+                    int habitCount = Database.getHabitDb().countHabitByUser(userId);
                     int userLevel = AppGenerator.getLevel( Integer.parseInt(userEntity.getUserScore()) );
                     if (userLevel <= 3) {
                         level[0] = "Thói quen dễ được nhiều người chọn (khuyên chọn)";
@@ -151,16 +156,19 @@ public class SuggestionByLevelActivity extends AppCompatActivity implements Recy
                         }
                     }
 //                    tvUsername.setText(userEntity.getUsername());
+                    tvUserDescription.setText(userEntity.getUserDescription());
                     tvStartedDate.setText(AppGenerator.format(userEntity.getCreatedDate(), AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
 //                    tvContinueUsing.setText(userEntity.getContinueUsingCount());
                     tvLevel.setText(String.valueOf(getLevel(Integer.parseInt(userEntity.getUserScore()))));
                     tvUserScore.setText(userEntity.getUserScore());
                     tvBestContinue.setText(userEntity.getBestContinueUsingCount());
                     tvCurrentContinue.setText(userEntity.getCurrentContinueUsingCount());
+                    tvTotalHabit.setText(String.valueOf(habitCount));
                     suggestByGroupAdapter.notifyDataSetChanged();
                     db.close();
                 }
             }
+
 
             @Override
             public void onFailure(Call<SuggestByLevelReponse> call, Throwable t) {
