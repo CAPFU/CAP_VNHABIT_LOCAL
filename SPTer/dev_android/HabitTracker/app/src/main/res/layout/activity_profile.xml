@@ -21,7 +21,7 @@
                 android:id="@+id/imgAvatar"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@mipmap/ic_launcher"
+                android:src="@drawable/avatar_empty"
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="10dp"
                 android:layout_centerHorizontal="true" />
@@ -31,9 +31,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imgAvatar"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="10dp"
                 android:gravity="center"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:text="User-01" />
 
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvRealName"
                 android:gravity="center"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:text="Something" />
 
             <RelativeLayout
@@ -148,7 +148,7 @@
                 android:orientation="horizontal"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="40dp"
                 android:background="#ffffff">
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -204,6 +204,19 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_margin="3dp">
+                    <TextView
+                        android:id="@+id/tvPercentComplete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="20sp"
+                        android:text="30%"/>
+                    <TextView
+                        android:layout_below="@+id/tvPercentComplete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Phần trăm hoàn thành"/>
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -232,7 +245,7 @@
                 android:layout_below="@+id/ll_banner3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:paddingStart="15dp"
                 android:textColor="#2d6fda"
                 android:text="Đề xuất"
@@ -260,12 +273,12 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
-        <ImageView
-            android:padding="10dp"
-            app:srcCompat="@drawable/calendar"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+        <!--<ImageView-->
+            <!--android:padding="10dp"-->
+            <!--app:srcCompat="@drawable/calendar"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content" />-->
         <ImageView
             android:padding="10dp"
             app:srcCompat="@drawable/check"
