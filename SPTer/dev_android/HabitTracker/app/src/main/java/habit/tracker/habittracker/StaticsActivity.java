@@ -35,7 +35,7 @@ import habit.tracker.habittracker.repository.habit.HabitTracking;
 import habit.tracker.habittracker.repository.tracking.TrackingEntity;
 
 
-public class StaticsActivity extends AppCompatActivity implements OnChartValueSelectedListener {
+public class StaticsActivity extends BaseActivity implements OnChartValueSelectedListener {
     private static final String DEBUG_TAG = "vnhb_debug";
     @BindView(R.id.pre)
     View imgPreDate;
@@ -421,10 +421,6 @@ public class StaticsActivity extends AppCompatActivity implements OnChartValueSe
     public void showEmpty(View view) {
         Intent intent = new Intent(this, EmptyActivity.class);
         startActivity(intent);
-    }
-
-    public void finishThis(View view) {
-        finish();
     }
 
     @Override

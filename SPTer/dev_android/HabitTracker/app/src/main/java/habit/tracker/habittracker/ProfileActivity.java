@@ -48,7 +48,7 @@ import static habit.tracker.habittracker.common.AppConstant.TYPE_3;
 import static habit.tracker.habittracker.common.util.AppGenerator.YMD_SHORT;
 import static habit.tracker.habittracker.common.util.AppGenerator.getLevel;
 
-public class ProfileActivity extends AppCompatActivity implements RecyclerViewItemClickListener {
+public class ProfileActivity extends BaseActivity implements RecyclerViewItemClickListener {
     public static final int PICK_AVATAR = 0;
     public static String SUGGEST_NAME = "SuggestionByLevelActivity.pick_name";
     public static String SUGGEST_NAME_ID = "SuggestionByLevelActivity.suggest_name_id";
@@ -67,6 +67,8 @@ public class ProfileActivity extends AppCompatActivity implements RecyclerViewIt
     TextView tvBestContinue;
     @BindView(R.id.tvCurrentContinue)
     TextView tvCurrentContinue;
+    @BindView(R.id.tvContinueUsing)
+    TextView tvContinueUsing;
     @BindView(R.id.tvTotalHabit)
     TextView tvTotalHabit;
 
@@ -184,33 +186,33 @@ public class ProfileActivity extends AppCompatActivity implements RecyclerViewIt
                     tvStartedDate.setText(AppGenerator.format(userEntity.getCreatedDate(), AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
                     tvLevel.setText(String.valueOf(getLevel(Integer.parseInt(userEntity.getUserScore()))));
                     tvUserScore.setText(userEntity.getUserScore());
-                    tvBestContinue.setText(userEntity.getBestContinueUsingCount());
-                    tvCurrentContinue.setText(userEntity.getCurrentContinueUsingCount());
+                    tvBestContinue.setText(userEntity.getBestContinueUsingCount() + " ngày");
+                    tvCurrentContinue.setText(userEntity.getCurrentContinueUsingCount() + " ngày");
+                    tvContinueUsing.setText(userEntity.getContinueUsingCount() + " ngày");
                     tvTotalHabit.setText(String.valueOf(habitCount));
                     suggestByGroupAdapter.notifyDataSetChanged();
 
-                    int totalTrack = 0;
-                    int successTrack = 0;
-                    HabitEntity habitEntity;
-                    List<TrackingEntity> trackingEntityList;
-                    List<HabitTracking> habitTrackingList = Database.getHabitDb().getHabitTracking(userId, userEntity.getCreatedDate(), currentDate);
-                    for (HabitTracking habitTracking : habitTrackingList) {
-                        habitEntity = habitTracking.getHabit();
-                        trackingEntityList = habitTracking.getTrackingList();
-                        switch (habitEntity.getHabitType()) {
-                            case TYPE_0:
-                                for (TrackingEntity trackingEntity: trackingEntityList) {
-
-                                }
-                                break;
-                            case TYPE_1:
-                                break;
-                            case TYPE_2:
-                                break;
-                            case TYPE_3:
-                                break;
-                        }
-                    }
+//                    int totalTrack = 0;
+//                    int successTrack = 0;
+//                    HabitEntity habitEntity;
+//                    List<TrackingEntity> trackingEntityList;
+//                    List<HabitTracking> habitTrackingList = Database.getHabitDb().getHabitTracking(userId, userEntity.getCreatedDate(), currentDate);
+//                    for (HabitTracking habitTracking : habitTrackingList) {
+//                        habitEntity = habitTracking.getHabit();
+//                        trackingEntityList = habitTracking.getTrackingList();
+//                        switch (habitEntity.getHabitType()) {
+//                            case TYPE_0:
+//                                for (TrackingEntity trackingEntity: trackingEntityList) {
+//                                }
+//                                break;
+//                            case TYPE_1:
+//                                break;
+//                            case TYPE_2:
+//                                break;
+//                            case TYPE_3:
+//                                break;
+//                        }
+//                    }
 
                     db.close();
                 }

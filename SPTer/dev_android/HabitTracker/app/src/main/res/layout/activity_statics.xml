@@ -180,13 +180,13 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
-        <ImageView
-            android:onClick="showEmpty"
-            android:padding="10dp"
-            app:srcCompat="@drawable/calendar"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+        <!--<ImageView-->
+            <!--android:onClick="showEmpty"-->
+            <!--android:padding="10dp"-->
+            <!--app:srcCompat="@drawable/calendar"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content" />-->
         <ImageView
             android:onClick="finishThis"
             android:padding="10dp"
@@ -195,7 +195,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
         <ImageView
-            android:onClick="showEmpty"
+            android:onClick="showProfile"
             android:padding="10dp"
             app:srcCompat="@drawable/note"
             android:layout_weight="1"

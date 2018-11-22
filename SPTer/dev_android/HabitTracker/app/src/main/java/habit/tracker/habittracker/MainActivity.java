@@ -42,7 +42,7 @@ import retrofit2.Response;
 
 import static habit.tracker.habittracker.adapter.habit.HabitRecyclerViewAdapter.TYPE_ADD;
 
-public class MainActivity extends AppCompatActivity implements HabitRecyclerViewAdapter.ItemClickListener {
+public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapter.ItemClickListener {
     public static final int CREATE_NEW_HABIT = 0;
     public static final int UPDATE_HABIT = 1;
     public static final int USE_FILTER = 2;
