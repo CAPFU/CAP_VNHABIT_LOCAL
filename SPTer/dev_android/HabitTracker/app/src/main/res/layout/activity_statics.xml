@@ -176,7 +176,7 @@
         <ImageView
             android:id="@+id/report"
             android:padding="10dp"
-            app:srcCompat="@drawable/chart_active"
+            app:srcCompat="@drawable/chart"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
@@ -190,9 +190,10 @@
         <ImageView
             android:onClick="finishThis"
             android:padding="10dp"
-            app:srcCompat="@drawable/check_fade"
+            app:srcCompat="@drawable/check"
             android:layout_weight="1"
             android:layout_width="0dp"
+            android:alpha="0.3"
             android:layout_height="wrap_content" />
         <ImageView
             android:onClick="showProfile"
@@ -200,7 +201,8 @@
             app:srcCompat="@drawable/note"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:alpha="0.3"/>
     </LinearLayout>
 
 </LinearLayout>

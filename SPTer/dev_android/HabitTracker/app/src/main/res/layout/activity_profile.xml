@@ -24,7 +24,8 @@
                 android:src="@drawable/avatar_empty"
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="10dp"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:background="#ffffff"/>
 
             <TextView
                 android:id="@+id/tvRealName"
@@ -52,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:paddingStart="15dp"
+                android:paddingStart="20dp"
                 android:paddingEnd="30dp">
 
                 <LinearLayout
@@ -146,19 +147,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_marginTop="40dp"
-                android:background="#ffffff">
+                android:layout_marginTop="20dp">
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_margin="3dp">
+                    android:layout_margin="3dp"
+                    android:paddingBottom="20dp"
+                    android:background="#ffffff">
+                    <ImageView
+                        android:src="@drawable/feet"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="10dp"/>
                     <TextView
                         android:id="@+id/tvCurrentContinue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
                         android:gravity="center"
                         android:textSize="20sp"
                         android:text="20 ngày"/>
@@ -173,12 +181,20 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:paddingEnd="20dp"
-                    android:layout_margin="3dp">
+                    android:layout_margin="3dp"
+                    android:paddingBottom="20dp"
+                    android:background="#ffffff">
+                    <ImageView
+                        android:src="@drawable/dumbbell"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp" />
                     <TextView
                         android:id="@+id/tvBestContinue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
                         android:gravity="center"
                         android:textSize="20sp"
                         android:text="36 ngày"/>
@@ -187,7 +203,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Chuỗi sử dụng dài nhất"/>
+                        android:text="Chuỗi tốt nhất"/>
                 </RelativeLayout>
             </LinearLayout>
             <LinearLayout
@@ -195,19 +211,27 @@
                 android:layout_below="@+id/ll_banner2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:orientation="horizontal"
-                android:background="#ffffff">
+                android:orientation="horizontal">
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_margin="3dp">
+                    android:layout_margin="3dp"
+                    android:paddingBottom="20dp"
+                    android:background="#ffffff">
+                    <ImageView
+                        android:src="@drawable/rings"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="10dp"/>
                     <TextView
                         android:id="@+id/tvContinueUsing"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
                         android:gravity="center"
                         android:textSize="20sp"
                         android:text="7 ngày"/>
@@ -222,12 +246,22 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:paddingEnd="20dp"
-                    android:layout_margin="3dp">
+                    android:layout_margin="3dp"
+                    android:paddingBottom="20dp"
+                    android:background="#ffffff">
+                    <ImageView
+                        android:src="@drawable/fire"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="10dp"
+                        android:padding="10dp"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp" />
                     <TextView
                         android:id="@+id/tvTotalHabit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
                         android:gravity="center"
                         android:textSize="20sp"
                         android:text="120"/>
@@ -273,7 +307,8 @@
             app:srcCompat="@drawable/chart"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:alpha="0.2"/>
         <!--<ImageView-->
             <!--android:padding="10dp"-->
             <!--app:srcCompat="@drawable/calendar"-->
@@ -286,7 +321,8 @@
             app:srcCompat="@drawable/check"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:alpha="0.3"/>
         <ImageView
             android:id="@+id/tabSuggestion"
             android:padding="10dp"
