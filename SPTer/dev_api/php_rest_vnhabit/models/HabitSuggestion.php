@@ -79,9 +79,9 @@ class HabitSuggestion extends Model {
     }
 
     public function getRecommendList($limit) {
-        $sqlLv1 = 'SELECT ' . $this->cols . ', (success_track / total_track) * 100 AS hbcal FROM `habit_suggestion` HAVING hbcal >= 80 ORDER BY hbcal LIMIT '. $limit;
-        $sqlLv2 = 'SELECT ' . $this->cols . ', (success_track / total_track) * 100 AS hbcal FROM `habit_suggestion` HAVING hbcal >= 50 AND hbcal < 80 ORDER BY hbcal LIMIT ' . $limit;
-        $sqlLv3 = 'SELECT ' . $this->cols . ', (success_track / total_track) * 100 AS hbcal FROM `habit_suggestion` HAVING hbcal < 50 ORDER BY hbcal LIMIT ' . $limit;
+        $sqlLv1 = 'SELECT ' . $this->cols . ', (success_track / total_track) * 100 AS hbcal FROM `habit_suggestion` HAVING hbcal >= 80 ORDER BY habit_name_count DESC LIMIT '. $limit;
+        $sqlLv2 = 'SELECT ' . $this->cols . ', (success_track / total_track) * 100 AS hbcal FROM `habit_suggestion` HAVING hbcal >= 50 AND hbcal < 80 ORDER BY habit_name_count DESC LIMIT ' . $limit;
+        $sqlLv3 = 'SELECT ' . $this->cols . ', (success_track / total_track) * 100 AS hbcal FROM `habit_suggestion` HAVING hbcal < 50 ORDER BY habit_name_count DESC LIMIT ' . $limit;
         $arr_lv1 = array();
         $arr_lv2 = array();
         $arr_lv3 = array();

@@ -86,7 +86,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9"
+        android:layout_weight="8"
         android:padding="20dp"
         >
 
@@ -106,5 +106,43 @@
             android:layout_alignParentEnd="true"
             />
     </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/tabs"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="5dp">
 
+        <ImageView
+            android:id="@+id/tabEditHabit"
+            android:padding="10dp"
+            app:srcCompat="@drawable/tab_edit"
+            android:layout_weight="1"
+            android:alpha="0.3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:id="@+id/tabAddJournal"
+            android:padding="10dp"
+            app:srcCompat="@drawable/tab_description"
+            android:alpha="0.5"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:padding="10dp"
+            app:srcCompat="@drawable/tab_chart"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:id="@+id/tabCalendar"
+            android:padding="10dp"
+            app:srcCompat="@drawable/tab_calendar"
+            android:alpha="0.5"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 </LinearLayout>
