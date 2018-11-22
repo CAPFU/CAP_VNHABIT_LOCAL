@@ -133,15 +133,14 @@ public class ReportDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_report_details);
         ButterKnife.bind(this);
 
+        Database db = Database.getInstance(this);
+        db.open();
         Bundle data = getIntent().getExtras();
         if (data != null) {
             String habitId = data.getString(MainActivity.HABIT_ID);
 
             if (!TextUtils.isEmpty(habitId)) {
-                Database db = Database.getInstance(this);
-                db.open();
                 habitEntity = Database.getHabitDb().getHabit(habitId);
-                db.close();
 
                 initDefaultUI(habitEntity);
 
@@ -155,6 +154,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 updateUI();
             }
         }
+        db.close();
     }
 
     @Override

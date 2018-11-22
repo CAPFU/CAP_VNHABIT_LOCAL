@@ -27,7 +27,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 $habitSuggestion->habit_name_id = $data->habit_name_id;
 $habitSuggestion->habit_name_uni = $data->habit_name;
-$habitSuggestion->habit_name = $data->habit_name_ascii;
+$habitSuggestion->habit_name_ascii = $data->habit_name_ascii;
 $habitSuggestion->habit_name_count = $data->habit_name_count;
 $habitSuggestion->updateCount();
 if ($habitSuggestion->find($data->habit_name)->rowCount() == 0) {

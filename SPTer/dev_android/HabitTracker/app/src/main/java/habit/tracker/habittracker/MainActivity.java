@@ -41,6 +41,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static habit.tracker.habittracker.adapter.habit.HabitRecyclerViewAdapter.TYPE_ADD;
+import static habit.tracker.habittracker.adapter.habit.HabitRecyclerViewAdapter.TYPE_CHECK;
+import static habit.tracker.habittracker.adapter.habit.HabitRecyclerViewAdapter.TYPE_COUNT;
 
 public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapter.ItemClickListener {
     public static final int CREATE_NEW_HABIT = 0;
@@ -269,11 +271,17 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         if (TYPE_ADD == type) {
             Intent intent = new Intent(this, HabitActivity.class);
             startActivityForResult(intent, CREATE_NEW_HABIT);
-        } else {
+        } else if (TYPE_COUNT == type) {
             Intent intent = new Intent(this, ReportDetailsActivity.class);
             intent.putExtra(HABIT_ID, trackingItemList.get(position).getHabitId());
             intent.putExtra(HABIT_COLOR, trackingItemList.get(position).getColor());
             startActivityForResult(intent, REPORT);
+        } else if (TYPE_CHECK == type) {
+            Intent intent = new Intent(this, ReportCalendarActivity.class);
+            intent.putExtra(HABIT_ID, trackingItemList.get(position).getHabitId());
+            intent.putExtra(HABIT_COLOR, trackingItemList.get(position).getColor());
+            startActivity(intent);
+            finish();
         }
     }
 
