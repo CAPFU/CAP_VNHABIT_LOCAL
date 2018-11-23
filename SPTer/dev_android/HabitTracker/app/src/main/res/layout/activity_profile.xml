@@ -54,7 +54,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:paddingStart="20dp"
-                android:paddingEnd="30dp">
+                android:paddingEnd="30dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/bg_border">
 
                 <LinearLayout
                     android:id="@+id/ll_start_date"

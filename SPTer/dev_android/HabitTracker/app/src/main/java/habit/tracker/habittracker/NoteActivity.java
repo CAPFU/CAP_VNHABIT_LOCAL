@@ -40,6 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static habit.tracker.habittracker.common.AppConstant.TYPE_0;
 import static habit.tracker.habittracker.common.AppConstant.TYPE_1;
 
 public class NoteActivity extends BaseActivity implements RecyclerViewItemClickListener {
@@ -140,15 +141,22 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
         availDaysInWeek[5] = habitEntity.getSat().equals("1");
         availDaysInWeek[6] = habitEntity.getSun().equals("1");
 
-        curTrackingCount = Integer.parseInt(todayTracking.getCount());
+        curTrackingCount= 0;
+        if (todayTracking != null) {
+            curTrackingCount = Integer.parseInt(todayTracking.getCount());
+        }
         displayItemList.clear();
-        for (TrackingEntity entity : trackingEntityList) {
-            if (!TextUtils.isEmpty(entity.getDescription())) {
-                displayItemList.add(new NoteItem(entity.getTrackingId(),
-                        entity.getCurrentDate(),
-                        AppGenerator.format(entity.getCurrentDate(), AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT),
-                        entity.getDescription()));
+        if (trackingEntityList != null) {
+            for (TrackingEntity entity : trackingEntityList) {
+                if (!TextUtils.isEmpty(entity.getDescription())) {
+                    displayItemList.add(new NoteItem(entity.getTrackingId(),
+                            entity.getCurrentDate(),
+                            AppGenerator.format(entity.getCurrentDate(), AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT),
+                            entity.getDescription()));
+                }
             }
+        } else {
+            trackingEntityList = new ArrayList<>();
         }
 
         noteRecyclerViewAdapter = new NoteRecyclerViewAdapter(this, displayItemList, this);
@@ -308,7 +316,7 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
             trackingEntity = new TrackingEntity();
             trackingEntity.setTrackingId(trackId);
             trackingEntity.setHabitId(habitId);
-            trackingEntity.setCount("0");
+            trackingEntity.setCount(TYPE_0);
             trackingEntity.setCurrentDate(currentDate);
             trackingEntity.setDescription(newNote);
             trackingEntityList.add(trackingEntity);
@@ -479,7 +487,7 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
             todayTracking.setHabitId(habitId);
             todayTracking.setCount(String.valueOf(defaultVal));
             todayTracking.setCurrentDate(currentDate);
-//            todayTracking.setHabitDescription(null);
+            todayTracking.setDescription(null);
 //            Database.getTrackingDb().saveTracking(todayTracking);
         }
         db.close();
