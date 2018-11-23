@@ -82,7 +82,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CREATE_NEW_HABIT || requestCode == UPDATE_HABIT) {
             if (resultCode == RESULT_OK) {
-                initializeScreen();
+                backToCurrent(null);
             }
 
         } else if (requestCode == USE_FILTER) {
@@ -107,9 +107,9 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
             }
 
         } else if (requestCode == REPORT_DETAIL || requestCode == REPORT_CALENDAR) {
-            initializeScreen();
+            backToCurrent(null);
         } else if (resultCode == RESULT_OK && (requestCode == SHOW_STATICS || requestCode == SHOW_PROFILE)) {
-            initializeScreen();
+            backToCurrent(null);
         }
     }
 
@@ -139,6 +139,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
     private void initializeScreen() {
         currentDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
         firstCurrentDate = currentDate;
+        updateTitle(currentDate);
         trackingItemList.clear();
         String userId = MySharedPreference.getUserId(this);
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
