@@ -26,7 +26,7 @@ $user->password = $data->password;
 $user->email = $data->email;
 $user->date_of_birth = $data->date_of_birth;
 $user->gender = $data->gender;
-$user->user_icon = $data->user_icon;
+$user->real_name = $data->real_name;
 $user->avatar = $data->avatar;
 $user->user_description = $data->user_description;
 
