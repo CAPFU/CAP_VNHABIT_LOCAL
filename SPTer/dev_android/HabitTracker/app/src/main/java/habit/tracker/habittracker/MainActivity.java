@@ -82,7 +82,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CREATE_NEW_HABIT || requestCode == UPDATE_HABIT) {
             if (resultCode == RESULT_OK) {
-                backToCurrent(null);
+                backToCurrent();
             }
 
         } else if (requestCode == USE_FILTER) {
@@ -107,9 +107,9 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
             }
 
         } else if (requestCode == REPORT_DETAIL || requestCode == REPORT_CALENDAR) {
-            backToCurrent(null);
+            backToCurrent();
         } else if (resultCode == RESULT_OK && (requestCode == SHOW_STATICS || requestCode == SHOW_PROFILE)) {
-            backToCurrent(null);
+            backToCurrent();
         }
     }
 
@@ -367,6 +367,10 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
     }
 
     public void backToCurrent(View v) {
+        backToCurrent();
+    }
+
+    private void backToCurrent() {
         timeLine = 0;
         updateTitle(firstCurrentDate);
         currentDate = firstCurrentDate;
@@ -418,8 +422,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
             tvDate.setText("Ngày mai");
         } else if (timeLine == -1) {
             tvDate.setText("Hôm qua");
-        }
-        else {
+        } else {
             tvDate.setText(AppGenerator.format(date, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
         }
     }
