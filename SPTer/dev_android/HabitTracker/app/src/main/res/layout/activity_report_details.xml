@@ -106,7 +106,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvGoal"
-                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textSize="14sp"
                 android:text="Mục tiêu đề ra"/>
         </RelativeLayout>
         <RelativeLayout
@@ -124,7 +125,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvSumCount"
-                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textSize="14sp"
                 android:text="Đã hoàn thành"/>
         </RelativeLayout>
     </LinearLayout>

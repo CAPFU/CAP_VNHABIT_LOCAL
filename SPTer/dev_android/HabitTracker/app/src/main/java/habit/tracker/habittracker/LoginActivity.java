@@ -138,8 +138,12 @@ public class LoginActivity extends BaseActivity {
                 if (response.body().getResult().equals(AppConstant.RES_OK)) {
                     User user = response.body().getData();
                     Database db = new Database(LoginActivity.this);
-                    UserEntity userEntity = new UserEntity();
+                    UserEntity userEntity;
                     db.open();
+                    userEntity = Database.getUserDb().getUser(user.getUserId());
+                    if (userEntity == null) {
+                        userEntity = new UserEntity();
+                    }
                     if (user != null) {
                         userEntity.setUserId(user.getUserId());
                         userEntity.setUsername(user.getUsername());
@@ -149,7 +153,7 @@ public class LoginActivity extends BaseActivity {
                         userEntity.setDateOfBirth(user.getDateOfBirth());
                         userEntity.setPassword(user.getPassword());
                         userEntity.setUserIcon(user.getUserIcon());
-                        userEntity.setAvatar(user.getAvatar());
+//                        userEntity.setAvatar(user.getAvatar());
                         userEntity.setUserDescription(user.getUserDescription());
                         userEntity.setCreatedDate(user.getCreatedDate());
                         userEntity.setLastLoginTime(user.getLastLoginTime());

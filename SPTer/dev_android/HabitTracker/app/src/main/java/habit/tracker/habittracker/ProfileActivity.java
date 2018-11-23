@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -102,7 +103,7 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
                     Database db = new Database(ProfileActivity.this);
                     db.open();
                     if (user != null) {
-                        UserEntity userEntity = Database.getUserDb().getUser(user.getUserId());
+                        ProfileActivity.this.userEntity = Database.getUserDb().getUser(user.getUserId());
                         userEntity.setUserId(user.getUserId());
                         userEntity.setUsername(user.getUsername());
                         userEntity.setEmail(user.getEmail());
@@ -144,10 +145,7 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
                     List<List<HabitSuggestion>> data = response.body().getData();
 
                     String currentDate = AppGenerator.getCurrentDate(YMD_SHORT);
-                    String userId = MySharedPreference.getUserId(ProfileActivity.this);
-                    userEntity = Database.getUserDb().getUser(userId);
-
-                    int habitCount = Database.getHabitDb().countHabitByUser(userId);
+                    int habitCount = Database.getHabitDb().countHabitByUser(userEntity.getUserId());
                     int userLevel = AppGenerator.getLevel(Integer.parseInt(userEntity.getUserScore()));
                     String[] level = new String[]{"Thói quen dễ được nhiều người chọn", "Thói quen trung bình được nhiều người chọn", "Thói quen khó được nhiều người chọn"};
                     if (userLevel <= 3) {
@@ -173,7 +171,7 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
                             ));
                         }
                     }
-                    if (userEntity.getAvatar() != null) {
+                    if (!TextUtils.isEmpty(userEntity.getAvatar())) {
                         try {
                             Uri uri = Uri.parse(userEntity.getAvatar());
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(ProfileActivity.this.getContentResolver(), uri);
