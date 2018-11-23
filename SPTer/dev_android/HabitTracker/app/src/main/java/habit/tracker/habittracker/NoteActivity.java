@@ -1,12 +1,12 @@
 package habit.tracker.habittracker;
 
 import android.annotation.SuppressLint;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -40,8 +40,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class NoteActivity extends AppCompatActivity implements RecyclerViewItemClickListener {
+import static habit.tracker.habittracker.common.AppConstant.TYPE_1;
 
+public class NoteActivity extends BaseActivity implements RecyclerViewItemClickListener {
     @BindView(R.id.llHeader)
     View llHeader;
     @BindView(R.id.rvNote)
@@ -62,8 +63,18 @@ public class NoteActivity extends AppCompatActivity implements RecyclerViewItemC
     @BindView(R.id.addCount)
     View imgAddCount;
 
+    @BindView(R.id.tabEditHabit)
+    View tabEditHabit;
+    @BindView(R.id.tabAddJournal)
+    View tabAddJournal;
+    @BindView(R.id.tabChart)
+    View tabChart;
+    @BindView(R.id.tabCalendar)
+    View tabCalendar;
+
     String habitId;
     HabitEntity habitEntity;
+    boolean isCountHabitType = false;
     String currentDate;
     NoteRecyclerViewAdapter noteRecyclerViewAdapter;
     List<NoteItem> displayItemList = new ArrayList<>();
@@ -74,6 +85,23 @@ public class NoteActivity extends AppCompatActivity implements RecyclerViewItemC
     private int timeLine = 0;
     private boolean[] availDaysInWeek = new boolean[7];
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == HabitActivity.REQUEST_UPDATE) {
+            boolean delete = false;
+            if (data != null) {
+                delete = data.getBooleanExtra("delete", false);
+            }
+            if (!delete) {
+                initializeScreen(habitId);
+                updateUI();
+
+            } else {
+                finish();
+            }
+        }
+    }
+
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +110,6 @@ public class NoteActivity extends AppCompatActivity implements RecyclerViewItemC
         setContentView(R.layout.activity_note);
         ButterKnife.bind(this);
 
-        Database db = Database.getInstance(this);
-        db.open();
-
         currentDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
 
         Bundle bundle = getIntent().getExtras();
@@ -92,7 +117,18 @@ public class NoteActivity extends AppCompatActivity implements RecyclerViewItemC
             habitId = bundle.getString(MainActivity.HABIT_ID);
         }
 
+        initializeScreen(habitId);
+
+        updateUI();
+    }
+
+    @SuppressLint("ResourceType")
+    private void initializeScreen(String habitId) {
+        Database db = Database.getInstance(this);
+        db.open();
+
         habitEntity = Database.getHabitDb().getHabit(habitId);
+        isCountHabitType = habitEntity.getMonitorType().equals(TYPE_1);
         trackingEntityList = Database.getTrackingDb().getTrackingListByHabit(habitId);
         TrackingEntity todayTracking = Database.getTrackingDb().getTracking(habitEntity.getHabitId(), currentDate);
 
@@ -105,7 +141,7 @@ public class NoteActivity extends AppCompatActivity implements RecyclerViewItemC
         availDaysInWeek[6] = habitEntity.getSun().equals("1");
 
         curTrackingCount = Integer.parseInt(todayTracking.getCount());
-
+        displayItemList.clear();
         for (TrackingEntity entity : trackingEntityList) {
             if (!TextUtils.isEmpty(entity.getDescription())) {
                 displayItemList.add(new NoteItem(entity.getTrackingId(),
@@ -119,9 +155,33 @@ public class NoteActivity extends AppCompatActivity implements RecyclerViewItemC
         rvNote.setLayoutManager(new LinearLayoutManager(this));
         rvNote.setAdapter(noteRecyclerViewAdapter);
 
-        llHeader.setBackgroundColor(Color.parseColor(habitEntity.getHabitColor()));
+        if (TextUtils.isEmpty(habitEntity.getHabitColor()) || habitEntity.getHabitColor().equals(getString(R.color.color0))) {
+            llHeader.setBackgroundColor(Color.parseColor(getString(R.color.gray2)));
+        } else {
+            llHeader.setBackgroundColor(Color.parseColor(habitEntity.getHabitColor()));
+        }
 
-        updateUI();
+        if (!isCountHabitType) {
+            if (imgMinusCount.getVisibility() == View.VISIBLE) {
+                imgMinusCount.setVisibility(View.GONE);
+            }
+            if (imgAddCount.getVisibility() == View.VISIBLE) {
+                imgAddCount.setVisibility(View.GONE);
+            }
+            if (tabChart.getVisibility() == View.VISIBLE) {
+                tabChart.setVisibility(View.GONE);
+            }
+        } else {
+            if (imgMinusCount.getVisibility() == View.GONE) {
+                imgMinusCount.setVisibility(View.VISIBLE);
+            }
+            if (imgAddCount.getVisibility() == View.GONE) {
+                imgAddCount.setVisibility(View.VISIBLE);
+            }
+            if (tabChart.getVisibility() == View.GONE) {
+                tabChart.setVisibility(View.VISIBLE);
+            }
+        }
 
         db.close();
     }
@@ -362,6 +422,21 @@ public class NoteActivity extends AppCompatActivity implements RecyclerViewItemC
         updateUI();
     }
 
+    @OnClick(R.id.tabEditHabit)
+    public void editHabitDetails(View v) {
+        super.editHabitDetails(habitEntity.getHabitId());
+    }
+
+    @OnClick(R.id.tabChart)
+    public void showDetailsChart(View v) {
+        super.showDetailsChart(habitEntity.getHabitId());
+    }
+
+    @OnClick(R.id.tabCalendar)
+    public void showOnCalendar(View v) {
+        super.showOnCalendar(habitEntity.getHabitId());
+    }
+
     private void updateUI() {
         if (timeLine == 0) {
             tvCurrentTime.setText("Hôm nay");
@@ -381,7 +456,13 @@ public class NoteActivity extends AppCompatActivity implements RecyclerViewItemC
                 imgAddNote.setVisibility(View.INVISIBLE);
             }
         } else {
-            tvTrackCount.setText(String.valueOf(curTrackingCount) + " " + habitEntity.getMonitorUnit());
+            if (isCountHabitType) {
+                tvTrackCount.setText(String.valueOf(curTrackingCount) + " " + habitEntity.getMonitorUnit());
+            } else if (curTrackingCount > 0) {
+                tvTrackCount.setText("Hoàn thành");
+            } else if (curTrackingCount == 0) {
+                tvTrackCount.setText("Chưa hoàn thành");
+            }
             if (imgAddNote.getVisibility() != View.INVISIBLE ) {
                 imgAddNote.setVisibility(View.VISIBLE);
             }

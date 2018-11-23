@@ -223,11 +223,11 @@
 
     <LinearLayout
         android:id="@+id/tabs"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="5dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:padding="5dp">
 
         <ImageView
             android:id="@+id/tabEditHabit"
@@ -246,7 +246,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent" />
         <ImageView
-            android:padding="7dp"
+            android:id="@+id/tabChart"
+            android:padding="10dp"
             app:srcCompat="@drawable/tab_chart"
             android:layout_weight="1"
             android:layout_width="0dp"

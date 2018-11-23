@@ -668,7 +668,13 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         });
         String savedUserId = MySharedPreference.getUserId(this);
         String habitName = editHabitName.getText().toString();
-        String monitorNumber = this.editCheckNumber.getText().toString();
+        String monitorNumber;
+        if (monitorType == 1) {
+            monitorNumber = this.editCheckNumber.getText().toString();
+        } else {
+            monitorNumber = TYPE_1;
+        }
+
         if (!validator.checkEmpty("Tên thói quen", habitName)) {
             return;
         }

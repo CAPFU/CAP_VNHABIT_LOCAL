@@ -34,6 +34,8 @@ import habit.tracker.habittracker.repository.habit.HabitEntity;
 import habit.tracker.habittracker.repository.habit.HabitTracking;
 import habit.tracker.habittracker.repository.tracking.TrackingEntity;
 
+import static habit.tracker.habittracker.common.AppConstant.TYPE_0;
+
 
 public class StaticsActivity extends BaseActivity implements OnChartValueSelectedListener {
     private static final String DEBUG_TAG = "vnhb_debug";
@@ -366,15 +368,21 @@ public class StaticsActivity extends BaseActivity implements OnChartValueSelecte
         HabitEntity habitEntity;
         int total = 0;
         int goal;
+        boolean isDaily = false;
         for (HabitTracking habitTracking : trackingData) {
             habitEntity = habitTracking.getHabit();
+            isDaily = habitEntity.getMonitorType().equals(TYPE_0);
             goal = Integer.parseInt(habitEntity.getMonitorNumber());
             for (TrackingEntity trackingEntity : habitTracking.getTrackingList()) {
                 if (trackingEntity.getCurrentDate().compareTo(start) >= 0 && trackingEntity.getCurrentDate().compareTo(end) <= 0) {
                     total += Integer.parseInt(trackingEntity.getCount());
                     if (total >= goal) {
                         meetGoalTrackingList.add(trackingEntity);
-                        break;
+                        if (isDaily) {
+                            total = 0;
+                        } else {
+                            break;
+                        }
                     }
                 }
             }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 20, 2018 at 12:58 PM
+-- Generation Time: Nov 23, 2018 at 01:01 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -128,7 +128,7 @@ CREATE TABLE `habit` (
 
 INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
 ('3da48f98-01', '4e0819c9-33', '1', '1ed9504d-85', 'an com', 0, 0, 1, 'Lần', 3, '2018-11-20', NULL, '2018-11-20', '#789c4dd9', ''),
-('7d4295d1-17', 'd233c193-6e', '2', '58cefe15-1f', 'Chạy bộ', 0, 0, 1, 'km', 5, '2018-11-18', NULL, '2018-11-18', '#78e1385f', '');
+('7d4295d1-17', 'd233c193-6e', '2', '58cefe15-1f', 'Chạy bộ', 0, 0, 0, NULL, 1, '2018-11-18', NULL, '2018-11-23', '#78e15474', '');
 
 -- --------------------------------------------------------
 
@@ -151,6 +151,7 @@ CREATE TABLE `habit_suggestion` (
 --
 
 INSERT INTO `habit_suggestion` (`habit_name_id`, `group_id`, `habit_name_uni`, `habit_name_ascii`, `habit_name_count`, `total_track`, `success_track`) VALUES
+('0047ad7d-2a', NULL, 'Chạy bộ', 'chay bo', 1, NULL, NULL),
 ('154fsd', '2', 'Đi chợ', 'di cho', 12, 35, 35),
 ('1dv43fsd', '3', 'Đi bộ', 'di bo', 12, 90, 20),
 ('a0fde794-38', NULL, 'an com', 'an com', 1, 0, 0),
@@ -225,9 +226,13 @@ CREATE TABLE `tracking` (
 --
 
 INSERT INTO `tracking` (`tracking_id`, `habit_id`, `current_date`, `count`, `tracking_description`) VALUES
-('73a79271-9f', '7d4295d1-17', '2018-11-18', 2, NULL),
+('0f3f3eaa-35', '7d4295d1-17', '2018-11-23', 1, NULL),
+('3ae0c813-5f', '7d4295d1-17', '2018-11-21', 0, 'test 21'),
+('5e27a48f-5c', '7d4295d1-17', '2018-11-22', 0, NULL),
+('73a79271-9f', '7d4295d1-17', '2018-11-18', 0, 'test 18'),
 ('a95e76c6-6a', '3da48f98-01', '2018-11-20', 2, NULL),
-('cd850fbe-c0', '7d4295d1-17', '2018-11-19', 1, NULL);
+('c7f92227-24', '7d4295d1-17', '2018-11-19', 0, 'test 19'),
+('f88525f1-31', '7d4295d1-17', '2018-11-20', 0, 'test 20');
 
 -- --------------------------------------------------------
 
@@ -261,7 +266,7 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `user_icon`, `avatar`, `user_description`, `created_date`, `last_login_time`, `continue_using_count`, `current_continue_using_count`, `best_continue_using_count`, `user_score`) VALUES
 ('1b153946-89', 'user02', '12345678', NULL, 'user02@mail.com', NULL, 1, NULL, NULL, NULL, '2018-11-11', '0000-00-00', 100, 0, 0, 100),
 ('4e0819c9-33', 'dat', '12345678', NULL, 'dat@mail.com', NULL, NULL, NULL, NULL, NULL, '2018-11-20', '2018-11-20', 30, 1, 1, 1000),
-('d233c193-6e', 'user01', '12345678', NULL, 'user01@mail.com', NULL, 0, NULL, NULL, NULL, '2018-11-12', '2018-11-20', 3, 3, 3, 6),
+('d233c193-6e', 'user01', '12345678', NULL, 'user01@mail.com', NULL, 0, NULL, NULL, 'something good will hapend to you', '2018-11-12', '2018-11-23', 6, 6, 6, 12),
 ('d233c195-hf', 'user03', '12345678', NULL, 'user03@mail.com', NULL, 0, NULL, NULL, NULL, '2018-11-10', '0000-00-00', 6, 0, 0, 1000);
 
 --

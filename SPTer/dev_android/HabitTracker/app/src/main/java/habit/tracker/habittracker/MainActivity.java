@@ -3,7 +3,6 @@ package habit.tracker.habittracker;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -48,7 +47,10 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
     public static final int CREATE_NEW_HABIT = 0;
     public static final int UPDATE_HABIT = 1;
     public static final int USE_FILTER = 2;
-    private static final int REPORT = 3;
+    private static final int REPORT_DETAIL = 3;
+    private static final int REPORT_CALENDAR = 4;
+    private static final int SHOW_STATICS = 5;
+    private static final int SHOW_PROFILE = 6;
 
     public static final String HABIT_ID = "habit_id";
     public static final String HABIT_COLOR = "habit_color";
@@ -77,36 +79,10 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
     boolean isReStart = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-
-        currentDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
-        firstCurrentDate = currentDate;
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        trackingAdapter = new HabitRecyclerViewAdapter(MainActivity.this, trackingItemList);
-        trackingAdapter.setClickListener(MainActivity.this);
-        recyclerView.setAdapter(trackingAdapter);
-        initTrackingList();
-    }
-
-    @Override
-    protected void onRestart() {
-        if (isReStart) {
-            isReStart = false;
-            initTrackingList();
-        }
-        super.onRestart();
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CREATE_NEW_HABIT || requestCode == UPDATE_HABIT) {
             if (resultCode == RESULT_OK) {
-                initTrackingList();
+                initializeScreen();
             }
 
         } else if (requestCode == USE_FILTER) {
@@ -130,14 +106,40 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
 
             }
 
-        } else if (requestCode == REPORT) {
-            initTrackingList();
+        } else if (requestCode == REPORT_DETAIL || requestCode == REPORT_CALENDAR) {
+            initializeScreen();
+        } else if (resultCode == RESULT_OK && (requestCode == SHOW_STATICS || requestCode == SHOW_PROFILE)) {
+            initializeScreen();
         }
     }
 
-    private void initTrackingList() {
-        trackingItemList.clear();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        trackingAdapter = new HabitRecyclerViewAdapter(MainActivity.this, trackingItemList);
+        trackingAdapter.setClickListener(MainActivity.this);
+        recyclerView.setAdapter(trackingAdapter);
+        initializeScreen();
+    }
+
+    @Override
+    protected void onRestart() {
+        if (isReStart) {
+            isReStart = false;
+            initializeScreen();
+        }
+        super.onRestart();
+    }
+
+    private void initializeScreen() {
+        currentDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
+        firstCurrentDate = currentDate;
+        trackingItemList.clear();
         String userId = MySharedPreference.getUserId(this);
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
         mService.getHabit(userId).enqueue(new Callback<HabitResponse>() {
@@ -274,14 +276,13 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         } else if (TYPE_COUNT == type) {
             Intent intent = new Intent(this, ReportDetailsActivity.class);
             intent.putExtra(HABIT_ID, trackingItemList.get(position).getHabitId());
-            intent.putExtra(HABIT_COLOR, trackingItemList.get(position).getColor());
-            startActivityForResult(intent, REPORT);
+//            intent.putExtra(HABIT_COLOR, trackingItemList.get(position).getColor());
+            startActivityForResult(intent, REPORT_DETAIL);
         } else if (TYPE_CHECK == type) {
             Intent intent = new Intent(this, ReportCalendarActivity.class);
             intent.putExtra(HABIT_ID, trackingItemList.get(position).getHabitId());
-            intent.putExtra(HABIT_COLOR, trackingItemList.get(position).getColor());
-            startActivity(intent);
-            finish();
+//            intent.putExtra(HABIT_COLOR, trackingItemList.get(position).getColor());
+            startActivityForResult(intent, REPORT_CALENDAR);
         }
     }
 
@@ -373,22 +374,22 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
     }
 
     @OnClick(R.id.report)
-    public void report(View v) {
+    public void ShowStatics(View v) {
         Intent intent = new Intent(this, StaticsActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, SHOW_STATICS);
+    }
+
+    @OnClick(R.id.tabSuggestion)
+    public void showProfile(View view) {
+        isReStart = true;
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivityForResult(intent, SHOW_PROFILE);
     }
 
     @OnClick(R.id.imgFilter)
     public void showFilter(View v) {
         Intent intent = new Intent(this, FilterMainActivity.class);
         startActivityForResult(intent, USE_FILTER);
-    }
-
-    @OnClick(R.id.tabSuggestion)
-    public void showSuggestion(View view) {
-        isReStart = true;
-        Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
     }
 
     public void showEmpty(View v) {

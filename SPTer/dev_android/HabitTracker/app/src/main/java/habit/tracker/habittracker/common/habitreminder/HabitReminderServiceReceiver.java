@@ -69,12 +69,12 @@ public class HabitReminderServiceReceiver extends BroadcastReceiver {
                 }
 
                 notification = new NotificationCompat.Builder(context, defaultId)
-                                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                                .setSmallIcon(R.drawable.app_logo)
                                 .setContentTitle("VN Habit Tracker: " + habitName)
                                 .setContentText(remindText).build();
             } else {
                 notification = new NotificationCompat.Builder(context, defaultId)
-                        .setSmallIcon(R.drawable.ic_launcher_foreground)
+                        .setSmallIcon(R.drawable.app_logo)
                         .setContentTitle("VN Habit Tracker: " + habitName)
                         .setContentText(remindText).build();
             }
