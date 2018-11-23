@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 23, 2018 at 01:01 AM
+-- Generation Time: Nov 23, 2018 at 02:34 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -128,7 +128,9 @@ CREATE TABLE `habit` (
 
 INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
 ('3da48f98-01', '4e0819c9-33', '1', '1ed9504d-85', 'an com', 0, 0, 1, 'Lần', 3, '2018-11-20', NULL, '2018-11-20', '#789c4dd9', ''),
-('7d4295d1-17', 'd233c193-6e', '2', '58cefe15-1f', 'Chạy bộ', 0, 0, 0, NULL, 1, '2018-11-18', NULL, '2018-11-23', '#78e15474', '');
+('75fc8ef3-9d', 'd233c193-6e', NULL, '82464f46-2a', 'aaaa', 0, 0, 1, 'Lần', 5, '2018-11-23', NULL, '2018-11-23', '#78ed872a', ''),
+('7d4295d1-17', 'd233c193-6e', '2', '58cefe15-1f', 'Chạy bộ', 0, 0, 0, NULL, 1, '2018-11-18', NULL, '2018-11-23', '#784a90e6', ''),
+('c04afdda-97', 'd233c193-6e', NULL, '9fb717fe-67', 'hhhh', 0, 1, 0, NULL, 1, '2018-11-23', NULL, '2018-11-23', '#646066cc', '');
 
 -- --------------------------------------------------------
 
@@ -154,6 +156,8 @@ INSERT INTO `habit_suggestion` (`habit_name_id`, `group_id`, `habit_name_uni`, `
 ('0047ad7d-2a', NULL, 'Chạy bộ', 'chay bo', 1, NULL, NULL),
 ('154fsd', '2', 'Đi chợ', 'di cho', 12, 35, 35),
 ('1dv43fsd', '3', 'Đi bộ', 'di bo', 12, 90, 20),
+('2d49e9e2-7f', NULL, 'aaaa', 'aaaa', 1, 0, 0),
+('5003303b-3a', NULL, 'hhhh', 'hhhh', 1, 0, 0),
 ('a0fde794-38', NULL, 'an com', 'an com', 1, 0, 0),
 ('dasf', '1', 'Đi Uống thuốc', 'di uong thuoc', 1, 200, 119),
 ('dsfgsd', '2', 'Đi Chạy bộ', 'di chay bo', 13, 11, 10),
@@ -185,7 +189,9 @@ CREATE TABLE `monitor_date` (
 
 INSERT INTO `monitor_date` (`monitor_id`, `habit_id`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`) VALUES
 ('1ed9504d-85', '3da48f98-01', 1, 1, 1, 1, 1, 1, 1),
-('58cefe15-1f', '7d4295d1-17', 1, 1, 1, 1, 1, 1, 1);
+('58cefe15-1f', '7d4295d1-17', 1, 1, 1, 1, 1, 1, 1),
+('82464f46-2a', '75fc8ef3-9d', 1, 1, 1, 1, 1, 1, 1),
+('9fb717fe-67', 'c04afdda-97', 0, 0, 0, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -226,12 +232,14 @@ CREATE TABLE `tracking` (
 --
 
 INSERT INTO `tracking` (`tracking_id`, `habit_id`, `current_date`, `count`, `tracking_description`) VALUES
-('0f3f3eaa-35', '7d4295d1-17', '2018-11-23', 1, NULL),
+('0f3f3eaa-35', '7d4295d1-17', '2018-11-23', 0, NULL),
 ('3ae0c813-5f', '7d4295d1-17', '2018-11-21', 0, 'test 21'),
 ('5e27a48f-5c', '7d4295d1-17', '2018-11-22', 0, NULL),
 ('73a79271-9f', '7d4295d1-17', '2018-11-18', 0, 'test 18'),
+('925f6a8a-fc', '75fc8ef3-9d', '2018-11-23', 0, 'test 23'),
 ('a95e76c6-6a', '3da48f98-01', '2018-11-20', 2, NULL),
 ('c7f92227-24', '7d4295d1-17', '2018-11-19', 0, 'test 19'),
+('df2349e8-8e', 'c04afdda-97', '2018-11-23', 1, NULL),
 ('f88525f1-31', '7d4295d1-17', '2018-11-20', 0, 'test 20');
 
 -- --------------------------------------------------------
@@ -248,7 +256,7 @@ CREATE TABLE `user` (
   `email` text COLLATE utf8mb4_unicode_ci,
   `date_of_birth` date DEFAULT NULL,
   `gender` tinyint(1) DEFAULT '-1',
-  `user_icon` text COLLATE utf8mb4_unicode_ci,
+  `real_name` text COLLATE utf8mb4_unicode_ci,
   `avatar` text COLLATE utf8mb4_unicode_ci,
   `user_description` text COLLATE utf8mb4_unicode_ci,
   `created_date` date DEFAULT NULL,
@@ -263,11 +271,11 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `user_icon`, `avatar`, `user_description`, `created_date`, `last_login_time`, `continue_using_count`, `current_continue_using_count`, `best_continue_using_count`, `user_score`) VALUES
-('1b153946-89', 'user02', '12345678', NULL, 'user02@mail.com', NULL, 1, NULL, NULL, NULL, '2018-11-11', '0000-00-00', 100, 0, 0, 100),
-('4e0819c9-33', 'dat', '12345678', NULL, 'dat@mail.com', NULL, NULL, NULL, NULL, NULL, '2018-11-20', '2018-11-20', 30, 1, 1, 1000),
-('d233c193-6e', 'user01', '12345678', NULL, 'user01@mail.com', NULL, 0, NULL, NULL, 'something good will hapend to you', '2018-11-12', '2018-11-23', 6, 6, 6, 12),
-('d233c195-hf', 'user03', '12345678', NULL, 'user03@mail.com', NULL, 0, NULL, NULL, NULL, '2018-11-10', '0000-00-00', 6, 0, 0, 1000);
+INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `real_name`, `avatar`, `user_description`, `created_date`, `last_login_time`, `continue_using_count`, `current_continue_using_count`, `best_continue_using_count`, `user_score`) VALUES
+('1b153946-89', 'user02', '12345678', NULL, 'user02@mail.com', NULL, 1, 'nam', NULL, NULL, '2018-11-11', '0000-00-00', 100, 0, 0, 100),
+('4e0819c9-33', 'dat', '12345678', NULL, 'dat@mail.com', NULL, NULL, 'dat', NULL, NULL, '2018-11-20', '2018-11-20', 30, 1, 1, 1000),
+('d233c193-6e', 'user01', '12345678', NULL, 'user01@mail.com', NULL, 0, 'jon', NULL, 'something good will hapend to you', '2018-11-12', '2018-11-23', 6, 6, 6, 12),
+('d233c195-hf', 'user03', '12345678', NULL, 'user03@mail.com', NULL, 0, 'kim', NULL, NULL, '2018-11-10', '0000-00-00', 6, 0, 0, 1000);
 
 --
 -- Indexes for dumped tables

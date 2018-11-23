@@ -26,9 +26,9 @@ public class User {
     @SerializedName("gender")
     @Expose
     private String gender;
-    @SerializedName("user_icon")
+    @SerializedName("real_name")
     @Expose
-    private String userIcon;
+    private String realName;
     @SerializedName("avatar")
     @Expose
     private String avatar;
@@ -85,8 +85,8 @@ public class User {
         return gender;
     }
 
-    public String getUserIcon() {
-        return userIcon;
+    public String getRealName() {
+        return realName;
     }
 
     public String getAvatar() {
@@ -149,8 +149,8 @@ public class User {
         this.gender = gender;
     }
 
-    public void setUserIcon(String userIcon) {
-        this.userIcon = userIcon;
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 
     public void setAvatar(String avatar) {

@@ -50,8 +50,8 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
             if (cursor.getColumnIndex(DATE_OF_BIRTH) != -1) {
                 userEntity.setDateOfBirth(cursor.getString(cursor.getColumnIndexOrThrow(DATE_OF_BIRTH)));
             }
-            if (cursor.getColumnIndex(USER_ICON) != -1) {
-                userEntity.setUserIcon(cursor.getString(cursor.getColumnIndexOrThrow(USER_ICON)));
+            if (cursor.getColumnIndex(REAL_NAME) != -1) {
+                userEntity.setRealName(cursor.getString(cursor.getColumnIndexOrThrow(REAL_NAME)));
             }
             if (cursor.getColumnIndex(AVATAR) != -1) {
                 userEntity.setAvatar(cursor.getString(cursor.getColumnIndexOrThrow(AVATAR)));
@@ -90,7 +90,7 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
         initialValues.put(PHONE, userEntity.getPhone());
         initialValues.put(GENDER, userEntity.getGender());
         initialValues.put(DATE_OF_BIRTH, userEntity.getDateOfBirth());
-        initialValues.put(USER_ICON, userEntity.getUserIcon());
+        initialValues.put(REAL_NAME, userEntity.getRealName());
         initialValues.put(AVATAR, userEntity.getAvatar());
         initialValues.put(USER_DESCRIPTION, userEntity.getUserDescription());
         initialValues.put(USER_CREATED_DATE, userEntity.getCreatedDate());
@@ -116,7 +116,7 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
             entity.setEmail(user.getEmail());
             entity.setDateOfBirth(user.getDateOfBirth());
             entity.setAvatar(user.getAvatar());
-            entity.setUserIcon(user.getUserIcon());
+            entity.setRealName(user.getRealName());
             entity.setUserDescription(user.getUserDescription());
             entity.setCreatedDate(user.getCreatedDate());
             entity.setLastLoginTime(user.getLastLoginTime());

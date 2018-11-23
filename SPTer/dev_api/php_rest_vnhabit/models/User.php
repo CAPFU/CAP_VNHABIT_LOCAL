@@ -17,7 +17,7 @@ include_once '../../models/Model.php';
         public $email;
         public $date_of_birth;
         public $gender;
-        public $user_icon;
+        public $real_name;
         public $avatar;
         public $user_description;
         public $created_date;

@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -34,18 +33,11 @@ import habit.tracker.habittracker.common.AppConstant;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
 import habit.tracker.habittracker.repository.Database;
-import habit.tracker.habittracker.repository.habit.HabitEntity;
-import habit.tracker.habittracker.repository.habit.HabitTracking;
-import habit.tracker.habittracker.repository.tracking.TrackingEntity;
 import habit.tracker.habittracker.repository.user.UserEntity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static habit.tracker.habittracker.common.AppConstant.TYPE_0;
-import static habit.tracker.habittracker.common.AppConstant.TYPE_1;
-import static habit.tracker.habittracker.common.AppConstant.TYPE_2;
-import static habit.tracker.habittracker.common.AppConstant.TYPE_3;
 import static habit.tracker.habittracker.common.util.AppGenerator.YMD_SHORT;
 import static habit.tracker.habittracker.common.util.AppGenerator.getLevel;
 
@@ -58,6 +50,8 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
     ImageView imgAvatar;
     @BindView(R.id.tvStartedDate)
     TextView tvStartedDate;
+    @BindView(R.id.tvRealName)
+    TextView tvRealName;
     @BindView(R.id.tvUserDescription)
     TextView tvUserDescription;
     @BindView(R.id.tvLevel)
@@ -111,7 +105,7 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
                         userEntity.setGender(user.getGender());
                         userEntity.setDateOfBirth(user.getDateOfBirth());
                         userEntity.setPassword(user.getPassword());
-                        userEntity.setUserIcon(user.getUserIcon());
+                        userEntity.setRealName(user.getRealName());
 //                        userEntity.setAvatar(user.getAvatar());
                         userEntity.setUserDescription(user.getUserDescription());
                         userEntity.setCreatedDate(user.getCreatedDate());
@@ -180,6 +174,7 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
                             e.printStackTrace();
                         }
                     }
+                    tvRealName.setText(userEntity.getRealName());
                     tvUserDescription.setText(userEntity.getUserDescription());
                     tvStartedDate.setText(AppGenerator.format(userEntity.getCreatedDate(), AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
                     tvLevel.setText(String.valueOf(getLevel(Integer.parseInt(userEntity.getUserScore()))));
