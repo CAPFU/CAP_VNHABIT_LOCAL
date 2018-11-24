@@ -44,6 +44,7 @@ import habit.tracker.habittracker.api.model.reminder.Reminder;
 import habit.tracker.habittracker.api.model.search.HabitSuggestion;
 import habit.tracker.habittracker.api.model.search.SearchResponse;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
+import habit.tracker.habittracker.common.dialog.AppDialogHelper;
 import habit.tracker.habittracker.common.habitreminder.HabitReminderManager;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
@@ -374,10 +375,10 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         remindAdapter.setListener(new RecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(HabitActivity.this);
-                builder1.setMessage("Xóa nhắc nhở này");
-                builder1.setCancelable(true);
-                builder1.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(HabitActivity.this);
+                builder.setMessage("Xóa nhắc nhở này");
+                builder.setCancelable(true);
+                builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         HabitReminderManager manager = new HabitReminderManager(HabitActivity.this);
                         manager.cancelReminder(Integer.parseInt(remindDisplayList.get(position).getReminderId()));
@@ -387,13 +388,13 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                     }
                 });
 
-                builder1.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 });
 
-                final AlertDialog alertDialog = builder1.create();
+                final AlertDialog alertDialog = builder.create();
                 alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @SuppressLint("ResourceType")
                     @Override
@@ -489,7 +490,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
             Database db = new Database(this);
             db.open();
-            HabitEntity habitEntity = Database.habitDaoImpl.getHabit(habitId);
+            HabitEntity habitEntity = Database.getHabitDb().getHabit(habitId);
 
             if (habitEntity != null) {
 
@@ -820,33 +821,38 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     public void cancel(View v) {
         if (createMode == MODE_CREATE) {
             finish();
-
         } else if (createMode == MODE_UPDATE) {
-
-            // delete habit
-            Database db = new Database(this);
-            db.open();
-            Database.getHabitDb().deleteHabit(initHabitId);
-            db.close();
-
-            VnHabitApiService service = VnHabitApiUtils.getApiService();
-            service.deleteHabit(this.initHabitId).enqueue(new Callback<ResponseBody>() {
+            AppDialogHelper appDialogHelper = new AppDialogHelper();
+            appDialogHelper.setPositiveListener(new DialogInterface.OnClickListener() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    Toast.makeText(HabitActivity.this, "Đã xóa thói quen", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent();
-                    intent.putExtra("delete", true);
-                    HabitActivity.this.setResult(HabitActivity.RESULT_OK, intent);
-                    finish();
-                }
+                public void onClick(DialogInterface dialog, int which) {
+                    // delete habit
+                    Database db = new Database(HabitActivity.this);
+                    db.open();
+                    Database.getHabitDb().deleteHabit(initHabitId);
+                    db.close();
+                    VnHabitApiService service = VnHabitApiUtils.getApiService();
+                    service.deleteHabit(initHabitId).enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            Toast.makeText(HabitActivity.this, "Đã xóa thói quen", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent();
+                            intent.putExtra("delete", true);
+                            HabitActivity.this.setResult(HabitActivity.RESULT_OK, intent);
+                            finish();
+                        }
 
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
             });
+            appDialogHelper.getDialog(this, "Xóa thói quen này?", "Có", "Không").show();
         }
     }
+    
 
     @OnClick(R.id.btn_addReminder)
     public void addReminder(View v) {
