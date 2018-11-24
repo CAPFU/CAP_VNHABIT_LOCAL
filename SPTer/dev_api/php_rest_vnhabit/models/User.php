@@ -103,7 +103,7 @@ include_once '../../models/Model.php';
             $this->email = $user['email'];
             $this->date_of_birth = $user['date_of_birth'];
             $this->gender = $user['gender'];
-            $this->user_icon = $user['user_icon'];
+            $this->real_name = $user['real_name'];
             $this->avatar = $user['avatar'];
             $this->user_description = $user['user_description'];
             $this->created_date = $user['created_date'];
