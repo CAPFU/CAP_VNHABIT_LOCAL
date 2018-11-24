@@ -115,7 +115,7 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
     float touchY = 0;
     float boundTop = 0;
     float boundBottom = 0;
-    float touchThreshTime = 90;
+    float touchThresh = 90;
     float touchTimeThresh = 100;
     long lastTouchTime = 0;
 
@@ -360,7 +360,7 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
             case (MotionEvent.ACTION_MOVE):
                 if (ev.getY() > boundTop && ev.getY() < boundBottom) {
                     if (System.currentTimeMillis() - lastTouchTime > touchTimeThresh) {
-                        if (ev.getX() - touchX > touchThreshTime && Math.abs(ev.getY() - touchY) < touchThreshTime) {
+                        if (ev.getX() - touchX > touchThresh && Math.abs(ev.getY() - touchY) < touchThresh) {
 
                             String pre = AppGenerator.getFirstDatePreMonth(currentDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
                             timeLine = AppGenerator.countDayBetween(pre, currentDate) * -1;
@@ -368,7 +368,7 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
                             loadCalendarByDate(currentDate);
                             updateUI();
                             Log.d(DEBUG_TAG, "Action was MOVE: right");
-                        } else if (touchX - ev.getX() > touchThreshTime && Math.abs(ev.getY() - touchY) < touchThreshTime) {
+                        } else if (touchX - ev.getX() > touchThresh && Math.abs(ev.getY() - touchY) < touchThresh) {
 
                             String next = AppGenerator.getFirstDateNextMonth(currentDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
                             timeLine = AppGenerator.countDayBetween(currentDate, next);

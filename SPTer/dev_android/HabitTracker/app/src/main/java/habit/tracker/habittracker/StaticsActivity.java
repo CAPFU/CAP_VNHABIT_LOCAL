@@ -75,8 +75,8 @@ public class StaticsActivity extends BaseActivity implements OnChartValueSelecte
     float touchY = 0;
     float boundTop = 0;
     float boundBottom = 0;
-    float touchThresh = 100;
-    float touchTimeThresh = 50;
+    float touchThresh = 90;
+    float touchTimeThresh = 100;
     long lastTouchTime = 0;
 
     Database appDatabase = Database.getInstance(this);

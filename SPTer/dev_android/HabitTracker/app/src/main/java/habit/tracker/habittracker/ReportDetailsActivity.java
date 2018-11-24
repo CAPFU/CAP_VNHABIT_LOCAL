@@ -125,8 +125,8 @@ public class ReportDetailsActivity extends BaseActivity {
     float touchY = 0;
     float boundTop = 0;
     float boundBottom = 0;
-    float touchThresh = 70;
-    float touchTimeThresh = 50;
+    float touchThresh = 90;
+    float touchTimeThresh = 100;
     long lastTouchTime = 0;
 
     @Override
