@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.reminder.ReminderEntity;
 
 public class ReminderCreateActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
+    public static final String IS_DELETE_REMINDER = "is_delete_reminder";
     public static final String REMINDER_ID = "reminder_id";
     public static final String POSITION_IN_LIST = "position_in_list";
     public static final String REMIND_TEXT = "remind_text";
@@ -38,10 +40,11 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
     NumberPicker pickerMinute;
     @BindView(R.id.picker_date)
     NumberPicker pickerDate;
+
     @BindView(R.id.btn_save)
-    View btnSave;
+    Button btnSave;
     @BindView(R.id.btn_cancel)
-    View btnCancel;
+    Button btnCancel;
 
     @BindView(R.id.btn_TypeAll)
     View btnTypeNoRepeat;
@@ -55,6 +58,7 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
     View btnTypeYearly;
     View vType;
 
+    boolean isUpdate = false;
     String[] hours;
     String[] minutes;
     String[] daysInYear;
@@ -89,40 +93,45 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
         Bundle data = getIntent().getExtras();
         if (data != null) {
             reminderId = data.getString(REMINDER_ID);
-            positionInList = data.getInt(POSITION_IN_LIST, -1);
             if (!TextUtils.isEmpty(reminderId)) {
-                Database db = Database.getInstance(this);
-                db.open();
-                ReminderEntity reminderEntity = Database.getReminderDb().getRemindersById(reminderId);
+                positionInList = data.getInt(POSITION_IN_LIST, -1);
+                if (!TextUtils.isEmpty(reminderId)) {
+                    Database db = Database.getInstance(this);
+                    db.open();
+                    ReminderEntity reminderEntity = Database.getReminderDb().getRemindersById(reminderId);
 
-                String t = reminderEntity.getReminderStartTime();
-                Date d = AppGenerator.getDate(t, AppGenerator.YMD2);
-                Calendar ca = Calendar.getInstance();
-                ca.setTime(d);
+                    String t = reminderEntity.getReminderStartTime();
+                    Date d = AppGenerator.getDate(t, AppGenerator.YMD2);
+                    Calendar ca = Calendar.getInstance();
+                    ca.setTime(d);
 
-                hour = ca.get(Calendar.HOUR_OF_DAY);
-                minute = ca.get(Calendar.MINUTE);
-                remindDate = AppGenerator.format(t, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
-                type = Integer.parseInt(reminderEntity.getRepeatType());
-                setWhiteBg(btnTypeNoRepeat);
-                switch (type) {
-                    case -1:
-                        setWhiteBg(btnTypeNoRepeat);
-                    case 0:
-                        setGreenBg(btnTypeDaily);
-                        break;
-                    case 1:
-                        setGreenBg(btnTypeWeekly);
-                        break;
-                    case 2:
-                        setGreenBg(btnTypeMonthly);
-                        break;
-                    case 3:
-                        setGreenBg(btnTypeYearly);
-                        break;
+                    hour = ca.get(Calendar.HOUR_OF_DAY);
+                    minute = ca.get(Calendar.MINUTE);
+                    remindDate = AppGenerator.format(t, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
+                    type = Integer.parseInt(reminderEntity.getRepeatType());
+                    setWhiteBg(btnTypeNoRepeat);
+                    switch (type) {
+                        case -1:
+                            setWhiteBg(btnTypeNoRepeat);
+                        case 0:
+                            setGreenBg(btnTypeDaily);
+                            break;
+                        case 1:
+                            setGreenBg(btnTypeWeekly);
+                            break;
+                        case 2:
+                            setGreenBg(btnTypeMonthly);
+                            break;
+                        case 3:
+                            setGreenBg(btnTypeYearly);
+                            break;
+                    }
+                    edRemindText.setText(reminderEntity.getRemindText());
+                    btnCancel.setText("Xóa");
+                    btnSave.setText("Cập nhật");
+                    isUpdate = true;
+                    db.close();
                 }
-                edRemindText.setText(reminderEntity.getRemindText());
-                db.close();
             }
         }
 
@@ -173,6 +182,12 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
 
     @OnClick(R.id.btn_cancel)
     public void cancel(View v) {
+        if (isUpdate) {
+            Intent intent = getIntent();
+            intent.putExtra(IS_DELETE_REMINDER, true);
+            intent.putExtra(POSITION_IN_LIST, positionInList);
+            setResult(RESULT_OK, intent);
+        }
         finish();
     }
 

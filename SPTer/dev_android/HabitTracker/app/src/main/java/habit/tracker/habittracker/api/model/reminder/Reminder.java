@@ -27,6 +27,9 @@ public class Reminder {
     private String serverId;
 
     private String habitName;
+    @SerializedName("is_delete")
+    @Expose
+    private boolean isDelete = false;
 
     public String getReminderId() {
         return reminderId;
@@ -61,6 +64,10 @@ public class Reminder {
         return habitName;
     }
 
+    public boolean isDelete() {
+        return isDelete;
+    }
+
     public void setReminderId(String reminderId) {
         this.reminderId = reminderId;
     }
@@ -91,5 +98,9 @@ public class Reminder {
 
     public void setHabitName(String habitName) {
         this.habitName = habitName;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
     }
 }

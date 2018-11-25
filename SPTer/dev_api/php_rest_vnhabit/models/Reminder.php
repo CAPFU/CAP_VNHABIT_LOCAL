@@ -97,6 +97,22 @@ include_once '../../models/Model.php';
             return false;
         }
 
+        public function delete() {
+            // create query
+            $query = 'DELETE FROM ' . $this->table . ' WHERE reminder_id = :reminder_id';
+            // Prepare statement
+            $stmt = $this->conn->prepare($query);
+            // Bind data
+            $stmt->bindParam(':reminder_id', $this->reminder_id);
+            // Execute query
+            if($stmt->execute()) {
+                return true;
+            }
+            // Print error if something goes wrong
+            printf("Error: %s.\n", $stmt->error);
+            return false;
+        }
+
         // Update
         public function update() {
             // create query

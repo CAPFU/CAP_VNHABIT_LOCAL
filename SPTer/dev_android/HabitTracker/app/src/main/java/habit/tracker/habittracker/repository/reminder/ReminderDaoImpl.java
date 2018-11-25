@@ -26,7 +26,13 @@ public class ReminderDaoImpl extends MyDatabaseHelper implements ReminderDao, Re
     }
 
     @Override
-    public int delete(String id) {
+    public int delete(String reminderId) {
+        try {
+            final String selectionArgs[] = {reminderId};
+            final String selection = REMINDER_ID + " = ?";
+            return super.mDb.delete(REMINDER_TABLE, selection, selectionArgs);
+        } catch (SQLiteConstraintException ignored) {
+        }
         return 0;
     }
 

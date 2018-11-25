@@ -44,16 +44,20 @@ public class HabitReminderManager {
         Reminder reminder;
         for (int i = 0; i < remindersList.size(); i++) {
             reminder = remindersList.get(i);
-            remindTime = reminder.getRemindStartTime();
-            date = AppGenerator.getDate(remindTime, AppGenerator.YMD2);
-            calendar.setTime(date);
+            if (reminder.isDelete()) {
+                cancelReminder(Integer.parseInt(reminder.getReminderId()));
+            } else {
+                remindTime = reminder.getRemindStartTime();
+                date = AppGenerator.getDate(remindTime, AppGenerator.YMD2);
+                calendar.setTime(date);
 
-            year = calendar.get(Calendar.YEAR);
-            month = calendar.get(Calendar.MONTH);
-            day = calendar.get(Calendar.DAY_OF_MONTH);
-            hour = calendar.get(Calendar.HOUR_OF_DAY);
-            minute = calendar.get(Calendar.MINUTE);
-            remind(reminder, year, month, day, hour, minute);
+                year = calendar.get(Calendar.YEAR);
+                month = calendar.get(Calendar.MONTH);
+                day = calendar.get(Calendar.DAY_OF_MONTH);
+                hour = calendar.get(Calendar.HOUR_OF_DAY);
+                minute = calendar.get(Calendar.MINUTE);
+                remind(reminder, year, month, day, hour, minute);
+            }
         }
     }
 

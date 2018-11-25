@@ -213,7 +213,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     @BindView(R.id.rvRemind)
     RecyclerView rvRemind;
     List<Reminder> reminderDisplayList = new ArrayList<>();
-    List<Reminder> reminderAddNewList = new ArrayList<>();
+    List<Reminder> reminderUpdateList = new ArrayList<>();
     RemindRecyclerViewAdapter reminderAdapter;
 
     @Override
@@ -229,28 +229,45 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         } else if (requestCode == ADD_REMINDER) {
             if (resultCode == RESULT_OK) {
                 if (data != null && data.getExtras() != null) {
+                    String format = "%02d";
+                    boolean isDelete = data.getBooleanExtra(ReminderCreateActivity.IS_DELETE_REMINDER, false);
                     int pos = data.getIntExtra(ReminderCreateActivity.POSITION_IN_LIST, -1);
                     String reminderId = data.getStringExtra(ReminderCreateActivity.REMINDER_ID);
                     String remindType = String.valueOf(data.getIntExtra(ReminderCreateActivity.REMIND_TYPE, -1));
                     String remindText = data.getStringExtra(ReminderCreateActivity.REMIND_TEXT);
-                    String format = "%02d";
                     String hour = String.format(format, data.getIntExtra(ReminderCreateActivity.REMIND_HOUR, 0));
                     String minute = String.format(format, data.getIntExtra(ReminderCreateActivity.REMIND_MINUTE, 0));
                     String date = data.getStringExtra(ReminderCreateActivity.REMIND_DATE);
+
                     if (TextUtils.isEmpty(reminderId)) {
+                        // add new
                         Reminder reminder = new Reminder();
                         reminder.setServerId(AppGenerator.getNewId());
                         reminder.setRemindText(remindText);
                         reminder.setRemindStartTime(date + " " + hour + ":" + minute);
                         reminder.setRepeatType(remindType);
                         reminderDisplayList.add(reminder);
-                        reminderAddNewList.add(reminder);
+                        reminderUpdateList.add(reminder);
                     } else {
-                        Reminder reminder = reminderDisplayList.get(pos);
-                        reminder.setRemindText(remindText);
-                        reminder.setRemindStartTime(date + " " + hour + ":" + minute);
-                        reminder.setRepeatType(remindType);
-                        reminderAddNewList.add(reminder);
+                        // update
+                        boolean f = false;
+                        Reminder updateReminder = reminderDisplayList.get(pos);
+                        updateReminder.setRemindText(remindText);
+                        updateReminder.setRepeatType(remindType);
+                        updateReminder.setRemindStartTime(date + " " + hour + ":" + minute);
+                        for (Reminder reminder : reminderUpdateList) {
+                            if (reminder.getReminderId().equals(reminderId)) {
+                                reminder.setDelete(isDelete);
+                                f = true;
+                                break;
+                            }
+                        }
+                        if (!f) {
+                            reminderUpdateList.add(updateReminder);
+                        }
+                        if (isDelete) {
+                            reminderDisplayList.remove(pos);
+                        }
                     }
                     reminderAdapter.notifyDataSetChanged();
                 }
@@ -504,6 +521,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 reminder.setServerId(entity.getServerId());
                 reminderDisplayList.add(reminder);
             }
+            reminderUpdateList.addAll(reminderDisplayList);
             reminderAdapter.notifyDataSetChanged();
 
             // habit description
@@ -613,21 +631,23 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         }
 
         // set reminder list
-        for (Reminder reminder : reminderAddNewList) {
+        for (Reminder reminder : reminderUpdateList) {
             reminder.setHabitId(habit.getHabitId());
             reminder.setHabitName(habit.getHabitName());
-            if (!TextUtils.isEmpty(habit.getEndDate())) {
-                reminder.setRemindEndTime(habit.getEndDate());
-            }
+            reminder.setRemindEndTime(habit.getEndDate());
         }
-        habit.setReminderList(reminderAddNewList);
+        habit.setReminderList(reminderUpdateList);
 
         // SAVE HABIT
         if (Database.getHabitDb().saveUpdateHabit(Database.getHabitDb().convert(habit))) {
             String reminderId;
             for (Reminder reminder : habit.getReminderList()) {
-                reminderId = Database.getReminderDb().saveReminder(Database.getReminderDb().convert(reminder));
-                reminder.setReminderId(reminderId);
+                if (reminder.isDelete()) {
+                    Database.getReminderDb().delete(reminder.getReminderId());
+                } else {
+                    reminderId = Database.getReminderDb().saveReminder(Database.getReminderDb().convert(reminder));
+                    reminder.setReminderId(reminderId);
+                }
             }
         }
 

@@ -73,7 +73,11 @@ if (isset($habit->habit_id)) {
         $reminder->repeat_type = $item->repeat_type;
         $reminder->reminder_description = $item->reminder_description;
         if ($reminder->lookUp()) {
-            $reminder->update();
+            if ($item->is_delete){
+                $reminder->delete();
+            } else {
+                $reminder->update();
+            }
         } else {
             $reminder->create();
         }

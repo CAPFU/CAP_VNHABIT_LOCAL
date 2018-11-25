@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 25, 2018 at 05:42 AM
+-- Generation Time: Nov 25, 2018 at 08:21 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -103,7 +103,7 @@ CREATE TABLE `habit` (
 --
 
 INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
-('1ecc224c-80', 'd233c193-6e', NULL, 'ad3a8ba0-74', 'Chạy bộ', 0, 0, 1, 'km', 3, '2018-11-25', NULL, '2018-11-25', '#784a90e6', 'chat bo');
+('1ecc224c-80', 'd233c193-6e', NULL, 'ad3a8ba0-74', 'Chạy bộ', 0, 0, 1, 'km', 3, '2018-11-25', '2018-11-30', '2018-11-25', '#784a90e6', 'chat bo');
 
 -- --------------------------------------------------------
 
@@ -177,13 +177,6 @@ CREATE TABLE `reminder` (
   `repeat_type` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `reminder_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `reminder`
---
-
-INSERT INTO `reminder` (`reminder_id`, `habit_id`, `remind_start_time`, `remind_end_time`, `repeat_type`, `reminder_description`) VALUES
-('1', '1ecc224c-80', '2018-11-25 17:30', NULL, '0', 'test');
 
 -- --------------------------------------------------------
 
