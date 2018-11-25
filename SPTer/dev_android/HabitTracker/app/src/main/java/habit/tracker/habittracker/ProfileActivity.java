@@ -188,14 +188,14 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
 //                    int totalTrack = 0;
 //                    int successTrack = 0;
 //                    HabitEntity habitEntity;
-//                    List<TrackingEntity> trackingEntityList;
+//                    List<TrackingEntity> defaultTrackingList;
 //                    List<HabitTracking> habitTrackingList = Database.getHabitDb().getHabitTracking(userId, userEntity.getCreatedDate(), currentDate);
 //                    for (HabitTracking habitTracking : habitTrackingList) {
 //                        habitEntity = habitTracking.getHabit();
-//                        trackingEntityList = habitTracking.getTrackingList();
+//                        defaultTrackingList = habitTracking.getTrackingList();
 //                        switch (habitEntity.getHabitType()) {
 //                            case TYPE_0:
-//                                for (TrackingEntity trackingEntity: trackingEntityList) {
+//                                for (TrackingEntity trackingEntity: defaultTrackingList) {
 //                                }
 //                                break;
 //                            case TYPE_1:
