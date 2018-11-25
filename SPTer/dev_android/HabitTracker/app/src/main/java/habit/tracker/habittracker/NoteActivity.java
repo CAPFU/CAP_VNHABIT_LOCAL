@@ -274,17 +274,6 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
         alertDialog.show();
     }
 
-    private void updateNote(String newNote, int position) {
-        NoteItem noteItem = displayItemList.get(position);
-        if (TextUtils.isEmpty(newNote)) {
-            displayItemList.remove(position);
-        } else {
-            displayItemList.get(position).setNote(newNote);
-        }
-        noteRecyclerViewAdapter.notifyDataSetChanged();
-        updateData(newNote, noteItem.getTrackingId());
-    }
-
     private void deleteNote(int position) {
         NoteItem noteItem = displayItemList.get(position);
         updateData(null, noteItem.getTrackingId());
@@ -300,6 +289,17 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
             }
         }
         updateData(newNote, AppGenerator.getNewId());
+    }
+
+    private void updateNote(String newNote, int position) {
+        NoteItem noteItem = displayItemList.get(position);
+        if (TextUtils.isEmpty(newNote)) {
+            displayItemList.remove(position);
+        } else {
+            displayItemList.get(position).setNote(newNote);
+        }
+        noteRecyclerViewAdapter.notifyDataSetChanged();
+        updateData(newNote, noteItem.getTrackingId());
     }
 
     private void updateData(String newNote, String trackId) {
@@ -485,7 +485,6 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
             todayTracking.setCount(String.valueOf(defaultVal));
             todayTracking.setCurrentDate(currentDate);
             todayTracking.setDescription(null);
-//            Database.getTrackingDb().saveTracking(todayTracking);
         }
         db.close();
         return todayTracking;

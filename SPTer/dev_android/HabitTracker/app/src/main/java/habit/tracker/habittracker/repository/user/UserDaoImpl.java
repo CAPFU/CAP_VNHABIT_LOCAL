@@ -151,7 +151,7 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
         final String selection = USER_ID + " = ?";
         UserEntity userEntity = new UserEntity();
         cursor = super.query(USER_TABLE, USER_COLUMNS, selection, selectionArgs, USER_ID);
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 userEntity = cursorToEntity(cursor);
