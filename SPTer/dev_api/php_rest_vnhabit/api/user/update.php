@@ -27,7 +27,6 @@ $user->email = $data->email;
 $user->date_of_birth = $data->date_of_birth;
 $user->gender = $data->gender;
 $user->real_name = $data->real_name;
-$user->avatar = $data->avatar;
 $user->user_description = $data->user_description;
 
 if ($user->update()) {

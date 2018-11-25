@@ -5,12 +5,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import habit.tracker.habittracker.api.model.reminder.Reminder;
 import habit.tracker.habittracker.common.util.AppGenerator;
@@ -47,7 +44,7 @@ public class HabitReminderManager {
         Reminder reminder;
         for (int i = 0; i < remindersList.size(); i++) {
             reminder = remindersList.get(i);
-            remindTime = reminder.getReminderTime();
+            remindTime = reminder.getRemindStartTime();
             date = AppGenerator.getDate(remindTime, AppGenerator.YMD2);
             calendar.setTime(date);
 
@@ -66,7 +63,7 @@ public class HabitReminderManager {
         intent.putExtra(REMIND_ID, reminder.getHabitId());
         intent.putExtra(REMIND_TEXT, reminder.getRemindText());
         intent.putExtra(HABIT_NAME, reminder.getHabitName());
-        intent.putExtra(END_TIME, reminder.getEndDate());
+        intent.putExtra(END_TIME, reminder.getRemindEndTime());
         alarmIntent = PendingIntent.getBroadcast(context, Integer.parseInt(reminder.getReminderId()), intent, 0);
 
         Calendar calendar = Calendar.getInstance();

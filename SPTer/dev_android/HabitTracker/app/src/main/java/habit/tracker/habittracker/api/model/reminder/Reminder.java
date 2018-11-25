@@ -10,9 +10,12 @@ public class Reminder {
     @SerializedName("reminder_description")
     @Expose
     private String remindText;
-    @SerializedName("reminder_time")
+    @SerializedName("remind_start_time")
     @Expose
-    private String reminderTime;
+    private String remindStartTime;
+    @SerializedName("remind_end_time")
+    @Expose
+    private String remindEndTime;
     @SerializedName("repeat_type")
     @Expose
     private String repeatType;
@@ -22,8 +25,8 @@ public class Reminder {
     @SerializedName("server_id")
     @Expose
     private String serverId;
+
     private String habitName;
-    private String endDate;
 
     public String getReminderId() {
         return reminderId;
@@ -34,8 +37,12 @@ public class Reminder {
     }
 
     // yyyy-MM-dd HH:mm:ss
-    public String getReminderTime() {
-        return reminderTime;
+    public String getRemindStartTime() {
+        return remindStartTime;
+    }
+
+    public String getRemindEndTime() {
+        return remindEndTime;
     }
 
     public String getRepeatType() {
@@ -54,10 +61,6 @@ public class Reminder {
         return habitName;
     }
 
-    public String getEndDate() {
-        return endDate;
-    }
-
     public void setReminderId(String reminderId) {
         this.reminderId = reminderId;
     }
@@ -66,8 +69,12 @@ public class Reminder {
         this.remindText = remindText;
     }
 
-    public void setReminderTime(String reminderTime) {
-        this.reminderTime = reminderTime;
+    public void setRemindStartTime(String remindStartTime) {
+        this.remindStartTime = remindStartTime;
+    }
+
+    public void setRemindEndTime(String remindEndTime) {
+        this.remindEndTime = remindEndTime;
     }
 
     public void setRepeatType(String repeatType) {
@@ -84,9 +91,5 @@ public class Reminder {
 
     public void setHabitName(String habitName) {
         this.habitName = habitName;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
     }
 }

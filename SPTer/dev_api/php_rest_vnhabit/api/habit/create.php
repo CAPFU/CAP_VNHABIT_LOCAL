@@ -79,7 +79,9 @@ if ($habit->create()) {
                 $item = $arr_reminder[$i];
                 $reminder->reminder_id = $item->server_id;
                 $reminder->habit_id = $item->habit_id;
-                $reminder->reminder_time = $item->reminder_time;
+                $reminder->remind_start_time = $item->remind_start_time;
+                $reminder->remind_end_time = $item->remind_end_time;
+                $reminder->repeat_type = $item->repeat_type;
                 $reminder->reminder_description = $item->reminder_description;
                 if ($reminder->create()) {
                     $error = false;

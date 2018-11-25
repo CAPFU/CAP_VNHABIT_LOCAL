@@ -23,6 +23,7 @@ import habit.tracker.habittracker.adapter.habit.TrackingItem;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.habit.Habit;
 import habit.tracker.habittracker.api.model.habit.HabitResponse;
+import habit.tracker.habittracker.api.model.reminder.Reminder;
 import habit.tracker.habittracker.api.model.tracking.Tracking;
 import habit.tracker.habittracker.api.model.tracking.TrackingList;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
@@ -150,20 +151,21 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
                     int year, month, date, totalCount;
                     Database db = Database.getInstance(MainActivity.this);
                     db.open();
-
                     List<Habit> habitList = response.body().getHabit();
                     for (Habit habit : habitList) {
-
                         Calendar ca = Calendar.getInstance();
                         ca.setTimeInMillis(System.currentTimeMillis());
                         year = ca.get(Calendar.YEAR);
                         month = ca.get(Calendar.MONTH) + 1;
                         date = ca.get(Calendar.DATE);
                         if (isTodayHabit(year, month - 1, date, habit)) {
-
-                            // update tracking displayItemList from server
+                            // update tracking list from server
                             for (Tracking track : habit.getTracksList()) {
                                 Database.getTrackingDb().saveTracking(Database.getTrackingDb().convert(track));
+                            }
+                            // update reminder list from server
+                            for (Reminder reminder: habit.getReminderList()) {
+                                Database.getReminderDb().saveReminder(Database.getReminderDb().convert(reminder), reminder.getReminderId());
                             }
                             // create today tracking record list
                             if (currentDate.compareTo(habit.getStartDate()) >= 0 && (TextUtils.isEmpty(habit.getEndDate()) || currentDate.compareTo(habit.getEndDate()) <= 0)) {
@@ -299,7 +301,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         List<HabitEntity> habitEntities = Database.getHabitDb().getTodayHabit(schedule, currentDate);
         int totalCount = 0;
         for (HabitEntity habit : habitEntities) {
-            // get tracking records on current date
+            // get tracking records on current remindDate
             TrackingEntity trackingEntity = Database.getTrackingDb().getTracking(habit.getHabitId(), currentDate);
             if (trackingEntity == null) {
                 trackingEntity = getTodayTracking(habit.getHabitId(), currentDate, 0);

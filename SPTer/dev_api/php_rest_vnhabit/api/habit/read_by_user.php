@@ -7,6 +7,7 @@ header('Content-Type: application/json');
 include_once '../../config/Database.php';
 include_once '../../models/Habit.php';
 include_once '../../models/Tracking.php';
+include_once '../../models/Reminder.php';
 
 // Instantiate DB & connect
 $database = new Database();
@@ -15,6 +16,7 @@ $db = $database->connect();
 // Instantiate Habit object
 $habit = new Habit($db);
 $tracker = new Tracking($db);
+$reminder = new Reminder($db);
 
 // Get username and password
 $habit->user_id = isset($_GET['user_id']) ? $_GET['user_id'] : die();
@@ -31,12 +33,21 @@ if ($num > 0) {
     while($row = $result->fetch(PDO::FETCH_ASSOC)) {
         extract($row);
 
-        $trackArr = array();
+        $tracksArr = array();
         $tracker->habit_id = $habit_id;
         $trackRes = $tracker->getTrackByHabit();
         if ($trackRes) {
             while($row2 = $trackRes->fetch(PDO::FETCH_ASSOC)) {
-                array_push($trackArr, $row2);
+                array_push($tracksArr, $row2);
+            }
+        }
+
+        $remindersArr = array();
+        $reminder->habit_id = $habit_id;
+        $reminderRes = $reminder->getRemindersByHabit();
+        if ($reminderRes) {
+            while($row3 = $reminderRes->fetch(PDO::FETCH_ASSOC)) {
+                array_push($remindersArr, $row3);
             }
         }
 
@@ -63,7 +74,8 @@ if ($num > 0) {
             'fri' => $fri,
             'sat' => $sat,
             'sun' => $sun,
-            'tracks' => $trackArr
+            'tracking_list' => $tracksArr,
+            'reminder_list' => $remindersArr
         );
 
         // push to "data"

@@ -18,7 +18,6 @@ include_once '../../models/Model.php';
         public $date_of_birth;
         public $gender;
         public $real_name;
-        public $avatar;
         public $user_description;
         public $created_date;
         public $last_login_time;

@@ -79,10 +79,10 @@ public class Habit implements TrackingDateInWeek {
     @SerializedName("sun")
     @Expose
     private String sun;
-    @SerializedName("reminders")
+    @SerializedName("reminder_list")
     @Expose
     private List<Reminder> reminderList;
-    @SerializedName("tracks")
+    @SerializedName("tracking_list")
     @Expose
     private List<Tracking> tracksList;
     @SerializedName("habit_name_id")

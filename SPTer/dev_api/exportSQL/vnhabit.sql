@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 23, 2018 at 02:34 AM
+-- Generation Time: Nov 25, 2018 at 05:42 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -34,30 +34,6 @@ CREATE TABLE `about` (
   `app_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `app_description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `app_fqa` text COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `achievement`
---
-
-CREATE TABLE `achievement` (
-  `achievement_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `achievement_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `achievement_description` text COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `achievement_details`
---
-
-CREATE TABLE `achievement_details` (
-  `user_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `achievement_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `count` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -127,10 +103,7 @@ CREATE TABLE `habit` (
 --
 
 INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
-('3da48f98-01', '4e0819c9-33', '1', '1ed9504d-85', 'an com', 0, 0, 1, 'Lần', 3, '2018-11-20', NULL, '2018-11-20', '#789c4dd9', ''),
-('75fc8ef3-9d', 'd233c193-6e', NULL, '82464f46-2a', 'aaaa', 0, 0, 1, 'Lần', 5, '2018-11-23', NULL, '2018-11-23', '#78ed872a', ''),
-('7d4295d1-17', 'd233c193-6e', '2', '58cefe15-1f', 'Chạy bộ', 0, 0, 0, NULL, 1, '2018-11-18', NULL, '2018-11-23', '#784a90e6', ''),
-('c04afdda-97', 'd233c193-6e', NULL, '9fb717fe-67', 'hhhh', 0, 1, 0, NULL, 1, '2018-11-23', NULL, '2018-11-23', '#646066cc', '');
+('1ecc224c-80', 'd233c193-6e', NULL, 'ad3a8ba0-74', 'Chạy bộ', 0, 0, 1, 'km', 3, '2018-11-25', NULL, '2018-11-25', '#784a90e6', 'chat bo');
 
 -- --------------------------------------------------------
 
@@ -153,7 +126,7 @@ CREATE TABLE `habit_suggestion` (
 --
 
 INSERT INTO `habit_suggestion` (`habit_name_id`, `group_id`, `habit_name_uni`, `habit_name_ascii`, `habit_name_count`, `total_track`, `success_track`) VALUES
-('0047ad7d-2a', NULL, 'Chạy bộ', 'chay bo', 1, NULL, NULL),
+('0047ad7d-2a', NULL, 'Chạy bộ', 'chay bo', 4, NULL, NULL),
 ('154fsd', '2', 'Đi chợ', 'di cho', 12, 35, 35),
 ('1dv43fsd', '3', 'Đi bộ', 'di bo', 12, 90, 20),
 ('2d49e9e2-7f', NULL, 'aaaa', 'aaaa', 1, 0, 0),
@@ -188,10 +161,7 @@ CREATE TABLE `monitor_date` (
 --
 
 INSERT INTO `monitor_date` (`monitor_id`, `habit_id`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`) VALUES
-('1ed9504d-85', '3da48f98-01', 1, 1, 1, 1, 1, 1, 1),
-('58cefe15-1f', '7d4295d1-17', 1, 1, 1, 1, 1, 1, 1),
-('82464f46-2a', '75fc8ef3-9d', 1, 1, 1, 1, 1, 1, 1),
-('9fb717fe-67', 'c04afdda-97', 0, 0, 0, 1, 1, 1, 1);
+('ad3a8ba0-74', '1ecc224c-80', 1, 1, 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -202,7 +172,9 @@ INSERT INTO `monitor_date` (`monitor_id`, `habit_id`, `mon`, `tue`, `wed`, `thu`
 CREATE TABLE `reminder` (
   `reminder_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `habit_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `reminder_time` text COLLATE utf8mb4_unicode_ci,
+  `remind_start_time` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remind_end_time` text COLLATE utf8mb4_unicode_ci,
+  `repeat_type` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `reminder_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -210,8 +182,8 @@ CREATE TABLE `reminder` (
 -- Dumping data for table `reminder`
 --
 
-INSERT INTO `reminder` (`reminder_id`, `habit_id`, `reminder_time`, `reminder_description`) VALUES
-('41675c3e-93', '3da48f98-01', '2018-11-20 00:00', 'dddd');
+INSERT INTO `reminder` (`reminder_id`, `habit_id`, `remind_start_time`, `remind_end_time`, `repeat_type`, `reminder_description`) VALUES
+('1', '1ecc224c-80', '2018-11-25 17:30', NULL, '0', 'test');
 
 -- --------------------------------------------------------
 
@@ -232,15 +204,7 @@ CREATE TABLE `tracking` (
 --
 
 INSERT INTO `tracking` (`tracking_id`, `habit_id`, `current_date`, `count`, `tracking_description`) VALUES
-('0f3f3eaa-35', '7d4295d1-17', '2018-11-23', 0, NULL),
-('3ae0c813-5f', '7d4295d1-17', '2018-11-21', 0, 'test 21'),
-('5e27a48f-5c', '7d4295d1-17', '2018-11-22', 0, NULL),
-('73a79271-9f', '7d4295d1-17', '2018-11-18', 0, 'test 18'),
-('925f6a8a-fc', '75fc8ef3-9d', '2018-11-23', 0, 'test 23'),
-('a95e76c6-6a', '3da48f98-01', '2018-11-20', 2, NULL),
-('c7f92227-24', '7d4295d1-17', '2018-11-19', 0, 'test 19'),
-('df2349e8-8e', 'c04afdda-97', '2018-11-23', 1, NULL),
-('f88525f1-31', '7d4295d1-17', '2018-11-20', 0, 'test 20');
+('b29c8c3e-3f', '1ecc224c-80', '2018-11-25', 2, NULL);
 
 -- --------------------------------------------------------
 
@@ -257,7 +221,6 @@ CREATE TABLE `user` (
   `date_of_birth` date DEFAULT NULL,
   `gender` tinyint(1) DEFAULT '-1',
   `real_name` text COLLATE utf8mb4_unicode_ci,
-  `avatar` text COLLATE utf8mb4_unicode_ci,
   `user_description` text COLLATE utf8mb4_unicode_ci,
   `created_date` date DEFAULT NULL,
   `last_login_time` date DEFAULT NULL,
@@ -271,28 +234,16 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `real_name`, `avatar`, `user_description`, `created_date`, `last_login_time`, `continue_using_count`, `current_continue_using_count`, `best_continue_using_count`, `user_score`) VALUES
-('1b153946-89', 'user02', '12345678', NULL, 'user02@mail.com', NULL, 1, 'nam', NULL, NULL, '2018-11-11', '0000-00-00', 100, 0, 0, 100),
-('4e0819c9-33', 'dat', '12345678', NULL, 'dat@mail.com', NULL, NULL, 'dat', NULL, NULL, '2018-11-20', '2018-11-20', 30, 1, 1, 1000),
-('d233c193-6e', 'user01', '12345678', NULL, 'user01@mail.com', NULL, 0, 'jon', NULL, 'something good will hapend to you', '2018-11-12', '2018-11-23', 6, 6, 6, 12),
-('d233c195-hf', 'user03', '12345678', NULL, 'user03@mail.com', NULL, 0, 'kim', NULL, NULL, '2018-11-10', '0000-00-00', 6, 0, 0, 1000);
+INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `real_name`, `user_description`, `created_date`, `last_login_time`, `continue_using_count`, `current_continue_using_count`, `best_continue_using_count`, `user_score`) VALUES
+('1b153946-89', 'user02', '12345678', NULL, 'user02@mail.com', NULL, 1, 'nam', NULL, '2018-11-11', '0000-00-00', 100, 0, 0, 100),
+('4abb9cc1-b9', 'user22', '12345678', NULL, 'user22@mail.com', NULL, NULL, NULL, NULL, '2018-11-23', '2018-11-23', 1, 1, 1, 2),
+('4e0819c9-33', 'dat', '12345678', NULL, 'dat@mail.com', NULL, NULL, 'dat', NULL, '2018-11-20', '2018-11-20', 30, 1, 1, 1000),
+('d233c193-6e', 'user01', '12345678', NULL, 'user01@mail.com', NULL, 0, 'jon', 'something good will hapend to you', '2018-11-12', '2018-11-25', 8, 8, 8, 18),
+('d233c195-hf', 'user03', '12345678', NULL, 'user03@mail.com', NULL, 0, 'kim', NULL, '2018-11-10', '0000-00-00', 6, 0, 0, 1000);
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `achievement`
---
-ALTER TABLE `achievement`
-  ADD PRIMARY KEY (`achievement_id`);
-
---
--- Indexes for table `achievement_details`
---
-ALTER TABLE `achievement_details`
-  ADD PRIMARY KEY (`user_id`,`achievement_id`),
-  ADD KEY `achievement_id` (`achievement_id`);
 
 --
 -- Indexes for table `feedback`
@@ -353,13 +304,6 @@ ALTER TABLE `user`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `achievement_details`
---
-ALTER TABLE `achievement_details`
-  ADD CONSTRAINT `achievement_details_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `achievement_details_ibfk_2` FOREIGN KEY (`achievement_id`) REFERENCES `achievement` (`achievement_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `feedback`

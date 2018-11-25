@@ -18,8 +18,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import habit.tracker.habittracker.common.util.AppGenerator;
+import habit.tracker.habittracker.repository.Database;
+import habit.tracker.habittracker.repository.reminder.ReminderEntity;
 
 public class ReminderCreateActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
+    public static final String REMINDER_ID = "reminder_id";
+    public static final String POSITION_IN_LIST = "position_in_list";
     public static final String REMIND_TEXT = "remind_text";
     public static final String REMIND_HOUR = "remind_hour";
     public static final String REMIND_MINUTE = "remind_minute";
@@ -40,25 +44,27 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
     View btnCancel;
 
     @BindView(R.id.btn_TypeAll)
-    View btnTypeAll;
+    View btnTypeNoRepeat;
     @BindView(R.id.btn_TypeDaily)
     View btnTypeDaily;
     @BindView(R.id.btn_TypeWeekly)
-    View btnTypeWeek;
+    View btnTypeWeekly;
     @BindView(R.id.btn_TypeMonthly)
-    View btnTypeMonth;
+    View btnTypeMonthly;
     @BindView(R.id.btn_TypeYearly)
-    View btnTypeYear;
+    View btnTypeYearly;
     View vType;
 
-    int[] hours;
-    int[] minutes;
+    String[] hours;
+    String[] minutes;
     String[] daysInYear;
 
+    String reminderId;
+    int positionInList;
     int hour;
     int minute;
     int type;
-    String date;
+    String remindDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +76,7 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
         hour = 0;
         minute = 0;
         type = -1;
-        vType = btnTypeAll;
-
+        vType = btnTypeNoRepeat;
 
         String currentDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
         daysInYear = new String[1000];
@@ -81,45 +86,87 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
             currentDate = daysInYear[i];
         }
 
-        String[] displayDates = convertDisplayDate(daysInYear);
+        Bundle data = getIntent().getExtras();
+        if (data != null) {
+            reminderId = data.getString(REMINDER_ID);
+            positionInList = data.getInt(POSITION_IN_LIST, -1);
+            if (!TextUtils.isEmpty(reminderId)) {
+                Database db = Database.getInstance(this);
+                db.open();
+                ReminderEntity reminderEntity = Database.getReminderDb().getRemindersById(reminderId);
+
+                String t = reminderEntity.getReminderStartTime();
+                Date d = AppGenerator.getDate(t, AppGenerator.YMD2);
+                Calendar ca = Calendar.getInstance();
+                ca.setTime(d);
+
+                hour = ca.get(Calendar.HOUR_OF_DAY);
+                minute = ca.get(Calendar.MINUTE);
+                remindDate = AppGenerator.format(t, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
+                type = Integer.parseInt(reminderEntity.getRepeatType());
+                setWhiteBg(btnTypeNoRepeat);
+                switch (type) {
+                    case -1:
+                        setWhiteBg(btnTypeNoRepeat);
+                    case 0:
+                        setGreenBg(btnTypeDaily);
+                        break;
+                    case 1:
+                        setGreenBg(btnTypeWeekly);
+                        break;
+                    case 2:
+                        setGreenBg(btnTypeMonthly);
+                        break;
+                    case 3:
+                        setGreenBg(btnTypeYearly);
+                        break;
+                }
+                edRemindText.setText(reminderEntity.getRemindText());
+                db.close();
+            }
+        }
+
+        String[] displayDates = getDisplayDate(daysInYear);
         pickerDate.setMinValue(0);
         pickerDate.setMaxValue(displayDates.length - 1);
         pickerDate.setWrapSelectorWheel(false);
         pickerDate.setDisplayedValues(displayDates);
         pickerDate.setOnValueChangedListener(this);
+        remindDate = daysInYear[0];
+        setPickerValue(displayDates, remindDate, pickerDate);
 
-        this.date = daysInYear[0];
-
-        hours = new int[24];
+        hours = new String[24];
         for (int i = 0; i < hours.length; i++) {
-            hours[i] = i;
+            hours[i] = String.valueOf(i);
         }
         pickerHour.setMinValue(0);
         pickerHour.setMaxValue(hours.length - 1);
         pickerHour.setDisplayedValues(getStringArr(hours));
         pickerHour.setOnValueChangedListener(this);
+        setPickerValue(hours, String.valueOf(hour), pickerHour);
 
-        minutes = new int[60];
+        minutes = new String[60];
         for (int i = 0; i < minutes.length; i++) {
-            minutes[i] = i;
+            minutes[i] = String.valueOf(i);
         }
         pickerMinute.setMinValue(0);
         pickerMinute.setMaxValue(minutes.length - 1);
         pickerMinute.setDisplayedValues(getStringArr(minutes));
         pickerMinute.setOnValueChangedListener(this);
+        setPickerValue(minutes, String.valueOf(minute), pickerMinute);
     }
 
     @Override
     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
         switch (picker.getId()){
             case R.id.picker_hour:
-                hour = hours[newVal];
+                hour = Integer.parseInt(hours[newVal]);
                 break;
             case R.id.picker_minute:
-                minute = minutes[newVal];
+                minute = Integer.parseInt(minutes[newVal]);
                 break;
             case R.id.picker_date:
-                date = daysInYear[newVal];
+                remindDate = daysInYear[newVal];
                 break;
         }
     }
@@ -135,12 +182,13 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
             Toast.makeText(this, "Chưa thêm nội dung nhắc nhở.", Toast.LENGTH_SHORT).show();
             return;
         }
-
         Intent intent = getIntent();
+        intent.putExtra(POSITION_IN_LIST, positionInList);
+        intent.putExtra(REMINDER_ID, reminderId);
         intent.putExtra(REMIND_TEXT, edRemindText.getText().toString());
         intent.putExtra(REMIND_HOUR, hour);
         intent.putExtra(REMIND_MINUTE, minute);
-        intent.putExtra(REMIND_DATE, date);
+        intent.putExtra(REMIND_DATE, remindDate);
         intent.putExtra(REMIND_TYPE, type);
         setResult(RESULT_OK, intent);
         finish();
@@ -154,7 +202,16 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
         type = Integer.parseInt(view.getTag().toString());
     }
 
-    private String[] convertDisplayDate(String[] dates) {
+    private void setPickerValue(String[] values, String defaultValue, NumberPicker picker) {
+        for (int i = 0; i < values.length; i++) {
+            if (values[i].equals(defaultValue)) {
+                picker.setValue(i);
+                break;
+            }
+        }
+    }
+
+    private String[] getDisplayDate(String[] dates) {
         String[] res = new String[dates.length];
         int year;
         int month;
@@ -198,7 +255,7 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
         return res;
     }
 
-    private String[] getStringArr(int[] arr) {
+    private String[] getStringArr(String[] arr) {
         String[] res = new String[arr.length];
         for (int i = 0; i < arr.length; i++) {
             res[i] = String.valueOf(arr[i]);

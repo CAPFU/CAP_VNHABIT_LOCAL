@@ -4,7 +4,8 @@ public class ReminderEntity {
     private String reminderId;
     private String habitId;
     private String remindText;
-    private String reminderTime;
+    private String reminderStartTime;
+    private String reminderEndTime;
     private String repeatType;
     private String serverId;
 
@@ -20,8 +21,12 @@ public class ReminderEntity {
         return remindText;
     }
 
-    public String getReminderTime() {
-        return reminderTime;
+    public String getReminderStartTime() {
+        return reminderStartTime;
+    }
+
+    public String getReminderEndTime() {
+        return reminderEndTime;
     }
 
     public String getRepeatType() {
@@ -44,8 +49,12 @@ public class ReminderEntity {
         this.remindText = remindText;
     }
 
-    public void setReminderTime(String reminderTime) {
-        this.reminderTime = reminderTime;
+    public void setReminderStartTime(String reminderStartTime) {
+        this.reminderStartTime = reminderStartTime;
+    }
+
+    public void setReminderEndTime(String reminderEndTime) {
+        this.reminderEndTime = reminderEndTime;
     }
 
     public void setRepeatType(String repeatType) {

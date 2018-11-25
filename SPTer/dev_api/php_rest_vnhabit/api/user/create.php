@@ -27,7 +27,6 @@ $user->phone = $data->phone;
 $user->date_of_birth = $data->date_of_birth;
 $user->gender = $data->gender;
 $user->real_name = $data->real_name;
-$user->avatar = $data->avatar;
 $user->user_description = $data->user_description;
 $user->created_date = $data->created_date;
 $user->last_login_time = $data->last_login_time;
