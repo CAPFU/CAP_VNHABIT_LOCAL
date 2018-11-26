@@ -103,7 +103,6 @@ include_once '../../models/Model.php';
             $this->date_of_birth = $user['date_of_birth'];
             $this->gender = $user['gender'];
             $this->real_name = $user['real_name'];
-            $this->avatar = $user['avatar'];
             $this->user_description = $user['user_description'];
             $this->created_date = $user['created_date'];
             $this->last_login_time = $user['last_login_time'];
