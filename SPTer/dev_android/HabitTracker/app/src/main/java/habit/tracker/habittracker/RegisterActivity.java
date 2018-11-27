@@ -133,7 +133,7 @@ public class RegisterActivity extends BaseActivity {
         mService.registerUser(user).enqueue(new Callback<UserResult>() {
             @Override
             public void onResponse(Call<UserResult> call, Response<UserResult> response) {
-                if (response.body().getResult().equals(AppConstant.RES_OK)) {
+                if (response.body().getResult().equals(AppConstant.STATUS_OK)) {
                     Database.getUserDb().saveUser(Database.getUserDb().convert(user));
                     Intent intent = getIntent();
                     intent.putExtra(LoginActivity.USERNAME, user.getUsername());

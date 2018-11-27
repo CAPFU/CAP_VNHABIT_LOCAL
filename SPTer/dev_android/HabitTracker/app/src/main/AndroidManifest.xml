@@ -40,7 +40,7 @@
         <activity
             android:name=".HabitActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".GroupActivity" />
+        <activity android:name=".GroupActivity"/>
         <activity android:name=".ReminderCreateActivity" />
 
         <receiver android:name=".common.habitreminder.HabitReminderServiceReceiver" />
@@ -60,7 +60,7 @@
         <activity android:name=".NoteActivity" />
         <activity android:name=".SuggestionByGroupActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".SettingActivity"></activity>
+        <activity android:name=".SettingActivity" />
     </application>
 
 </manifest>

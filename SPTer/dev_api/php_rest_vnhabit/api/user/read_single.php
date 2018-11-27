@@ -15,8 +15,8 @@ $db = $database->connect();
 $user = new User($db);
 
 // Get username and password
-$user->username = isset($_GET['username']) ? $_GET['username'] : die();
-$user->password = isset($_GET['password']) ? $_GET['password'] : die();
+$user->username = isset($_POST['username']) ? $_POST['username'] : die();
+$user->password = isset($_POST['password']) ? $_POST['password'] : die();
 
 // Get user by username and password
 $foundUser = $user->read_single();

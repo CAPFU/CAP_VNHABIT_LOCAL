@@ -140,14 +140,13 @@ public class SuggestionByGroupActivity extends AppCompatActivity implements Recy
             public void onFailure(Call<GroupResponse> call, Throwable t) {
                 Database db = new Database(SuggestionByGroupActivity.this);
                 db.open();
-                List<GroupEntity> entities = Database.getGroupDb().fetchGroup();
+                List<GroupEntity> entities = Database.getGroupDb().getAll();
                 for (GroupEntity entity: entities) {
                     groupsList.add(new Group(
                             entity.getGroupId(),
                             entity.getGroupName(),
-                            entity.getParentId(),
-                            entity.getGroupIcon(),
-                            entity.getGroupDescription()
+                            entity.getDescription(),
+                            entity.isLocal().equals("1")
                     ));
                 }
                 db.close();

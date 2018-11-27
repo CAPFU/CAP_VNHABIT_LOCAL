@@ -147,7 +147,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         mService.getHabit(userId).enqueue(new Callback<HabitResponse>() {
             @Override
             public void onResponse(Call<HabitResponse> call, Response<HabitResponse> response) {
-                if (response.body().getResult().equals(AppConstant.RES_OK)) {
+                if (response.body().getResult().equals(AppConstant.STATUS_OK)) {
                     int year, month, date, totalCount;
                     Database db = Database.getInstance(MainActivity.this);
                     db.open();

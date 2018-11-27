@@ -21,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static habit.tracker.habittracker.common.AppConstant.RES_OK;
+import static habit.tracker.habittracker.common.AppConstant.STATUS_OK;
 
 public class HabitTextWatcher implements TextWatcher {
     private Context context;
@@ -56,7 +56,7 @@ public class HabitTextWatcher implements TextWatcher {
             @Override
             public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
                 searchResultList.clear();
-                if (response.body().getResult().equals(RES_OK)) {
+                if (response.body().getResult().equals(STATUS_OK)) {
                     Database db = Database.getInstance(context);
                     db.open();
 

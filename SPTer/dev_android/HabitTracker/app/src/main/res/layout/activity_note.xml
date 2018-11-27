@@ -87,15 +87,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="8"
-        android:padding="20dp"
-        >
+        android:padding="10dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvNote"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="40dp"
-            />
+            android:layout_marginEnd="40dp" />
 
         <ImageView
             android:id="@+id/imgAddNote"
@@ -103,8 +101,7 @@
             android:layout_height="23dp"
             android:src="@drawable/ic_note_pen"
             android:alpha="0.4"
-            android:layout_alignParentEnd="true"
-            />
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
     <LinearLayout
         android:id="@+id/tabs"

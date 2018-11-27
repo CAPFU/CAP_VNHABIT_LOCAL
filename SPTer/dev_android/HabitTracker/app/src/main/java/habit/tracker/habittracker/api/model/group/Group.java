@@ -10,27 +10,22 @@ public class Group {
     @SerializedName("group_name")
     @Expose
     private String groupName;
-    @SerializedName("parent_id")
-    @Expose
-    private String parentId;
-    @SerializedName("group_icon")
-    @Expose
-    private String groupIcon;
     @SerializedName("group_description")
     @Expose
     private String groupDescription;
 
-    boolean isSelected = false;
+    private boolean isSelected = false;
+    private boolean isDelete = false;
+    private boolean isLocal = false;
 
     public Group() {
     }
 
-    public Group(String groupId, String groupName, String parentId, String groupIcon, String groupDescription) {
+    public Group(String groupId, String groupName, String groupDescription, boolean isLocal) {
         this.groupId = groupId;
         this.groupName = groupName;
-        this.parentId = parentId;
-        this.groupIcon = groupIcon;
         this.groupDescription = groupDescription;
+        this.isLocal = isLocal;
     }
 
     public String getGroupId() {
@@ -41,20 +36,20 @@ public class Group {
         return groupName;
     }
 
-    public String getParentId() {
-        return parentId;
-    }
-
-    public String getGroupIcon() {
-        return groupIcon;
-    }
-
     public String getGroupDescription() {
         return groupDescription;
     }
 
     public boolean isSelected() {
         return isSelected;
+    }
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public boolean isLocal() {
+        return isLocal;
     }
 
     public void setGroupId(String groupId) {
@@ -65,19 +60,19 @@ public class Group {
         this.groupName = groupName;
     }
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
-
-    public void setGroupIcon(String groupIcon) {
-        this.groupIcon = groupIcon;
-    }
-
     public void setGroupDescription(String groupDescription) {
         this.groupDescription = groupDescription;
     }
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
+    }
+
+    public void setLocal(boolean local) {
+        isLocal = local;
     }
 }

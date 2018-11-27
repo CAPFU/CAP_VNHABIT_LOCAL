@@ -15,7 +15,7 @@ import habit.tracker.habittracker.repository.tracking.TrackingEntity;
 import habit.tracker.habittracker.repository.tracking.TrackingSchema;
 
 /**
- * Created by DatTVT1 on 10/16/2018
+ * Created on 10/16/2018
  */
 public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSchema, TrackingSchema {
     private Cursor cursor;

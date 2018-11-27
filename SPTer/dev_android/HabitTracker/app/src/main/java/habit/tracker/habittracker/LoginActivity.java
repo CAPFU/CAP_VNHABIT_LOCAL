@@ -134,7 +134,7 @@ public class LoginActivity extends BaseActivity {
         mService.getUser(username, password).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                if (response.body().getResult().equals(AppConstant.RES_OK)) {
+                if (response.body().getResult().equals(AppConstant.STATUS_OK)) {
                     Database db = new Database(LoginActivity.this);
                     db.open();
                     User user = response.body().getData();

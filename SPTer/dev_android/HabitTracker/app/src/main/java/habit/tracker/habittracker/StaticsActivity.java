@@ -268,7 +268,7 @@ public class StaticsActivity extends BaseActivity implements OnChartValueSelecte
         String endDate = AppGenerator.format(daysInWeek[6], AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT);
         tvDisplayTime.setText(startDate + " - " + endDate);
 
-        // get data in week
+        // get groupList in week
         List<HabitTracking> weekData = Database.getHabitDb().getHabitTracking(MySharedPreference.getUserId(this), daysInWeek[0], daysInWeek[6]);
 
         List<TrackingEntity> meetGoalTrackingList = getMeetGoalDateList(weekData, daysInWeek[0], daysInWeek[6]);

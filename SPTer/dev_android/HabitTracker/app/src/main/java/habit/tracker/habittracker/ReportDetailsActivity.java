@@ -7,7 +7,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.ColorUtils;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -222,13 +221,13 @@ public class ReportDetailsActivity extends BaseActivity {
             curTrackingCount = Integer.parseInt(currentTrackingList.getCount());
         }
 
-        trackingDaysInWeek[0] = habitEntity.getMon().equals(AppConstant.RES_OK);
-        trackingDaysInWeek[1] = habitEntity.getTue().equals(AppConstant.RES_OK);
-        trackingDaysInWeek[2] = habitEntity.getWed().equals(AppConstant.RES_OK);
-        trackingDaysInWeek[3] = habitEntity.getThu().equals(AppConstant.RES_OK);
-        trackingDaysInWeek[4] = habitEntity.getFri().equals(AppConstant.RES_OK);
-        trackingDaysInWeek[5] = habitEntity.getSat().equals(AppConstant.RES_OK);
-        trackingDaysInWeek[6] = habitEntity.getSun().equals(AppConstant.RES_OK);
+        trackingDaysInWeek[0] = habitEntity.getMon().equals(AppConstant.STATUS_OK);
+        trackingDaysInWeek[1] = habitEntity.getTue().equals(AppConstant.STATUS_OK);
+        trackingDaysInWeek[2] = habitEntity.getWed().equals(AppConstant.STATUS_OK);
+        trackingDaysInWeek[3] = habitEntity.getThu().equals(AppConstant.STATUS_OK);
+        trackingDaysInWeek[4] = habitEntity.getFri().equals(AppConstant.STATUS_OK);
+        trackingDaysInWeek[5] = habitEntity.getSat().equals(AppConstant.STATUS_OK);
+        trackingDaysInWeek[6] = habitEntity.getSun().equals(AppConstant.STATUS_OK);
 
         tvHabitName.setText(habitEntity.getHabitName());
         tvGoal.setText(habitEntity.getMonitorNumber() + " " + habitEntity.getMonitorUnit());

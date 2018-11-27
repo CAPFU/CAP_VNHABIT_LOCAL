@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 25, 2018 at 08:21 AM
+-- Generation Time: Nov 27, 2018 at 04:23 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -58,8 +58,6 @@ CREATE TABLE `feedback` (
 CREATE TABLE `group` (
   `group_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `group_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `parent_id` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `group_icon` text COLLATE utf8mb4_unicode_ci,
   `group_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -67,12 +65,12 @@ CREATE TABLE `group` (
 -- Dumping data for table `group`
 --
 
-INSERT INTO `group` (`group_id`, `group_name`, `parent_id`, `group_icon`, `group_description`) VALUES
-('1', 'Sức khỏe', NULL, NULL, NULL),
-('2', 'Tài chính', NULL, NULL, NULL),
-('3', 'Gia đình', NULL, NULL, NULL),
-('4', 'Học tập', NULL, NULL, NULL),
-('5', 'Mua sắm', NULL, NULL, NULL);
+INSERT INTO `group` (`group_id`, `group_name`, `group_description`) VALUES
+('1', 'Sức khỏe', NULL),
+('2', 'Tài chính', NULL),
+('3', 'Gia đình', NULL),
+('4', 'Học tập', NULL),
+('5', 'Mua sắm', NULL);
 
 -- --------------------------------------------------------
 
@@ -103,7 +101,7 @@ CREATE TABLE `habit` (
 --
 
 INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
-('1ecc224c-80', 'd233c193-6e', NULL, 'ad3a8ba0-74', 'Chạy bộ', 0, 0, 1, 'km', 3, '2018-11-25', '2018-11-30', '2018-11-25', '#784a90e6', 'chat bo');
+('1ecc224c-80', 'd233c193-6e', NULL, 'ad3a8ba0-74', 'Chạy bộ', 0, 0, 1, 'km', 3, '2018-11-24', '2018-11-30', '2018-11-25', '#784a90e6', 'chat bo');
 
 -- --------------------------------------------------------
 
@@ -197,7 +195,10 @@ CREATE TABLE `tracking` (
 --
 
 INSERT INTO `tracking` (`tracking_id`, `habit_id`, `current_date`, `count`, `tracking_description`) VALUES
-('b29c8c3e-3f', '1ecc224c-80', '2018-11-25', 2, NULL);
+('26a2dba1-ed', '1ecc224c-80', '2018-11-25', 1, 'test 25'),
+('92584005-d0', '1ecc224c-80', '2018-11-27', 1, NULL),
+('eb81de52-53', '1ecc224c-80', '2018-11-26', 2, NULL),
+('f712f54b-0b', '1ecc224c-80', '2018-11-24', 0, 'test 24');
 
 -- --------------------------------------------------------
 
@@ -230,9 +231,9 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`user_id`, `username`, `password`, `phone`, `email`, `date_of_birth`, `gender`, `real_name`, `user_description`, `created_date`, `last_login_time`, `continue_using_count`, `current_continue_using_count`, `best_continue_using_count`, `user_score`) VALUES
 ('1b153946-89', 'user02', '12345678', NULL, 'user02@mail.com', NULL, 1, 'nam', NULL, '2018-11-11', '0000-00-00', 100, 0, 0, 100),
 ('4abb9cc1-b9', 'user22', '12345678', NULL, 'user22@mail.com', NULL, NULL, NULL, NULL, '2018-11-23', '2018-11-23', 1, 1, 1, 2),
-('4e0819c9-33', 'dat', '12345678', NULL, 'dat@mail.com', NULL, NULL, 'dat', NULL, '2018-11-20', '2018-11-20', 30, 1, 1, 1000),
-('d233c193-6e', 'user01', '12345678', NULL, 'user01@mail.com', NULL, 0, 'jon', 'something good will hapend to you', '2018-11-12', '2018-11-25', 8, 8, 8, 18),
-('d233c195-hf', 'user03', '12345678', NULL, 'user03@mail.com', NULL, 0, 'kim', NULL, '2018-11-10', '0000-00-00', 6, 0, 0, 1000);
+('d233c193-6e', 'user01', '12345678', NULL, 'user01@mail.com', NULL, 0, 'jon', 'something good will hapend to you', '2018-11-12', '2018-11-27', 10, 10, 10, 26),
+('d233c195-hf', 'user03', '12345678', NULL, 'user03@mail.com', NULL, 0, 'kim', NULL, '2018-11-10', '0000-00-00', 6, 0, 0, 1000),
+('ed382fdb-67', 'dat', '12345678', NULL, 'dat@mail.com', NULL, NULL, NULL, NULL, '2018-11-25', '2018-11-25', 1, 1, 1, 2);
 
 --
 -- Indexes for dumped tables

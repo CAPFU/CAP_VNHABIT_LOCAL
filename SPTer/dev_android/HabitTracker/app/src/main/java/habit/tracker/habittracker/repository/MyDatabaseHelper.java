@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
- * Created by DatTVT1 on 10/15/2018
+ * Created on 10/15/2018
  */
 public abstract class MyDatabaseHelper {
     public SQLiteDatabase mDb;

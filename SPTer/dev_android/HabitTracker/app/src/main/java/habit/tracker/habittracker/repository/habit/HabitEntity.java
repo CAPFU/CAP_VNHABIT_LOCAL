@@ -1,7 +1,7 @@
 package habit.tracker.habittracker.repository.habit;
 
 /**
- * Created by DatTVT1 on 10/16/2018
+ * Created on 10/16/2018
  */
 public class HabitEntity implements TrackingDateInWeek {
     private String habitId;

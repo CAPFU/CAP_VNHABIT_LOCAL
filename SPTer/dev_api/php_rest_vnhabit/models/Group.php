@@ -9,9 +9,7 @@ include_once '../../models/Model.php';
         private $params;
 
         public $group_id;
-        public $parent_id;
         public $group_name;
-        public $group_icon;
         public $group_description;
 
         public function __construct($db) {

@@ -92,7 +92,7 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
         mService.getUser(userInfo[1], userInfo[2]).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                if (response.body().getResult().equals(AppConstant.RES_OK)) {
+                if (response.body().getResult().equals(AppConstant.STATUS_OK)) {
                     User user = response.body().getData();
                     Database db = new Database(ProfileActivity.this);
                     db.open();

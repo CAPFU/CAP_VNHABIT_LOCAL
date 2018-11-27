@@ -17,7 +17,7 @@ import habit.tracker.habittracker.repository.user.UserDaoImpl;
 import habit.tracker.habittracker.repository.user.UserSchema;
 
 /**
- * Created by DatTVT1 on 10/12/2018
+ * Created on 10/12/2018
  */
 public class Database {
     private static final String DATABASE_NAME = "vnhabit";

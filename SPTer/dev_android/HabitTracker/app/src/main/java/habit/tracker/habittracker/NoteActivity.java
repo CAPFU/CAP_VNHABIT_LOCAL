@@ -5,10 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -31,6 +33,7 @@ import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.tracking.Tracking;
 import habit.tracker.habittracker.api.model.tracking.TrackingList;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
+import habit.tracker.habittracker.common.swipe.SwipeToDeleteCallback;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
@@ -47,7 +50,7 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
     @BindView(R.id.llHeader)
     View llHeader;
     @BindView(R.id.rvNote)
-    RecyclerView rvNote;
+    RecyclerView recyclerViewNote;
     @BindView(R.id.imgAddNote)
     ImageView imgAddNote;
 
@@ -121,6 +124,8 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
         initializeScreen(habitId);
 
         updateUI();
+
+        enableSwipeToDeleteAndUndo();
     }
 
     @SuppressLint("ResourceType")
@@ -160,8 +165,8 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
         }
 
         noteRecyclerViewAdapter = new NoteRecyclerViewAdapter(this, displayItemList, this);
-        rvNote.setLayoutManager(new LinearLayoutManager(this));
-        rvNote.setAdapter(noteRecyclerViewAdapter);
+        recyclerViewNote.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewNote.setAdapter(noteRecyclerViewAdapter);
 
         if (TextUtils.isEmpty(habitEntity.getHabitColor()) || habitEntity.getHabitColor().equals(getString(R.color.color0))) {
             llHeader.setBackgroundColor(Color.parseColor(getString(R.color.gray2)));
@@ -427,6 +432,8 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
         updateUI();
     }
 
+
+
     @OnClick(R.id.tabEditHabit)
     public void editHabitDetails(View v) {
         super.editHabitDetails(habitEntity.getHabitId());
@@ -488,5 +495,39 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
         }
         db.close();
         return todayTracking;
+    }
+
+    private void enableSwipeToDeleteAndUndo() {
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+
+
+                final int position = viewHolder.getAdapterPosition();
+                final NoteItem item = displayItemList.get(position);
+
+                displayItemList.remove(position);
+                noteRecyclerViewAdapter.notifyDataSetChanged();
+
+
+//                Snackbar snackbar = Snackbar
+//                        .make(coordinatorLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
+//                snackbar.setAction("UNDO", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                        mAdapter.restoreItem(item, position);
+//                        recyclerViewNote.scrollToPosition(position);
+//                    }
+//                });
+
+//                snackbar.setActionTextColor(Color.YELLOW);
+//                snackbar.show();
+
+            }
+        };
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerViewNote);
     }
 }
