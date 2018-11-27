@@ -52,6 +52,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
     private static final int REPORT_CALENDAR = 4;
     private static final int SHOW_STATICS = 5;
     private static final int SHOW_PROFILE = 6;
+    private static final int SETTING = 7;
 
     public static final String HABIT_ID = "habit_id";
     public static final String HABIT_COLOR = "habit_color";
@@ -62,6 +63,8 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
     String firstCurrentDate;
     int timeLine = 0;
 
+    @BindView(R.id.imgSetting)
+    ImageView imgSetting;
     @BindView(R.id.rvMenu)
     RecyclerView recyclerView;
     @BindView(R.id.imgFilter)
@@ -111,6 +114,16 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
             backToCurrent();
         } else if (resultCode == RESULT_OK && (requestCode == SHOW_STATICS || requestCode == SHOW_PROFILE)) {
             backToCurrent();
+        } else if (requestCode == SETTING && resultCode == RESULT_OK) {
+            if (data != null) {
+                Bundle res = data.getExtras();
+                if (res != null) {
+                    boolean isLogout = res.getBoolean("logout");
+                    if (isLogout) {
+                        finish();
+                    }
+                }
+            }
         }
     }
 
@@ -342,6 +355,12 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
 //            Database.getTrackingDb().saveTracking(todayTracking);
         }
         return todayTracking;
+    }
+
+    @OnClick(R.id.imgSetting)
+    public void showSetting(View v) {
+        Intent intent = new Intent(this, SettingActivity.class);
+        startActivityForResult(intent, SETTING);
     }
 
     @OnClick(R.id.imgNext)

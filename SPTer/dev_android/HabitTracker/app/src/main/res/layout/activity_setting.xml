@@ -1,10 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".SettingActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:background="@drawable/border_bottom">
+        <ImageView
+            android:id="@+id/btn_back"
+            app:srcCompat="@drawable/arrow_back"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:paddingStart="13dp"
+            android:paddingEnd="13dp"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="8"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="#103cc1"
+            android:textSize="20sp"
+            android:text="Cài đặt"
+            />
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="11">
+
+        <TextView
+            android:id="@+id/lb1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="16sp"
+            android:padding="5dp"
+            android:text="Cá nhân"/>
+        <View
+            android:id="@+id/line1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/lb1"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#aeaeae"/>
+        <TextView
+            android:id="@+id/lb2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/line1"
+            android:layout_marginBottom="10dp"
+            android:textSize="16sp"
+            android:padding="5dp"
+            android:text="Sắp xếp theo"/>
+        <LinearLayout
+            android:id="@+id/ll_1"
+            android:layout_below="@+id/lb2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_TypeDaily"
+                android:tag="0"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="25dp"
+                android:textSize="12sp"
+                android:textColor="@color/light_brown"
+                android:background="@drawable/button_green"
+                android:text="Tên"/>
+
+            <Button
+                android:id="@+id/btn_TypeWeekly"
+                android:tag="1"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="25dp"
+                android:textSize="12sp"
+                android:textColor="@color/light_brown"
+                android:background="@android:color/transparent"
+                android:text="Đầu tiên"/>
+            <Button
+                android:id="@+id/btn_TypeMonthly"
+                android:tag="2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="25dp"
+                android:textSize="12sp"
+                android:textColor="@color/light_brown"
+                android:background="@android:color/transparent"
+                android:text="Cuối cùng"/>
+            <Button
+                android:id="@+id/btn_TypeYearly"
+                android:tag="3"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="25dp"
+                android:textSize="12sp"
+                android:textColor="@color/light_brown"
+                android:background="@android:color/transparent"
+                android:text="Tùy chĩnh"/>
+        </LinearLayout>
+        <View
+            android:id="@+id/line2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/ll_1"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:background="#aeaeae"/>
+        <TextView
+            android:id="@+id/lb3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/line2"
+            android:textSize="16sp"
+            android:padding="5dp"
+            android:text="Âm thanh thông báo"/>
+        <TextView
+            android:id="@+id/tvSoundSetting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/line2"
+            android:textSize="16sp"
+            android:padding="5dp"
+            android:layout_marginEnd="15dp"
+            android:textColor="#103cc1"
+            android:text="Mặc định"/>
+
+        <TextView
+            android:id="@+id/tvLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lb3"
+            android:textSize="16sp"
+            android:padding="5dp"
+            android:textColor="#103cc1"
+            android:text="Đăng xuất"/>
+    </RelativeLayout>
+</LinearLayout>
