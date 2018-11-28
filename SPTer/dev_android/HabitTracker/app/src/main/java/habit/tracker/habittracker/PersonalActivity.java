@@ -139,6 +139,8 @@ public class PersonalActivity extends AppCompatActivity {
         Database.getUserDb().saveUser(userEntity);
         db.close();
 
+        MySharedPreference.saveUser(this, user.getUserId(), user.getUsername(), user.getPassword());
+
         mService.updateUser(user).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
