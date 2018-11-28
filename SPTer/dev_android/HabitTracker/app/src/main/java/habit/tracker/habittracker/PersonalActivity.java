@@ -4,9 +4,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -14,6 +22,7 @@ import butterknife.OnClick;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
+import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
 import habit.tracker.habittracker.common.validator.Validator;
 import habit.tracker.habittracker.common.validator.ValidatorType;
@@ -30,6 +39,16 @@ public class PersonalActivity extends AppCompatActivity {
     EditText editUsername;
     @BindView(R.id.editRealName)
     EditText editRealName;
+    @BindView(R.id.editDay)
+    EditText editDay;
+    @BindView(R.id.editMonth)
+    EditText editMonth;
+    @BindView(R.id.editYear)
+    EditText editYear;
+    @BindView(R.id.radioMale)
+    RadioButton radioMale;
+    @BindView(R.id.radioFemale)
+    RadioButton radioFemale;
     @BindView(R.id.editOldPassword)
     EditText editPassword;
     @BindView(R.id.editNewPassword)
@@ -44,6 +63,7 @@ public class PersonalActivity extends AppCompatActivity {
     Button btnSave;
 
     private UserEntity userEntity;
+    private boolean isMale = true;
 
     VnHabitApiService mService = VnHabitApiUtils.getApiService();
 
@@ -59,10 +79,26 @@ public class PersonalActivity extends AppCompatActivity {
         userEntity = Database.getUserDb().getUser(MySharedPreference.getUserId(this));
         db.close();
 
-        editUsername.setText(userEntity.getUsername());
-        editEmail.setText(userEntity.getEmail());
-        editRealName.setText(userEntity.getRealName());
-        editDescription.setText(userEntity.getDescription());
+        Calendar ca = Calendar.getInstance();
+
+        if (userEntity != null) {
+
+            if (userEntity.getDateOfBirth() != null) {
+                ca.setTime(AppGenerator.getDate(userEntity.getDateOfBirth(), AppGenerator.YMD_SHORT));
+                editDay.setText(String.valueOf(ca.get(Calendar.DAY_OF_MONTH)));
+                editMonth.setText(String.valueOf(ca.get(Calendar.MONTH) + 1));
+                editYear.setText(String.valueOf(ca.get(Calendar.YEAR)));
+            }
+
+            if (userEntity.getGender() != null && userEntity.getGender().equals("0")) {
+                radioFemale.setChecked(true);
+            }
+
+            editUsername.setText(userEntity.getUsername());
+            editRealName.setText(userEntity.getRealName());
+            editEmail.setText(userEntity.getEmail());
+            editDescription.setText(userEntity.getDescription());
+        }
     }
 
     @OnClick({R.id.btnCancel, R.id.btnBack})
@@ -73,6 +109,10 @@ public class PersonalActivity extends AppCompatActivity {
     @OnClick(R.id.btnSave)
     public void saveInfo(View v) {
         String username = editUsername.getText().toString();
+        String date = editDay.getText().toString();
+        String month = editMonth.getText().toString();
+        String year = editYear.getText().toString();
+        String dob = year + "-" + month + "-" + date;
         String oldPassword = editPassword.getText().toString();
         String newPassword = editPasswordConfirm.getText().toString();
         String realName = editRealName.getText().toString();
@@ -87,6 +127,9 @@ public class PersonalActivity extends AppCompatActivity {
                     case EMPTY:
                         Toast.makeText(PersonalActivity.this, key + " không được rỗng", Toast.LENGTH_SHORT).show();
                         break;
+                    case DATE:
+                        Toast.makeText(PersonalActivity.this, key + " không hợp lệ", Toast.LENGTH_SHORT).show();
+                        break;
                     case PHONE:
                         Toast.makeText(PersonalActivity.this, key + " không đúng", Toast.LENGTH_SHORT).show();
                         break;
@@ -96,17 +139,23 @@ public class PersonalActivity extends AppCompatActivity {
                     case LENGTH:
                         Toast.makeText(PersonalActivity.this, "Chiều dài " + key + " tối thiểu là 8", Toast.LENGTH_SHORT).show();
                         break;
-                    case EQUAL:
-                        Toast.makeText(PersonalActivity.this, key + " không chính xác", Toast.LENGTH_SHORT).show();
+                    case DIFF:
+                        Toast.makeText(PersonalActivity.this, key + " mới trùng mật khẩu cũ", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
         });
         if (!validator.checkEmpty("Tên tài khoản", username)
+                || !validator.checkEmpty("Ngày", date)
+                || !validator.checkEmpty("Tháng", month)
+                || !validator.checkEmpty("Năm", year)
                 || !validator.checkEmpty("Email", email)
                 || !validator.checkEmpty("Mật khẩu", oldPassword)
                 || !validator.checkEmpty("Mật khẩu", newPassword)
-                || !validator.checkEmpty("Tên", realName) ) {
+                || !validator.checkEmpty("Tên", realName)) {
+            return;
+        }
+        if (!validator.checkDate(dob, AppGenerator.YMD_SHORT, "Ngày sinh")) {
             return;
         }
         if (!validator.checkEmail(email)) {
@@ -119,12 +168,16 @@ public class PersonalActivity extends AppCompatActivity {
         if (!validator.checkEqual(oldPassword, loginInfo[2], "Mật khẩu cũ")) {
             return;
         }
+        if (!validator.checkDiff(oldPassword, newPassword, "Mật khẩu")) {
+            return;
+        }
 
         User user = new User();
         user.setUserId(MySharedPreference.getUserId(this));
         user.setUsername(username);
         user.setRealName(realName);
-        user.setDateOfBirth(null);
+        user.setDateOfBirth(dob);
+        user.setGender(isMale ? "1" : "0");
         user.setEmail(email);
         user.setPassword(newPassword);
         user.setDescription(description);
@@ -153,5 +206,20 @@ public class PersonalActivity extends AppCompatActivity {
                 Toast.makeText(PersonalActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @OnClick({R.id.radioMale, R.id.radioFemale})
+    public void onRadioButtonClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+        switch (view.getId()) {
+            case R.id.radioMale:
+                if (checked)
+                    isMale = true;
+                break;
+            case R.id.radioFemale:
+                if (checked)
+                    isMale = false;
+                break;
+        }
     }
 }

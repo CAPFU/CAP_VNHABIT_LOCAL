@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 28, 2018 at 05:18 AM
+-- Generation Time: Nov 28, 2018 at 07:00 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -231,7 +231,7 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`user_id`, `username`, `password`, `email`, `date_of_birth`, `gender`, `real_name`, `user_description`, `created_date`, `last_login_time`, `continue_using_count`, `current_continue_using_count`, `best_continue_using_count`, `user_score`) VALUES
 ('1b153946-89', 'user02', '12345678', 'user02@mail.com', NULL, 1, 'nam', NULL, '2018-11-11', '0000-00-00', 100, 0, 0, 100),
 ('4abb9cc1-b9', 'user22', '12345678', 'user22@mail.com', NULL, NULL, NULL, NULL, '2018-11-23', '2018-11-23', 1, 1, 1, 2),
-('d233c193-6e', 'user01', '123456789a', 'user01@mail.com', NULL, 1, 'joncena', 'something good will hapend to you', '2018-11-10', '2018-11-28', 1, 1, 1, 2),
+('d233c193-6e', 'user01', '12345678', 'user01@mail.com', '1999-12-12', 1, 'joncena', 'something good', '2018-11-10', '2018-11-28', 1, 1, 1, 2),
 ('d233c195-hf', 'user03', '12345678', 'user03@mail.com', NULL, 0, 'kim', NULL, '2018-11-10', '0000-00-00', 6, 0, 0, 1000),
 ('ed382fdb-67', 'dat', '12345678', 'dat@mail.com', NULL, NULL, NULL, NULL, '2018-11-25', '2018-11-25', 1, 1, 1, 2);
 

@@ -125,7 +125,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     View selGroup;
     @BindView(R.id.tv_groupName)
     TextView tvGroupName;
-    String savedGroupId;
+    String selectedGroupId;
 
     @BindView(R.id.btnMon)
     TextView btnMon;
@@ -224,8 +224,17 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         if (requestCode == SELECT_GROUP) {
             if (resultCode == RESULT_OK) {
                 if (data != null && data.getExtras() != null) {
-                    savedGroupId = data.getStringExtra(GroupActivity.GROUP_ID);
-                    tvGroupName.setText(data.getStringExtra(GroupActivity.GROUP_NAME));
+                    selectedGroupId = data.getStringExtra(GroupActivity.GROUP_ID);
+                    Database db = Database.getInstance(HabitActivity.this);
+                    db.open();
+                    GroupEntity groupEntity = Database.getGroupDb().getGroup(selectedGroupId);
+                    db.close();
+                    if (groupEntity != null) {
+                        tvGroupName.setText(data.getStringExtra(GroupActivity.GROUP_NAME));
+                    } else {
+                        selectedGroupId = null;
+                        tvGroupName.setText("Chưa có");
+                    }
                 }
             }
         } else if (requestCode == ADD_REMINDER) {
@@ -397,7 +406,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
             // set group
             if (habitEntity.getGroupId() != null) {
-                this.savedGroupId = habitEntity.getGroupId();
+                this.selectedGroupId = habitEntity.getGroupId();
                 GroupEntity groupEntity = Database.groupDaoImpl.getGroup(habitEntity.getGroupId());
                 if (groupEntity != null) {
                     tvGroupName.setText(groupEntity.getGroupName());
@@ -598,7 +607,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             habit.setMonitorId(savedMonitorDateId);
         }
         habit.setUserId(savedUserId);
-        habit.setGroupId(savedGroupId);
+        habit.setGroupId(selectedGroupId);
 
         habit.setHabitName(habitName);
         habit.setHabitTarget(String.valueOf(habitTarget));

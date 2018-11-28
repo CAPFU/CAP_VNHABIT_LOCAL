@@ -27,6 +27,11 @@ public class SettingActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
+    @OnClick(R.id.btnBack)
+    public void back(View v) {
+        finish();
+    }
+
     @OnClick(R.id.tvLogout)
     public void logout(View v) {
         MySharedPreference.saveUser(this, null, null, null);

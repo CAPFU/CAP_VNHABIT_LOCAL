@@ -151,8 +151,8 @@ include_once '../../models/Model.php';
 
         // Update user
         public function update() {
-            $excludeArr = array('user_id', 'date_of_birth', 'gender', 'created_date', 'last_login_time', 'continue_using_count', 'current_continue_using_count', 'best_continue_using_count', 'user_score');
-            $excludeArr2 = array('date_of_birth', 'gender', 'created_date', 'last_login_time', 'continue_using_count', 'current_continue_using_count', 'best_continue_using_count', 'user_score');
+            $excludeArr = array('user_id', 'created_date', 'last_login_time', 'continue_using_count', 'current_continue_using_count', 'best_continue_using_count', 'user_score');
+            $excludeArr2 = array('created_date', 'last_login_time', 'continue_using_count', 'current_continue_using_count', 'best_continue_using_count', 'user_score');
             $query = 'UPDATE ' . $this->table . ' SET ' . $this->get_query_param($excludeArr) . ' WHERE user_id = :user_id';
             $stmt = $this->conn->prepare($query);
             $stmt = $this->bind_param_exc($stmt, $excludeArr2);
