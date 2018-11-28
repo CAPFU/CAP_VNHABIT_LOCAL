@@ -25,10 +25,11 @@ import static habit.tracker.habittracker.common.AppConstant.STATUS_OK;
 
 public class HabitTextWatcher implements TextWatcher {
     private Context context;
-    private boolean justSelectedSuggestion = true;
     private SearchRecyclerViewAdapter habitSuggestionAdapter;
     private List<HabitSuggestion> searchResultList = new ArrayList<>();
     private VnHabitApiService mService;
+
+    private boolean afterSelectedSuggestion = false;
 
     public HabitTextWatcher(Context context) {
         this.context = context;
@@ -47,8 +48,8 @@ public class HabitTextWatcher implements TextWatcher {
             habitSuggestionAdapter.notifyDataSetChanged();
             return;
         }
-        if (justSelectedSuggestion) {
-            justSelectedSuggestion = false;
+        if (afterSelectedSuggestion) {
+            afterSelectedSuggestion = false;
             return;
         }
 
@@ -134,8 +135,8 @@ public class HabitTextWatcher implements TextWatcher {
 
     }
 
-    public boolean isJustSelectedSuggestion() {
-        return justSelectedSuggestion;
+    public boolean isAfterSelectedSuggestion() {
+        return afterSelectedSuggestion;
     }
 
     public SearchRecyclerViewAdapter getHabitSuggestionAdapter() {
@@ -146,8 +147,8 @@ public class HabitTextWatcher implements TextWatcher {
         return searchResultList;
     }
 
-    public void setJustSelectedSuggestion(boolean justSelectedSuggestion) {
-        this.justSelectedSuggestion = justSelectedSuggestion;
+    public void setAfterSelectedSuggestion(boolean justSelectedSuggestion) {
+        this.afterSelectedSuggestion = justSelectedSuggestion;
     }
 
     public void setAdapter(SearchRecyclerViewAdapter habitSuggestionAdapter) {

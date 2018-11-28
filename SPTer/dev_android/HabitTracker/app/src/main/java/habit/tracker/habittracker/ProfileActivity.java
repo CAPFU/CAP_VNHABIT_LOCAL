@@ -101,13 +101,11 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
                         userEntity.setUserId(user.getUserId());
                         userEntity.setUsername(user.getUsername());
                         userEntity.setEmail(user.getEmail());
-                        userEntity.setPhone(user.getPhone());
                         userEntity.setGender(user.getGender());
                         userEntity.setDateOfBirth(user.getDateOfBirth());
                         userEntity.setPassword(user.getPassword());
                         userEntity.setRealName(user.getRealName());
-//                        userEntity.setAvatar(user.getAvatar());
-                        userEntity.setUserDescription(user.getUserDescription());
+                        userEntity.setDescription(user.getUserDescription());
                         userEntity.setCreatedDate(user.getCreatedDate());
                         userEntity.setLastLoginTime(user.getLastLoginTime());
                         userEntity.setContinueUsingCount(user.getContinueUsingCount());
@@ -175,7 +173,7 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
                         }
                     }
                     tvRealName.setText(userEntity.getRealName());
-                    tvUserDescription.setText(userEntity.getUserDescription());
+                    tvUserDescription.setText(userEntity.getDescription());
                     tvStartedDate.setText(AppGenerator.format(userEntity.getCreatedDate(), AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
                     tvLevel.setText(String.valueOf(getLevel(Integer.parseInt(userEntity.getUserScore()))));
                     tvUserScore.setText(userEntity.getUserScore());
@@ -184,28 +182,6 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
                     tvContinueUsing.setText(userEntity.getContinueUsingCount() + " ngày");
                     tvTotalHabit.setText(String.valueOf(habitCount));
                     suggestByGroupAdapter.notifyDataSetChanged();
-
-//                    int totalTrack = 0;
-//                    int successTrack = 0;
-//                    HabitEntity habitEntity;
-//                    List<TrackingEntity> defaultTrackingList;
-//                    List<HabitTracking> habitTrackingList = Database.getHabitDb().getHabitTracking(userId, userEntity.getCreatedDate(), currentDate);
-//                    for (HabitTracking habitTracking : habitTrackingList) {
-//                        habitEntity = habitTracking.getHabit();
-//                        defaultTrackingList = habitTracking.getTrackingList();
-//                        switch (habitEntity.getHabitType()) {
-//                            case TYPE_0:
-//                                for (TrackingEntity trackingEntity: defaultTrackingList) {
-//                                }
-//                                break;
-//                            case TYPE_1:
-//                                break;
-//                            case TYPE_2:
-//                                break;
-//                            case TYPE_3:
-//                                break;
-//                        }
-//                    }
 
                     db.close();
                 }

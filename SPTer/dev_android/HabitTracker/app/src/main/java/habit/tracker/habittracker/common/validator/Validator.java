@@ -40,6 +40,14 @@ public class Validator {
         return true;
     }
 
+    public boolean checkLength(String str, int length, String key) {
+        if (str.length() < length) {
+            mErrorMsgListener.showError(ValidatorType.LENGTH, key);
+            return false;
+        }
+        return true;
+    }
+
     public boolean checkPhone(String phone) {
         final String regex = "^[0][0-9]+$";
         Pattern pattern = Pattern.compile(regex);

@@ -76,12 +76,14 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     EditText editHabitName;
     @BindView(R.id.rvHabitSuggestion)
     RecyclerView rvHabitSuggestion;
+
     SearchRecyclerViewAdapter habitSuggestionAdapter;
     List<HabitSuggestion> searchResultList = new ArrayList<>();
+
     String initHabitId;
     String suggestHabitNameId;
     String suggestHabitName;
-    boolean justSelectedSuggestion = true;
+    HabitTextWatcher habitTextWatcher = new HabitTextWatcher(this);
 
     @BindView(R.id.btn_suggestHabit)
     View btnSuggestHabit;
@@ -277,7 +279,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 if (data != null) {
                     suggestHabitNameId = data.getStringExtra(SuggestionByGroupActivity.SUGGEST_HABIT_ID);
                     suggestHabitName = data.getStringExtra(SuggestionByGroupActivity.SUGGEST_HABIT_NAME_UNI);
-                    justSelectedSuggestion = true;
+                    habitTextWatcher.setAfterSelectedSuggestion(true);
                     editHabitName.setText(suggestHabitName);
                 }
             }
@@ -291,11 +293,11 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         setContentView(R.layout.activity_habit);
         ButterKnife.bind(this);
 
-        final HabitTextWatcher habitTextWatcher = new HabitTextWatcher(this);
+        final HabitTextWatcher habitNameTextWatcher = new HabitTextWatcher(this);
         habitSuggestionAdapter = new SearchRecyclerViewAdapter(this, searchResultList, new RecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                habitTextWatcher.setJustSelectedSuggestion(true);
+                habitNameTextWatcher.setAfterSelectedSuggestion(true);
                 suggestHabitNameId = searchResultList.get(position).getHabitNameId();
                 suggestHabitName = searchResultList.get(position).getHabitNameUni();
                 editHabitName.setText(suggestHabitName);
@@ -309,9 +311,9 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         rvHabitSuggestion.setItemAnimator(null);
 
         // get habit name suggestion
-        habitTextWatcher.setSearchResultList(searchResultList);
-        habitTextWatcher.setAdapter(habitSuggestionAdapter);
-        editHabitName.addTextChangedListener(habitTextWatcher);
+        habitNameTextWatcher.setSearchResultList(searchResultList);
+        habitNameTextWatcher.setAdapter(habitSuggestionAdapter);
+        editHabitName.addTextChangedListener(habitNameTextWatcher);
 
         // init remind list
         reminderAdapter = new RemindRecyclerViewAdapter(this, reminderDisplayList);
@@ -355,7 +357,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             suggestHabitNameId = data.getString(ProfileActivity.SUGGEST_NAME_ID, null);
             suggestHabitName = data.getString(ProfileActivity.SUGGEST_NAME, null);
             editHabitName.setText(suggestHabitName);
-            justSelectedSuggestion = true;
+            habitNameTextWatcher.setAfterSelectedSuggestion(true);
         }
         if (!TextUtils.isEmpty(initHabitId)) {
             if (initHabitId != null) {
@@ -397,7 +399,9 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             if (habitEntity.getGroupId() != null) {
                 this.savedGroupId = habitEntity.getGroupId();
                 GroupEntity groupEntity = Database.groupDaoImpl.getGroup(habitEntity.getGroupId());
-                tvGroupName.setText(groupEntity.getGroupName());
+                if (groupEntity != null) {
+                    tvGroupName.setText(groupEntity.getGroupName());
+                }
             }
 
             // set monitor days in week

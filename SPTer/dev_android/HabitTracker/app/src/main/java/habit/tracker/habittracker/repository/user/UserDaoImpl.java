@@ -41,9 +41,6 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
             if (cursor.getColumnIndex(EMAIL) != -1) {
                 userEntity.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(EMAIL)));
             }
-            if (cursor.getColumnIndex(PHONE) != -1) {
-                userEntity.setPhone(cursor.getString(cursor.getColumnIndexOrThrow(PHONE)));
-            }
             if (cursor.getColumnIndex(GENDER) != -1) {
                 userEntity.setGender(cursor.getString(cursor.getColumnIndexOrThrow(GENDER)));
             }
@@ -57,7 +54,7 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
                 userEntity.setAvatar(cursor.getString(cursor.getColumnIndexOrThrow(AVATAR)));
             }
             if (cursor.getColumnIndex(USER_DESCRIPTION) != -1) {
-                userEntity.setUserDescription(cursor.getString(cursor.getColumnIndexOrThrow(USER_DESCRIPTION)));
+                userEntity.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(USER_DESCRIPTION)));
             }
             if (cursor.getColumnIndex(USER_CREATED_DATE) != -1) {
                 userEntity.setCreatedDate(cursor.getString(cursor.getColumnIndexOrThrow(USER_CREATED_DATE)));
@@ -87,12 +84,11 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
         initialValues.put(USERNAME, userEntity.getUsername());
         initialValues.put(PASSWORD, userEntity.getPassword());
         initialValues.put(EMAIL, userEntity.getEmail());
-        initialValues.put(PHONE, userEntity.getPhone());
         initialValues.put(GENDER, userEntity.getGender());
         initialValues.put(DATE_OF_BIRTH, userEntity.getDateOfBirth());
         initialValues.put(REAL_NAME, userEntity.getRealName());
         initialValues.put(AVATAR, userEntity.getAvatar());
-        initialValues.put(USER_DESCRIPTION, userEntity.getUserDescription());
+        initialValues.put(USER_DESCRIPTION, userEntity.getDescription());
         initialValues.put(USER_CREATED_DATE, userEntity.getCreatedDate());
         initialValues.put(LAST_LOGIN_TIME, userEntity.getLastLoginTime());
         initialValues.put(CONTINUE_USING_COUNT, userEntity.getContinueUsingCount());
@@ -112,12 +108,11 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
             entity.setUsername(user.getUsername());
             entity.setPassword(user.getPassword());
             entity.setGender(user.getGender());
-            entity.setPhone(user.getPhone());
             entity.setEmail(user.getEmail());
             entity.setDateOfBirth(user.getDateOfBirth());
             entity.setAvatar(user.getAvatar());
             entity.setRealName(user.getRealName());
-            entity.setUserDescription(user.getUserDescription());
+            entity.setDescription(user.getUserDescription());
             entity.setCreatedDate(user.getCreatedDate());
             entity.setLastLoginTime(user.getLastLoginTime());
             entity.setContinueUsingCount(user.getContinueUsingCount());

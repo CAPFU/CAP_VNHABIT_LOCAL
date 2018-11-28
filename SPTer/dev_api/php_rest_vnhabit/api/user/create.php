@@ -23,7 +23,6 @@ $user->user_id = $data->user_id;
 $user->username = $data->username;
 $user->password = $data->password;
 $user->email = $data->email;
-$user->phone = $data->phone;
 $user->date_of_birth = $data->date_of_birth;
 $user->gender = $data->gender;
 $user->real_name = $data->real_name;

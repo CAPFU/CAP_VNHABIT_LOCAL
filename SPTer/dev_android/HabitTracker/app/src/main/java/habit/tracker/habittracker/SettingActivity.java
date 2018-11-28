@@ -14,6 +14,8 @@ import habit.tracker.habittracker.common.util.MySharedPreference;
 
 public class SettingActivity extends AppCompatActivity {
 
+    @BindView(R.id.lbPersonal)
+    TextView lbPersonal;
     @BindView(R.id.tvLogout)
     TextView tvLogout;
 
@@ -32,5 +34,11 @@ public class SettingActivity extends AppCompatActivity {
         intent.putExtra("logout", true);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @OnClick(R.id.lbPersonal)
+    public void editPersonalInfo(View v) {
+        Intent intent = new Intent(this, PersonalActivity.class);
+        startActivity(intent);
     }
 }

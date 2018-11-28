@@ -5,7 +5,6 @@ public interface UserSchema {
     String USER_ID = "user_id";
     String USERNAME = "username";
     String EMAIL = "email";
-    String PHONE = "phone";
     String GENDER = "gender";
     String DATE_OF_BIRTH = "date_of_birth";
     String PASSWORD = "password";
@@ -24,7 +23,6 @@ public interface UserSchema {
                     + USER_ID + " TEXT PRIMARY KEY NOT NULL, "
                     + USERNAME + " TEXT, "
                     + EMAIL + " TEXT, "
-                    + PHONE + " TEXT, "
                     + GENDER + " TEXT, "
                     + DATE_OF_BIRTH + " TEXT, "
                     + PASSWORD + " TEXT, "
@@ -38,6 +36,6 @@ public interface UserSchema {
                     + BEST_CONTINUE_USING_COUNT + " TEXT, "
                     + USER_SCORE + " TEXT"
                     + ")";
-    String[] USER_COLUMNS = new String[]{USER_ID, USERNAME, EMAIL, PHONE, GENDER, DATE_OF_BIRTH, PASSWORD, REAL_NAME, AVATAR, USER_DESCRIPTION, USER_CREATED_DATE,
+    String[] USER_COLUMNS = new String[]{USER_ID, USERNAME, EMAIL, GENDER, DATE_OF_BIRTH, PASSWORD, REAL_NAME, AVATAR, USER_DESCRIPTION, USER_CREATED_DATE,
             LAST_LOGIN_TIME, CONTINUE_USING_COUNT, CURRENT_CONTINUE_USING_COUNT, BEST_CONTINUE_USING_COUNT, USER_SCORE};
 }

@@ -77,7 +77,7 @@ public class UserEntity {
         return avatar;
     }
 
-    public String getUserDescription() {
+    public String getDescription() {
         return userDescription;
     }
 
@@ -141,7 +141,7 @@ public class UserEntity {
         this.avatar = avatar;
     }
 
-    public void setUserDescription(String userDescription) {
+    public void setDescription(String userDescription) {
         this.userDescription = userDescription;
     }
 

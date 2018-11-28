@@ -30,6 +30,9 @@ public interface VnHabitApiService {
     @POST("user/create.php")
     Call<UserResult> registerUser(@Body User user);
 
+    @POST("user/update.php")
+    Call<ResponseBody> updateUser(@Body User user);
+
     @POST("habit/create.php")
     Call<ResponseBody> addHabit(@Body Habit habit);
 

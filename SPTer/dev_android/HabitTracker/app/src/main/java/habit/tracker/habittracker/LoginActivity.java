@@ -142,12 +142,11 @@ public class LoginActivity extends BaseActivity {
                     userEntity.setUserId(user.getUserId());
                     userEntity.setUsername(user.getUsername());
                     userEntity.setEmail(user.getEmail());
-                    userEntity.setPhone(user.getPhone());
                     userEntity.setGender(user.getGender());
                     userEntity.setDateOfBirth(user.getDateOfBirth());
                     userEntity.setPassword(user.getPassword());
                     userEntity.setRealName(user.getRealName());
-                    userEntity.setUserDescription(user.getUserDescription());
+                    userEntity.setDescription(user.getUserDescription());
                     userEntity.setCreatedDate(user.getCreatedDate());
                     userEntity.setLastLoginTime(user.getLastLoginTime());
                     userEntity.setContinueUsingCount(user.getContinueUsingCount());
