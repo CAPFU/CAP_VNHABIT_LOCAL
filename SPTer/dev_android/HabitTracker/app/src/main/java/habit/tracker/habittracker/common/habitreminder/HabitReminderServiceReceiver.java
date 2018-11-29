@@ -27,10 +27,10 @@ public class HabitReminderServiceReceiver extends BroadcastReceiver {
         if (extras != null) {
             String remindId = extras.getString(HabitReminderManager.REMIND_ID);
             String remindText = extras.getString(HabitReminderManager.REMIND_TEXT);
-            String habitName = extras.getString(HabitReminderManager.HABIT_NAME);
+            String remindTitle = extras.getString(HabitReminderManager.REMIND_TITLE);
             String endTime = extras.getString(HabitReminderManager.END_TIME);
 
-            if (remindId == null || remindText == null || habitName == null) {
+            if (remindId == null || remindText == null || remindTitle == null) {
                 return;
             }
 
@@ -58,7 +58,7 @@ public class HabitReminderServiceReceiver extends BroadcastReceiver {
 
                 NotificationChannel mChannel = notificationManager.getNotificationChannel(defaultId);
                 if (mChannel == null) {
-                    mChannel = new NotificationChannel(defaultId, habitName, NotificationManager.IMPORTANCE_HIGH);
+                    mChannel = new NotificationChannel(defaultId, remindTitle, NotificationManager.IMPORTANCE_HIGH);
 //                    mChannel.enableVibration(true);
 //                    mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
                     notificationManager.createNotificationChannel(mChannel);
@@ -66,12 +66,12 @@ public class HabitReminderServiceReceiver extends BroadcastReceiver {
 
                 notification = new NotificationCompat.Builder(context, defaultId)
                                 .setSmallIcon(R.drawable.app_launcher)
-                                .setContentTitle("VN Habit Tracker: " + habitName)
+                                .setContentTitle("VN Habit Tracker: " + remindTitle)
                                 .setContentText(remindText).build();
             } else {
                 notification = new NotificationCompat.Builder(context, defaultId)
                         .setSmallIcon(R.drawable.app_launcher)
-                        .setContentTitle("VN Habit Tracker: " + habitName)
+                        .setContentTitle("VN Habit Tracker: " + remindTitle)
                         .setContentText(remindText).build();
             }
 

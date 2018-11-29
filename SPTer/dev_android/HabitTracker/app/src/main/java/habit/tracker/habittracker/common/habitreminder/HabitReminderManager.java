@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -15,17 +16,13 @@ import habit.tracker.habittracker.common.util.AppGenerator;
 public class HabitReminderManager {
     public static final String REMIND_ID = "remind_id";
     public static final String REMIND_TEXT = "remind_text";
-    public static final String HABIT_NAME = "habit_name";
+    public static final String REMIND_TITLE = "remind_title";
     public static final String END_TIME = "end_time";
 
     private Context context;
     private AlarmManager alarmMgr;
     private PendingIntent alarmIntent;
     private List<Reminder> remindersList;
-
-    public HabitReminderManager(Context context) {
-        this.context = context;
-    }
 
     public HabitReminderManager(Context context, List<Reminder> remindAddNew) {
         this.context = context;
@@ -66,7 +63,26 @@ public class HabitReminderManager {
         Intent intent = new Intent(context, HabitReminderServiceReceiver.class);
         intent.putExtra(REMIND_ID, reminder.getHabitId());
         intent.putExtra(REMIND_TEXT, reminder.getRemindText());
-        intent.putExtra(HABIT_NAME, reminder.getHabitName());
+        String title = null;
+        if (TextUtils.isEmpty(reminder.getHabitName())) {
+            switch (reminder.getRepeatType()) {
+                case "0":
+                    title = "Hăng ngày";
+                    break;
+                case "1":
+                    title = "Hăng tuần";
+                    break;
+                case "2":
+                    title = "Hăng tháng";
+                    break;
+                case "3":
+                    title = "Hăng năm";
+                    break;
+            }
+        } else {
+            title = reminder.getHabitName();
+        }
+        intent.putExtra(REMIND_TITLE, title);
         intent.putExtra(END_TIME, reminder.getRemindEndTime());
         alarmIntent = PendingIntent.getBroadcast(context, Integer.parseInt(reminder.getReminderId()), intent, 0);
 

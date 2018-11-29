@@ -27,10 +27,10 @@ public class Database {
     private final Context mContext;
 
     public static UserDaoImpl userDaoImpl;
-    public static HabitDaoImpl habitDaoImpl;
+    private static HabitDaoImpl habitDaoImpl;
     public static GroupDaoImpl groupDaoImpl;
     public static TrackingDaoImpl trackingImpl;
-    public static ReminderDaoImpl reminderImpl;
+    private static ReminderDaoImpl reminderImpl;
 
     public static UserDaoImpl getUserDb() {
         return userDaoImpl;
@@ -55,6 +55,7 @@ public class Database {
     public Database(Context context) {
         this.mContext = context;
     }
+
     private static Database sInstance;
 
     public static synchronized Database getInstance(Context context) {

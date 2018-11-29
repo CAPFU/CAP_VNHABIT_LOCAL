@@ -92,13 +92,15 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
 
         Bundle data = getIntent().getExtras();
         if (data != null) {
+
             reminderId = data.getString(REMINDER_ID);
+
             if (!TextUtils.isEmpty(reminderId)) {
-                positionInList = data.getInt(POSITION_IN_LIST, -1);
-                if (!TextUtils.isEmpty(reminderId)) {
-                    Database db = Database.getInstance(this);
-                    db.open();
-                    ReminderEntity reminderEntity = Database.getReminderDb().getRemindersById(reminderId);
+                Database db = Database.getInstance(this);
+                db.open();
+
+                ReminderEntity reminderEntity = Database.getReminderDb().getRemindersById(reminderId);
+                if (reminderEntity != null) {
 
                     String t = reminderEntity.getReminderStartTime();
                     Date d = AppGenerator.getDate(t, AppGenerator.YMD2);
@@ -129,9 +131,10 @@ public class ReminderCreateActivity extends AppCompatActivity implements NumberP
                     edRemindText.setText(reminderEntity.getRemindText());
                     btnCancel.setText("Xóa");
                     btnSave.setText("Cập nhật");
+                    positionInList = data.getInt(POSITION_IN_LIST, -1);
                     isUpdate = true;
-                    db.close();
                 }
+                db.close();
             }
         }
 

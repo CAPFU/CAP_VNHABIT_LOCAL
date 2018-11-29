@@ -125,6 +125,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/line3"
+            android:layout_marginBottom="5dp"
             android:textSize="14sp"
             android:padding="5dp"
             android:text="Nhắc nhở:"/>
@@ -141,10 +142,9 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
-                android:layout_toStartOf="@+id/btn_addReminder" />
-
+                android:layout_toStartOf="@+id/tvReminder" />
             <TextView
-                android:id="@+id/btn_addReminder"
+                android:id="@+id/tvReminder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
