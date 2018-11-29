@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -108,7 +109,8 @@ public class HabitTextWatcher implements TextWatcher {
                             searchResultList.addAll(sortedHabitList.size() >= 5 ? sortedHabitList.subList(0, 5) : sortedHabitList);
                         } else if (userLevel < 6) {
                             int size = easyHabitList.size() + mediumHabitList.size();
-                            searchResultList.addAll(sortedHabitList.subList(size, 0));
+                            searchResultList.addAll(sortedHabitList.subList(0, size));
+                            Collections.reverse(searchResultList);
                             if (searchResultList.size() < 5) {
                                 size = 5 - searchResultList.size();
                                 searchResultList.addAll(hardHabitList.size() >= size ? hardHabitList.subList(0, size) : hardHabitList);
