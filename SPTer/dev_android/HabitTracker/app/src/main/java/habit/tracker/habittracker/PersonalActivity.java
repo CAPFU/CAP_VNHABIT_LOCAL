@@ -4,17 +4,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -172,6 +167,9 @@ public class PersonalActivity extends AppCompatActivity {
             return;
         }
 
+        Database db = Database.getInstance(this);
+        db.open();
+
         User user = new User();
         user.setUserId(MySharedPreference.getUserId(this));
         user.setUsername(username);
@@ -182,14 +180,16 @@ public class PersonalActivity extends AppCompatActivity {
         user.setPassword(newPassword);
         user.setDescription(description);
 
-        userEntity.setUsername(username);
-        userEntity.setRealName(realName);
-        userEntity.setEmail(email);
-        userEntity.setPassword(newPassword);
-        userEntity.setDescription(description);
-        Database db = Database.getInstance(this);
-        db.open();
+        userEntity.setUsername(user.getUsername());
+        userEntity.setRealName(user.getRealName());
+        userEntity.setDateOfBirth(user.getDateOfBirth());
+        userEntity.setGender(user.getGender());
+        userEntity.setEmail(user.getGender());
+        userEntity.setPassword(user.getPassword());
+        userEntity.setDescription(user.getDescription());
+
         Database.getUserDb().saveUser(userEntity);
+
         db.close();
 
         MySharedPreference.saveUser(this, user.getUserId(), user.getUsername(), user.getPassword());

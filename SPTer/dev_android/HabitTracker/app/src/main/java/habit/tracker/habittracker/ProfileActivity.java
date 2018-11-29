@@ -105,7 +105,7 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
                         userEntity.setDateOfBirth(user.getDateOfBirth());
                         userEntity.setPassword(user.getPassword());
                         userEntity.setRealName(user.getRealName());
-                        userEntity.setDescription(user.getUserDescription());
+                        userEntity.setDescription(user.getDescription());
                         userEntity.setCreatedDate(user.getCreatedDate());
                         userEntity.setLastLoginTime(user.getLastLoginTime());
                         userEntity.setContinueUsingCount(user.getContinueUsingCount());

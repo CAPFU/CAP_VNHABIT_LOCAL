@@ -84,7 +84,7 @@ public class User {
         return avatar;
     }
 
-    public String getUserDescription() {
+    public String getDescription() {
         return userDescription;
     }
 

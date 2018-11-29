@@ -112,7 +112,7 @@ public class UserDaoImpl extends MyDatabaseHelper implements UserDao, UserSchema
             entity.setDateOfBirth(user.getDateOfBirth());
             entity.setAvatar(user.getAvatar());
             entity.setRealName(user.getRealName());
-            entity.setDescription(user.getUserDescription());
+            entity.setDescription(user.getDescription());
             entity.setCreatedDate(user.getCreatedDate());
             entity.setLastLoginTime(user.getLastLoginTime());
             entity.setContinueUsingCount(user.getContinueUsingCount());
