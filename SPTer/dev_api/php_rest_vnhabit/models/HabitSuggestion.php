@@ -55,6 +55,13 @@ class HabitSuggestion extends Model {
         return $stmt;
     }
 
+    public function isUpdate() {
+        $query = 'SELECT ' . $this->cols . ' FROM ' . $this->table . ' WHERE habit_name_id = "' . $this->habit_name_id . '"';
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
+    }
+
     public function updateCount() {
         // create query
         $query = 'UPDATE ' . $this->table . ' SET habit_name_count = habit_name_count + 1 WHERE habit_name_id = :habit_name_id';

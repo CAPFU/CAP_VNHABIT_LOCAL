@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Methods: PUT');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
-include_once '../../config/Database.php';
+include_once '../../config/config.php';
 include_once '../../models/Reminder.php';
 include_once '../../models/Habit.php';
 include_once '../../models/MonitorDate.php';
@@ -29,9 +29,10 @@ $habitSuggestion->habit_name_id = $data->habit_name_id;
 $habitSuggestion->habit_name_uni = $data->habit_name;
 $habitSuggestion->habit_name_ascii = $data->habit_name_ascii;
 $habitSuggestion->habit_name_count = $data->habit_name_count;
-$habitSuggestion->updateCount();
-if ($habitSuggestion->find($data->habit_name)->rowCount() == 0) {
+if (!$habitSuggestion->isUpdate()) {
     $habitSuggestion->create();
+} else {
+    $habitSuggestion->updateCount();
 }
 
 $date->monitor_id = $data->monitor_id;
