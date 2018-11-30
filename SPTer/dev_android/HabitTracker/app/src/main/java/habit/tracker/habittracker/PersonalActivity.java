@@ -159,7 +159,7 @@ public class PersonalActivity extends AppCompatActivity {
         if (!validator.checkEmail(email)) {
             return;
         }
-        if (!validator.checkLength(newPassword, 8, "Mật khẩu")) {
+        if (!validator.checkLength(oldPassword, 8, "Mật khẩu")) {
             return;
         }
         String[] loginInfo = MySharedPreference.getUser(this);

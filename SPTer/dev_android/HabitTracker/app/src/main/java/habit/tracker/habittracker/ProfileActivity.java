@@ -1,5 +1,6 @@
 package habit.tracker.habittracker;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -127,6 +128,7 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
 
     private void initializeScreen() {
         mService.getHabitSuggestByLevel().enqueue(new Callback<SuggestByLevelReponse>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<SuggestByLevelReponse> call, Response<SuggestByLevelReponse> response) {
                 if (response.body().getResult().equals("1")) {
