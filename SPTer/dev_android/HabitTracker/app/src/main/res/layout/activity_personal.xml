@@ -81,7 +81,8 @@
                         android:layout_width="0dp"
                         android:layout_weight="2"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
+                        android:gravity="center"
+                        android:textSize="14sp"
                         android:hint="ngày"/>
                     <TextView
                         android:layout_width="0dp"
@@ -93,7 +94,8 @@
                         android:layout_width="0dp"
                         android:layout_weight="2"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
+                        android:gravity="center"
+                        android:textSize="14sp"
                         android:hint="tháng"/>
                     <TextView
                         android:layout_width="0dp"
@@ -105,7 +107,8 @@
                         android:layout_width="0dp"
                         android:layout_weight="2"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
+                        android:gravity="center"
+                        android:textSize="14sp"
                         android:hint="năm"/>
                 </LinearLayout>
                 <RadioGroup

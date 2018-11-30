@@ -2,6 +2,7 @@ package habit.tracker.habittracker;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -134,6 +135,9 @@ public class PersonalActivity extends AppCompatActivity {
                     case LENGTH:
                         Toast.makeText(PersonalActivity.this, "Chiều dài " + key + " tối thiểu là 8", Toast.LENGTH_SHORT).show();
                         break;
+                    case EQUAL:
+                        Toast.makeText(PersonalActivity.this, key + " không đúng", Toast.LENGTH_SHORT).show();
+                        break;
                     case DIFF:
                         Toast.makeText(PersonalActivity.this, key + " mới trùng mật khẩu cũ", Toast.LENGTH_SHORT).show();
                         break;
@@ -146,7 +150,6 @@ public class PersonalActivity extends AppCompatActivity {
                 || !validator.checkEmpty("Năm", year)
                 || !validator.checkEmpty("Email", email)
                 || !validator.checkEmpty("Mật khẩu", oldPassword)
-                || !validator.checkEmpty("Mật khẩu", newPassword)
                 || !validator.checkEmpty("Tên", realName)) {
             return;
         }
@@ -163,8 +166,10 @@ public class PersonalActivity extends AppCompatActivity {
         if (!validator.checkEqual(oldPassword, loginInfo[2], "Mật khẩu cũ")) {
             return;
         }
-        if (!validator.checkDiff(oldPassword, newPassword, "Mật khẩu")) {
-            return;
+        if (!TextUtils.isEmpty(newPassword)) {
+            if (!validator.checkDiff(oldPassword, newPassword, "Mật khẩu")) {
+                return;
+            }
         }
 
         Database db = Database.getInstance(this);
@@ -184,7 +189,7 @@ public class PersonalActivity extends AppCompatActivity {
         userEntity.setRealName(user.getRealName());
         userEntity.setDateOfBirth(user.getDateOfBirth());
         userEntity.setGender(user.getGender());
-        userEntity.setEmail(user.getGender());
+        userEntity.setEmail(user.getEmail());
         userEntity.setPassword(user.getPassword());
         userEntity.setDescription(user.getDescription());
 
