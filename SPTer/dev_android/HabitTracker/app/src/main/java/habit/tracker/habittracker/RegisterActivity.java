@@ -104,10 +104,10 @@ public class RegisterActivity extends BaseActivity {
                 if (!validator.checkEqual(password, passwordConf, "Mật khẩu")) {
                     return;
                 }
+                newUser.setUserId(AppGenerator.getNewId());
                 newUser.setUsername(username);
                 newUser.setEmail(email);
                 newUser.setPassword(password);
-                newUser.setUserId(AppGenerator.getNewId());
                 newUser.setCreatedDate(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
                 newUser.setLastLoginTime(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
                 newUser.setContinueUsingCount("1");
