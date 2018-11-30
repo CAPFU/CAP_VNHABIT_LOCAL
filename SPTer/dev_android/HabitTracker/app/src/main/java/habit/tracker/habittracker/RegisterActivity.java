@@ -140,6 +140,8 @@ public class RegisterActivity extends BaseActivity {
                     RegisterActivity.this.setResult(RESULT_OK, intent);
                     Toast.makeText(RegisterActivity.this, "Đăng ký tài khoản thành công", Toast.LENGTH_SHORT).show();
                     finish();
+                } else if (response.body().getResult().equals("2")) {
+                    Toast.makeText(RegisterActivity.this, "Tài khoản đã tồn tại", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(RegisterActivity.this, "Đăng ký không thành công", Toast.LENGTH_SHORT).show();
                 }
