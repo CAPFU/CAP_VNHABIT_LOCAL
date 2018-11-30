@@ -3,6 +3,7 @@ package habit.tracker.habittracker;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +12,11 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.ajts.androidmads.library.SQLiteToExcel;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +44,9 @@ public class SettingActivity extends AppCompatActivity {
     TextView tvReminder;
     @BindView(R.id.rvRemind)
     RecyclerView rvRemind;
+
+    @BindView(R.id.lbExport)
+    TextView lbExport;
 
     List<Reminder> reminderDisplayList = new ArrayList<>();
     RemindRecyclerViewAdapter reminderAdapter;
@@ -166,4 +174,34 @@ public class SettingActivity extends AppCompatActivity {
         startActivityForResult(intent, ADD_USER_REMINDER);
     }
 
+    @OnClick(R.id.lbExport)
+    public void exportData(View v) {
+        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/Backup/";
+        File file = new File(directory_path);
+        if (!file.exists()) {
+            if (file.mkdirs()) {
+            }
+        }
+//        final Database db = Database.getInstance(this);
+//        db.open();
+        // Export SQLite DB as EXCEL FILE
+        SQLiteToExcel sqliteToExcel = new SQLiteToExcel(getApplicationContext(), Database.DATABASE_NAME, directory_path);
+        sqliteToExcel.exportSingleTable("my_user","users.csv", new SQLiteToExcel.ExportListener() {
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onCompleted(String filePath) {
+                Toast.makeText(SettingActivity.this, "Export ra " + filePath, Toast.LENGTH_SHORT).show();
+//                db.close();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(SettingActivity.this, "Export không thành công", Toast.LENGTH_SHORT).show();
+//                db.close();
+            }
+        });
+    }
 }
