@@ -833,29 +833,25 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     }
 
     @OnClick({R.id.edit_startDate, R.id.edit_endDate})
-    public void showDatePicker(View v) {
+    public void showDatePickerDialog(View v) {
         Calendar ca = Calendar.getInstance();
         DatePickerDialog dialog;
         onSetStartDate = v.getId() == R.id.edit_startDate;
 
         if (v.getId() == R.id.edit_startDate) {
             ca.setTime(AppGenerator.getDate(startHabitDate, AppGenerator.YMD_SHORT));
-            dialog = new DatePickerDialog(this, this,
-                    ca.get(Calendar.YEAR), ca.get(Calendar.MONTH), ca.get(Calendar.DATE));
+            dialog = new DatePickerDialog(this, this, ca.get(Calendar.YEAR), ca.get(Calendar.MONTH), ca.get(Calendar.DATE));
             dialog.getDatePicker().setMinDate(System.currentTimeMillis());
             dialog.show();
 
         } else {
-            String end = endHabitDate;
-            if (TextUtils.isEmpty(end)) {
-                end = startHabitDate;
-            }
-            ca.setTime(AppGenerator.getDate(end, AppGenerator.YMD_SHORT));
-            dialog = new DatePickerDialog(this, this,
-                    ca.get(Calendar.YEAR), ca.get(Calendar.MONTH), ca.get(Calendar.DATE));
 
-            ca.setTime(AppGenerator.getDate(startHabitDate, AppGenerator.YMD_SHORT));
+            ca.setTime(AppGenerator.getDate(endHabitDate, AppGenerator.YMD_SHORT));
+
+            dialog = new DatePickerDialog(this, this, ca.get(Calendar.YEAR), ca.get(Calendar.MONTH), ca.get(Calendar.DATE));
+
             dialog.getDatePicker().setMinDate(ca.getTimeInMillis());
+
             dialog.show();
         }
 
@@ -897,8 +893,11 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             startHabitDate = AppGenerator.getDate(year, month + 1, day, AppGenerator.YMD_SHORT);
             tvStartDate.setText(AppGenerator.format(startHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
 
-            endHabitDate = getEndDateByMonitorType();
-            tvEndDate.setText(AppGenerator.format(endHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
+            String minEndDate = getEndDateByMonitorType();
+            if (endHabitDate.compareTo(minEndDate) < 0) {
+                endHabitDate = minEndDate;
+                tvEndDate.setText(AppGenerator.format(endHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
+            }
 
         } else {
             endHabitDate = AppGenerator.getDate(year, month + 1, day, AppGenerator.YMD_SHORT);
