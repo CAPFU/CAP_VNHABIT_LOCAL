@@ -3,11 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 01, 2018 at 04:06 AM
+-- Generation Time: Dec 01, 2018 at 05:13 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
-
-SET FOREIGN_KEY_CHECKS = 0;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -54,6 +52,35 @@ CREATE TABLE `feedback` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `group`
+--
+
+DROP TABLE IF EXISTS `group`;
+CREATE TABLE `group` (
+  `group_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `group_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `group_description` text COLLATE utf8mb4_unicode_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `group`
+--
+
+INSERT INTO `group` (`group_id`, `user_id`, `group_name`, `group_description`) VALUES
+('1', NULL, 'Sức khỏe', NULL),
+('2', NULL, 'Kinh tế', NULL),
+('3', NULL, 'Gia đình', NULL),
+('4', NULL, 'Học tập', NULL),
+('5', NULL, 'Quan hệ', NULL),
+('6', NULL, 'Công việc', NULL),
+('7', 'd233c193-6e', 'Từ thiện', NULL),
+('8', 'd233c193-6e', 'Lao động', NULL),
+('9', 'd233c193-6e', 'Phát triển bản thân', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `habit`
 --
 
@@ -76,34 +103,12 @@ CREATE TABLE `habit` (
   `habit_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `habit_group`
+-- Dumping data for table `habit`
 --
 
-DROP TABLE IF EXISTS `habit_group`;
-CREATE TABLE `habit_group` (
-  `group_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `user_id` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `group_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `group_description` text COLLATE utf8mb4_unicode_ci
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `habit_group`
---
-
-INSERT INTO `habit_group` (`group_id`, `user_id`, `group_name`, `group_description`) VALUES
-('1', NULL, 'Sức khỏe', NULL),
-('2', NULL, 'Kinh tế', NULL),
-('3', NULL, 'Gia đình', NULL),
-('4', NULL, 'Học tập', NULL),
-('5', NULL, 'Quan hệ', NULL),
-('6', NULL, 'Công việc', NULL),
-('7', 'd233c193-6e', 'Từ thiện', NULL),
-('8', 'd233c193-6e', 'Lao động', NULL),
-('9', 'd233c193-6e', 'Phát triển bản thân', NULL);
+INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
+('bed76ca3-4d', 'd233c193-6e', '1', '4b23a479-d3', 'Đi Thức đêm', 1, 0, 0, NULL, 1, '2018-12-01', '2018-12-02', '2018-12-01', '#784a90e6', '');
 
 -- --------------------------------------------------------
 
@@ -127,13 +132,14 @@ CREATE TABLE `habit_suggestion` (
 --
 
 INSERT INTO `habit_suggestion` (`habit_name_id`, `group_id`, `habit_name_uni`, `habit_name_ascii`, `habit_name_count`, `total_track`, `success_track`) VALUES
+('01aae238-7d', NULL, 'Đi Thức đêm', 'đi thuc đem', 1, NULL, NULL),
 ('154fsd', '2', 'Đi chợ', 'di cho', 13, 35, 35),
 ('1dv43fsd', '3', 'Đi bộ', 'di bo', 12, 90, 20),
 ('a0fde794-38', '4', 'an com', 'an com', 1, 0, 0),
 ('dasf', '1', 'Đi Uống thuốc', 'di uong thuoc', 0, 200, 119),
 ('dsfgsd', '2', 'Đi Chạy bộ', 'di chay bo', 14, 11, 10),
 ('fsd-345', '3', 'Đi Uống rượu', 'di uong ruou', 4, 1000, 10),
-('fsd545', '3', 'Đi Thức đêm', 'di thuc dem', 44, 60, 59),
+('fsd545', '3', 'Đi Thức đêm', 'di thuc dem', 45, 60, 59),
 ('gfdh', '1', 'Đi Hút thuốc', 'di hut thuoc', 10, 100, 99),
 ('Gym', '1', 'Gym', '', 0, 0, 0);
 
@@ -155,6 +161,13 @@ CREATE TABLE `monitor_date` (
   `sat` tinyint(1) DEFAULT '1',
   `sun` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `monitor_date`
+--
+
+INSERT INTO `monitor_date` (`monitor_id`, `habit_id`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`) VALUES
+('4b23a479-d3', 'bed76ca3-4d', 1, 1, 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -230,6 +243,13 @@ ALTER TABLE `feedback`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `group`
+--
+ALTER TABLE `group`
+  ADD PRIMARY KEY (`group_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `habit`
 --
 ALTER TABLE `habit`
@@ -237,13 +257,6 @@ ALTER TABLE `habit`
   ADD KEY `user_id` (`user_id`),
   ADD KEY `group_id` (`group_id`),
   ADD KEY `monitor_id` (`monitor_id`);
-
---
--- Indexes for table `habit_group`
---
-ALTER TABLE `habit_group`
-  ADD PRIMARY KEY (`group_id`),
-  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `habit_suggestion`
@@ -290,18 +303,18 @@ ALTER TABLE `feedback`
   ADD CONSTRAINT `feedback_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `group`
+--
+ALTER TABLE `group`
+  ADD CONSTRAINT `group_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `habit`
 --
 ALTER TABLE `habit`
   ADD CONSTRAINT `habit_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `habit_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `habit_group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `habit_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `habit_ibfk_3` FOREIGN KEY (`monitor_id`) REFERENCES `monitor_date` (`monitor_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `habit_group`
---
-ALTER TABLE `habit_group`
-  ADD CONSTRAINT `habit_group_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `monitor_date`
@@ -325,5 +338,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-SET FOREIGN_KEY_CHECKS = 1;
