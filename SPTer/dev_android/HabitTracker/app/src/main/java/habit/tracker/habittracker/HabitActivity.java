@@ -737,6 +737,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
                     HabitEntity item = Database.getHabitDb().getHabit(initHabitId);
                     item.setDelete(true);
+                    Database.getHabitDb().saveUpdateHabit(item);
 
                     db.close();
 
@@ -745,7 +746,11 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             Toast.makeText(HabitActivity.this, "Đã xóa thói quen", Toast.LENGTH_SHORT).show();
 
+                            Database db = new Database(HabitActivity.this);
+                            db.open();
+
                             Database.getHabitDb().deleteHabit(initHabitId);
+                            db.close();
 
                             Intent intent = new Intent();
                             intent.putExtra("delete", true);

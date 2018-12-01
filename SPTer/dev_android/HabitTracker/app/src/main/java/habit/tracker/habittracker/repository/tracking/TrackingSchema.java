@@ -15,7 +15,7 @@ public interface TrackingSchema {
                     + CURRENT_DATE + " TEXT, "
                     + COUNT + " TEXT, "
                     + TRACKING_DESCRIPTION + " TEXT, "
-                    + IS_UPDATED + " TEXT"
+                    + IS_UPDATED + " TEXT DEFAULT 0"
                     + ")";
     String[] TRACKING_COLUMNS = new String[]{TRACKING_ID, HABIT_ID, CURRENT_DATE, COUNT, TRACKING_DESCRIPTION, IS_UPDATED};
 }
