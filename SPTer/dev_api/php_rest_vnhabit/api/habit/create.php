@@ -49,6 +49,7 @@ $habitSuggestion->habit_name_ascii = $data->habit_name_ascii;
 $habitSuggestion->habit_name_count = $data->habit_name_count;
 $habitSuggestion->total_track = 0;
 $habitSuggestion->success_track = 0;
+
 if (!$habitSuggestion->isUpdate()) {
     $habitSuggestion->create();
 } else {
@@ -75,6 +76,7 @@ if ($habit->create()) {
             // save reminders
             $arr_reminder = $data->reminder_list;
             for($i = 0; $i < count($arr_reminder); $i++) {
+
                 $item = $arr_reminder[$i];
                 $reminder->reminder_id = $item->server_id;
                 $reminder->habit_id = $item->habit_id;
@@ -82,6 +84,7 @@ if ($habit->create()) {
                 $reminder->remind_end_time = $item->remind_end_time;
                 $reminder->repeat_type = $item->repeat_type;
                 $reminder->reminder_description = $item->reminder_description;
+                
                 if ($reminder->create()) {
                     $error = false;
                 }

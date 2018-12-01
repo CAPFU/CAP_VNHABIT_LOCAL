@@ -18,10 +18,10 @@ $user = new User($db);
 $result = $user->read();
 
 // get row count
-$num = $result->rowCount();
+$row_count = $result->rowCount();
 
 // check if any users
-if ($num > 0) {
+if ($row_count > 0) {
     $users_arr = array();
     while($row = $result->fetch(PDO::FETCH_ASSOC)) {
         // push to "data"

@@ -18,7 +18,6 @@ $habit = new Habit($db);
 $tracker = new Tracking($db);
 $reminder = new Reminder($db);
 
-// Get username and password
 $habit->user_id = isset($_GET['user_id']) ? $_GET['user_id'] : die();
 
 // get habits by user_id
@@ -26,10 +25,12 @@ $habit->user_id = isset($_GET['user_id']) ? $_GET['user_id'] : die();
 $result = $habit->read_join_monitor();
 
 // get row count
-$num = $result->rowCount();
+$row_count = $result->rowCount();
 
-if ($num > 0) {
+if ($row_count > 0) {
+
     $habits_arr = array();
+    
     while($row = $result->fetch(PDO::FETCH_ASSOC)) {
         extract($row);
 

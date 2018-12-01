@@ -26,7 +26,6 @@ if ($hbsg->updateTrack()) {
         )
     );
 } else {
-    // no users
     echo json_encode(
         array(
             'result' => '0'

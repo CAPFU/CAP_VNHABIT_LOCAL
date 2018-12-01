@@ -34,7 +34,6 @@ if ($num > 0) {
     );
 
 } else {
-    // no users
     echo json_encode(
         array(
             'result' => '0'

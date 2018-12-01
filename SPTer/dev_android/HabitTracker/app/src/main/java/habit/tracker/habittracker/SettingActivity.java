@@ -177,13 +177,12 @@ public class SettingActivity extends AppCompatActivity {
     @OnClick(R.id.lbExport)
     public void exportData(View v) {
         String directory_path = Environment.getExternalStorageDirectory().getPath() + "/Backup/";
+
         File file = new File(directory_path);
         if (!file.exists()) {
-            if (file.mkdirs()) {
-            }
+            file.mkdirs();
         }
-//        final Database db = Database.getInstance(this);
-//        db.open();
+
         // Export SQLite DB as EXCEL FILE
         SQLiteToExcel sqliteToExcel = new SQLiteToExcel(getApplicationContext(), Database.DATABASE_NAME, directory_path);
         sqliteToExcel.exportSingleTable("my_user","users.csv", new SQLiteToExcel.ExportListener() {
@@ -193,14 +192,12 @@ public class SettingActivity extends AppCompatActivity {
 
             @Override
             public void onCompleted(String filePath) {
-                Toast.makeText(SettingActivity.this, "Export ra " + filePath, Toast.LENGTH_SHORT).show();
-//                db.close();
+                Toast.makeText(SettingActivity.this, "Đã export ra " + filePath, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(Exception e) {
                 Toast.makeText(SettingActivity.this, "Export không thành công", Toast.LENGTH_SHORT).show();
-//                db.close();
             }
         });
     }

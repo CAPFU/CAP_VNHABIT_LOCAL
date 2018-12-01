@@ -18,7 +18,7 @@ $habit = new Habit($db);
 
 $habit->habit_id = isset($_GET['habit_id']) ? $_GET['habit_id'] : die();
 
-if ($habit->delete()) {
+if ($habit->delete()->rowCount() > 0) {
     echo json_encode(
         array(
             'result' => '1'

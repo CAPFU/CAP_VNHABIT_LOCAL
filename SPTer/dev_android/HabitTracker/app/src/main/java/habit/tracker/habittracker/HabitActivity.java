@@ -72,6 +72,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     public static final String TYPE_8 = "8";
     public static final String TYPE_9 = "9";
 
+    VnHabitApiService mApiService = VnHabitApiUtils.getApiService();
+
     @BindView(R.id.edit_habitName)
     EditText editHabitName;
     @BindView(R.id.rvHabitSuggestion)
@@ -340,6 +342,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
         // init habit type: daily
         btnHabitType = btnDaily;
+
         // init habit color
         colorsList = new ArrayList<>();
         for (int colorId : colors) {
@@ -356,9 +359,11 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         color9.setBackground(getCircleBackground(colorsList.get(8)));
         color10.setBackground(getCircleBackground(colorsList.get(9)));
         setHabitColor(color1);
+
         // start and end remindDate
         startHabitDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
         endHabitDate = AppGenerator.getNextDate(startHabitDate, AppGenerator.YMD_SHORT);
+
         // load habit from local trackingItemList
         Bundle data = getIntent().getExtras();
         if (data != null) {
@@ -375,6 +380,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 initializeBySavedHabit(initHabitId);
             }
         } else {
+
             // init monitor remindDate
             setMonitorDate(btnMon);
             setMonitorDate(btnTue);
@@ -462,21 +468,21 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             // set habit type
             switch (habitEntity.getHabitType()) {
                 case TYPE_0:
-                    setHabitType(btnDaily);
+                    selectHabitType(btnDaily);
                     break;
                 case TYPE_1:
-                    setHabitType(btnWeekly);
+                    selectHabitType(btnWeekly);
                     break;
                 case TYPE_2:
-                    setHabitType(btnMonthly);
+                    selectHabitType(btnMonthly);
                     break;
                 case TYPE_3:
-                    setHabitType(btnYearly);
+                    selectHabitType(btnYearly);
                     break;
             }
 
             // set habit monitor info
-            selectMonitorType(habitEntity.getMonitorType().equals(TYPE_0) ? chkMonitorCheck : chkMonitorCount);
+            updateUIHabitType(habitEntity.getMonitorType().equals(TYPE_0) ? chkMonitorCheck : chkMonitorCount);
             editCheckNumber.setText(habitEntity.getMonitorNumber());
             editMonitorUnit.setText(!TextUtils.isEmpty(habitEntity.getMonitorUnit()) ? habitEntity.getMonitorUnit() : "lần");
 
@@ -720,19 +726,26 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             finish();
         } else if (createMode == MODE_UPDATE) {
             AppDialogHelper appDialogHelper = new AppDialogHelper();
+
             appDialogHelper.setPositiveListener(new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Database db = new Database(HabitActivity.this);
                     db.open();
-                    Database.getHabitDb().deleteHabit(initHabitId);
-                    VnHabitApiService service = VnHabitApiUtils.getApiService();
-                    service.deleteHabit(initHabitId).enqueue(new Callback<ResponseBody>() {
+
+                    HabitEntity item = Database.getHabitDb().getHabit(initHabitId);
+                    item.setDelete(true);
+
+                    mApiService.deleteHabit(initHabitId).enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             Toast.makeText(HabitActivity.this, "Đã xóa thói quen", Toast.LENGTH_SHORT).show();
+
+                            Database.getHabitDb().deleteHabit(initHabitId);
+
                             Intent intent = new Intent();
                             intent.putExtra("delete", true);
+
                             HabitActivity.this.setResult(HabitActivity.RESULT_OK, intent);
                             finish();
                         }
@@ -742,6 +755,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                             Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
                         }
                     });
+
                     db.close();
                 }
             });
@@ -772,29 +786,35 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     }
 
     @OnClick({R.id.btn_TypeDaily, R.id.btn_TypeWeekly, R.id.btn_TypeMonthly, R.id.btn_TypeYearly})
-    public void setHabitType(View view) {
+    public void selectHabitType(View view) {
         setWhiteBg(btnHabitType);
         setGreenBg(view);
         btnHabitType = view;
         habitType = Integer.parseInt(view.getTag().toString());
         switch (view.getId()) {
             case R.id.btn_TypeDaily:
+                endHabitDate = AppGenerator.getNextDate(startHabitDate, AppGenerator.YMD_SHORT);
                 tvCountUnit.setText("một ngày");
                 break;
             case R.id.btn_TypeWeekly:
+
+                endHabitDate = AppGenerator.getFirstDateNextWeek(startHabitDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
                 tvCountUnit.setText("một tuần");
                 break;
             case R.id.btn_TypeMonthly:
+                endHabitDate = AppGenerator.getFirstDateNextMonth(startHabitDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
                 tvCountUnit.setText("một tháng");
                 break;
             case R.id.btn_TypeYearly:
+                endHabitDate = AppGenerator.getFirstDateNextYear(startHabitDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
                 tvCountUnit.setText("một năm");
                 break;
         }
+        tvEndDate.setText(endHabitDate);
     }
 
     @OnClick({R.id.ll_checkDone, R.id.ll_checkCount})
-    public void selectMonitorType(View view) {
+    public void updateUIHabitType(View view) {
         if (view.getId() == R.id.ll_checkDone) {
             uncheck(imgTypeCount);
             check(imgTypeCheck);

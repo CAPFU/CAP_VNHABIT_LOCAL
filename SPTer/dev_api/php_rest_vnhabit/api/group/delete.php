@@ -4,27 +4,29 @@
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
-include_once '../../config/Database.php';
-include_once '../../models/HabitSuggestion.php';
+include_once '../../config/config.php';
+include_once '../../models/Group.php';
 
 // Instantiate DB & connect
 $database = new Database();
 $db = $database->connect();
 
-$hbsg = new HabitSuggestion($db);
+$group = new Group($db);
 
-$result = $hbsg->getRecommendList(5);
+$group->group_id = isset($_GET['group_id']) ? $_GET['group_id'] : die();
 
-if ($result) {
+$result = $group->deleteById();
+
+if ($result->rowCount() > 0) {
+    
+    // turn to JSON
     echo json_encode(
         array(
-            'result' => '1',
-            'data' => $result
+            'result' => $result->rowCount()
         )
     );
 
 } else {
-    // no users
     echo json_encode(
         array(
             'result' => '0'

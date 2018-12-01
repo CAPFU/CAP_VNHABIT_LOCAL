@@ -7,6 +7,9 @@ public class Group {
     @SerializedName("group_id")
     @Expose
     private String groupId;
+    @SerializedName("user_id")
+    @Expose
+    private String userId;
     @SerializedName("group_name")
     @Expose
     private String groupName;
@@ -16,20 +19,25 @@ public class Group {
 
     private boolean isSelected = false;
     private boolean isDelete = false;
-    private boolean isLocal = false;
+    private boolean isDefault = false;
 
     public Group() {
     }
 
-    public Group(String groupId, String groupName, String groupDescription, boolean isLocal) {
+    public Group(String groupId, String userId, String groupName, String groupDescription, boolean isDefault) {
         this.groupId = groupId;
+        this.userId = userId;
         this.groupName = groupName;
         this.groupDescription = groupDescription;
-        this.isLocal = isLocal;
+        this.isDefault = isDefault;
     }
 
     public String getGroupId() {
         return groupId;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public String getGroupName() {
@@ -48,12 +56,16 @@ public class Group {
         return isDelete;
     }
 
-    public boolean isLocal() {
-        return isLocal;
+    public boolean isDefault() {
+        return isDefault;
     }
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public void setGroupName(String groupName) {
@@ -72,7 +84,7 @@ public class Group {
         isDelete = delete;
     }
 
-    public void setLocal(boolean local) {
-        isLocal = local;
+    public void setDefault(boolean local) {
+        isDefault = local;
     }
 }

@@ -25,8 +25,6 @@ for($i = 0; $i < count($data); $i++) {
     array_push($arrTrack, get_object_vars($data[$i]));
 }
 
-var_dump($arrTrack);
-
 for($i = 0; $i < count($arrTrack); $i++) {
     $row = $tracker->getTrackWithParam($arrTrack[$i]);
     if($row) {

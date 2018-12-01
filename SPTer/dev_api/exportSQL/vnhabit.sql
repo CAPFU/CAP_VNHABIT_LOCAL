@@ -3,9 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 29, 2018 at 07:13 PM
+-- Generation Time: Dec 01, 2018 at 04:06 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
+
+SET FOREIGN_KEY_CHECKS = 0;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -28,6 +30,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `about`
 --
 
+DROP TABLE IF EXISTS `about`;
 CREATE TABLE `about` (
   `app_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `app_description` text COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -40,6 +43,7 @@ CREATE TABLE `about` (
 -- Table structure for table `feedback`
 --
 
+DROP TABLE IF EXISTS `feedback`;
 CREATE TABLE `feedback` (
   `feedback_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -50,32 +54,10 @@ CREATE TABLE `feedback` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `group`
---
-
-CREATE TABLE `group` (
-  `group_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `group_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `group_description` text COLLATE utf8mb4_unicode_ci
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `group`
---
-
-INSERT INTO `group` (`group_id`, `group_name`, `group_description`) VALUES
-('1', 'Sức khỏe', NULL),
-('2', 'Tài chính', NULL),
-('3', 'Gia đình', NULL),
-('4', 'Học tập', NULL),
-('5', 'Mua sắm', NULL);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `habit`
 --
 
+DROP TABLE IF EXISTS `habit`;
 CREATE TABLE `habit` (
   `habit_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -94,12 +76,34 @@ CREATE TABLE `habit` (
   `habit_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `habit`
+-- Table structure for table `habit_group`
 --
 
-INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_name`, `habit_target`, `habit_type`, `monitor_type`, `monitor_unit`, `monitor_number`, `start_date`, `end_date`, `created_date`, `habit_color`, `habit_description`) VALUES
-('1ecc224c-80', 'd233c193-6e', NULL, 'ad3a8ba0-74', 'Chạy bộ', 0, 0, 1, 'km', 3, '2018-11-24', '2018-11-30', '2018-11-25', '#784a90e6', 'chat bo');
+DROP TABLE IF EXISTS `habit_group`;
+CREATE TABLE `habit_group` (
+  `group_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `group_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `group_description` text COLLATE utf8mb4_unicode_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `habit_group`
+--
+
+INSERT INTO `habit_group` (`group_id`, `user_id`, `group_name`, `group_description`) VALUES
+('1', NULL, 'Sức khỏe', NULL),
+('2', NULL, 'Kinh tế', NULL),
+('3', NULL, 'Gia đình', NULL),
+('4', NULL, 'Học tập', NULL),
+('5', NULL, 'Quan hệ', NULL),
+('6', NULL, 'Công việc', NULL),
+('7', 'd233c193-6e', 'Từ thiện', NULL),
+('8', 'd233c193-6e', 'Lao động', NULL),
+('9', 'd233c193-6e', 'Phát triển bản thân', NULL);
 
 -- --------------------------------------------------------
 
@@ -107,6 +111,7 @@ INSERT INTO `habit` (`habit_id`, `user_id`, `group_id`, `monitor_id`, `habit_nam
 -- Table structure for table `habit_suggestion`
 --
 
+DROP TABLE IF EXISTS `habit_suggestion`;
 CREATE TABLE `habit_suggestion` (
   `habit_name_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `group_id` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -122,17 +127,15 @@ CREATE TABLE `habit_suggestion` (
 --
 
 INSERT INTO `habit_suggestion` (`habit_name_id`, `group_id`, `habit_name_uni`, `habit_name_ascii`, `habit_name_count`, `total_track`, `success_track`) VALUES
-('0047ad7d-2a', NULL, 'Chạy bộ', 'chay bo', 5, NULL, NULL),
-('154fsd', '2', 'Đi chợ', 'di cho', 12, 35, 35),
+('154fsd', '2', 'Đi chợ', 'di cho', 13, 35, 35),
 ('1dv43fsd', '3', 'Đi bộ', 'di bo', 12, 90, 20),
-('2d49e9e2-7f', NULL, 'aaaa', 'aaaa', 1, 0, 0),
-('5003303b-3a', NULL, 'hhhh', 'hhhh', 1, 0, 0),
-('a0fde794-38', NULL, 'an com', 'an com', 1, 0, 0),
-('dasf', '1', 'Đi Uống thuốc', 'di uong thuoc', 1, 200, 119),
-('dsfgsd', '2', 'Đi Chạy bộ', 'di chay bo', 13, 11, 10),
+('a0fde794-38', '4', 'an com', 'an com', 1, 0, 0),
+('dasf', '1', 'Đi Uống thuốc', 'di uong thuoc', 0, 200, 119),
+('dsfgsd', '2', 'Đi Chạy bộ', 'di chay bo', 14, 11, 10),
 ('fsd-345', '3', 'Đi Uống rượu', 'di uong ruou', 4, 1000, 10),
 ('fsd545', '3', 'Đi Thức đêm', 'di thuc dem', 44, 60, 59),
-('gfdh', '1', 'Đi Hút thuốc', 'di hut thuoc', 10, 100, 99);
+('gfdh', '1', 'Đi Hút thuốc', 'di hut thuoc', 10, 100, 99),
+('Gym', '1', 'Gym', '', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -140,6 +143,7 @@ INSERT INTO `habit_suggestion` (`habit_name_id`, `group_id`, `habit_name_uni`, `
 -- Table structure for table `monitor_date`
 --
 
+DROP TABLE IF EXISTS `monitor_date`;
 CREATE TABLE `monitor_date` (
   `monitor_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `habit_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -152,19 +156,13 @@ CREATE TABLE `monitor_date` (
   `sun` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `monitor_date`
---
-
-INSERT INTO `monitor_date` (`monitor_id`, `habit_id`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`) VALUES
-('ad3a8ba0-74', '1ecc224c-80', 1, 1, 1, 1, 1, 1, 1);
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `reminder`
 --
 
+DROP TABLE IF EXISTS `reminder`;
 CREATE TABLE `reminder` (
   `reminder_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `habit_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -180,6 +178,7 @@ CREATE TABLE `reminder` (
 -- Table structure for table `tracking`
 --
 
+DROP TABLE IF EXISTS `tracking`;
 CREATE TABLE `tracking` (
   `tracking_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `habit_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -188,24 +187,13 @@ CREATE TABLE `tracking` (
   `tracking_description` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `tracking`
---
-
-INSERT INTO `tracking` (`tracking_id`, `habit_id`, `current_date`, `count`, `tracking_description`) VALUES
-('263cef9f-dd', '1ecc224c-80', '2018-11-29', 1, NULL),
-('26a2dba1-ed', '1ecc224c-80', '2018-11-25', 1, 'test 25'),
-('3dc7b445-f0', '1ecc224c-80', '2018-11-28', 1, NULL),
-('92584005-d0', '1ecc224c-80', '2018-11-27', 1, NULL),
-('eb81de52-53', '1ecc224c-80', '2018-11-26', 2, NULL),
-('f712f54b-0b', '1ecc224c-80', '2018-11-24', 0, 'test 24');
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `user`
 --
 
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `user_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `username` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -228,11 +216,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `username`, `password`, `email`, `date_of_birth`, `gender`, `real_name`, `user_description`, `created_date`, `last_login_time`, `continue_using_count`, `current_continue_using_count`, `best_continue_using_count`, `user_score`) VALUES
-('1b153946-89', 'user02', '12345678', 'user02@mail.com', NULL, 1, 'nam', NULL, '2018-11-11', '0000-00-00', 100, 0, 0, 100),
-('4abb9cc1-b9', 'user22', '12345678', 'user22@mail.com', NULL, NULL, NULL, NULL, '2018-11-23', '2018-11-23', 1, 1, 1, 2),
-('d233c193-6e', 'user01', '12345678', 'user01@mail.com', '1999-12-12', 1, 'joncena', 'something good', '2018-11-10', '2018-11-28', 1, 1, 1, 2),
-('d233c195-hf', 'user03', '12345678', 'user03@mail.com', NULL, 0, 'kim', NULL, '2018-11-10', '0000-00-00', 6, 0, 0, 1000),
-('ed382fdb-67', 'dat', '12345678', 'dat@mail.com', NULL, NULL, NULL, NULL, '2018-11-25', '2018-11-25', 1, 1, 1, 2);
+('d233c193-6e', 'user01', '12345678', 'user01@mail.com', '1999-12-12', 1, 'joncena', 'something good', '2018-11-10', '2018-11-28', 1, 1, 1, 2);
 
 --
 -- Indexes for dumped tables
@@ -246,12 +230,6 @@ ALTER TABLE `feedback`
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `group`
---
-ALTER TABLE `group`
-  ADD PRIMARY KEY (`group_id`);
-
---
 -- Indexes for table `habit`
 --
 ALTER TABLE `habit`
@@ -259,6 +237,13 @@ ALTER TABLE `habit`
   ADD KEY `user_id` (`user_id`),
   ADD KEY `group_id` (`group_id`),
   ADD KEY `monitor_id` (`monitor_id`);
+
+--
+-- Indexes for table `habit_group`
+--
+ALTER TABLE `habit_group`
+  ADD PRIMARY KEY (`group_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `habit_suggestion`
@@ -309,8 +294,14 @@ ALTER TABLE `feedback`
 --
 ALTER TABLE `habit`
   ADD CONSTRAINT `habit_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `habit_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `habit_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `habit_group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `habit_ibfk_3` FOREIGN KEY (`monitor_id`) REFERENCES `monitor_date` (`monitor_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `habit_group`
+--
+ALTER TABLE `habit_group`
+  ADD CONSTRAINT `habit_group_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `monitor_date`
@@ -334,3 +325,5 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+SET FOREIGN_KEY_CHECKS = 1;

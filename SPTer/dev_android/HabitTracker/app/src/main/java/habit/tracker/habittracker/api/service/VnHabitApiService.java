@@ -46,10 +46,13 @@ public interface VnHabitApiService {
     Call<HabitResponse> getHabit(@Query("user_id") String userId);
 
     @GET("group/read.php")
-    Call<GroupResponse> getGroupItems();
+    Call<GroupResponse> getGroups(@Query("user_id") String userId);
 
     @POST("group/create.php")
-    Call<GroupResponse> addNewGroup(@Body Group group);
+    Call<ResponseBody> addNewGroup(@Body Group group);
+
+    @GET("group/delete.php")
+    Call<GroupResponse> deleteGroup(@Query("group_id") String groupId);
 
     @POST("tracking/create_update.php")
     Call<ResponseBody> updateTracking(@Body TrackingList trackingList);

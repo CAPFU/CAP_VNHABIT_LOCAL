@@ -20,9 +20,8 @@ $group = new Group($db);
 $data = json_decode(file_get_contents("php://input"));
 
 $group->group_id = $data->group_id;
-$group->parent_id = $data->parent_id;
+$group->user_id = $data->user_id;
 $group->group_name = $data->group_name;
-$group->group_icon = $data->group_icon;
 $group->group_description = $data->group_description;
 
 if ($group->create()) {
@@ -32,6 +31,7 @@ if ($group->create()) {
             'id' => $group->group_id
         )
     );
+
 } else {
     echo json_encode(
         array(

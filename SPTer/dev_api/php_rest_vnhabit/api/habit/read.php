@@ -18,11 +18,13 @@ $habit = new Habit($db);
 $result = $habit->read();
 
 // get row count
-$num = $result->rowCount();
+$row_count = $result->rowCount();
 
 // check if any users
-if ($num > 0) {
+if ($row_count > 0) {
+
     $habits_arr = array();
+    
     while($row = $result->fetch(PDO::FETCH_ASSOC)) {
         array_push($habits_arr, $row);
     }

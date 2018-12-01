@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import habit.tracker.habittracker.api.model.reminder.Reminder;
 import habit.tracker.habittracker.api.model.tracking.Tracking;
+import habit.tracker.habittracker.repository.habit.HabitEntity;
 import habit.tracker.habittracker.repository.habit.TrackingDateInWeek;
 
 public class Habit implements TrackingDateInWeek {
@@ -95,6 +96,8 @@ public class Habit implements TrackingDateInWeek {
     @Expose
     private int habitNameCount;
 
+    private boolean isDelete = false;
+
     public String getHabitId() {
         return habitId;
     }
@@ -157,6 +160,10 @@ public class Habit implements TrackingDateInWeek {
 
     public int getHabitNameCount() {
         return habitNameCount;
+    }
+
+    public boolean isDelete() {
+        return isDelete;
     }
 
     public String getMon() {
@@ -309,5 +316,39 @@ public class Habit implements TrackingDateInWeek {
 
     public void setHabitNameCount(int habitNameCount) {
         this.habitNameCount = habitNameCount;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
+    }
+
+    public static Habit convert(HabitEntity entity) {
+        if (entity != null) {
+            Habit habit = new Habit();
+            habit.setHabitId(habit.getHabitId());
+            habit.setUserId(habit.getUserId());
+            habit.setGroupId(habit.getGroupId());
+            habit.setMonitorId(habit.getMonitorId());
+            habit.setHabitName(habit.getHabitName());
+            habit.setHabitTarget(habit.getHabitTarget());
+            habit.setHabitType(habit.getHabitType());
+            habit.setMonitorType(habit.getMonitorType());
+            habit.setMonitorUnit(habit.getMonitorUnit());
+            habit.setMonitorNumber(habit.getMonitorNumber());
+            habit.setStartDate(habit.getStartDate());
+            habit.setEndDate(habit.getEndDate());
+            habit.setHabitColor(habit.getHabitColor());
+            habit.setHabitDescription(habit.getHabitDescription());
+            habit.setMon(habit.getMon());
+            habit.setTue(habit.getTue());
+            habit.setWed(habit.getWed());
+            habit.setThu(habit.getThu());
+            habit.setFri(habit.getFri());
+            habit.setSat(habit.getSat());
+            habit.setSun(habit.getSun());
+            habit.setDelete(entity.isDelete());
+            return habit;
+        }
+        return null;
     }
 }

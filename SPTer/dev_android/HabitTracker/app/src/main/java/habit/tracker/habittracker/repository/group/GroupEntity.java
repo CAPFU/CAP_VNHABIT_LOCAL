@@ -2,13 +2,18 @@ package habit.tracker.habittracker.repository.group;
 
 public class GroupEntity {
     private String groupId;
+    private String userId;
     private String groupName;
     private String groupDescription;
-    private String isDelete = "0";
-    private String isLocal = "0";
+    private boolean isDelete = false;
+    private boolean isDefault = false;
 
     public String getGroupId() {
         return groupId;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public String getGroupName() {
@@ -19,16 +24,20 @@ public class GroupEntity {
         return groupDescription;
     }
 
-    public String isDelete() {
+    public boolean isDelete() {
         return isDelete;
     }
 
-    public String isLocal() {
-        return isLocal;
+    public boolean isDefault() {
+        return isDefault;
     }
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public void setGroupName(String groupName) {
@@ -39,11 +48,11 @@ public class GroupEntity {
         this.groupDescription = groupDescription;
     }
 
-    public void setDelete(String delete) {
-        isDelete = delete;
+    public void setDelete(boolean isDelete) {
+        this.isDelete = isDelete;
     }
 
-    public void setLocal(String isLocal) {
-        this.isLocal = isLocal;
+    public void setDefault(boolean isDefault) {
+        this.isDefault = isDefault;
     }
 }

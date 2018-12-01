@@ -17,7 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,8 +31,10 @@ import habit.tracker.habittracker.api.model.group.Group;
 import habit.tracker.habittracker.api.model.group.GroupResponse;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.util.AppGenerator;
+import habit.tracker.habittracker.common.util.MySharedPreference;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.group.GroupEntity;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,6 +59,8 @@ public class GroupActivity extends AppCompatActivity implements GroupRecyclerVie
     @BindView(R.id.imgAddGroup)
     View imgAddNew;
 
+    VnHabitApiService mService = VnHabitApiUtils.getApiService();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,27 +68,46 @@ public class GroupActivity extends AppCompatActivity implements GroupRecyclerVie
         setContentView(R.layout.activity_group);
         ButterKnife.bind(this);
 
-        VnHabitApiService mService = VnHabitApiUtils.getApiService();
-        mService.getGroupItems().enqueue(new Callback<GroupResponse>() {
+        final String userId = MySharedPreference.getUserId(this);
+
+        mService.getGroups(userId).enqueue(new Callback<GroupResponse>() {
             @Override
             public void onResponse(Call<GroupResponse> call, Response<GroupResponse> response) {
                 if (response.body().getResult().equals("1")) {
                     Database db = new Database(GroupActivity.this);
                     db.open();
 
-                    List<Group> result = response.body().getGroupList();
+                    List<Group> resultFromServer = response.body().getGroupList();
+                    Map<String, String> mapGroupFromServer = new HashMap<>();
                     GroupEntity entity;
-                    for (Group group : result) {
+
+                    for (Group group : resultFromServer) {
                         entity = Database.getGroupDb().getGroup(group.getGroupId());
-                        if (entity != null && entity.isDelete().equals("1")) {
-                            group.setDelete(true);
+                        if (entity != null && entity.isDelete()) {
+
+                            callDeleteGroupApi(entity.getGroupId());
+
+                        } else {
+
+                            group.setDefault(TextUtils.isEmpty(group.getUserId()));
+
+                            Database.getGroupDb().save(group);
+
+                            mapGroupFromServer.put(group.getGroupId(), group.getGroupName());
                         }
-                        group.setLocal(false);
-                        Database.getGroupDb().save(group);
                     }
-                    List<GroupEntity> groupEntities = Database.getGroupDb().getAll();
+
+                    List<GroupEntity> groupEntities = Database.getGroupDb().getGroupsByUser(userId);
+                    Group group;
                     for (GroupEntity item : groupEntities) {
-                        groupList.add(new Group(item.getGroupId(), item.getGroupName(), item.getDescription(), item.isLocal().equals("1")));
+                        if (!item.isDelete()) {
+                            group = new Group(item.getGroupId(), item.getUserId(), item.getGroupName(), item.getDescription(), item.isDefault());
+                            groupList.add(group);
+
+                            if (!mapGroupFromServer.containsKey(item.getGroupId())) {
+                                callAddGroupApi(group);
+                            }
+                        }
                     }
 
                     db.close();
@@ -99,8 +124,8 @@ public class GroupActivity extends AppCompatActivity implements GroupRecyclerVie
 
                 List<GroupEntity> list = Database.getGroupDb().getAll();
                 for (GroupEntity entity : list) {
-                    if (!entity.isDelete().equals("1")) {
-                        groupList.add(new Group(entity.getGroupId(), entity.getGroupName(), entity.getDescription(), entity.isLocal().equals("1")));
+                    if (!entity.isDelete()) {
+                        groupList.add(new Group(entity.getGroupId(), entity.getUserId(), entity.getGroupName(), entity.getDescription(), entity.isDefault()));
                     }
                 }
                 db.close();
@@ -147,50 +172,70 @@ public class GroupActivity extends AppCompatActivity implements GroupRecyclerVie
 
         final Group newGroup = new Group();
         newGroup.setGroupId(AppGenerator.getNewId());
+        newGroup.setUserId(MySharedPreference.getUserId(this));
         newGroup.setGroupName(groupName);
-        newGroup.setLocal(true);
+        newGroup.setDefault(true);
         Database.getGroupDb().save(newGroup);
 
         edGroupName.setText(null);
         groupList.add(0, newGroup);
         groupViewAdapter.notifyDataSetChanged();
 
-//        VnHabitApiService mService = VnHabitApiUtils.getApiService();
-//        mService.addNewGroup(newGroup).enqueue(new Callback<GroupResponse>() {
-//            @Override
-//            public void onResponse(Call<GroupResponse> call, Response<GroupResponse> response) {
-//                if (response.body().getResult().equals(STATUS_OK)) {
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<GroupResponse> call, Throwable t) {
-//                Toast.makeText(GroupActivity.this, "Tạo nhóm không thành công!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        callAddGroupApi(newGroup);
 
         db.close();
+    }
+
+    private void callAddGroupApi(Group group) {
+        mService.addNewGroup(group).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            }
+        });
+    }
+
+    private void callDeleteGroupApi(final String groupId) {
+        mService.deleteGroup(groupId).enqueue(new Callback<GroupResponse>() {
+            @Override
+            public void onResponse(Call<GroupResponse> call, Response<GroupResponse> response) {
+                if (response.body().getResult().equals("1")) {
+                    Database db = Database.getInstance(GroupActivity.this);
+                    db.open();
+
+                    Database.getGroupDb().delete(groupId);
+                    db.close();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GroupResponse> call, Throwable t) {
+            }
+        });
     }
 
     private void enableSwipeToDeleteAndUndo() {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                Database db = Database.getInstance(GroupActivity.this);
+                db.open();
+
                 final int position = viewHolder.getAdapterPosition();
                 final Group item = groupList.get(position);
 
                 groupList.remove(position);
                 groupViewAdapter.notifyDataSetChanged();
 
-                Database db = Database.getInstance(GroupActivity.this);
-                db.open();
-                if (item.isLocal()){
-                    Database.getGroupDb().delete(item.getGroupId());
-                } else {
-                    item.setDelete(true);
+                item.setDelete(true);
+                if (item.isDefault()){
                     Database.getGroupDb().save(item);
+                } else {
+                    callDeleteGroupApi(item.getGroupId());
                 }
-                db.close();
 
                 Snackbar snackbar = Snackbar.make(linearLayout, "Nhóm " + item.getGroupName() + " đã bị xóa", Snackbar.LENGTH_LONG);
                 snackbar.setAction("Khôi phục", new View.OnClickListener() {
@@ -205,6 +250,7 @@ public class GroupActivity extends AppCompatActivity implements GroupRecyclerVie
 
                         item.setDelete(false);
                         Database.getGroupDb().save(item);
+                        callAddGroupApi(item);
 
                         db.close();
                     }
@@ -212,6 +258,9 @@ public class GroupActivity extends AppCompatActivity implements GroupRecyclerVie
 
                 snackbar.setActionTextColor(Color.YELLOW);
                 snackbar.show();
+
+                db.close();
+
             }
         };
 

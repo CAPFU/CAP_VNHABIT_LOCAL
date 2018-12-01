@@ -28,6 +28,8 @@ public class HabitEntity implements TrackingDateInWeek {
     private String sun;
     private String lastDateSyn;
 
+    private boolean isDelete = false;
+
     public String getHabitId() {
         return habitId;
     }
@@ -120,6 +122,10 @@ public class HabitEntity implements TrackingDateInWeek {
         return lastDateSyn;
     }
 
+    public boolean isDelete() {
+        return isDelete;
+    }
+
     public void setHabitId(String habitId) {
         this.habitId = habitId;
     }
@@ -210,5 +216,9 @@ public class HabitEntity implements TrackingDateInWeek {
 
     public void setLastDateSyn(String lastDateSyn) {
         this.lastDateSyn = lastDateSyn;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
     }
 }
