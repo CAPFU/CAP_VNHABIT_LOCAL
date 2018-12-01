@@ -738,6 +738,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                     HabitEntity item = Database.getHabitDb().getHabit(initHabitId);
                     item.setDelete(true);
 
+                    db.close();
+
                     mApiService.deleteHabit(initHabitId).enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -757,8 +759,6 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                             Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
                         }
                     });
-
-                    db.close();
                 }
             });
             appDialogHelper.getDialog(this, "Bạn có chắc muốn xóa thói quen này?", "Có", "Không").show();
