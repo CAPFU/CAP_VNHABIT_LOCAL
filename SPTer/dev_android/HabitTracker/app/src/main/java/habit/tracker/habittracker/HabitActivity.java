@@ -845,11 +845,12 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             dialog.show();
 
         } else {
-
+            String minDate = getEndDateByMonitorType();
             ca.setTime(AppGenerator.getDate(endHabitDate, AppGenerator.YMD_SHORT));
 
             dialog = new DatePickerDialog(this, this, ca.get(Calendar.YEAR), ca.get(Calendar.MONTH), ca.get(Calendar.DATE));
 
+            ca.setTime(AppGenerator.getDate(minDate, AppGenerator.YMD_SHORT));
             dialog.getDatePicker().setMinDate(ca.getTimeInMillis());
 
             dialog.show();
