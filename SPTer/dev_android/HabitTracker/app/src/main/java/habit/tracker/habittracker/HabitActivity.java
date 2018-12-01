@@ -362,10 +362,11 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
         // start and end remindDate
         startHabitDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
-        endHabitDate = AppGenerator.getNextDate(startHabitDate, AppGenerator.YMD_SHORT);
+        endHabitDate = getEndDateByMonitorType();
 
         // load habit from local trackingItemList
         Bundle data = getIntent().getExtras();
+
         if (data != null) {
             initHabitId = data.getString(MainActivity.HABIT_ID, null);
             suggestHabitNameId = data.getString(ProfileActivity.SUGGEST_NAME_ID, null);
@@ -373,14 +374,15 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             editHabitName.setText(suggestHabitName);
             habitNameTextWatcher.setAfterSelectedSuggestion(true);
         }
+
         if (!TextUtils.isEmpty(initHabitId)) {
             if (initHabitId != null) {
                 // mode UPDATE
                 createMode = MODE_UPDATE;
                 initializeBySavedHabit(initHabitId);
             }
-        } else {
 
+        } else {
             // init monitor remindDate
             setMonitorDate(btnMon);
             setMonitorDate(btnTue);
@@ -454,12 +456,12 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             // set start and end remindDate of habit
             if (habitEntity.getStartDate() != null) {
                 startHabitDate = habitEntity.getStartDate();
-                setHabitDate(mStartDate);
+                enableHabitDateRange(mStartDate);
                 tvStartDate.setText(AppGenerator.format(startHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
             }
             if (habitEntity.getEndDate() != null) {
                 endHabitDate = habitEntity.getEndDate();
-                setHabitDate(mEndDate);
+                enableHabitDateRange(mEndDate);
                 tvEndDate.setText(AppGenerator.format(endHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
             } else {
                 tvEndDate.setText(AppGenerator.format(endHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
@@ -482,7 +484,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             }
 
             // set habit monitor info
-            updateUIHabitType(habitEntity.getMonitorType().equals(TYPE_0) ? chkMonitorCheck : chkMonitorCount);
+            enableMonitorType(habitEntity.getMonitorType().equals(TYPE_0) ? chkMonitorCheck : chkMonitorCount);
             editCheckNumber.setText(habitEntity.getMonitorNumber());
             editMonitorUnit.setText(!TextUtils.isEmpty(habitEntity.getMonitorUnit()) ? habitEntity.getMonitorUnit() : "lần");
 
@@ -810,11 +812,11 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 tvCountUnit.setText("một năm");
                 break;
         }
-        tvEndDate.setText(endHabitDate);
+        tvEndDate.setText(AppGenerator.format(endHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
     }
 
     @OnClick({R.id.ll_checkDone, R.id.ll_checkCount})
-    public void updateUIHabitType(View view) {
+    public void enableMonitorType(View view) {
         if (view.getId() == R.id.ll_checkDone) {
             uncheck(imgTypeCount);
             check(imgTypeCheck);
@@ -840,7 +842,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             ca.setTime(AppGenerator.getDate(startHabitDate, AppGenerator.YMD_SHORT));
             dialog = new DatePickerDialog(this, this,
                     ca.get(Calendar.YEAR), ca.get(Calendar.MONTH), ca.get(Calendar.DATE));
-            dialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            dialog.getDatePicker().setMinDate(System.currentTimeMillis());
             dialog.show();
 
         } else {
@@ -868,7 +870,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     }
 
     @OnClick({R.id.ll_start_date, R.id.ll_end_date})
-    public void setHabitDate(View v) {
+    public void enableHabitDateRange(View v) {
         if (v.getId() == R.id.ll_start_date) {
             if (enableHabitLimitTime[0]) {
                 uncheckBox(chkStartDate);
@@ -888,16 +890,35 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         }
     }
 
+    // date picker set date method
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
         if (onSetStartDate) {
             startHabitDate = AppGenerator.getDate(year, month + 1, day, AppGenerator.YMD_SHORT);
             tvStartDate.setText(AppGenerator.format(startHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
 
+            endHabitDate = getEndDateByMonitorType();
+            tvEndDate.setText(AppGenerator.format(endHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
+
         } else {
             endHabitDate = AppGenerator.getDate(year, month + 1, day, AppGenerator.YMD_SHORT);
             tvEndDate.setText(AppGenerator.format(endHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
         }
+    }
+
+    private String getEndDateByMonitorType () {
+        switch (habitType) {
+            case 0:
+                return AppGenerator.getNextDate(startHabitDate, AppGenerator.YMD_SHORT);
+            case 1:
+
+                return AppGenerator.getFirstDateNextWeek(startHabitDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
+            case 2:
+                return AppGenerator.getFirstDateNextMonth(startHabitDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
+            case 3:
+                return AppGenerator.getFirstDateNextYear(startHabitDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
+        }
+        return endHabitDate;
     }
 
     @OnClick(R.id.ll_GroupName)
