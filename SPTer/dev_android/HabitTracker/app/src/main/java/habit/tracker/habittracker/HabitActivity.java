@@ -197,7 +197,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
     String startHabitDate;
     String endHabitDate;
-    boolean[] enableHabitLimitTime = new boolean[2];
+    boolean[] enableHabitRangeTime = new boolean[2];
     boolean onSetStartDate = false;
 
     static final int MODE_CREATE = 0;
@@ -624,8 +624,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         habit.setMonitorUnit(monitorUnit);
         habit.setMonitorNumber(monitorNumber);
 
-        habit.setStartDate(enableHabitLimitTime[0]? startHabitDate: AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
-        habit.setEndDate(enableHabitLimitTime[1]? endHabitDate: null);
+        habit.setStartDate(enableHabitRangeTime[0]? startHabitDate: AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
+        habit.setEndDate(enableHabitRangeTime[1]? endHabitDate: null);
         habit.setCreatedDate(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
 
         habit.setHabitColor(habitColorCode);
@@ -820,14 +820,19 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         if (view.getId() == R.id.ll_checkDone) {
             uncheck(imgTypeCount);
             check(imgTypeCheck);
+
             editCheckNumber.setEnabled(false);
             editMonitorUnit.setEnabled(false);
+
             monitorType = 0;
+
         } else if (view.getId() == R.id.ll_checkCount) {
             uncheck(imgTypeCheck);
             check(imgTypeCount);
+
             editCheckNumber.setEnabled(true);
             editMonitorUnit.setEnabled(true);
+
             monitorType = 1;
         }
     }
@@ -869,21 +874,34 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     @OnClick({R.id.ll_start_date, R.id.ll_end_date})
     public void enableHabitDateRange(View v) {
         if (v.getId() == R.id.ll_start_date) {
-            if (enableHabitLimitTime[0]) {
+            if (enableHabitRangeTime[0]) {
                 uncheckBox(chkStartDate);
             } else {
                 checkBox(chkStartDate);
             }
-            enableHabitLimitTime[0] = !enableHabitLimitTime[0];
-            tvStartDate.setEnabled(enableHabitLimitTime[0]);
+            enableHabitRangeTime[0] = !enableHabitRangeTime[0];
+            tvStartDate.setEnabled(enableHabitRangeTime[0]);
+
+            if (!enableHabitRangeTime[0]) {
+                startHabitDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
+//                endHabitDate = getEndDateByMonitorType();
+                tvStartDate.setText(AppGenerator.format(startHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
+            }
+
         } else if (v.getId() == R.id.ll_end_date) {
-            if (enableHabitLimitTime[1]) {
+            if (enableHabitRangeTime[1]) {
                 uncheckBox(chkEndDate);
             } else {
                 checkBox(chkEndDate);
             }
-            enableHabitLimitTime[1] = !enableHabitLimitTime[1];
-            tvEndDate.setEnabled(enableHabitLimitTime[1]);
+
+            enableHabitRangeTime[1] = !enableHabitRangeTime[1];
+            tvEndDate.setEnabled(enableHabitRangeTime[1]);
+
+            if (!enableHabitRangeTime[1]) {
+                endHabitDate = getEndDateByMonitorType();
+                tvEndDate.setText(AppGenerator.format(endHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
+            }
         }
     }
 
