@@ -95,7 +95,6 @@ if ($habit->create()) {
                 $reminder->remind_end_time = $item->remind_end_time;
                 $reminder->repeat_type = $item->repeat_type;
                 $reminder->reminder_description = $item->reminder_description;
-                
                 if ($reminder->create()) {
                     $error = false;
                 } else {

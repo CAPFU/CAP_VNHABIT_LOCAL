@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 02, 2018 at 08:38 AM
+-- Generation Time: Dec 02, 2018 at 10:25 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -223,9 +223,9 @@ CREATE TABLE `tracking` (
 --
 
 INSERT INTO `tracking` (`tracking_id`, `habit_id`, `current_date`, `count`, `tracking_description`) VALUES
-('3618f0a6-49', 'b9dc1973-30', '2018-12-02', 1, NULL),
-('6197bf71-86', '5766eadf-40', '2018-12-01', 1, NULL),
-('89ef956e-bf', '5766eadf-40', '2018-12-02', 2, NULL);
+('3618f0a6-49', 'b9dc1973-30', '2018-12-02', 1, 'abc'),
+('6197bf71-86', '5766eadf-40', '2018-12-01', 1, 'abc'),
+('89ef956e-bf', '5766eadf-40', '2018-12-02', 2, 'abc');
 
 -- --------------------------------------------------------
 
