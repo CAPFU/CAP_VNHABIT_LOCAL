@@ -206,7 +206,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
     Button btnSave;
     @BindView(R.id.btn_cancel)
     Button btnCancel;
-    int createMode = MODE_CREATE;
+    int screenMode = MODE_CREATE;
 
     @BindView(R.id.btn_addReminder)
     View btnAddReminder;
@@ -238,6 +238,14 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                         tvGroupName.setText("Chưa có");
                     }
                 }
+            } else {
+                Database db = Database.getInstance(HabitActivity.this);
+                db.open();
+                GroupEntity entity = Database.getGroupDb().getGroup(selectedGroupId);
+                if (entity == null || entity.isDelete()) {
+                    selectedGroupId = null;
+                }
+                db.close();
             }
         } else if (requestCode == ADD_REMINDER) {
             if (resultCode == RESULT_OK) {
@@ -378,7 +386,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         if (!TextUtils.isEmpty(initHabitId)) {
             if (initHabitId != null) {
                 // mode UPDATE
-                createMode = MODE_UPDATE;
+                screenMode = MODE_UPDATE;
                 initializeBySavedHabit(initHabitId);
             }
 
@@ -546,7 +554,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             reminderAdapter.notifyDataSetChanged();
 
             // habit description
-            editDescription.setText(habitEntity.getHabitDescription());
+            editDescription.setText(habitEntity.getDescription());
 
             db.close();
         }
@@ -607,10 +615,10 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
         // collect user input
         final Habit habit = new Habit();
-        if (createMode == MODE_CREATE) {
+        if (screenMode == MODE_CREATE) {
             habit.setHabitId(AppGenerator.getNewId());
             habit.setMonitorId(AppGenerator.getNewId());
-        } else if (createMode == MODE_UPDATE) {
+        } else if (screenMode == MODE_UPDATE) {
             habit.setHabitId(initHabitId);
             habit.setMonitorId(savedMonitorDateId);
         }
@@ -629,7 +637,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         habit.setCreatedDate(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
 
         habit.setHabitColor(habitColorCode);
-        habit.setHabitDescription(editDescription.getText().toString());
+        habit.setDescription(editDescription.getText().toString());
 
         // monitor_date
         habit.setMon(String.valueOf(monitorDate[0] ? 1 : 0));
@@ -642,13 +650,14 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
         // suggestions
         habit.setHabitNameAscii(AppGenerator.getSearchKey(habit.getHabitName()));
-        // user did'nt chose any suggestion habit
+
+        // user create new Habit Name
         if (TextUtils.isEmpty(suggestHabitName) || !suggestHabitName.equals(habit.getHabitName())) {
-            habit.setHabitSearchNameId(AppGenerator.getNewId());
+            habit.setHabitNameId(AppGenerator.getNewId());
             habit.setGroupId(habit.getGroupId());
-            habit.setHabitNameCount(1);
         } else {
-            habit.setHabitSearchNameId(suggestHabitNameId);
+            // user chose a habit name in the suggestion list
+            habit.setHabitNameId(suggestHabitNameId);
         }
 
         // set reminder list
@@ -659,10 +668,14 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         }
         habit.setReminderList(reminderUpdateList);
 
-        // SAVE HABIT
-        if (Database.getHabitDb().saveUpdateHabit(Database.getHabitDb().convert(habit))) {
+        // save or update habit
+        if (screenMode == MODE_UPDATE) {
+            habit.setUpdate(true);
+        }
+        if (Database.getHabitDb().saveUpdateHabit(habit.toEntity())) {
             String reminderId;
             for (Reminder reminder : habit.getReminderList()) {
+
                 if (reminder.isDelete()) {
                     Database.getReminderDb().delete(reminder.getReminderId());
                 } else {
@@ -672,17 +685,21 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             }
         }
 
-        VnHabitApiService mService = VnHabitApiUtils.getApiService();
-        // CREATE new habit
-        if (createMode == MODE_CREATE) {
-            mService.addHabit(habit).enqueue(new Callback<ResponseBody>() {
+        db.close();
+
+        // start remind server to put notification
+        HabitReminderManager habitReminderManager = new HabitReminderManager(this, habit.getReminderList());
+        habitReminderManager.start();
+
+        setResult(RESULT_OK);
+        finish();
+
+        // call api
+        if (screenMode == MODE_CREATE) {
+            mApiService.addHabit(habit).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     Toast.makeText(HabitActivity.this, "Tạo thói quen thành công", Toast.LENGTH_LONG).show();
-                    HabitActivity.this.setResult(HabitActivity.RESULT_OK);
-                    HabitReminderManager habitReminderManager = new HabitReminderManager(HabitActivity.this, habit.getReminderList());
-                    habitReminderManager.start();
-                    finish();
                 }
 
                 @Override
@@ -690,25 +707,26 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                     Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
                 }
             });
-        }
-        // UPDATE habit
-        else if (createMode == MODE_UPDATE) {
-            mService.updateHabit(habit).enqueue(new Callback<ResponseBody>() {
+
+        } else if (screenMode == MODE_UPDATE) {
+            mApiService.updateHabit(habit).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    HabitActivity.this.setResult(HabitActivity.RESULT_OK);
-                    HabitReminderManager habitReminderManager = new HabitReminderManager(HabitActivity.this, habit.getReminderList());
-                    habitReminderManager.start();
-                    finish();
+                    Toast.makeText(HabitActivity.this, "Cập nhật thành công", Toast.LENGTH_LONG).show();
+
+                    Database db = Database.getInstance(HabitActivity.this);
+                    db.open();
+
+                    Database.getHabitDb().setUpdate(habit.getHabitId(), false);
+                    db.close();
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi", Toast.LENGTH_LONG).show();
+                    Toast.makeText(HabitActivity.this, "Đã xãy ra lỗi khi kết nối server ", Toast.LENGTH_LONG).show();
                 }
             });
         }
-        db.close();
     }
 
     @OnClick(R.id.btn_suggestHabit)
@@ -724,11 +742,11 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
     @OnClick({R.id.btn_cancel})
     public void cancel(View v) {
-        if (createMode == MODE_CREATE) {
+        if (screenMode == MODE_CREATE) {
             finish();
-        } else if (createMode == MODE_UPDATE) {
-            AppDialogHelper appDialogHelper = new AppDialogHelper();
+        } else if (screenMode == MODE_UPDATE) {
 
+            AppDialogHelper appDialogHelper = new AppDialogHelper();
             appDialogHelper.setPositiveListener(new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -738,8 +756,12 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                     HabitEntity item = Database.getHabitDb().getHabit(initHabitId);
                     item.setDelete(true);
                     Database.getHabitDb().saveUpdateHabit(item);
-
                     db.close();
+
+                    Intent intent = new Intent();
+                    intent.putExtra("delete", true);
+                    setResult(RESULT_OK, intent);
+                    finish();
 
                     mApiService.deleteHabit(initHabitId).enqueue(new Callback<ResponseBody>() {
                         @Override
@@ -749,14 +771,8 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                             Database db = new Database(HabitActivity.this);
                             db.open();
 
-                            Database.getHabitDb().deleteHabit(initHabitId);
+                            Database.getHabitDb().delete(initHabitId);
                             db.close();
-
-                            Intent intent = new Intent();
-                            intent.putExtra("delete", true);
-
-                            HabitActivity.this.setResult(HabitActivity.RESULT_OK, intent);
-                            finish();
                         }
 
                         @Override

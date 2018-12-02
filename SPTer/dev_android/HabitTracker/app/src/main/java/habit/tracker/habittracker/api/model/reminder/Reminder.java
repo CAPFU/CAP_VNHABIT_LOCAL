@@ -25,10 +25,11 @@ public class Reminder {
     @SerializedName("server_id")
     @Expose
     private String serverId;
-    private String habitName;
     @SerializedName("is_delete")
     @Expose
     private boolean isDelete = false;
+
+    private String habitName;
 
     private String userId;
 

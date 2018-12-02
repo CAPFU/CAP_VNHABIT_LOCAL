@@ -115,7 +115,9 @@ public class LoginActivity extends BaseActivity {
                         || !validator.checkEmpty("Mật khẩu", password)) {
                     return;
                 }
+
                 getUser(username, password, true);
+
                 break;
             case R.id.btn_fb_login:
                 showEmptyScreen();

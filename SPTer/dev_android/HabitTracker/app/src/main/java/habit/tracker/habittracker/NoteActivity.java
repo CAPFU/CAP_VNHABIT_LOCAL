@@ -43,7 +43,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static habit.tracker.habittracker.common.AppConstant.TYPE_0;
 import static habit.tracker.habittracker.common.AppConstant.TYPE_1;
 
 public class NoteActivity extends BaseActivity implements RecyclerViewItemClickListener {
@@ -139,7 +138,7 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
         isCountHabitType = habitEntity.getMonitorType().equals(TYPE_1);
 
         // get all tracking record of this habit
-        defaultTrackingList = Database.getTrackingDb().getTrackingListByHabit(habitId);
+        defaultTrackingList = Database.getTrackingDb().getTrackingRecordsByHabit(habitId);
 
         TrackingEntity todayTracking = Database.getTrackingDb().getTracking(habitEntity.getHabitId(), currentDate);
 
@@ -349,7 +348,7 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
         noteRecyclerViewAdapter.notifyDataSetChanged();
 
         // save to local
-        Database.getTrackingDb().saveTracking(trackingEntity);
+        Database.getTrackingDb().saveUpdateRecord(trackingEntity);
 
         // object to save to server
         TrackingList trackingData = new TrackingList();
@@ -404,7 +403,7 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
             trackingEntity.setCurrentDate(currentDate);
         }
         trackingEntity.setCount(String.valueOf(curTrackingCount));
-        Database.trackingImpl.saveTracking(trackingEntity);
+        Database.trackingImpl.saveUpdateRecord(trackingEntity);
         db.close();
 
         updateUI();

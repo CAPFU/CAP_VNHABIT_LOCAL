@@ -3,7 +3,7 @@ package habit.tracker.habittracker.repository.tracking;
 import java.util.List;
 
 public interface TrackingDao {
-    boolean saveTracking(TrackingEntity entity);
+    boolean saveUpdateRecord(TrackingEntity entity);
     boolean updateTracking(TrackingEntity entity);
-    List<TrackingEntity> getTrackingListByHabit(String habitId);
+    List<TrackingEntity> getTrackingRecordsByHabit(String habitId);
 }
