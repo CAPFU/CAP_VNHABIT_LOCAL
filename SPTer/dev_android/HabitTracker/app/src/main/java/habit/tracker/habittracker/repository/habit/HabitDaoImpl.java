@@ -308,40 +308,6 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
         return habitEntity;
     }
 
-    public HabitEntity convert(Habit habit) {
-        if (habit != null) {
-            HabitEntity entity = new HabitEntity();
-            entity.setHabitId(habit.getHabitId());
-            entity.setUserId(habit.getUserId());
-            entity.setGroupId(habit.getGroupId());
-            entity.setMonitorId(habit.getMonitorId());
-            entity.setHabitName(habit.getHabitName());
-            entity.setHabitTarget(habit.getHabitTarget());
-            entity.setHabitType(habit.getHabitType());
-            entity.setMonitorType(habit.getMonitorType());
-            entity.setMonitorUnit(habit.getMonitorUnit());
-            entity.setMonitorNumber(habit.getMonitorNumber());
-            entity.setCreatedDate(habit.getCreatedDate());
-            entity.setStartDate(habit.getStartDate());
-            entity.setEndDate(habit.getEndDate());
-            entity.setHabitColor(habit.getHabitColor());
-            entity.setDescription(habit.getDescription());
-            entity.setMon(habit.getMon());
-            entity.setTue(habit.getTue());
-            entity.setWed(habit.getWed());
-            entity.setThu(habit.getThu());
-            entity.setFri(habit.getFri());
-            entity.setSat(habit.getSat());
-            entity.setSun(habit.getSun());
-            entity.setHabitNameId(habit.getHabitNameId());
-            entity.setHabitNameAscii(habit.getHabitNameAscii());
-            entity.setDelete(habit.isDelete());
-            entity.setUpdate(habit.isUpdate());
-            return entity;
-        }
-        return null;
-    }
-
     @Override
     public void setContentValue(HabitEntity habitEntity) {
         initialValues = new ContentValues();

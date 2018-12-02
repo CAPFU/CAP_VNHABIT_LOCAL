@@ -172,39 +172,45 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
                 List<Habit> fromServerToLocal = response.body().getHabit();
 
                 Map<String, String> mapHabitFromServer = new HashMap<>();
-                HabitEntity habitEntity;
+                Map<String, String> mapTrackingFromServer = new HashMap<>();
+                Map<String, String> mapReminderFromServer = new HashMap<>();
 
                 // syn data
                 if (fromServerToLocal != null && fromServerToLocal.size() > 0) {
+                    HabitEntity habitEntity;
                     for (Habit habit : fromServerToLocal) {
 
+                        mapHabitFromServer.put(habit.getHabitId(), habit.getHabitName());
                         habitEntity = Database.getHabitDb().getHabit(habit.getHabitId());
 
                         if (habitEntity != null && habitEntity.isDelete()) {
                             callDeleteHabitApi(habit.getHabitId());
-                        } else if (habitEntity != null && habitEntity.isUpdate()) {
-                            callUpdateHabitApi(habit.getHabitId());
-                        } else {
 
+                        } else if (habitEntity != null && habitEntity.isUpdate()) {
+                            callUpdateHabitApi(habitEntity);
+
+                        } else {
                             Database.getHabitDb().saveUpdateHabit(habit.toEntity());
-                            mapHabitFromServer.put(habit.getHabitId(), habit.getHabitName());
 
                             // update tracking list from server
                             TrackingEntity trackingEntity;
                             for (Tracking record : habit.getTracksList()) {
                                 trackingEntity = Database.getTrackingDb().getTracking(record.getHabitId());
                                 if (trackingEntity != null && trackingEntity.isUpdate()) {
-
+                                    callSaveUpdateTrackingApi(trackingEntity);
                                 } else {
-                                    Database.getTrackingDb().saveUpdateRecord(Database.getTrackingDb().convert(record));
+                                    Database.getTrackingDb().saveUpdateRecord(record.toEntity());
                                 }
+                                mapTrackingFromServer.put(record.getTrackingId(), record.getCurrentDate());
                             }
 
                             // update reminder list from server
                             for (Reminder reminder : habit.getReminderList()) {
-                                Database.getReminderDb().saveReminder(Database.getReminderDb().convert(reminder), reminder.getReminderId());
+                                Database.getReminderDb().saveReminder(reminder.toEnity(), reminder.getReminderId());
+                                mapReminderFromServer.put(reminder.getReminderId(), reminder.getHabitId());
                             }
                         }
+
                     }
                 }
 
@@ -212,41 +218,60 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
                 List<HabitEntity> fromLocalToServer = Database.getHabitDb().getHabitByUser(userId);
 
                 if (fromLocalToServer != null && fromLocalToServer.size() > 0) {
+                    List<TrackingEntity> trackingEntityList;
+                    List<ReminderEntity> reminderEntityList;
                     Calendar ca = Calendar.getInstance();
                     ca.setTimeInMillis(System.currentTimeMillis());
-
-                    for (HabitEntity entity : fromLocalToServer) {
-                        if (!entity.isDelete()) {
+                    for (HabitEntity habitEntity : fromLocalToServer) {
+                        if (!habitEntity.isDelete()) {
                             year = ca.get(Calendar.YEAR);
                             month = ca.get(Calendar.MONTH) + 1;
                             date = ca.get(Calendar.DATE);
 
                             // syn from local to server if server don't store this habit
-                            if (!mapHabitFromServer.containsKey(entity.getHabitId())) {
-                                callAddHabitApi(entity.getHabitId());
+                            if (!mapHabitFromServer.containsKey(habitEntity.getHabitId())) {
+                                callAddHabitApi(habitEntity.getHabitId());
                             }
 
-                            if (isTodayHabit(year, month - 1, date, entity)) {
+                            if (isTodayHabit(year, month - 1, date, habitEntity)) {
                                 // create today tracking record list
-                                if (currentDate.compareTo(entity.getStartDate()) >= 0 && (TextUtils.isEmpty(entity.getEndDate()) || currentDate.compareTo(entity.getEndDate()) <= 0)) {
-                                    TrackingEntity todayTracking = getTodayTracking(entity.getHabitId(), currentDate, 0);
-                                    totalCount = getSumTrackValueByHabit(entity.getHabitId(), Integer.parseInt(entity.getHabitType()), Integer.parseInt(todayTracking.getCount()));
+                                if (currentDate.compareTo(habitEntity.getStartDate()) >= 0
+                                        && (TextUtils.isEmpty(habitEntity.getEndDate()) || currentDate.compareTo(habitEntity.getEndDate()) <= 0)) {
+
+                                    TrackingEntity todayTracking = getTodayTracking(habitEntity.getHabitId(), currentDate, 0);
+                                    totalCount = getSumTrackValueByHabit(habitEntity.getHabitId(), Integer.parseInt(habitEntity.getHabitType()), Integer.parseInt(todayTracking.getCount()));
                                     trackingItemList.add(new TrackingItem(
                                             todayTracking.getTrackingId(),
-                                            entity.getHabitId(),
-                                            entity.getHabitTarget(),
-                                            entity.getGroupId(),
-                                            entity.getHabitName(),
-                                            entity.getDescription(),
+                                            habitEntity.getHabitId(),
+                                            habitEntity.getHabitTarget(),
+                                            habitEntity.getGroupId(),
+                                            habitEntity.getHabitName(),
+                                            habitEntity.getDescription(),
                                             todayTracking.getDescription(),
-                                            entity.getHabitType(),
-                                            Integer.parseInt(entity.getMonitorType()),
-                                            entity.getMonitorNumber(),
+                                            habitEntity.getHabitType(),
+                                            Integer.parseInt(habitEntity.getMonitorType()),
+                                            habitEntity.getMonitorNumber(),
                                             Integer.parseInt(todayTracking.getCount()),
-                                            entity.getMonitorUnit(),
-                                            entity.getHabitColor(),
+                                            habitEntity.getMonitorUnit(),
+                                            habitEntity.getHabitColor(),
                                             totalCount)
                                     );
+                                }
+                            }
+
+                            // syn tracking records
+                            trackingEntityList = Database.getTrackingDb().getTrackingRecordsByHabit(habitEntity.getHabitId());
+                            for (TrackingEntity record : trackingEntityList) {
+                                if (!mapTrackingFromServer.containsKey(record.getTrackingId())) {
+                                    callSaveUpdateTrackingApi(record);
+                                }
+                            }
+
+                            // syn reminders
+                            reminderEntityList = Database.getReminderDb().getRemindersByHabit(habitEntity.getHabitId());
+                            for (ReminderEntity reminderEntity : reminderEntityList) {
+                                if (!mapReminderFromServer.containsKey(reminderEntity.getServerId())) {
+                                    // call reminder api
                                 }
                             }
                         }
@@ -313,17 +338,16 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         });
     }
 
-    private void callUpdateHabitApi(final String habitId) {
+    private void callUpdateHabitApi(final HabitEntity habitEntity) {
         mDatabase.open();
 
-        HabitEntity habitEntity = Database.getHabitDb().getHabit(habitId);
-        Habit habit = habitEntity != null? habitEntity.toModel(): null;
+        final Habit habit = habitEntity != null? habitEntity.toModel(): null;
         if (habit == null) {
             return;
         }
 
-        List<TrackingEntity> trackingList = Database.getTrackingDb().getTrackingRecordsByHabit(habitId);
-        List<ReminderEntity> reminderList = Database.getReminderDb().getRemindersByHabit(habitId);
+        List<TrackingEntity> trackingList = Database.getTrackingDb().getTrackingRecordsByHabit(habit.getHabitId());
+        List<ReminderEntity> reminderList = Database.getReminderDb().getRemindersByHabit(habit.getHabitId());
 
         for (TrackingEntity trackingEntity : trackingList) {
             habit.getTracksList().add(trackingEntity.toModel());
@@ -339,7 +363,24 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
                 Database db = Database.getInstance(MainActivity.this);
                 db.open();
 
-                Database.getHabitDb().setUpdate(habitId, true);
+                Database.getHabitDb().setUpdate(habit.getHabitId(), true);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            }
+        });
+    }
+
+    private void callSaveUpdateTrackingApi(final TrackingEntity entityToServer) {
+        TrackingList trackingData = new TrackingList();
+        trackingData.getTrackingList().add(entityToServer.toModel());
+        mApiService.saveUpdateTracking(trackingData).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Database db = new Database(MainActivity.this);
+                db.open();
+                Database.getTrackingDb().setUpdate(entityToServer.getTrackingId(), false);
             }
 
             @Override
@@ -393,10 +434,9 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         tracking.setCurrentDate(currentDate);
         tracking.setDescription(trackingItem.getTrackingDescription());
         tracking.setUpdate(true);
-
         trackingData.getTrackingList().add(tracking);
 
-        if (!Database.getTrackingDb().updateTracking(Database.getTrackingDb().convert(tracking))) {
+        if (!Database.getTrackingDb().updateTracking(tracking.toEntity())) {
             return;
         }
 
@@ -406,7 +446,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
     private void callUpdateTrackRecordApi(final TrackingList trackingData, final String recordId) {
         // save to server
         VnHabitApiService service = VnHabitApiUtils.getApiService();
-        service.updateTracking(trackingData).enqueue(new Callback<ResponseBody>() {
+        service.saveUpdateTracking(trackingData).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Database db = Database.getInstance(MainActivity.this);

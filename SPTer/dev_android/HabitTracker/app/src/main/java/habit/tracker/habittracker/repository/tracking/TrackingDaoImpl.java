@@ -222,6 +222,19 @@ public class TrackingDaoImpl extends MyDatabaseHelper implements TrackingDao, Tr
         }
     }
 
+    public boolean setUpdate(String trackId, boolean isUpdate) {
+        final String sql = "UPDATE " + TRACKING_TABLE + " SET " + IS_UPDATED + " = " + (isUpdate ? "1" : "0")
+                + " WHERE " + TRACKING_ID + " = '" + trackId + "'";
+
+        cursor = super.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.close();
+            return true;
+        }
+        return false;
+    }
+
     public String getParams(String[] columns, String alias, boolean removeEnd) {
         String str = "";
         for (int i = 0; i < columns.length; i++) {

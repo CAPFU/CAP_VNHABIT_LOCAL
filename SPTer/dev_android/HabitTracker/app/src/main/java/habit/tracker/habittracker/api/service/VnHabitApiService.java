@@ -55,7 +55,7 @@ public interface VnHabitApiService {
     Call<GroupResponse> deleteGroup(@Query("group_id") String groupId);
 
     @POST("tracking/create_update.php")
-    Call<ResponseBody> updateTracking(@Body TrackingList trackingList);
+    Call<ResponseBody> saveUpdateTracking(@Body TrackingList trackingList);
 
     @GET("suggest/habit_search.php")
     Call<SearchResponse> searchHabitName(@Query("search") String searchKey);

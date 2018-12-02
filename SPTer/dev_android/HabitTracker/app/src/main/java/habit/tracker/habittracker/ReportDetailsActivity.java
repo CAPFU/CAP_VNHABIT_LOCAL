@@ -416,7 +416,7 @@ public class ReportDetailsActivity extends BaseActivity {
         trackingData.getTrackingList().add(tracking);
 
         VnHabitApiService service = VnHabitApiUtils.getApiService();
-        service.updateTracking(trackingData).enqueue(new Callback<ResponseBody>() {
+        service.saveUpdateTracking(trackingData).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
             }
