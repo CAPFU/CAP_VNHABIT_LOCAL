@@ -222,6 +222,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
                     List<ReminderEntity> reminderEntityList;
                     Calendar ca = Calendar.getInstance();
                     ca.setTimeInMillis(System.currentTimeMillis());
+
                     for (HabitEntity habitEntity : fromLocalToServer) {
                         if (!habitEntity.isDelete()) {
                             year = ca.get(Calendar.YEAR);
@@ -231,6 +232,22 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
                             // syn from local to server if server don't store this habit
                             if (!mapHabitFromServer.containsKey(habitEntity.getHabitId())) {
                                 callAddHabitApi(habitEntity.getHabitId());
+                            }
+
+                            // syn tracking records
+                            trackingEntityList = Database.getTrackingDb().getTrackingRecordsByHabit(habitEntity.getHabitId());
+                            for (TrackingEntity record : trackingEntityList) {
+                                if (!mapTrackingFromServer.containsKey(record.getTrackingId())) {
+                                    callSaveUpdateTrackingApi(record);
+                                }
+                            }
+
+                            // syn reminders
+                            reminderEntityList = Database.getReminderDb().getRemindersByHabit(habitEntity.getHabitId());
+                            for (ReminderEntity reminderEntity : reminderEntityList) {
+                                if (!mapReminderFromServer.containsKey(reminderEntity.getServerId())) {
+                                    callAddReminderApi(reminderEntity.toModel());
+                                }
                             }
 
                             if (isTodayHabit(year, month - 1, date, habitEntity)) {
@@ -256,22 +273,6 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
                                             habitEntity.getHabitColor(),
                                             totalCount)
                                     );
-                                }
-                            }
-
-                            // syn tracking records
-                            trackingEntityList = Database.getTrackingDb().getTrackingRecordsByHabit(habitEntity.getHabitId());
-                            for (TrackingEntity record : trackingEntityList) {
-                                if (!mapTrackingFromServer.containsKey(record.getTrackingId())) {
-                                    callSaveUpdateTrackingApi(record);
-                                }
-                            }
-
-                            // syn reminders
-                            reminderEntityList = Database.getReminderDb().getRemindersByHabit(habitEntity.getHabitId());
-                            for (ReminderEntity reminderEntity : reminderEntityList) {
-                                if (!mapReminderFromServer.containsKey(reminderEntity.getServerId())) {
-                                    // call reminder api
                                 }
                             }
                         }
@@ -389,6 +390,38 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         });
     }
 
+    private void callUpdateTrackRecordApi(final TrackingList trackingData, final String recordId) {
+        mApiService.saveUpdateTracking(trackingData).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Database db = Database.getInstance(MainActivity.this);
+                db.open();
+                TrackingEntity entity = Database.getTrackingDb().getTracking(recordId);
+                if (entity != null) {
+                    entity.setUpdate(false);
+                    Database.getTrackingDb().saveUpdateRecord(entity);
+                }
+                db.close();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            }
+        });
+    }
+
+    private void callAddReminderApi(Reminder reminder) {
+        mApiService.addReminder(reminder).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            }
+        });
+    }
+
     private int getSumTrackValueByHabit(String habitId, int habitType, int count) {
         String[] arr = currentDate.split("-");
         int year = Integer.parseInt(arr[0]);
@@ -436,33 +469,11 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         tracking.setUpdate(true);
         trackingData.getTrackingList().add(tracking);
 
-        if (!Database.getTrackingDb().updateTracking(tracking.toEntity())) {
+        if (!Database.getTrackingDb().saveUpdateRecord(tracking.toEntity())) {
             return;
         }
 
         callUpdateTrackRecordApi(trackingData, trackingItem.getTrackId());
-    }
-
-    private void callUpdateTrackRecordApi(final TrackingList trackingData, final String recordId) {
-        // save to server
-        VnHabitApiService service = VnHabitApiUtils.getApiService();
-        service.saveUpdateTracking(trackingData).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Database db = Database.getInstance(MainActivity.this);
-                db.open();
-                TrackingEntity entity = Database.getTrackingDb().getTracking(recordId);
-                if (entity != null) {
-                    entity.setUpdate(false);
-                    Database.getTrackingDb().saveUpdateRecord(entity);
-                }
-                db.close();
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-            }
-        });
     }
 
     @Override
