@@ -81,8 +81,8 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
     @BindView(R.id.tabSuggestion)
     ImageView tabSuggestion;
 
+    String userId;
     boolean isReStart = false;
-
     VnHabitApiService mApiService = VnHabitApiUtils.getApiService();
     Database mDatabase;
 
@@ -137,6 +137,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        userId = MySharedPreference.getUserId(this);
         mDatabase = Database.getInstance(MainActivity.this);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         trackingAdapter = new HabitRecyclerViewAdapter(MainActivity.this, trackingItemList);
@@ -492,7 +493,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         }
     }
 
-    public void updateByCurrentDate() {
+    private void updateByCurrentDate() {
         Database db = Database.getInstance(this);
         db.open();
 
@@ -503,10 +504,9 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         int date = Integer.parseInt(arr[2]);
         Schedule schedule = new Schedule(year, month, date);
 
-        List<HabitEntity> habitEntities = Database.getHabitDb().getTodayHabit(schedule, currentDate);
+        List<HabitEntity> habitEntities = Database.getHabitDb().getTodayHabit(schedule, currentDate, userId);
 
         int totalCount = 0;
-
         for (HabitEntity habit : habitEntities) {
 
             // get tracking records on current remindDate

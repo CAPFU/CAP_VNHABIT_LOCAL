@@ -123,10 +123,12 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
         return count;
     }
 
-    public List<HabitEntity> getTodayHabit(TrackingDateInWeek date, String currentDate) {
+    public List<HabitEntity> getTodayHabit(TrackingDateInWeek date, String currentDate, String userId) {
         List<HabitEntity> list = new ArrayList<>();
 
-        final String sql = "SELECT * FROM " + HabitSchema.HABIT_TABLE + " WHERE ( '" + currentDate + "' >= " + HabitSchema.START_DATE + ")"
+        final String sql = "SELECT * FROM " + HabitSchema.HABIT_TABLE
+                + " WHERE " + USER_ID + " = '" + userId + "' "
+                + "( '" + currentDate + "' >= " + HabitSchema.START_DATE + ")"
                 + " AND ( " + HabitSchema.END_DATE + " IS NULL OR '" + currentDate + "' <= " + HabitSchema.END_DATE + ")"
                 + " AND " + getTodayCond(date);
 
