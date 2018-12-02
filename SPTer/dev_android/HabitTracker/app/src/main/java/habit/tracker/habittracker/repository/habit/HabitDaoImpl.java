@@ -127,8 +127,8 @@ public class HabitDaoImpl extends MyDatabaseHelper implements HabitDao, HabitSch
         List<HabitEntity> list = new ArrayList<>();
 
         final String sql = "SELECT * FROM " + HabitSchema.HABIT_TABLE
-                + " WHERE " + USER_ID + " = '" + userId + "' "
-                + "( '" + currentDate + "' >= " + HabitSchema.START_DATE + ")"
+                + " WHERE " + USER_ID + " = '" + userId + "'"
+                + " AND ( '" + currentDate + "' >= " + HabitSchema.START_DATE + ")"
                 + " AND ( " + HabitSchema.END_DATE + " IS NULL OR '" + currentDate + "' <= " + HabitSchema.END_DATE + ")"
                 + " AND " + getTodayCond(date);
 
