@@ -550,10 +550,8 @@ public class ReportDetailsActivity extends BaseActivity {
             for (TrackingEntity track : habitTracking.getTrackingList()) {
                 count = Integer.parseInt(track.getCount());
                 curSumCount += count;
-//                if (count >= Integer.parseInt(habit.getMonitorNumber())) {
                 mapDayInMonth.put(track.getCurrentDate(),
                         mapDayInMonth.get(track.getCurrentDate()) + count);
-//                }
             }
         }
 

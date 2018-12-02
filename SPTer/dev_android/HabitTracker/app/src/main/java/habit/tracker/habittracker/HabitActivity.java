@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -905,7 +906,6 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
 
             if (!enableHabitRangeTime[0]) {
                 startHabitDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
-//                endHabitDate = getEndDateByMonitorType();
                 tvStartDate.setText(AppGenerator.format(startHabitDate, AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
             }
 
@@ -1058,5 +1058,18 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             mDrawable.setColorFilter(new PorterDuffColorFilter(this.getResources().getColor(color), PorterDuff.Mode.MULTIPLY));
         }
         return mDrawable;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        int x = Math.round(ev.getX());
+        int y = Math.round(ev.getY());
+
+        if (x < rvHabitSuggestion.getLeft() || x > rvHabitSuggestion.getRight() || y < rvHabitSuggestion.getTop() || y > rvHabitSuggestion.getBottom()) {
+            searchResultList.clear();
+            habitSuggestionAdapter.notifyDataSetChanged();
+        }
+
+        return super.dispatchTouchEvent(ev);
     }
 }

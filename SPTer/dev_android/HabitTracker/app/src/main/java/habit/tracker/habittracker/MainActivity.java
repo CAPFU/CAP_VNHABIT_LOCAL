@@ -158,6 +158,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
     private void initializeScreen() {
         currentDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
         firstCurrentDate = currentDate;
+        timeLine = 0;
         updateTitle(currentDate);
         trackingItemList.clear();
 
