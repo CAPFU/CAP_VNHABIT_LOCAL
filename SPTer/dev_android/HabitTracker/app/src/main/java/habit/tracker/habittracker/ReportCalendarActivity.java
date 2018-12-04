@@ -200,10 +200,12 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
             groupList.add(new ArrayList<TrackingEntity>());
             preDay = currentDate;
             for (int i = totalList.size() - 1; i >= 0; i--) {
-                if (!preDay.equals(totalList.get(i).getCurrentDate())) {
+                if (totalList.get(i).getIntCount() > 0 && !preDay.equals(totalList.get(i).getCurrentDate())) {
                     groupList.add(new ArrayList<TrackingEntity>());
                 }
-                groupList.get(groupList.size() - 1).add(totalList.get(i));
+                if (totalList.get(i).getIntCount() > 0) {
+                    groupList.get(groupList.size() - 1).add(totalList.get(i));
+                }
                 preDay = AppGenerator.getPreDate(totalList.get(i).getCurrentDate(), availDaysInWeek);
             }
             int l = 0;

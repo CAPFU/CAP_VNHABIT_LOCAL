@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -312,14 +313,19 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
     }
 
     private void addToDisplayList(NoteItem item) {
-        int insertPos = 0;
-        for (int i = 0; i < nonEmptyNoteList.size(); i++) {
-            if (item.getDefDate().compareTo(nonEmptyNoteList.get(i).getDefDate()) > 0) {
-                insertPos = i;
-                break;
+        nonEmptyNoteList.add(item);
+        Collections.sort(nonEmptyNoteList, new Comparator<NoteItem>() {
+            @Override
+            public int compare(NoteItem n1, NoteItem n2) {
+                if (n2.getDefDate().compareTo(n1.getDefDate()) > 0) {
+                    return 1;
+                }
+                if (n2.getDefDate().compareTo(n1.getDefDate()) < 0) {
+                    return -1;
+                }
+                return 0;
             }
-        }
-        nonEmptyNoteList.add(insertPos, item);
+        });
         noteRecyclerViewAdapter.notifyDataSetChanged();
     }
 
