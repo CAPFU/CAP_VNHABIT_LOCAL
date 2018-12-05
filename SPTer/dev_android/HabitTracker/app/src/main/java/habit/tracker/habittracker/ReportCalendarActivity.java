@@ -179,43 +179,7 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
         availDaysInWeek[5] = defaultHabitEntity.getSat().equals("1");
         availDaysInWeek[6] = defaultHabitEntity.getSun().equals("1");
 
-        String curDay = currentDate;
-        String preDay;
-        List<List<TrackingEntity>> groupList = new ArrayList<>();
-        if (totalList != null && totalList.size() > 0) {
-            int k = totalList.size() - 1;
-            curTrackingChain.add(totalList.get(k));
-            k--;
-            while (k >= 0) {
-                preDay = AppGenerator.getPreDate(curDay, availDaysInWeek);
-                if (preDay.equals(totalList.get(k).getCurrentDate())) {
-                    curTrackingChain.add(totalList.get(k));
-                } else {
-                    break;
-                }
-                curDay = preDay;
-                k--;
-            }
-
-            groupList.add(new ArrayList<TrackingEntity>());
-            preDay = currentDate;
-            for (int i = totalList.size() - 1; i >= 0; i--) {
-                if (totalList.get(i).getIntCount() > 0 && !preDay.equals(totalList.get(i).getCurrentDate())) {
-                    groupList.add(new ArrayList<TrackingEntity>());
-                }
-                if (totalList.get(i).getIntCount() > 0) {
-                    groupList.get(groupList.size() - 1).add(totalList.get(i));
-                }
-                preDay = AppGenerator.getPreDate(totalList.get(i).getCurrentDate(), availDaysInWeek);
-            }
-            int l = 0;
-            for (List<TrackingEntity> chain : groupList) {
-                if (chain.size() > l) {
-                    bestTrackingChain = chain;
-                    l = chain.size();
-                }
-            }
-        }
+        loadTrackingChains(totalList);
 
         calendarAdapter = new TrackingCalendarAdapter(this, calendarItemList, defaultHabitEntity.getHabitColor());
         calendarAdapter.setClickListener(this);
@@ -246,6 +210,42 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
         }
 
         updateUI();
+    }
+
+    private void loadTrackingChains(List<TrackingEntity> totalList) {
+        String curDay = currentDate;
+        String preDay;
+        List<List<TrackingEntity>> groupList = new ArrayList<>();
+
+        curTrackingChain.clear();
+        bestTrackingChain.clear();
+
+        if (totalList != null && totalList.size() > 0) {
+
+            groupList.add(new ArrayList<TrackingEntity>());
+            preDay = totalList.get(totalList.size() - 1).getCurrentDate();
+
+            for (int i = totalList.size() - 1; i >= 0; i--) {
+                if (totalList.get(i).getIntCount() > 0 && !preDay.equals(totalList.get(i).getCurrentDate())) {
+                    groupList.add(new ArrayList<TrackingEntity>());
+                }
+                if (totalList.get(i).getIntCount() > 0) {
+                    groupList.get(groupList.size() - 1).add(totalList.get(i));
+                }
+                preDay = AppGenerator.getPreDate(totalList.get(i).getCurrentDate(), availDaysInWeek);
+            }
+
+            if (groupList.size() > 0) {
+                int longest = 0;
+                for (List<TrackingEntity> chain : groupList) {
+                    if (chain.size() > longest) {
+                        bestTrackingChain = chain;
+                        longest = chain.size();
+                    }
+                }
+                curTrackingChain = groupList.get(0);
+            }
+        }
     }
 
     @Override
@@ -322,7 +322,7 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
 
         for (int i = 0; i < datesInMonth.length; i++) {
             if (trackingEntityMap.containsKey(datesInMonth[i])) {
-                if (isCountHabitType || !trackingEntityMap.get(datesInMonth[i]).getCount().equals(TYPE_0)) {
+                if (trackingEntityMap.get(datesInMonth[i]).getIntCount() > 0) {
                     calendarItemList.add(new TrackingCalendarItem(String.valueOf(i + 1), datesInMonth[i], true, false));
                 } else {
                     calendarItemList.add(new TrackingCalendarItem(String.valueOf(i + 1), datesInMonth[i], false, false));
@@ -401,6 +401,8 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
             return;
         }
 
+        int count = curTrackingCount;
+
         switch (v.getId()) {
             case R.id.minusCount:
                 curTrackingCount = curTrackingCount - 1 < 0 ? 0 : curTrackingCount - 1;
@@ -410,6 +412,16 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
                 curTrackingCount++;
                 totalCount++;
                 break;
+        }
+
+        if ((count > 0 && curTrackingCount == 0) || (count == 0 && curTrackingCount > 0)) {
+            for (int i = 0; i  <calendarItemList.size(); i++) {
+                if (calendarItemList.get(i).getDate() != null && calendarItemList.get(i).getDate().equals(currentDate)) {
+                    calendarItemList.get(i).setFilled(!calendarItemList.get(i).isFilled());
+                    calendarAdapter.notifyDataSetChanged();
+                    break;
+                }
+            }
         }
 
         updateLocalAndApi(defaultHabitEntity.getHabitId(), currentDate, String.valueOf(curTrackingCount));
@@ -426,6 +438,9 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
         }
         trackingEntity.setCount(String.valueOf(curTrackingCount));
         Database.getTrackingDb().saveUpdateRecord(trackingEntity);
+
+        List<TrackingEntity> totalList = Database.getTrackingDb().getTrackingRecordsByHabit(defaultHabitEntity.getHabitId());
+        loadTrackingChains(totalList);
 
         updateUI();
 
