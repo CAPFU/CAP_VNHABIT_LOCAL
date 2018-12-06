@@ -213,11 +213,11 @@ public class SettingActivity extends AppCompatActivity {
     public void sendFeedback(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
-        View inflatedView = inflater.inflate(R.layout.dialog_edit_note, null);
-        final EditText editNote = inflatedView.findViewById(R.id.editNote);
+        View inflatedView = inflater.inflate(R.layout.dialog_edit_feedback, null);
+        final EditText editNote = inflatedView.findViewById(R.id.editFeedback);
 
         TextView title = new TextView(this);
-        title.setText("feedback");
+        title.setText("Feedback");
         title.setGravity(Gravity.CENTER);
         title.setPadding(25, 20, 0, 10);
         title.setTextSize(14);
