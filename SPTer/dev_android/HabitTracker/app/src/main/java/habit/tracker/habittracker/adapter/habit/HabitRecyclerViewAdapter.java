@@ -191,27 +191,27 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 return;
             }
 
-            int num = mData.get(getAdapterPosition()).getTotalCount();
-            int num2 = mData.get(getAdapterPosition()).getCount();
+            int totalCount = mData.get(getAdapterPosition()).getTotalCount();
+            int todayCount = mData.get(getAdapterPosition()).getCount();
 
             if (view.getId() == R.id.btn_plus) {
-                num = num + 1;
-                num2++;
-                tvCount.setText(String.valueOf(num));
-                mClickListener.onTrackingValueChanged(view, TYPE_COUNT, getAdapterPosition(), num, num2);
+                totalCount = totalCount + 1;
+                todayCount++;
+                tvCount.setText(String.valueOf(totalCount));
+                mClickListener.onTrackingValueChanged(view, TYPE_COUNT, getAdapterPosition(), totalCount, todayCount);
 
             } else if (view.getId() == R.id.btn_minus) {
-                num = num > 0 ? num - 1 : 0;
-                num2 = num2 > 0 ? num2 - 1 : 0;
-                tvCount.setText(String.valueOf(num));
-                mClickListener.onTrackingValueChanged(view, TYPE_COUNT, getAdapterPosition(), num, num2);
+                totalCount = totalCount > 0 ? totalCount - 1 : 0;
+                todayCount = totalCount > 0 ? todayCount - 1 : 0;
+                tvCount.setText(String.valueOf(totalCount));
+                mClickListener.onTrackingValueChanged(view, TYPE_COUNT, getAdapterPosition(), totalCount, todayCount);
 
             } else if (mClickListener != null) {
                 mClickListener.onItemClick(view, TYPE_COUNT, getAdapterPosition());
             }
 
             float goal = mData.get(getAdapterPosition()).getCompletion();
-            float ratio = (float) num / Integer.parseInt(mData.get(getAdapterPosition()).getNumber());
+            float ratio = (float) totalCount / Integer.parseInt(mData.get(getAdapterPosition()).getNumber());
             scaleView(background, goal, ratio > 1 ? 1f : ratio, 400);
             mData.get(getAdapterPosition()).setRatio(ratio);
         }
