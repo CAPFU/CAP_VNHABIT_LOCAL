@@ -257,6 +257,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
 
                                     TrackingEntity record = getTodayTracking(habitEntity.getHabitId(), currentDate, 0);
                                     totalCount = getSumValueInPeriod(habitEntity.getHabitId(), Integer.parseInt(habitEntity.getHabitType()), Integer.parseInt(record.getCount()));
+
                                     itemList.add(new TrackingItem(
                                             record.getTrackingId(),
                                             habitEntity.getHabitId(),

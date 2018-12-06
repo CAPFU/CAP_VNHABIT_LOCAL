@@ -1,16 +1,22 @@
 package habit.tracker.habittracker;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -200,5 +206,47 @@ public class SettingActivity extends AppCompatActivity {
                 Toast.makeText(SettingActivity.this, "Export không thành công", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @OnClick(R.id.lbFeedback)
+    @SuppressLint("ResourceType")
+    public void sendFeedback(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View inflatedView = inflater.inflate(R.layout.dialog_edit_note, null);
+        final EditText editNote = inflatedView.findViewById(R.id.editNote);
+
+        TextView title = new TextView(this);
+        title.setText("feedback");
+        title.setGravity(Gravity.CENTER);
+        title.setPadding(25, 20, 0, 10);
+        title.setTextSize(14);
+        builder.setCustomTitle(title);
+
+        builder.setView(inflatedView)
+                .setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialog) {
+                editNote.setText("");
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(SettingActivity.this.getString(R.color.colorAccent)));
+                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor(SettingActivity.this.getString(R.color.colorAccent)));
+            }
+        });
+        alertDialog.show();
     }
 }
