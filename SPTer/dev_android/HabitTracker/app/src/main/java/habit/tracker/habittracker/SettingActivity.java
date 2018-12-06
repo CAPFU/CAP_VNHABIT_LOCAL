@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -40,6 +42,7 @@ import habit.tracker.habittracker.repository.reminder.ReminderEntity;
 
 public class SettingActivity extends AppCompatActivity {
     private static final int ADD_USER_REMINDER = 0;
+    private static final int SELECT_REMINDER = 1;
 
     @BindView(R.id.lbPersonal)
     TextView lbPersonal;
@@ -53,6 +56,9 @@ public class SettingActivity extends AppCompatActivity {
 
     @BindView(R.id.lbExport)
     TextView lbExport;
+
+    @BindView(R.id.lbSound)
+    TextView lbSound;
 
     List<Reminder> reminderDisplayList = new ArrayList<>();
     RemindRecyclerViewAdapter reminderAdapter;
@@ -110,6 +116,15 @@ public class SettingActivity extends AppCompatActivity {
             habitReminderManager.start();
 
             db.close();
+        } else if (resultCode == RESULT_OK && requestCode == SELECT_REMINDER) {
+            Uri uri;
+            if (data != null) {
+                uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                if (uri != null) {
+
+                } else {
+                }
+            }
         }
     }
 
@@ -248,5 +263,14 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
         alertDialog.show();
+    }
+
+    @OnClick(R.id.lbSound)
+    public void selectNotificationSound(View v) {
+        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tone");
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
+        this.startActivityForResult(intent, SELECT_REMINDER);
     }
 }
