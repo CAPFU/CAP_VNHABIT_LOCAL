@@ -46,7 +46,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static habit.tracker.habittracker.common.AppConstant.DEBUG_TAG;
-import static habit.tracker.habittracker.common.AppConstant.TYPE_0;
 import static habit.tracker.habittracker.common.AppConstant.TYPE_1;
 
 public class ReportCalendarActivity extends BaseActivity implements TrackingCalendarAdapter.OnItemClickListener {
@@ -437,7 +436,7 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
             trackingEntity.setCurrentDate(currentDate);
         }
         trackingEntity.setCount(String.valueOf(curTrackingCount));
-        Database.getTrackingDb().saveUpdateRecord(trackingEntity);
+        Database.getTrackingDb().saveUpdateTracking(trackingEntity);
 
         List<TrackingEntity> totalList = Database.getTrackingDb().getTrackingRecordsByHabit(defaultHabitEntity.getHabitId());
         loadTrackingChains(totalList);

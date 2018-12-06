@@ -299,7 +299,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
                 if (data != null) {
                     suggestHabitNameId = data.getStringExtra(SuggestionByGroupActivity.SUGGEST_HABIT_ID);
                     suggestHabitName = data.getStringExtra(SuggestionByGroupActivity.SUGGEST_HABIT_NAME_UNI);
-                    habitTextWatcher.setAfterSelectedSuggestion(true);
+                    habitTextWatcher.setAfterSelection(true);
                     editHabitName.setText(suggestHabitName);
                 }
             }
@@ -317,7 +317,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         habitSuggestionAdapter = new SearchRecyclerViewAdapter(this, searchResultList, new RecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                habitNameTextWatcher.setAfterSelectedSuggestion(true);
+                habitNameTextWatcher.setAfterSelection(true);
                 suggestHabitNameId = searchResultList.get(position).getHabitNameId();
                 suggestHabitName = searchResultList.get(position).getHabitNameUni();
                 editHabitName.setText(suggestHabitName);
@@ -373,7 +373,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         startHabitDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
         endHabitDate = getEndDateByMonitorType();
 
-        // load habit from local trackingItemList
+        // load habit from local itemList
         Bundle data = getIntent().getExtras();
 
         if (data != null) {
@@ -381,7 +381,7 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             suggestHabitNameId = data.getString(ProfileActivity.SUGGEST_NAME_ID, null);
             suggestHabitName = data.getString(ProfileActivity.SUGGEST_NAME, null);
             editHabitName.setText(suggestHabitName);
-            habitNameTextWatcher.setAfterSelectedSuggestion(true);
+            habitNameTextWatcher.setAfterSelection(true);
         }
 
         if (!TextUtils.isEmpty(initHabitId)) {

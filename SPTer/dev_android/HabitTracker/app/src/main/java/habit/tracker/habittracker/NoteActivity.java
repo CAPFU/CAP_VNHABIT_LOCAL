@@ -303,13 +303,13 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
         entity.setHabitId(habitId);
         entity.setCount("0");
         entity.setCurrentDate(currentDate);
-        Database.getTrackingDb().saveUpdateRecord(entity);
+        Database.getTrackingDb().saveUpdateTracking(entity);
 
         item = new NoteItem(entity.getTrackingId(), entity.getCurrentDate(),
                 AppGenerator.format(entity.getCurrentDate(), AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT), newNote);
         addToDisplayList(item);
 
-        saveToLocalAndApi(newNote, entity.getHabitId());
+        saveToLocalAndApi(newNote, entity.getTrackingId());
     }
 
     private void addToDisplayList(NoteItem item) {
@@ -355,7 +355,7 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
             // save to local
             entity.setDescription(newNote);
             entity.setUpdate(true);
-            Database.getTrackingDb().saveUpdateRecord(entity);
+            Database.getTrackingDb().saveUpdateTracking(entity);
 
             // call api
             TrackingList trackingData = new TrackingList();
@@ -391,7 +391,7 @@ public class NoteActivity extends BaseActivity implements RecyclerViewItemClickL
         }
         entity.setCount(String.valueOf(curTrackingCount));
         entity.setUpdate(true);
-        Database.getTrackingDb().saveUpdateRecord(entity);
+        Database.getTrackingDb().saveUpdateTracking(entity);
 
         updateUI();
 
