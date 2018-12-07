@@ -223,13 +223,30 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
+    @OnClick({R.id.star1, R.id.star2, R.id.star3, R.id.star4, R.id.star5})
+    public void setStar(View v) {
+        switch (v.getId()) {
+            case R.id.star1:
+                break;
+            case R.id.star2:
+                break;
+            case R.id.star3:
+                break;
+            case R.id.star4:
+                break;
+            case R.id.star5:
+                break;
+        }
+    }
+
     @OnClick(R.id.lbFeedback)
     @SuppressLint("ResourceType")
     public void sendFeedback(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View inflatedView = inflater.inflate(R.layout.dialog_edit_feedback, null);
-        final EditText editNote = inflatedView.findViewById(R.id.editFeedback);
+
+        final EditText edFeedback = inflatedView.findViewById(R.id.editFeedback);
 
         TextView title = new TextView(this);
         title.setText("Feedback");
@@ -257,7 +274,7 @@ public class SettingActivity extends AppCompatActivity {
 
             @Override
             public void onShow(DialogInterface dialog) {
-                editNote.setText("");
+                edFeedback.setText("");
                 alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(SettingActivity.this.getString(R.color.colorAccent)));
                 alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor(SettingActivity.this.getString(R.color.colorAccent)));
             }
@@ -271,6 +288,6 @@ public class SettingActivity extends AppCompatActivity {
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tone");
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
-        this.startActivityForResult(intent, SELECT_REMINDER);
+        startActivityForResult(intent, SELECT_REMINDER);
     }
 }
