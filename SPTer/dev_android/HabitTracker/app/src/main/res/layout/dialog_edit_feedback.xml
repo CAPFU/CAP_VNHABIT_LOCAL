@@ -37,27 +37,27 @@
             android:layout_height="30dp"
             android:layout_marginEnd="7dp"
             android:alpha="0.2"
-            android:src="@drawable/ic_star_grey"/>
+            android:src="@drawable/ic_star_yellow"/>
         <ImageView
             android:id="@+id/star3"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="7dp"
             android:alpha="0.2"
-            android:src="@drawable/ic_star_grey"/>
+            android:src="@drawable/ic_star_yellow"/>
         <ImageView
             android:id="@+id/star4"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="7dp"
             android:alpha="0.2"
-            android:src="@drawable/ic_star_grey"/>
+            android:src="@drawable/ic_star_yellow"/>
         <ImageView
             android:id="@+id/star5"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:alpha="0.2"
-            android:src="@drawable/ic_star_grey"/>
+            android:src="@drawable/ic_star_yellow"/>
     </LinearLayout>
 
 </RelativeLayout>

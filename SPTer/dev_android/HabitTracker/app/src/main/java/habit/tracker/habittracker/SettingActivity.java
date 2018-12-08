@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +41,7 @@ import habit.tracker.habittracker.common.util.MySharedPreference;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.reminder.ReminderEntity;
 
-public class SettingActivity extends AppCompatActivity {
+public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int ADD_USER_REMINDER = 0;
     private static final int SELECT_REMINDER = 1;
 
@@ -60,6 +61,7 @@ public class SettingActivity extends AppCompatActivity {
     @BindView(R.id.lbSound)
     TextView lbSound;
 
+    Database mDb = Database.getInstance(this);
     List<Reminder> reminderDisplayList = new ArrayList<>();
     RemindRecyclerViewAdapter reminderAdapter;
 
@@ -68,11 +70,8 @@ public class SettingActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ADD_USER_REMINDER && resultCode == RESULT_OK && data != null) {
-            Database db = Database.getInstance(this);
-            db.open();
-
+            mDb.open();
             String format = "%02d";
-
             boolean isDelete = data.getBooleanExtra(ReminderCreateActivity.IS_DELETE_REMINDER, false);
             int pos = data.getIntExtra(ReminderCreateActivity.POSITION_IN_LIST, -1);
             String reminderId = data.getStringExtra(ReminderCreateActivity.REMINDER_ID);
@@ -115,7 +114,6 @@ public class SettingActivity extends AppCompatActivity {
             HabitReminderManager habitReminderManager = new HabitReminderManager(SettingActivity.this, updateList);
             habitReminderManager.start();
 
-            db.close();
         } else if (resultCode == RESULT_OK && requestCode == SELECT_REMINDER) {
             Uri uri;
             if (data != null) {
@@ -139,9 +137,7 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private void populateRecyclerView() {
-        Database db = Database.getInstance(this);
-        db.open();
-
+        mDb.open();
         List<ReminderEntity> entityList = Database.getReminderDb().getReminderByUser(MySharedPreference.getUserId(this));
         Reminder reminder;
         for (ReminderEntity entity : entityList) {
@@ -165,8 +161,6 @@ public class SettingActivity extends AppCompatActivity {
         });
         rvRemind.setLayoutManager(new LinearLayoutManager(this));
         rvRemind.setAdapter(reminderAdapter);
-
-        db.close();
     }
 
     @OnClick(R.id.btnBack)
@@ -223,22 +217,6 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
-    @OnClick({R.id.star1, R.id.star2, R.id.star3, R.id.star4, R.id.star5})
-    public void setStar(View v) {
-        switch (v.getId()) {
-            case R.id.star1:
-                break;
-            case R.id.star2:
-                break;
-            case R.id.star3:
-                break;
-            case R.id.star4:
-                break;
-            case R.id.star5:
-                break;
-        }
-    }
-
     @OnClick(R.id.lbFeedback)
     @SuppressLint("ResourceType")
     public void sendFeedback(View v) {
@@ -247,23 +225,33 @@ public class SettingActivity extends AppCompatActivity {
         View inflatedView = inflater.inflate(R.layout.dialog_edit_feedback, null);
 
         final EditText edFeedback = inflatedView.findViewById(R.id.editFeedback);
+        ImageView imgStart1 = inflatedView.findViewById(R.id.star1);
+        ImageView imgStart2 = inflatedView.findViewById(R.id.star2);
+        ImageView imgStart3 = inflatedView.findViewById(R.id.star3);
+        ImageView imgStart4 = inflatedView.findViewById(R.id.star4);
+        ImageView imgStart5 = inflatedView.findViewById(R.id.star5);
+        imgStart1.setOnClickListener(this);
+        imgStart2.setOnClickListener(this);
+        imgStart3.setOnClickListener(this);
+        imgStart4.setOnClickListener(this);
+        imgStart5.setOnClickListener(this);
 
         TextView title = new TextView(this);
-        title.setText("Feedback");
+        title.setText("Đánh giá ứng dụng");
         title.setGravity(Gravity.CENTER);
         title.setPadding(25, 20, 0, 10);
         title.setTextSize(14);
         builder.setCustomTitle(title);
 
         builder.setView(inflatedView)
-                .setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Gửi", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
 
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         dialog.cancel();
@@ -286,8 +274,30 @@ public class SettingActivity extends AppCompatActivity {
     public void selectNotificationSound(View v) {
         Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tone");
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Chọn âm báo");
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
         startActivityForResult(intent, SELECT_REMINDER);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.star1:
+                break;
+            case R.id.star2:
+                break;
+            case R.id.star3:
+                break;
+            case R.id.star4:
+                break;
+            case R.id.star5:
+                break;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        mDb.close();
+        super.onStop();
     }
 }
