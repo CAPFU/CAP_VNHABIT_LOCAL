@@ -34,14 +34,22 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import habit.tracker.habittracker.adapter.RecyclerViewItemClickListener;
 import habit.tracker.habittracker.adapter.RemindRecyclerViewAdapter;
+import habit.tracker.habittracker.api.VnHabitApiUtils;
+import habit.tracker.habittracker.api.model.feedback.Feedback;
 import habit.tracker.habittracker.api.model.reminder.Reminder;
+import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.habitreminder.HabitReminderManager;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
 import habit.tracker.habittracker.repository.Database;
+import habit.tracker.habittracker.repository.MyDatabaseHelper;
 import habit.tracker.habittracker.repository.reminder.ReminderEntity;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
+public class SettingActivity extends AppCompatActivity {
     private static final int ADD_USER_REMINDER = 0;
     private static final int SELECT_REMINDER = 1;
 
@@ -61,9 +69,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     @BindView(R.id.lbSound)
     TextView lbSound;
 
+    VnHabitApiService mService = VnHabitApiUtils.getApiService();
     Database mDb = Database.getInstance(this);
     List<Reminder> reminderDisplayList = new ArrayList<>();
     RemindRecyclerViewAdapter reminderAdapter;
+
+    int starNumber = 5;
 
     @Override
     @SuppressLint("DefaultLocale")
@@ -230,11 +241,27 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         ImageView imgStart3 = inflatedView.findViewById(R.id.star3);
         ImageView imgStart4 = inflatedView.findViewById(R.id.star4);
         ImageView imgStart5 = inflatedView.findViewById(R.id.star5);
-        imgStart1.setOnClickListener(this);
-        imgStart2.setOnClickListener(this);
-        imgStart3.setOnClickListener(this);
-        imgStart4.setOnClickListener(this);
-        imgStart5.setOnClickListener(this);
+        final ImageView[] starArray = {imgStart1, imgStart2, imgStart3, imgStart4, imgStart5};
+        View.OnClickListener startClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (v.getTag() != null) {
+                    starNumber = Integer.parseInt(v.getTag().toString());
+                    for (int i = 0; i < starNumber; i++) {
+                        setGoldStar(starArray[i]);
+                    }
+                    for (int i = starNumber; i < 5; i++) {
+                        unsetGoldStar(starArray[i]);
+                    }
+                }
+            }
+        };
+
+        imgStart1.setOnClickListener(startClick);
+        imgStart2.setOnClickListener(startClick);
+        imgStart3.setOnClickListener(startClick);
+        imgStart4.setOnClickListener(startClick);
+        imgStart5.setOnClickListener(startClick);
 
         TextView title = new TextView(this);
         title.setText("Đánh giá ứng dụng");
@@ -247,13 +274,35 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 .setPositiveButton("Gửi", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+                        mDb.open();
+
+                        final Feedback fb = new Feedback();
+                        fb.setFeedbackId(MySharedPreference.getUserId(SettingActivity.this));
+                        fb.setUserId(MySharedPreference.getUserId(SettingActivity.this));
+                        fb.setStarNum(starNumber);
+                        fb.setDescription(edFeedback.toString().trim());
+
+                        Database.getFeedbackDb().saveFeedback(fb.toEntity(true));
+
+                        mService.sendFeedback(fb).enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                mDb.open();
+                                Database.getFeedbackDb().saveFeedback(fb.toEntity(false));
+                                Toast.makeText(SettingActivity.this, "Gửi phản hồi thành công", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                Toast.makeText(SettingActivity.this, "Gửi phản hồi không thành công", Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
                         dialog.cancel();
                     }
                 })
                 .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
                         dialog.cancel();
                     }
                 });
@@ -279,20 +328,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         startActivityForResult(intent, SELECT_REMINDER);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.star1:
-                break;
-            case R.id.star2:
-                break;
-            case R.id.star3:
-                break;
-            case R.id.star4:
-                break;
-            case R.id.star5:
-                break;
-        }
+    private void setGoldStar(ImageView img) {
+        img.setImageResource(R.drawable.ic_star_yellow);
+        img.setAlpha(1f);
+    }
+
+    private void unsetGoldStar(ImageView img) {
+        img.setImageResource(R.drawable.ic_star_grey);
+        img.setAlpha(0.2f);
     }
 
     @Override
