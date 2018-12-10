@@ -56,6 +56,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         // back from sign up screen
         if (requestCode == SIGN_UP) {
             if (resultCode == RESULT_OK) {
@@ -99,7 +100,13 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.btn_login, R.id.link_register, R.id.btn_fb_login, R.id.btn_google_login})
+
+    @OnClick(R.id.btn_google_login)
+    public void siginWithGoogle(View v) {
+        signInwithGoogle();
+    }
+
+    @OnClick({R.id.btn_login, R.id.link_register, R.id.btn_fb_login})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
@@ -121,9 +128,6 @@ public class LoginActivity extends BaseActivity {
 
                 break;
             case R.id.btn_fb_login:
-                showEmptyScreen();
-                break;
-            case R.id.btn_google_login:
                 showEmptyScreen();
                 break;
             case R.id.link_register:
