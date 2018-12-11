@@ -42,7 +42,7 @@ import habit.tracker.habittracker.common.habitreminder.HabitReminderManager;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
 import habit.tracker.habittracker.repository.Database;
-import habit.tracker.habittracker.repository.MyDatabaseHelper;
+import habit.tracker.habittracker.repository.feedback.FeedbackEntity;
 import habit.tracker.habittracker.repository.reminder.ReminderEntity;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -231,28 +231,31 @@ public class SettingActivity extends AppCompatActivity {
     @OnClick(R.id.lbFeedback)
     @SuppressLint("ResourceType")
     public void sendFeedback(View v) {
+        mDb.open();
+
+        FeedbackEntity feedbackEntity = Database.getFeedbackDb().getFeedbackByUser(MySharedPreference.getUserId(this));
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View inflatedView = inflater.inflate(R.layout.dialog_edit_feedback, null);
 
         final EditText edFeedback = inflatedView.findViewById(R.id.editFeedback);
+        edFeedback.setText(feedbackEntity.getDescription());
         ImageView imgStart1 = inflatedView.findViewById(R.id.star1);
         ImageView imgStart2 = inflatedView.findViewById(R.id.star2);
         ImageView imgStart3 = inflatedView.findViewById(R.id.star3);
         ImageView imgStart4 = inflatedView.findViewById(R.id.star4);
         ImageView imgStart5 = inflatedView.findViewById(R.id.star5);
         final ImageView[] starArray = {imgStart1, imgStart2, imgStart3, imgStart4, imgStart5};
+        starNumber = feedbackEntity.getStarNum();
+        updateRatingUI(starArray, starNumber);
+
         View.OnClickListener startClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (v.getTag() != null) {
                     starNumber = Integer.parseInt(v.getTag().toString());
-                    for (int i = 0; i < starNumber; i++) {
-                        setGoldStar(starArray[i]);
-                    }
-                    for (int i = starNumber; i < 5; i++) {
-                        unsetGoldStar(starArray[i]);
-                    }
+                    updateRatingUI(starArray, starNumber);
                 }
             }
         };
@@ -326,6 +329,15 @@ public class SettingActivity extends AppCompatActivity {
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Chọn âm báo");
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
         startActivityForResult(intent, SELECT_REMINDER);
+    }
+
+    private void updateRatingUI(ImageView[] starArray, int num) {
+        for (int i = 0; i < num; i++) {
+            setGoldStar(starArray[i]);
+        }
+        for (int i = num; i < 5; i++) {
+            unsetGoldStar(starArray[i]);
+        }
     }
 
     private void setGoldStar(ImageView img) {

@@ -103,7 +103,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.btn_google_login)
     public void siginWithGoogle(View v) {
-        signInwithGoogle();
+        signInWithGoogle();
     }
 
     @OnClick({R.id.btn_login, R.id.link_register, R.id.btn_fb_login})

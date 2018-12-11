@@ -28,6 +28,7 @@ import habit.tracker.habittracker.api.model.habit.HabitResponse;
 import habit.tracker.habittracker.api.model.reminder.Reminder;
 import habit.tracker.habittracker.api.model.tracking.Tracking;
 import habit.tracker.habittracker.api.model.tracking.TrackingList;
+import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
@@ -142,6 +143,11 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         trackingAdapter.setClickListener(MainActivity.this);
         recyclerView.setAdapter(trackingAdapter);
         initializeScreen();
+    }
+
+    @Override
+    protected void checkLogin(User user) {
+
     }
 
     @Override
@@ -458,7 +464,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         item.setCount(count);
         item.setTotalCount(totalCount);
 
-        // save to appDatabase local
+        // save to mDb local
         TrackingList trackingData = new TrackingList();
         Tracking tracking = new Tracking();
         tracking.setTrackingId(item.getTrackId());

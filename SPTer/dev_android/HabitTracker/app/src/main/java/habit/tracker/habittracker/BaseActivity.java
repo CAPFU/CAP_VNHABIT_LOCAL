@@ -21,7 +21,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class BaseActivity extends AppCompatActivity {
+import habit.tracker.habittracker.api.VnHabitApiUtils;
+import habit.tracker.habittracker.api.model.user.User;
+import habit.tracker.habittracker.api.model.user.UserResponse;
+import habit.tracker.habittracker.api.service.VnHabitApiService;
+import habit.tracker.habittracker.common.AppConstant;
+import habit.tracker.habittracker.common.util.AppGenerator;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public abstract class BaseActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 9001;
 
@@ -62,7 +72,7 @@ public class BaseActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    protected void signInwithGoogle() {
+    protected void signInWithGoogle() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -75,9 +85,38 @@ public class BaseActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            User newUser = new User();
+                            newUser.setUserId(String.valueOf(user.getEmail().split("@")[0].hashCode()));
+                            newUser.setUsername(user.getEmail());
+                            newUser.setEmail(user.getEmail());
+                            newUser.setPassword(AppGenerator.getNewPassword());
+                            newUser.setCreatedDate(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
+                            newUser.setLastLoginTime(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
+                            newUser.setContinueUsingCount("1");
+                            newUser.setCurrentContinueUsingCount("1");
+                            newUser.setBestContinueUsingCount("1");
+                            newUser.setUserScore("2");
+
+                            checkLogin(newUser);
                         }
                     }
                 });
+    }
+
+    private void checkLogin(User user) {
+        VnHabitApiService mService = VnHabitApiUtils.getApiService();
+        mService.registerSocialLogin(user).enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.body().getResult().equals(AppConstant.STATUS_OK)) {
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+            }
+        });
     }
 
     public void showMainScreen() {
