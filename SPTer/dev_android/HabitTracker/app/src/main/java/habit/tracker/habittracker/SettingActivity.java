@@ -51,7 +51,7 @@ import retrofit2.Response;
 
 public class SettingActivity extends AppCompatActivity {
     private static final int ADD_USER_REMINDER = 0;
-    private static final int SELECT_REMINDER = 1;
+    private static final int SELECT_REMINDER_RINHTONE = 1;
 
     @BindView(R.id.lbPersonal)
     TextView lbPersonal;
@@ -125,13 +125,13 @@ public class SettingActivity extends AppCompatActivity {
             HabitReminderManager habitReminderManager = new HabitReminderManager(SettingActivity.this, updateList);
             habitReminderManager.start();
 
-        } else if (resultCode == RESULT_OK && requestCode == SELECT_REMINDER) {
+        } else if (resultCode == RESULT_OK && requestCode == SELECT_REMINDER_RINHTONE) {
             Uri uri;
             if (data != null) {
                 uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                 if (uri != null) {
-
-                } else {
+                    String userId = MySharedPreference.getUserId(this);
+                    MySharedPreference.save(this, userId + "_sound", uri.toString());
                 }
             }
         }
@@ -328,7 +328,7 @@ public class SettingActivity extends AppCompatActivity {
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Chọn âm báo");
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
-        startActivityForResult(intent, SELECT_REMINDER);
+        startActivityForResult(intent, SELECT_REMINDER_RINHTONE);
     }
 
     private void updateRatingUI(ImageView[] starArray, int num) {

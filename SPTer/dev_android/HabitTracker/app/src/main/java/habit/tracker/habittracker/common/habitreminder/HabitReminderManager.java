@@ -12,8 +12,10 @@ import java.util.List;
 
 import habit.tracker.habittracker.api.model.reminder.Reminder;
 import habit.tracker.habittracker.common.util.AppGenerator;
+import habit.tracker.habittracker.common.util.MySharedPreference;
 
 public class HabitReminderManager {
+    public static final String USER_ID = "user_id";
     public static final String REMIND_ID = "remind_id";
     public static final String REMIND_TEXT = "remind_text";
     public static final String REMIND_TITLE = "remind_title";
@@ -61,6 +63,7 @@ public class HabitReminderManager {
     private void remind(Reminder reminder, int year, int month, int day, int hour, int minute) {
         alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, HabitReminderServiceReceiver.class);
+        intent.putExtra(USER_ID, MySharedPreference.getUserId(context));
         intent.putExtra(REMIND_ID, reminder.getHabitId());
         intent.putExtra(REMIND_TEXT, reminder.getRemindText());
         String title = null;
