@@ -85,6 +85,7 @@ public class SettingActivity extends AppCompatActivity {
             String format = "%02d";
             boolean isDelete = data.getBooleanExtra(ReminderCreateActivity.IS_DELETE_REMINDER, false);
             int pos = data.getIntExtra(ReminderCreateActivity.POSITION_IN_LIST, -1);
+
             String reminderId = data.getStringExtra(ReminderCreateActivity.REMINDER_ID);
             String remindType = String.valueOf(data.getIntExtra(ReminderCreateActivity.REMIND_TYPE, -1));
             String remindText = data.getStringExtra(ReminderCreateActivity.REMIND_TEXT);
@@ -94,6 +95,7 @@ public class SettingActivity extends AppCompatActivity {
             String time = date + " " + hour + ":" + minute;
 
             List<Reminder> updateList = new ArrayList<>();
+
             Reminder reminder;
             if (TextUtils.isEmpty(reminderId)) {
                 reminder = new Reminder();
@@ -106,14 +108,12 @@ public class SettingActivity extends AppCompatActivity {
                 reminderDisplayList.add(reminder);
 
             } else {
-                // update
                 reminder = reminderDisplayList.get(pos);
                 reminder.setRemindText(remindText);
                 reminder.setRepeatType(remindType);
                 reminder.setRemindStartTime(date + " " + hour + ":" + minute);
                 if (isDelete) {
                     reminder.setDelete(true);
-
                     reminderDisplayList.remove(pos);
                     Database.getReminderDb().delete(reminderId);
                 } else {

@@ -54,7 +54,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 if (account != null) {
                     firebaseAuthWithGoogle(account);
                 }
-            } catch (ApiException e) {
+            } catch (ApiException ignored) {
             }
         }
     }
@@ -70,7 +70,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        FirebaseApp.initializeApp(this);
+//        FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -86,34 +86,37 @@ public abstract class BaseActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            final User newUser = new User();
-                            newUser.setUserId(user.getUid());
-                            newUser.setUsername(user.getEmail());
-                            newUser.setEmail(user.getEmail());
-                            newUser.setPassword(user.getUid());
-                            newUser.setCreatedDate(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
-                            newUser.setLastLoginTime(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
-                            newUser.setContinueUsingCount("1");
-                            newUser.setCurrentContinueUsingCount("1");
-                            newUser.setBestContinueUsingCount("1");
-                            newUser.setUserScore("2");
+                            if (user != null) {
+                                final User newUser = new User();
+                                newUser.setUserId(user.getUid());
+                                newUser.setUsername(user.getEmail());
+                                newUser.setEmail(user.getEmail());
+                                newUser.setPassword(user.getUid());
+                                newUser.setCreatedDate(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
+                                newUser.setLastLoginTime(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
+                                newUser.setContinueUsingCount("1");
+                                newUser.setCurrentContinueUsingCount("1");
+                                newUser.setBestContinueUsingCount("1");
+                                newUser.setUserScore("2");
 
-                            VnHabitApiService mService = VnHabitApiUtils.getApiService();
-                            mService.registerSocialLogin(newUser).enqueue(new Callback<UserResponse>() {
-                                @Override
-                                public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                                    if (response.body().getResult().equals(AppConstant.STATUS_OK)) {
-                                        MySharedPreference.saveUser(BaseActivity.this, newUser.getUserId(), newUser.getUsername(), newUser.getPassword());
-                                        afterGoogleLogin(newUser);
+                                VnHabitApiService mService = VnHabitApiUtils.getApiService();
+                                mService.registerSocialLogin(newUser).enqueue(new Callback<UserResponse>() {
+                                    @Override
+                                    public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                                        if (response.body().getResult().equals(AppConstant.STATUS_OK)) {
+                                            MySharedPreference.saveUser(BaseActivity.this, newUser.getUserId(), newUser.getUsername(), newUser.getPassword());
+                                            afterGoogleLogin(newUser);
+                                        }
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(Call<UserResponse> call, Throwable t) {
-                                }
-                            });
+                                    @Override
+                                    public void onFailure(Call<UserResponse> call, Throwable t) {
+                                    }
+                                });
+                            }
                         }
                     }
                 });

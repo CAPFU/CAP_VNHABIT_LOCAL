@@ -53,6 +53,7 @@ public class LoginActivity extends BaseActivity {
 
     PushDataService pushDataService;
     VnHabitApiService mService = VnHabitApiUtils.getApiService();
+    Database mDb = new Database(LoginActivity.this);
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -94,7 +95,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.btn_google_login)
     public void siginWithGoogle(View v) {
-        signInWithGoogle();
+        super.signInWithGoogle();
     }
 
     @Override
@@ -146,18 +147,19 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    private void getUser(final String username, final String password, final boolean isLogin) {
+    private void getUser(final String username, final String password, final boolean isInit) {
         mService.getUser(username, password).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if (response.body().getResult().equals(AppConstant.STATUS_OK)) {
-                    Database db = new Database(LoginActivity.this);
-                    db.open();
-                    User user = response.body().getData();
+                    mDb.open();
 
+                    User user = response.body().getData();
                     UserEntity userEntity = Database.getUserDb().getUser(user.getUserId());
+
                     if (userEntity.isUpdate()) {
                         callUpdateUserApi(userEntity.toModel());
+
                     } else {
                         userEntity.setUserId(user.getUserId());
                         userEntity.setUsername(user.getUsername());
@@ -175,10 +177,9 @@ public class LoginActivity extends BaseActivity {
                         userEntity.setUserScore(user.getUserScore());
                         Database.getUserDb().saveUser(userEntity);
                     }
-                    db.close();
 
-                    if (isLogin) {
-                        showMainScreen(user.getUserId(), user.getUsername(), user.getPassword());
+                    if (isInit) {
+                        initializeUserInApp(user.getUserId(), user.getUsername(), user.getPassword());
                     }
 
                 } else {
@@ -188,12 +189,12 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
-                Database db = new Database(LoginActivity.this);
-                db.open();
+                mDb.open();
+
                 UserEntity userEntity = Database.userDaoImpl.getUser(username, password);
-                db.close();
+
                 if (userEntity.getUserId() != null) {
-                    showMainScreen(userEntity.getUserId(), userEntity.getUsername(), userEntity.getPassword());
+                    initializeUserInApp(userEntity.getUserId(), userEntity.getUsername(), userEntity.getPassword());
                 } else {
                     Toast.makeText(LoginActivity.this, "Đăng nhập không thành công!", Toast.LENGTH_SHORT).show();
                 }
@@ -205,9 +206,9 @@ public class LoginActivity extends BaseActivity {
         mService.updateUser(user).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                mDb.open();
+
                 Toast.makeText(LoginActivity.this, "Cập nhật thành công", Toast.LENGTH_LONG).show();
-                Database db = Database.getInstance(LoginActivity.this);
-                db.open();
                 Database.getUserDb().saveUpdate(user.getUserId(), false);
             }
 
@@ -218,14 +219,16 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    private void showMainScreen(String userId, String username, String password) {
+    private void initializeUserInApp(String userId, String username, String password) {
         MySharedPreference.saveUser(this, userId, username, password);
         if (MySharedPreference.get(this, MySharedPreference.FIRST_INSTALL) == null) {
             MySharedPreference.save(this, MySharedPreference.FIRST_INSTALL, "1");
             startActivityForResult(new Intent(this, GuideActivity.class), GUIDE);
         } else {
+
             pushDataService = new PushDataService(this, userId);
             pushDataService.start();
+
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -235,5 +238,11 @@ public class LoginActivity extends BaseActivity {
     public void showEmpty(View v) {
         Intent i = new Intent(this, EmptyActivity.class);
         startActivity(i);
+    }
+
+    @Override
+    protected void onStop() {
+        mDb.close();
+        super.onStop();
     }
 }
