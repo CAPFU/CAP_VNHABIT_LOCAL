@@ -103,8 +103,21 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.btn_google_login)
     public void siginWithGoogle(View v) {
-        prepareSignInGoogle(this);
         signInWithGoogle();
+    }
+
+    @Override
+    protected void afterGoogleLogin(User user) {
+        if (!backFromSignUp && MySharedPreference.getUserId(this) != null) {
+            String[] info = MySharedPreference.getUser(this);
+            getUser(info[1], info[2], backFromGuild);
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        if (backFromSignUp) {
+            backFromSignUp = false;
+        }
     }
 
     @OnClick({R.id.btn_login, R.id.link_register, R.id.btn_fb_login})

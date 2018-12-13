@@ -1,6 +1,5 @@
 package habit.tracker.habittracker;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -69,11 +68,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-    }
 
-    public void prepareSignInGoogle(Context childContext) {
-        mGoogleSignInClient = GoogleSignIn.getClient(childContext, gso);
-        FirebaseApp.initializeApp(childContext);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -116,6 +113,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if (response.body().getResult().equals(AppConstant.STATUS_OK)) {
                     MySharedPreference.saveUser(BaseActivity.this, user.getUserId(), user.getUsername(), user.getPassword());
+                    afterGoogleLogin(user);
                 }
             }
 
@@ -123,6 +121,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             public void onFailure(Call<UserResponse> call, Throwable t) {
             }
         });
+    }
+
+    protected void afterGoogleLogin(User user) {
+
     }
 
     public void showMainScreen() {
