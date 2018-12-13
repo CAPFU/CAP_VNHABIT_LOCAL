@@ -1,5 +1,6 @@
 package habit.tracker.habittracker;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,6 +28,7 @@ import habit.tracker.habittracker.api.model.user.UserResponse;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.AppConstant;
 import habit.tracker.habittracker.common.util.AppGenerator;
+import habit.tracker.habittracker.common.util.MySharedPreference;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,6 +40,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private GoogleSignInClient mGoogleSignInClient;
+
+    GoogleSignInOptions gso;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -61,14 +65,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
+    }
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        FirebaseApp.initializeApp(this);
+    public void prepareSignInGoogle(Context childContext) {
+        mGoogleSignInClient = GoogleSignIn.getClient(childContext, gso);
+        FirebaseApp.initializeApp(childContext);
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -87,10 +92,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
 
                             User newUser = new User();
-                            newUser.setUserId(String.valueOf(user.getEmail().split("@")[0].hashCode()));
+                            newUser.setUserId(user.getUid());
                             newUser.setUsername(user.getEmail());
                             newUser.setEmail(user.getEmail());
-                            newUser.setPassword(AppGenerator.getNewPassword());
+                            newUser.setPassword(user.getUid());
                             newUser.setCreatedDate(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
                             newUser.setLastLoginTime(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
                             newUser.setContinueUsingCount("1");
@@ -104,12 +109,13 @@ public abstract class BaseActivity extends AppCompatActivity {
                 });
     }
 
-    private void checkLogin(User user) {
+    private void checkLogin(final User user) {
         VnHabitApiService mService = VnHabitApiUtils.getApiService();
         mService.registerSocialLogin(user).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if (response.body().getResult().equals(AppConstant.STATUS_OK)) {
+                    MySharedPreference.saveUser(BaseActivity.this, user.getUserId(), user.getUsername(), user.getPassword());
                 }
             }
 
