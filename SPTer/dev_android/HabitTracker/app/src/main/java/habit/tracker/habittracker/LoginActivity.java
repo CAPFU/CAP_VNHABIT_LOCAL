@@ -88,16 +88,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (!backFromSignUp && MySharedPreference.getUserId(this) != null) {
-            String[] info = MySharedPreference.getUser(this);
-            getUser(info[1], info[2], backFromGuild);
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-        if (backFromSignUp) {
-            backFromSignUp = false;
-        }
+        checkLogin();
     }
 
 
@@ -108,6 +99,10 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void afterGoogleLogin(User user) {
+        checkLogin();
+    }
+
+    private void checkLogin() {
         if (!backFromSignUp && MySharedPreference.getUserId(this) != null) {
             String[] info = MySharedPreference.getUser(this);
             getUser(info[1], info[2], backFromGuild);
@@ -163,8 +158,7 @@ public class LoginActivity extends BaseActivity {
                     UserEntity userEntity = Database.getUserDb().getUser(user.getUserId());
                     if (userEntity.isUpdate()) {
                         callUpdateUserApi(userEntity.toModel());
-                    }
-                    else {
+                    } else {
                         userEntity.setUserId(user.getUserId());
                         userEntity.setUsername(user.getUsername());
                         userEntity.setEmail(user.getEmail());

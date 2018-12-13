@@ -88,7 +88,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            User newUser = new User();
+                            final User newUser = new User();
                             newUser.setUserId(user.getUid());
                             newUser.setUsername(user.getEmail());
                             newUser.setEmail(user.getEmail());
@@ -100,37 +100,26 @@ public abstract class BaseActivity extends AppCompatActivity {
                             newUser.setBestContinueUsingCount("1");
                             newUser.setUserScore("2");
 
-                            checkLogin(newUser);
+                            VnHabitApiService mService = VnHabitApiUtils.getApiService();
+                            mService.registerSocialLogin(newUser).enqueue(new Callback<UserResponse>() {
+                                @Override
+                                public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                                    if (response.body().getResult().equals(AppConstant.STATUS_OK)) {
+                                        MySharedPreference.saveUser(BaseActivity.this, newUser.getUserId(), newUser.getUsername(), newUser.getPassword());
+                                        afterGoogleLogin(newUser);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<UserResponse> call, Throwable t) {
+                                }
+                            });
                         }
                     }
                 });
     }
 
-    private void checkLogin(final User user) {
-        VnHabitApiService mService = VnHabitApiUtils.getApiService();
-        mService.registerSocialLogin(user).enqueue(new Callback<UserResponse>() {
-            @Override
-            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                if (response.body().getResult().equals(AppConstant.STATUS_OK)) {
-                    MySharedPreference.saveUser(BaseActivity.this, user.getUserId(), user.getUsername(), user.getPassword());
-                    afterGoogleLogin(user);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<UserResponse> call, Throwable t) {
-            }
-        });
-    }
-
     protected void afterGoogleLogin(User user) {
-
-    }
-
-    public void showMainScreen() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     public void editHabitDetails(String habitId) {
