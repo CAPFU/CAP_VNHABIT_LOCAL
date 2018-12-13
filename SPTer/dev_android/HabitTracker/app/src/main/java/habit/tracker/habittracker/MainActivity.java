@@ -146,11 +146,6 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
     }
 
     @Override
-    protected void checkLogin(User user) {
-
-    }
-
-    @Override
     protected void onRestart() {
         if (isReStart) {
             isReStart = false;

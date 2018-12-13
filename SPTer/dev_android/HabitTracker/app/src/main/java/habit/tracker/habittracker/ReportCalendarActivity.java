@@ -150,11 +150,6 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
         }
     }
 
-    @Override
-    protected void checkLogin(User user) {
-
-    }
-
     @SuppressLint("ResourceType")
     private void initializeScreen(String habitId) {
         appDatabase.open();

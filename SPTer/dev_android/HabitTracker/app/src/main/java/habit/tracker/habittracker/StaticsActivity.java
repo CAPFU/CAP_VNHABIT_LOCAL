@@ -114,11 +114,6 @@ public class StaticsActivity extends BaseActivity implements OnChartValueSelecte
         initializeScreen();
     }
 
-    @Override
-    protected void checkLogin(User user) {
-
-    }
-
     private void initializeScreen() {
         currentDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
         firstCurrentDate = currentDate;
