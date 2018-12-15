@@ -264,15 +264,19 @@ public class SettingActivity extends AppCompatActivity {
         View inflatedView = inflater.inflate(R.layout.dialog_edit_feedback, null);
 
         final EditText edFeedback = inflatedView.findViewById(R.id.editFeedback);
-        edFeedback.setText(feedbackEntity.getDescription());
+
         ImageView imgStart1 = inflatedView.findViewById(R.id.star1);
         ImageView imgStart2 = inflatedView.findViewById(R.id.star2);
         ImageView imgStart3 = inflatedView.findViewById(R.id.star3);
         ImageView imgStart4 = inflatedView.findViewById(R.id.star4);
         ImageView imgStart5 = inflatedView.findViewById(R.id.star5);
         final ImageView[] starArray = {imgStart1, imgStart2, imgStart3, imgStart4, imgStart5};
-        starNumber = feedbackEntity.getStarNum();
-        updateRatingUI(starArray, starNumber);
+
+        if (feedbackEntity != null) {
+            edFeedback.setText(feedbackEntity.getDescription());
+            starNumber = feedbackEntity.getStarNum();
+            updateRatingUI(starArray, starNumber);
+        }
 
         View.OnClickListener startClick = new View.OnClickListener() {
             @Override
@@ -307,7 +311,7 @@ public class SettingActivity extends AppCompatActivity {
                         fb.setFeedbackId(MySharedPreference.getUserId(SettingActivity.this));
                         fb.setUserId(MySharedPreference.getUserId(SettingActivity.this));
                         fb.setStarNum(starNumber);
-                        fb.setDescription(edFeedback.toString().trim());
+                        fb.setDescription(edFeedback.getText().toString().trim());
 
                         Database.getFeedbackDb().saveFeedback(fb.toEntity(true));
 
