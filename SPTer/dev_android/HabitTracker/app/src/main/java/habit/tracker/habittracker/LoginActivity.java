@@ -107,7 +107,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    protected void afterGoogleLogin(User user) {
+    protected void afterSocialLogin(User user) {
         checkLogin();
     }
 
