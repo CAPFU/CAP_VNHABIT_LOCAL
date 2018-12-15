@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.widget.LoginButton;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -45,6 +47,8 @@ public class LoginActivity extends BaseActivity {
     EditText edPassword;
     @BindView(R.id.btn_login)
     Button btnLogin;
+//    @BindView(R.id.btn_fb_login_real)
+//    LoginButton btnFbLogin;
     @BindView(R.id.link_register)
     TextView linkRegister;
 
@@ -137,8 +141,10 @@ public class LoginActivity extends BaseActivity {
                 getUser(username, password, true);
 
                 break;
+//            case R.id.btn_fb_login_real:
+//                break;
             case R.id.btn_fb_login:
-                showEmptyScreen();
+//                btnFbLogin.performClick();
                 break;
             case R.id.link_register:
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
