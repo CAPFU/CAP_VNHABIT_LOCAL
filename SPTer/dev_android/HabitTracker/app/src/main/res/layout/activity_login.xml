@@ -131,11 +131,12 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.3" />
+        android:layout_weight="0.2" />
 
-    <!--<com.facebook.login.widget.LoginButton-->
-        <!--android:id="@+id/btn_fb_login_real"-->
-        <!--android:layout_width="1dp"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:visibility="invisible"/>-->
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/btn_fb_login_real"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:visibility="invisible"/>
 </LinearLayout>
