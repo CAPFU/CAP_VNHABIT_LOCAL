@@ -126,11 +126,6 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
         });
     }
 
-    @Override
-    protected void checkLogin(User user) {
-
-    }
-
     private void initializeScreen() {
         mService.getHabitSuggestByLevel().enqueue(new Callback<SuggestByLevelReponse>() {
             @SuppressLint("SetTextI18n")
