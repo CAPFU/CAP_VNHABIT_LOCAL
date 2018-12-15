@@ -257,7 +257,7 @@ public class SettingActivity extends AppCompatActivity {
     public void sendFeedback(View v) {
         mDb.open();
 
-        FeedbackEntity feedbackEntity = Database.getFeedbackDb().getFeedbackByUser(MySharedPreference.getUserId(this));
+        final FeedbackEntity feedbackEntity = Database.getFeedbackDb().getFeedbackByUser(MySharedPreference.getUserId(this));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -272,11 +272,6 @@ public class SettingActivity extends AppCompatActivity {
         ImageView imgStart5 = inflatedView.findViewById(R.id.star5);
         final ImageView[] starArray = {imgStart1, imgStart2, imgStart3, imgStart4, imgStart5};
 
-        if (feedbackEntity != null) {
-            edFeedback.setText(feedbackEntity.getDescription());
-            starNumber = feedbackEntity.getStarNum();
-            updateRatingUI(starArray, starNumber);
-        }
 
         View.OnClickListener startClick = new View.OnClickListener() {
             @Override
@@ -341,7 +336,12 @@ public class SettingActivity extends AppCompatActivity {
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
-                edFeedback.setText("");
+                if (feedbackEntity != null) {
+                    edFeedback.setText(feedbackEntity.getDescription());
+                    starNumber = feedbackEntity.getStarNum();
+                    updateRatingUI(starArray, starNumber);
+                }
+
                 alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(SettingActivity.this.getString(R.color.colorAccent)));
                 alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor(SettingActivity.this.getString(R.color.colorAccent)));
             }
