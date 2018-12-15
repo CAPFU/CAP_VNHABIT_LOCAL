@@ -1,5 +1,6 @@
 package habit.tracker.habittracker;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -489,6 +492,28 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
             intent.putExtra(AppConstant.HABIT_ID, itemList.get(position).getHabitId());
             startActivityForResult(intent, REPORT_CALENDAR);
         }
+    }
+
+    @OnClick(R.id.tvDate)
+    public void onTitleDateClick(View v) {
+        Calendar ca = Calendar.getInstance();
+        DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+            }
+        }, ca.get(Calendar.YEAR), ca.get(Calendar.MONTH), ca.get(Calendar.DATE));
+        dialog.getDatePicker().setMinDate(System.currentTimeMillis());
+        dialog.show();
+
+        Button posButton = dialog.getButton(DatePickerDialog.BUTTON_POSITIVE);
+        posButton.setAllCaps(false);
+        posButton.setText("Chọn");
+        posButton.setTextColor(getResources().getColor(R.color.colorAccent));
+        Button navButton = dialog.getButton(DatePickerDialog.BUTTON_NEGATIVE);
+        navButton.setAllCaps(false);
+        navButton.setText("Hủy");
+        navButton.setTextColor(getResources().getColor(R.color.colorAccent));
     }
 
     private void updateByCurrentDate() {
