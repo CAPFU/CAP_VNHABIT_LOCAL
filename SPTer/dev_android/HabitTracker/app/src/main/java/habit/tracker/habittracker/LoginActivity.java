@@ -146,6 +146,7 @@ public class LoginActivity extends BaseActivity {
 
                 break;
             case R.id.btn_fb_login:
+                signInWithFacebook(btnFbLogin);
                 btnFbLogin.performClick();
                 break;
             case R.id.link_register:

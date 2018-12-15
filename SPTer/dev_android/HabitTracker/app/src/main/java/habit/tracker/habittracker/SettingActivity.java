@@ -56,7 +56,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @SuppressLint("ResourceType")
-public class SettingActivity extends AppCompatActivity {
+public class SettingActivity extends BaseActivity {
     private static final int ADD_USER_REMINDER = 0;
     private static final int SELECT_REMINDER_RINHTONE = 1;
 
@@ -195,9 +195,10 @@ public class SettingActivity extends AppCompatActivity {
         appDialogHelper.setPositiveListener(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                signOutSocialLogin();
                 MySharedPreference.saveUser(SettingActivity.this, null, null, null);
                 Intent intent = getIntent();
-                intent.putExtra("logout", true);
+                intent.putExtra("logoutSocialLogin", true);
                 setResult(RESULT_OK, intent);
                 finish();
             }

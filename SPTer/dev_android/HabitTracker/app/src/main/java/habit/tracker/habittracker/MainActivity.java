@@ -121,7 +121,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
             if (data != null) {
                 Bundle res = data.getExtras();
                 if (res != null) {
-                    boolean isLogout = res.getBoolean("logout");
+                    boolean isLogout = res.getBoolean("logoutSocialLogin");
                     if (isLogout) {
                         startActivity(new Intent(this, LoginActivity.class));
                         finish();

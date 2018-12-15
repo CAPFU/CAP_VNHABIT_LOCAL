@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -88,6 +90,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         mCallbackManager = CallbackManager.Factory.create();
     }
 
+    protected void signOutSocialLogin() {
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
+    }
+
     protected void signInWithGoogle() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -146,7 +153,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (user != null) {
             final User newUser = new User();
             newUser.setUserId(user.getUid());
-            newUser.setUsername(user.getEmail());
+
+            if (!TextUtils.isEmpty(user.getEmail())) {
+                newUser.setUsername(user.getEmail());
+            } else {
+                newUser.setUsername(AppGenerator.getSearchKey(user.getDisplayName().replace(" ", "")) + user.getUid().substring(0, 3));
+            }
+
             newUser.setEmail(user.getEmail());
             newUser.setPassword(user.getUid());
             newUser.setCreatedDate(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
