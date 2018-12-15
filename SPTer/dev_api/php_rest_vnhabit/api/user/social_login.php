@@ -36,7 +36,6 @@ $user->user_score = $data->user_score;
 
 $result = $user->find_by_id();
 if ($result) {
-    // update
     $foundUser = $user->read_single();
     echo json_encode(
         array(
