@@ -499,8 +499,13 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         Calendar ca = Calendar.getInstance();
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                String d = AppGenerator.getDate(year, month + 1, day, AppGenerator.YMD_SHORT);
+                timeLine = AppGenerator.countDayBetween(currentDate, d);
+                currentDate = d;
+                updateTitle(currentDate);
+                itemList.clear();
+                updateByCurrentDate();
             }
         }, ca.get(Calendar.YEAR), ca.get(Calendar.MONTH), ca.get(Calendar.DATE));
         dialog.getDatePicker().setMinDate(System.currentTimeMillis());

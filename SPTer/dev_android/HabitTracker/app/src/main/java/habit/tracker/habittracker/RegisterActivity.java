@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.widget.LoginButton;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -32,6 +34,8 @@ public class RegisterActivity extends BaseActivity {
     Button btnRegister;
     @BindView(R.id.link_login)
     TextView linkLogin;
+    @BindView(R.id.btn_fb_login_real)
+    LoginButton btnFbLogin;
     @BindView(R.id.edit_username)
     EditText edUsername;
     @BindView(R.id.edit_email)
@@ -63,7 +67,17 @@ public class RegisterActivity extends BaseActivity {
         linkLogin.setText(content);
     }
 
-    @OnClick({R.id.btn_register, R.id.link_login})
+    @OnClick(R.id.btn_google_login)
+    public void siginWithGoogle(View v) {
+        super.signInWithGoogle();
+    }
+
+    @Override
+    protected void afterSocialLogin(User user) {
+        finish();
+    }
+
+    @OnClick({R.id.btn_register, R.id.link_login, R.id.btn_fb_login})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_register:
@@ -124,10 +138,8 @@ public class RegisterActivity extends BaseActivity {
 
                 break;
             case R.id.btn_fb_login:
-                showEmptyScreen();
-                break;
-            case R.id.btn_google_login:
-                showEmptyScreen();
+                signInWithFacebook(btnFbLogin);
+                btnFbLogin.performClick();
                 break;
             case R.id.link_login:
                 finish();
