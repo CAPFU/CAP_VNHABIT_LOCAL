@@ -13,6 +13,11 @@ import android.widget.Toast;
 
 import com.facebook.login.widget.LoginButton;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -22,6 +27,7 @@ import habit.tracker.habittracker.api.model.user.UserResult;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.AppConstant;
 import habit.tracker.habittracker.common.util.AppGenerator;
+import habit.tracker.habittracker.common.util.XmlAppHelper;
 import habit.tracker.habittracker.common.validator.Validator;
 import habit.tracker.habittracker.common.validator.ValidatorType;
 import habit.tracker.habittracker.repository.Database;
@@ -122,19 +128,26 @@ public class RegisterActivity extends BaseActivity {
                     return;
                 }
 
-                User newUser = new User();
-                newUser.setUserId(AppGenerator.getNewId());
-                newUser.setUsername(username);
-                newUser.setEmail(email);
-                newUser.setPassword(password);
-                newUser.setCreatedDate(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
-                newUser.setLastLoginTime(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
-                newUser.setContinueUsingCount("1");
-                newUser.setCurrentContinueUsingCount("1");
-                newUser.setBestContinueUsingCount("1");
-                newUser.setUserScore("2");
+                try {
+                    Map<String, String> umap = XmlAppHelper.readFromAnXML(this, R.xml.app_default);
 
-                registNewUser(newUser);
+                    User newUser = new User();
+                    newUser.setUserId(AppGenerator.getNewId());
+                    newUser.setUsername(username);
+                    newUser.setEmail(email);
+                    newUser.setPassword(password);
+                    newUser.setCreatedDate(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
+                    newUser.setLastLoginTime(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
+                    newUser.setContinueUsingCount(umap.get(XmlAppHelper.USAGE));
+                    newUser.setCurrentContinueUsingCount(umap.get(XmlAppHelper.CURRENT_USAGE_CHAIN));
+                    newUser.setBestContinueUsingCount(umap.get(XmlAppHelper.BEST_USGAE_CHAIN));
+                    newUser.setUserScore(umap.get(XmlAppHelper.USER_SCORE));
+
+                    registNewUser(newUser);
+
+                } catch (IOException | XmlPullParserException e) {
+                    e.printStackTrace();
+                }
 
                 break;
             case R.id.btn_fb_login:

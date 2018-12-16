@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<initializion>
+    <user>
+        <usage>1</usage>
+        <current_usage_chain>1</current_usage_chain>
+        <best_usage_chain>1</best_usage_chain>
+        <user_score>2</user_score>
+    </user>
+</initializion>
