@@ -140,7 +140,7 @@ public class RegisterActivity extends BaseActivity {
                     newUser.setLastLoginTime(AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT));
                     newUser.setContinueUsingCount(umap.get(XmlAppHelper.USAGE));
                     newUser.setCurrentContinueUsingCount(umap.get(XmlAppHelper.CURRENT_USAGE_CHAIN));
-                    newUser.setBestContinueUsingCount(umap.get(XmlAppHelper.BEST_USGAE_CHAIN));
+                    newUser.setBestContinueUsingCount(umap.get(XmlAppHelper.BEST_USAGE_CHAIN));
                     newUser.setUserScore(umap.get(XmlAppHelper.USER_SCORE));
 
                     registNewUser(newUser);
