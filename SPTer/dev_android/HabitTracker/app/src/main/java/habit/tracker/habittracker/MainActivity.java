@@ -508,7 +508,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
                 updateByCurrentDate();
             }
         }, ca.get(Calendar.YEAR), ca.get(Calendar.MONTH), ca.get(Calendar.DATE));
-        dialog.getDatePicker().setMinDate(System.currentTimeMillis());
+//        dialog.getDatePicker().setMinDate(System.currentTimeMillis());
         dialog.show();
 
         Button posButton = dialog.getButton(DatePickerDialog.BUTTON_POSITIVE);
