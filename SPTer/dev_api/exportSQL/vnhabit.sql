@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 15, 2018 at 04:57 AM
+-- Generation Time: Dec 17, 2018 at 04:46 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -48,6 +48,13 @@ CREATE TABLE `feedback` (
   `star_num` int(11) NOT NULL,
   `feedback_description` text COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `feedback`
+--
+
+INSERT INTO `feedback` (`feedback_id`, `user_id`, `star_num`, `feedback_description`) VALUES
+('22374f33-05', '22374f33-05', 3, '');
 
 -- --------------------------------------------------------
 
@@ -212,7 +219,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `username`, `password`, `email`, `date_of_birth`, `gender`, `real_name`, `user_description`, `created_date`, `last_login_time`, `continue_using_count`, `current_continue_using_count`, `best_continue_using_count`, `user_score`) VALUES
-('hzxjdv2N8tSWyyW5PMyhJ94GKbn1', 'tvtd995a3@gmail.com', 'hzxjdv2N8tSWyyW5PMyhJ94GKbn1', 'tvtd995a3@gmail.com', NULL, NULL, NULL, NULL, '2018-12-14', '2018-12-14', 1, 1, 1, 2);
+('22374f33-05', 'datt', '12345678', 'datt@mail.com', NULL, NULL, NULL, NULL, '2018-12-17', '2018-12-17', 1, 1, 1, 2);
 
 --
 -- Indexes for dumped tables
