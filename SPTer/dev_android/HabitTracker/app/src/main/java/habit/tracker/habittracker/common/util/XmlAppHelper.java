@@ -25,12 +25,12 @@ public class XmlAppHelper {
         XmlResourceParser xpp = res.getXml(resource);
         xpp.next();
         int eventType = xpp.getEventType();
-        String pre = "";
+        String key = "";
         while (eventType != XmlPullParser.END_DOCUMENT) {
-            if(eventType == XmlPullParser.START_TAG) {
-                pre = xpp.getName();
-            } else {
-                map.put(xpp.getName(), xpp.getText());
+            if (eventType == XmlPullParser.START_TAG) {
+                key = xpp.getName();
+            } else if (eventType == XmlPullParser.TEXT) {
+                map.put(key, xpp.getText());
             }
             eventType = xpp.next();
         }
