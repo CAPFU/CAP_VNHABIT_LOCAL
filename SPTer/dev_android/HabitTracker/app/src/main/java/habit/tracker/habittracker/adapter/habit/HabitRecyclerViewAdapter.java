@@ -190,23 +190,22 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 return;
             }
 
-            int totalCount = mData.get(getAdapterPosition()).getTotalCount();
+            int periodCount = mData.get(getAdapterPosition()).getTotalCount();
             int todayCount = mData.get(getAdapterPosition()).getCount();
 
             if (view.getId() == R.id.btn_plus) {
-                totalCount = totalCount + 1;
+                periodCount = periodCount + 1;
                 todayCount++;
-                tvCount.setText(String.valueOf(totalCount));
-                mClickListener.onItemValueChanged(view, TYPE_COUNT, getAdapterPosition(), totalCount, todayCount);
+                tvCount.setText(String.valueOf(periodCount));
+                mClickListener.onItemValueChanged(view, TYPE_COUNT, getAdapterPosition(), periodCount, todayCount);
 
             } else if (view.getId() == R.id.btn_minus) {
-                totalCount = totalCount > 0 ? totalCount - 1 : 0;
-                if (todayCount > 0) {
+                if (periodCount > 0) {
+                    periodCount--;
                     todayCount--;
-                    totalCount--;
                 }
-                tvCount.setText(String.valueOf(totalCount));
-                mClickListener.onItemValueChanged(view, TYPE_COUNT, getAdapterPosition(), totalCount, todayCount);
+                tvCount.setText(String.valueOf(periodCount));
+                mClickListener.onItemValueChanged(view, TYPE_COUNT, getAdapterPosition(), periodCount, todayCount);
 
             } else if (mClickListener != null) {
                 mClickListener.onItemClick(view, TYPE_COUNT, getAdapterPosition());
@@ -214,7 +213,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
             // update background animation
             float goal = mData.get(getAdapterPosition()).getCompletion();
-            float ratio = (float) totalCount / Integer.parseInt(mData.get(getAdapterPosition()).getNumber());
+            float ratio = (float) periodCount / Integer.parseInt(mData.get(getAdapterPosition()).getNumber());
             scaleView(background, goal, ratio > 1 ? 1f : ratio, 400);
             mData.get(getAdapterPosition()).setRatio(ratio);
         }

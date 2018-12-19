@@ -60,7 +60,11 @@ public class HabitReminderServiceReceiver extends BroadcastReceiver {
             Notification notification = null;
             long[] pattern = {100, 200, 300, 400, 500, 400, 300, 200, 400};
 
-            Uri soundUri = Uri.parse(MySharedPreference.get(context, userId + "_sound"));
+            String soundStrUri = MySharedPreference.get(context, userId + "_sound");
+            Uri soundUri = null;
+            if (soundStrUri != null) {
+                soundUri = Uri.parse(soundStrUri);
+            }
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
 
@@ -74,7 +78,9 @@ public class HabitReminderServiceReceiver extends BroadcastReceiver {
                     mChannel = new NotificationChannel(defaultId, remindTitle, NotificationManager.IMPORTANCE_HIGH);
                     mChannel.enableVibration(true);
                     mChannel.setVibrationPattern(pattern);
-                    mChannel.setSound(soundUri, att);
+                    if (soundUri != null) {
+                        mChannel.setSound(soundUri, att);
+                    }
                     notificationManager.createNotificationChannel(mChannel);
                 }
 
@@ -84,12 +90,15 @@ public class HabitReminderServiceReceiver extends BroadcastReceiver {
                                 .setContentText(remindText).build();
             } else {
 
-                notification = new NotificationCompat.Builder(context, defaultId)
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(context, defaultId)
                         .setSmallIcon(R.drawable.app_launcher)
                         .setContentTitle("VN Habit Tracker: " + remindTitle)
                         .setVibrate(pattern)
-                        .setSound(soundUri)
-                        .setContentText(remindText).build();
+                        .setContentText(remindText);
+                if (soundUri != null) {
+                    builder.setSound(soundUri);
+                }
+                notification = builder.build();
             }
 
             notificationManager.notify(0, notification);
