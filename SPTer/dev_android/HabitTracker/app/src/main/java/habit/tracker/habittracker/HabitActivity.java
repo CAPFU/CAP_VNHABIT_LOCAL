@@ -229,25 +229,29 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
             if (resultCode == RESULT_OK) {
                 if (data != null && data.getExtras() != null) {
                     selectedGroupId = data.getStringExtra(GroupActivity.GROUP_ID);
-                    Database db = Database.getInstance(HabitActivity.this);
-                    db.open();
-                    GroupEntity groupEntity = Database.getGroupDb().getGroup(selectedGroupId);
-                    db.close();
-                    if (groupEntity != null) {
-                        tvGroupName.setText(data.getStringExtra(GroupActivity.GROUP_NAME));
-                    } else {
-                        selectedGroupId = null;
-                        tvGroupName.setText("Chưa có");
+                    if (selectedGroupId != null) {
+                        Database db = Database.getInstance(HabitActivity.this);
+                        db.open();
+                        GroupEntity groupEntity = Database.getGroupDb().getGroup(selectedGroupId);
+                        db.close();
+                        if (groupEntity != null) {
+                            tvGroupName.setText(data.getStringExtra(GroupActivity.GROUP_NAME));
+                        } else {
+                            selectedGroupId = null;
+                            tvGroupName.setText("Chưa có");
+                        }
                     }
                 }
             } else {
-                Database db = Database.getInstance(HabitActivity.this);
-                db.open();
-                GroupEntity entity = Database.getGroupDb().getGroup(selectedGroupId);
-                if (entity == null || entity.isDelete()) {
-                    selectedGroupId = null;
+                if (selectedGroupId != null) {
+                    Database db = Database.getInstance(HabitActivity.this);
+                    db.open();
+                    GroupEntity entity = Database.getGroupDb().getGroup(selectedGroupId);
+                    if (entity == null || entity.isDelete()) {
+                        selectedGroupId = null;
+                    }
+                    db.close();
                 }
-                db.close();
             }
         } else if (requestCode == ADD_REMINDER) {
             if (resultCode == RESULT_OK) {
