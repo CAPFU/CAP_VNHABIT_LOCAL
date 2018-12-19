@@ -1,15 +1,7 @@
 package habit.tracker.habittracker.common.util;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
 import android.text.TextUtils;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.Normalizer;
 import java.text.ParseException;
@@ -392,39 +384,5 @@ public class AppGenerator {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return getDate(calendar.get(Calendar.YEAR) + 1, 1, 1, fmOut);
-    }
-
-    public static int getLevel(int score) {
-        if (score < 10) {
-            return 1;
-        }
-        if (score < 20) {
-            return 2;
-        }
-        if (score < 50){
-            return 3;
-        }
-        if (score < 120){
-            return 4;
-        }
-        if (score < 290){
-            return 5;
-        }
-        if (score < 700){
-            return 6;
-        }
-        if (score < 1690){
-            return 7;
-        }
-        if (score < 4080){
-            return 8;
-        }
-        if (score <9850){
-            return 9;
-        }
-        if (score < 23780){
-            return 10;
-        }
-        return 11;
     }
 }

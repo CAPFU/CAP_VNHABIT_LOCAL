@@ -16,7 +16,12 @@
             <level8>4080</level8>
             <level9>9850</level9>
             <level10>23780</level10>
-            <level11>23781</level11>
         </levels>
     </user>
+    <score>
+        <daily>1</daily>
+        <weekly>3</weekly>
+        <monthly>12</monthly>
+        <yearly>150</yearly>
+    </score>
 </initializion>

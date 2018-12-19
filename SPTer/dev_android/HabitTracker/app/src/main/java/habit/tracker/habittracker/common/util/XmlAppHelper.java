@@ -18,17 +18,21 @@ public class XmlAppHelper {
     public static final String BEST_USAGE_CHAIN = "best_usage_chain";
     public static final String USER_SCORE = "user_score";
 
-    public static final String level1 = "level1";
-    public static final String level2 = "level1";
-    public static final String level3 = "level1";
-    public static final String level4 = "level1";
-    public static final String level5 = "level1";
-    public static final String level6 = "level1";
-    public static final String level7 = "level1";
-    public static final String level8 = "level1";
-    public static final String level9 = "level1";
-    public static final String level0 = "level1";
-    public static final String level11 = "level1";
+    public static final String LEVEL1 = "level1";
+    public static final String LEVEL2 = "level2";
+    public static final String LEVEL3 = "level3";
+    public static final String LEVEL4 = "level4";
+    public static final String LEVEL5 = "level5";
+    public static final String LEVEL6 = "level6";
+    public static final String LEVEL7 = "level7";
+    public static final String LEVEL8 = "level8";
+    public static final String LEVEL9 = "level9";
+    public static final String LEVEL10 = "level10";
+
+    public static final String DAILY = "daily";
+    public static final String WEEKLY = "weekly";
+    public static final String MONTHLY = "monthly";
+    public static final String YEARLY = "yearly";
 
     public static Map<String, String> readFromAnXML(Context context, int resource) throws IOException, XmlPullParserException {
         Map<String, String> map = new HashMap<>();

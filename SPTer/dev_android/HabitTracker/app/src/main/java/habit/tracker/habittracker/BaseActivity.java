@@ -30,11 +30,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.model.user.UserResponse;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.AppConstant;
+import habit.tracker.habittracker.common.util.AppDefaultConfig;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
 import retrofit2.Call;
@@ -53,6 +58,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     // facebook
     private CallbackManager mCallbackManager;
+
+    protected AppDefaultConfig appDefaultConfig;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -91,6 +98,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         // facebook
         mCallbackManager = CallbackManager.Factory.create();
+
+        try {
+            appDefaultConfig = AppDefaultConfig.getInstance(this);
+        } catch (IOException | XmlPullParserException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void signOutSocialLogin() {

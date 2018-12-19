@@ -39,8 +39,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static habit.tracker.habittracker.common.util.AppGenerator.getLevel;
-
 public class ProfileActivity extends BaseActivity implements RecyclerViewItemClickListener {
     public static final int PICK_AVATAR = 0;
     public static final int NEW_HABIT = 1;
@@ -137,7 +135,7 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
                     // 0: low, 1: med, 2: hig
                     List<List<HabitSuggestion>> data = response.body().getData();
                     int habitCount = Database.getHabitDb().countHabitByUser(userEntity.getUserId());
-                    int userLevel = AppGenerator.getLevel(Integer.parseInt(userEntity.getUserScore()));
+                    int userLevel =  appDefaultConfig.getUserLevel(Integer.parseInt(userEntity.getUserScore()));
                     String[] level = new String[]{"Thói quen dễ được nhiều người chọn", "Thói quen trung bình được nhiều người chọn", "Thói quen khó được nhiều người chọn"};
                     if (userLevel <= 3) {
                         level[0] = "Thói quen dễ được nhiều người chọn (khuyên chọn)";
@@ -174,7 +172,7 @@ public class ProfileActivity extends BaseActivity implements RecyclerViewItemCli
                     tvRealName.setText(userEntity.getRealName());
                     tvUserDescription.setText(userEntity.getDescription());
                     tvStartedDate.setText(AppGenerator.format(userEntity.getCreatedDate(), AppGenerator.YMD_SHORT, AppGenerator.DMY_SHORT));
-                    tvLevel.setText(String.valueOf(getLevel(Integer.parseInt(userEntity.getUserScore()))));
+                    tvLevel.setText(String.valueOf( appDefaultConfig.getUserLevel (Integer.parseInt(userEntity.getUserScore()))));
                     tvUserScore.setText(userEntity.getUserScore());
                     tvBestContinue.setText(userEntity.getBestContinueUsingCount() + " ngày");
                     tvCurrentContinue.setText(userEntity.getCurrentContinueUsingCount() + " ngày");

@@ -5,6 +5,9 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,6 +17,7 @@ import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.search.HabitSuggestion;
 import habit.tracker.habittracker.api.model.search.SearchResponse;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
+import habit.tracker.habittracker.common.util.AppDefaultConfig;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
 import habit.tracker.habittracker.repository.Database;
@@ -101,7 +105,12 @@ public class HabitTextWatcher implements TextWatcher {
                         Collections.sort(mediumHabitList, comparator);
                         Collections.sort(hardHabitList, comparator);
 
-                        int userLevel = AppGenerator.getLevel(Integer.parseInt(userEntity.getUserScore()));
+                        int userLevel = 0;
+                        try {
+                            userLevel = AppDefaultConfig.getInstance(context).getUserLevel( Integer.parseInt(userEntity.getUserScore()) );
+                        } catch (IOException | XmlPullParserException e) {
+                            e.printStackTrace();
+                        }
                         if (userLevel <= 3) {
                             sortedHabitList.addAll(easyHabitList);
                             sortedHabitList.addAll(mediumHabitList);
