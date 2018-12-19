@@ -3,6 +3,7 @@ package habit.tracker.habittracker;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,13 +42,15 @@ public class GuideActivity extends AppCompatActivity {
     String[] titles = {"TẠO THÓI QUEN", "QUẢN LÝ THÓI QUEN", "THEO DÕI LỊCH BIỂU"};
     String[] guides = {
             "Tạo nhanh một thói quen và đề xuất những thói quen phù hợp cho bạn!",
-            "Quản lý thói quen và theo dõi theo dòng thời gian thông min!",
+            "Quản lý thói quen và theo dõi theo dòng thời gian thông minh!",
             "Bạn có thể lập lịch và xem lịch biểu thói quen một cách dễ dàng!"
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_guide);
         ButterKnife.bind(this);
 
