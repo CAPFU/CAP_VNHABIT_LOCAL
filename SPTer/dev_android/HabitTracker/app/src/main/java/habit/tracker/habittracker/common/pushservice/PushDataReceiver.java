@@ -17,7 +17,6 @@ import habit.tracker.habittracker.api.model.user.UpdateScoreRequest;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.util.AppDefaultConfig;
 import habit.tracker.habittracker.common.util.AppGenerator;
-import habit.tracker.habittracker.common.util.XmlAppHelper;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
 import habit.tracker.habittracker.repository.habit.HabitTracking;
@@ -74,7 +73,7 @@ class PushDataReceiver extends BroadcastReceiver {
                                     trackingEntity = Database.getTrackingDb().getTracking(habit.getHabitId(), lastSynDate);
                                     if (Integer.parseInt(trackingEntity.getCount()) >= Integer.parseInt(habit.getMonitorNumber())) {
                                         successCount++;
-                                        userScore += config.getIntValue(XmlAppHelper.DAILY);
+                                        userScore += config.getIntValue(AppDefaultConfig.DAILY);
                                     }
                                     lastSynDate = AppGenerator.getNextDate(lastSynDate, AppGenerator.YMD_SHORT);
                                 }
@@ -103,7 +102,7 @@ class PushDataReceiver extends BroadcastReceiver {
                                             }
                                             if (sumInWeek >= habitGoalNumber) {
                                                 successCount++;
-                                                userScore += config.getIntValue(XmlAppHelper.WEEKLY);
+                                                userScore += config.getIntValue(AppDefaultConfig.WEEKLY);
                                             }
                                         }
                                         sumInWeek = 0;
@@ -123,7 +122,7 @@ class PushDataReceiver extends BroadcastReceiver {
                                     }
                                     if (sumInMonth >= habitGoalNumber) {
                                         successCount++;
-                                        userScore += config.getIntValue(XmlAppHelper.MONTHLY);
+                                        userScore += config.getIntValue(AppDefaultConfig.MONTHLY);
                                     }
                                     totalCount++;
                                     lastSynDate = AppGenerator.getFirstDateNextMonth(lastSynDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
@@ -142,7 +141,7 @@ class PushDataReceiver extends BroadcastReceiver {
                                     }
                                     if (sumInYear >= habitGoalNumber) {
                                         successCount++;
-                                        userScore += config.getIntValue(XmlAppHelper.YEARLY);
+                                        userScore += config.getIntValue(AppDefaultConfig.YEARLY);
                                     }
                                     totalCount++;
                                     lastSynDate = AppGenerator.getFirstDateNextYear(lastSynDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
