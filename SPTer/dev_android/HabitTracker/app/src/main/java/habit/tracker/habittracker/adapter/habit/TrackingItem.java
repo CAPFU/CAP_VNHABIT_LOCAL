@@ -134,7 +134,7 @@ public class TrackingItem {
         this.habitDescription = habitDescription;
     }
 
-    public void setTrackingDescription(String trackingDescription) {
+    public void setTodayDescription(String trackingDescription) {
         this.trackingDescription = trackingDescription;
     }
 

@@ -191,21 +191,16 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             }
 
             int periodCount = mData.get(getAdapterPosition()).getTotalCount();
-            int todayCount = mData.get(getAdapterPosition()).getCount();
 
             if (view.getId() == R.id.btn_plus) {
                 periodCount = periodCount + 1;
-                todayCount++;
                 tvCount.setText(String.valueOf(periodCount));
-                mClickListener.onItemValueChanged(view, TYPE_COUNT, getAdapterPosition(), periodCount, todayCount);
+                mClickListener.onItemValueChanged(view, TYPE_COUNT, getAdapterPosition(), periodCount, 1);
 
             } else if (view.getId() == R.id.btn_minus) {
-                if (periodCount > 0) {
-                    periodCount--;
-                    todayCount--;
-                }
+                periodCount = periodCount > 0 ? periodCount - 1 : 0;
                 tvCount.setText(String.valueOf(periodCount));
-                mClickListener.onItemValueChanged(view, TYPE_COUNT, getAdapterPosition(), periodCount, todayCount);
+                mClickListener.onItemValueChanged(view, TYPE_COUNT, getAdapterPosition(), periodCount, -1);
 
             } else if (mClickListener != null) {
                 mClickListener.onItemClick(view, TYPE_COUNT, getAdapterPosition());
@@ -313,7 +308,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     public interface ItemClickListener {
-        void onItemValueChanged(View view, int type, int position, int totalCount, int count);
+        void onItemValueChanged(View view, int type, int position, int totalCount, int alpha);
 
         void onItemClick(View view, int type, int position);
     }

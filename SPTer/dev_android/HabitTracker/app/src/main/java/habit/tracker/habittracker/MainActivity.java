@@ -37,6 +37,7 @@ import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
 import habit.tracker.habittracker.repository.Database;
 import habit.tracker.habittracker.repository.habit.HabitEntity;
+import habit.tracker.habittracker.repository.habit.HabitTracking;
 import habit.tracker.habittracker.repository.habit.Schedule;
 import habit.tracker.habittracker.repository.habit.TrackingDateInWeek;
 import habit.tracker.habittracker.repository.reminder.ReminderEntity;
@@ -62,6 +63,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
 
     List<TrackingItem> itemList = new ArrayList<>();
     HabitRecyclerViewAdapter trackingAdapter;
+
     String currentDate;
     String firstCurrentDate;
     int timeLine = 0;
@@ -84,7 +86,9 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
     ImageView tabSuggestion;
 
     String userId;
+
     boolean isReStart = false;
+
     VnHabitApiService mApiService = VnHabitApiUtils.getApiService();
     Database mDatabase;
 
@@ -393,16 +397,15 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         });
     }
 
-    private void callUpdateTrackRecordApi(final TrackingList data, final String trackId) {
+    private void callUpdateTrackRecordApi(final TrackingList data) {
         mApiService.saveUpdateTracking(data).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 mDatabase.open();
 
-                TrackingEntity entity = Database.getTrackingDb().getTracking(trackId);
-                if (entity != null) {
-                    entity.setUpdate(false);
-                    Database.getTrackingDb().saveUpdateTracking(entity);
+                for (Tracking tracking : data.getTrackingList()) {
+                    tracking.setUpdate(false);
+                    Database.getTrackingDb().saveUpdateTracking(tracking.toEntity());
                 }
             }
 
@@ -422,6 +425,66 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
             public void onFailure(Call<ResponseBody> call, Throwable t) {
             }
         });
+    }
+
+    @Override
+    public void onItemValueChanged(View view, int type, int position, int totalCount, int alpha) {
+        mDatabase.open();
+
+        // update item
+        TrackingItem item = itemList.get(position);
+        item.setCount(item.getCount() + alpha);
+        item.setTotalCount(totalCount);
+
+        HabitTracking habitTracking = getTrackingBeginToRecent(item.getHabitId(), item.getHabitType());
+        TrackingList trackingData = new TrackingList();
+
+        if (habitTracking != null && habitTracking.getTrackingList() != null) {
+            TrackingEntity entity;
+            for (int i = 0; i < habitTracking.getTrackingList().size(); i++) {
+                entity = habitTracking.getTrackingList().get(i);
+                if (alpha > 0 || entity.getIntCount() > 0) {
+                    entity.setCount(String.valueOf(entity.getIntCount() + alpha));
+                    entity.setUpdate(true);
+
+                    Tracking tracking = new Tracking();
+                    tracking.setTrackingId(entity.getTrackingId());
+                    tracking.setHabitId(entity.getHabitId());
+                    tracking.setCount(entity.getCount());
+                    tracking.setCurrentDate(entity.getCurrentDate());
+                    tracking.setDescription(entity.getDescription());
+                    tracking.setUpdate(true);
+                    trackingData.getTrackingList().add(tracking);
+
+                    Database.getTrackingDb().saveUpdateTracking(entity);
+                    break;
+                }
+            }
+
+            callUpdateTrackRecordApi(trackingData);
+        }
+    }
+
+    private HabitTracking getTrackingBeginToRecent(String habitId, int habitType) {
+        String[] arr = currentDate.split("-");
+        int year = Integer.parseInt(arr[0]);
+        int month = Integer.parseInt(arr[1]);
+        String start = currentDate;
+        switch (habitType) {
+            case 0:
+                start = currentDate;
+                break;
+            case 1:
+                start = AppGenerator.getDatesInWeek(currentDate)[0];
+                break;
+            case 2:
+                start = year + "-" + String.format(AppConstant.format2D, month) + "-01";
+                break;
+            case 3:
+                start = year + "-01-01";
+                break;
+        }
+        return Database.getTrackingDb().getHabitTrackingBetween(habitId, start, currentDate);
     }
 
     private int getSumValueInPeriod(String habitId, int habitType, int count) {
@@ -453,32 +516,6 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
     }
 
     @Override
-    public void onItemValueChanged(View view, int type, int position, int totalCount, int count) {
-        mDatabase.open();
-
-        TrackingItem item = itemList.get(position);
-        item.setCount(count);
-        item.setTotalCount(totalCount);
-
-        // save to mDb local
-        TrackingList trackingData = new TrackingList();
-        Tracking tracking = new Tracking();
-        tracking.setTrackingId(item.getTrackId());
-        tracking.setHabitId(item.getHabitId());
-        tracking.setCount(String.valueOf(item.getCount()));
-        tracking.setCurrentDate(currentDate);
-        tracking.setDescription(item.getTrackingDescription());
-        tracking.setUpdate(true);
-        trackingData.getTrackingList().add(tracking);
-
-        if (!Database.getTrackingDb().saveUpdateTracking(tracking.toEntity())) {
-            return;
-        }
-
-        callUpdateTrackRecordApi(trackingData, item.getTrackId());
-    }
-
-    @Override
     public void onItemClick(View view, int type, int position) {
         if (TYPE_ADD == type) {
             Intent intent = new Intent(this, HabitActivity.class);
@@ -500,11 +537,12 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
-                String d = AppGenerator.getDate(year, month + 1, day, AppGenerator.YMD_SHORT);
-                timeLine = AppGenerator.countDayBetween(firstCurrentDate, d);
-                currentDate = d;
-                updateTitle(currentDate);
+                String selectDay = AppGenerator.getDate(year, month + 1, day, AppGenerator.YMD_SHORT);
+                timeLine = AppGenerator.countDayBetween(firstCurrentDate, selectDay);
+                currentDate = selectDay;
                 itemList.clear();
+
+                updateTitle(currentDate);
                 updateByCurrentDate();
             }
         }, ca.get(Calendar.YEAR), ca.get(Calendar.MONTH), ca.get(Calendar.DATE));
