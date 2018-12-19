@@ -34,7 +34,6 @@ import habit.tracker.habittracker.adapter.calendar.TrackingCalendarItem;
 import habit.tracker.habittracker.api.VnHabitApiUtils;
 import habit.tracker.habittracker.api.model.tracking.Tracking;
 import habit.tracker.habittracker.api.model.tracking.TrackingList;
-import habit.tracker.habittracker.api.model.user.User;
 import habit.tracker.habittracker.api.service.VnHabitApiService;
 import habit.tracker.habittracker.common.AppConstant;
 import habit.tracker.habittracker.common.util.AppGenerator;
@@ -109,7 +108,7 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
     List<TrackingEntity> curTrackingChain = new ArrayList<>();
     List<TrackingEntity> bestTrackingChain = new ArrayList<>();
 
-    Database appDatabase = Database.getInstance(this);
+    Database mDb = Database.getInstance(this);
 
     float touchX = 0;
     float touchY = 0;
@@ -153,7 +152,7 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
 
     @SuppressLint("ResourceType")
     private void initializeScreen(String habitId) {
-        appDatabase.open();
+        mDb.open();
 
         currentDate = AppGenerator.getCurrentDate(AppGenerator.YMD_SHORT);
         defaultCurrentDate = currentDate;
@@ -254,7 +253,7 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
     @Override
     protected void onStart() {
         super.onStart();
-        appDatabase.open();
+        mDb.open();
     }
 
     private void loadCalendar(String currentDate) {
@@ -431,6 +430,8 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
     }
 
     private void updateLocalAndApi(String habitId, String currentDate, String curTrackingCount) {
+        mDb.open();
+
         // save to mDb
         TrackingEntity trackingEntity = Database.getTrackingDb().getTracking(habitId, currentDate);
         if (trackingEntity == null) {
@@ -470,7 +471,7 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
 
     @Override
     public void onItemClick(View v, int position) {
-        appDatabase.open();
+        mDb.open();
 
         TrackingCalendarItem item = calendarItemList.get(position);
         currentDate = item.getDate();
@@ -515,7 +516,7 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
 
     private void loadCalendarByDate(String currentDate) {
         if (timeLine <= 0) {
-            appDatabase.open();
+            mDb.open();
 
             // get today tracking record of current habit
             TrackingEntity todayTracking = Database.getTrackingDb().getTracking(defaultHabitEntity.getHabitId(), currentDate);
@@ -544,9 +545,9 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
             if (isCountHabitType) {
                 tvTrackCount.setText(String.valueOf(curTrackingCount));
             } else if (curTrackingCount > 0) {
-                tvTrackCount.setText("Hoàn thành");
+                tvTrackCount.setText("Đã thực hiện");
             } else if (curTrackingCount == 0) {
-                tvTrackCount.setText("Chưa hoàn thành");
+                tvTrackCount.setText("Chưa thực hiện");
             }
         } else {
             tvTrackCount.setText("--");
@@ -568,6 +569,8 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
     }
 
     public Map<String, TrackingEntity> loadData(String currentDate) {
+        mDb.open();
+
         String startReportDate = AppGenerator.getFirstDateInMonth(currentDate, AppGenerator.YMD_SHORT, AppGenerator.YMD_SHORT);
         HabitTracking habitTracking = Database.getTrackingDb().getHabitTrackingBetween(defaultHabitEntity.getHabitId(), startReportDate, defaultCurrentDate);
         Map<String, TrackingEntity> mapDayInMonth = new HashMap<>(31);
@@ -626,7 +629,7 @@ public class ReportCalendarActivity extends BaseActivity implements TrackingCale
 
     @Override
     protected void onStop() {
-        appDatabase.close();
+        mDb.close();
         super.onStop();
     }
 }
