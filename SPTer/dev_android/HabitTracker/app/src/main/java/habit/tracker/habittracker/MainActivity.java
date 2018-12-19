@@ -501,7 +501,7 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 String d = AppGenerator.getDate(year, month + 1, day, AppGenerator.YMD_SHORT);
-                timeLine = AppGenerator.countDayBetween(currentDate, d);
+                timeLine = AppGenerator.countDayBetween(firstCurrentDate, d);
                 currentDate = d;
                 updateTitle(currentDate);
                 itemList.clear();
