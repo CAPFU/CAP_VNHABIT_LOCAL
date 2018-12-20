@@ -107,7 +107,7 @@ public class HabitReminderManager {
         if (interval > 0) {
             alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, startTime - 1000 * 60, interval, alarmIntent);
         } else {
-            alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + startTime - System.currentTimeMillis(), alarmIntent);
+            alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + startTime - System.currentTimeMillis() - (1000 * 25), alarmIntent);
         }
     }
 
