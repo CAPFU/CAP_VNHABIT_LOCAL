@@ -433,35 +433,56 @@ public class MainActivity extends BaseActivity implements HabitRecyclerViewAdapt
 
         // update item
         TrackingItem item = itemList.get(position);
-        item.setCount(item.getCount() + alpha);
-        item.setTotalCount(totalCount);
 
-        HabitTracking habitTracking = getTrackingBeginToRecent(item.getHabitId(), item.getHabitType());
-        TrackingList trackingData = new TrackingList();
+        if (type == 0) {
 
-        if (habitTracking != null && habitTracking.getTrackingList() != null) {
-            TrackingEntity entity;
-            for (int i = 0; i < habitTracking.getTrackingList().size(); i++) {
-                entity = habitTracking.getTrackingList().get(i);
-                if (alpha > 0 || entity.getIntCount() > 0) {
-                    entity.setCount(String.valueOf(entity.getIntCount() + alpha));
-                    entity.setUpdate(true);
+            item.setCount(alpha);
+            item.setTotalCount(totalCount);
 
-                    Tracking tracking = new Tracking();
-                    tracking.setTrackingId(entity.getTrackingId());
-                    tracking.setHabitId(entity.getHabitId());
-                    tracking.setCount(entity.getCount());
-                    tracking.setCurrentDate(entity.getCurrentDate());
-                    tracking.setDescription(entity.getDescription());
-                    tracking.setUpdate(true);
-                    trackingData.getTrackingList().add(tracking);
+            TrackingList trackingData = new TrackingList();
+            Tracking tracking = new Tracking();
+            tracking.setTrackingId(item.getTrackId());
+            tracking.setHabitId(item.getHabitId());
+            tracking.setCount( String.valueOf( item.getCount()));
+            tracking.setCurrentDate(currentDate);
+            tracking.setDescription(item.getTrackingDescription());
+            tracking.setUpdate(true);
+            trackingData.getTrackingList().add(tracking);
 
-                    Database.getTrackingDb().saveUpdateTracking(entity);
-                    break;
-                }
-            }
-
+            Database.getTrackingDb().saveUpdateTracking(tracking.toEntity());
             callUpdateTrackRecordApi(trackingData);
+        } else {
+
+            item.setCount(item.getCount() + alpha);
+            item.setTotalCount(totalCount);
+
+            HabitTracking habitTracking = getTrackingBeginToRecent(item.getHabitId(), item.getHabitType());
+            TrackingList trackingData = new TrackingList();
+
+            if (habitTracking != null && habitTracking.getTrackingList() != null) {
+                TrackingEntity entity;
+                for (int i = 0; i < habitTracking.getTrackingList().size(); i++) {
+                    entity = habitTracking.getTrackingList().get(i);
+                    if (alpha > 0 || entity.getIntCount() > 0) {
+                        entity.setCount(String.valueOf(entity.getIntCount() + alpha));
+                        entity.setUpdate(true);
+
+                        Tracking tracking = new Tracking();
+                        tracking.setTrackingId(entity.getTrackingId());
+                        tracking.setHabitId(entity.getHabitId());
+                        tracking.setCount(entity.getCount());
+                        tracking.setCurrentDate(entity.getCurrentDate());
+                        tracking.setDescription(entity.getDescription());
+                        tracking.setUpdate(true);
+                        trackingData.getTrackingList().add(tracking);
+
+                        Database.getTrackingDb().saveUpdateTracking(entity);
+                        break;
+                    }
+                }
+
+                callUpdateTrackRecordApi(trackingData);
+            }
         }
     }
 
