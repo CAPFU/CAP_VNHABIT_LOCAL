@@ -685,11 +685,10 @@ public class HabitActivity extends AppCompatActivity implements DatePickerDialog
         if (Database.getHabitDb().saveUpdateHabit(habit.toEntity())) {
             String reminderId;
             for (Reminder reminder : habit.getReminderList()) {
-
                 if (reminder.isDelete()) {
                     Database.getReminderDb().delete(reminder.getReminderId());
                 } else {
-                    reminderId = Database.getReminderDb().saveReminder(reminder.toEntity());
+                    reminderId = Database.getReminderDb().add(reminder.toEntity());
                     reminder.setReminderId(reminderId);
                 }
             }

@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.text.TextUtils;
 
 import java.util.Calendar;
@@ -104,9 +105,9 @@ public class HabitReminderManager {
         }
 
         if (interval > 0) {
-            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, startTime, interval, alarmIntent);
+            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, startTime - 1000 * 60, interval, alarmIntent);
         } else {
-            alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, startTime, alarmIntent);
+            alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + startTime - System.currentTimeMillis() - 1000 * 60, alarmIntent);
         }
     }
 
@@ -121,7 +122,7 @@ public class HabitReminderManager {
             case "3":
                 return "Hăng năm";
         }
-        return null;
+        return "Hôm nay";
     }
 
     private void cancelReminder(int requestCode) {

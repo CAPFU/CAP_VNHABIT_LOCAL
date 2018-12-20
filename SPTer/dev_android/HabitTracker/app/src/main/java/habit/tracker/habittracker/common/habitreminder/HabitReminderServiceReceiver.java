@@ -16,6 +16,7 @@ import android.text.TextUtils;
 
 import java.util.Date;
 
+import habit.tracker.habittracker.LoginActivity;
 import habit.tracker.habittracker.R;
 import habit.tracker.habittracker.common.util.AppGenerator;
 import habit.tracker.habittracker.common.util.MySharedPreference;
@@ -56,6 +57,11 @@ public class HabitReminderServiceReceiver extends BroadcastReceiver {
                 notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             }
 
+            // Create an explicit intent for an Activity in your app
+            Intent appIntent = new Intent(context, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, appIntent, 0);
+
             String defaultId = "habittracker";
             Notification notification = null;
             long[] pattern = {100, 200, 300, 400, 500, 400, 300, 200, 400};
@@ -85,9 +91,11 @@ public class HabitReminderServiceReceiver extends BroadcastReceiver {
                 }
 
                 notification = new NotificationCompat.Builder(context, defaultId)
-                                .setSmallIcon(R.drawable.app_launcher)
-                                .setContentTitle("VN Habit Tracker: " + remindTitle)
-                                .setContentText(remindText).build();
+                        .setSmallIcon(R.drawable.app_launcher)
+                        .setContentTitle("VN Habit Tracker: " + remindTitle)
+                        .setContentText(remindText)
+                        .setContentIntent(pendingIntent)
+                        .setAutoCancel(true).build();
             } else {
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, defaultId)
@@ -98,6 +106,7 @@ public class HabitReminderServiceReceiver extends BroadcastReceiver {
                 if (soundUri != null) {
                     builder.setSound(soundUri);
                 }
+                builder.setContentIntent(pendingIntent).setAutoCancel(true);
                 notification = builder.build();
             }
 

@@ -14,7 +14,6 @@ import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -109,7 +108,7 @@ public class SettingActivity extends BaseActivity {
                 reminder.setRepeatType(remindType);
                 reminder.setRemindText(remindText);
                 reminder.setRemindStartTime(time);
-                reminder.setReminderId(Database.getReminderDb().saveReminder(reminder.toEntity()));
+                reminder.setReminderId(Database.getReminderDb().add(reminder.toEntity()));
                 reminderDisplayList.add(reminder);
 
             } else {
@@ -124,6 +123,7 @@ public class SettingActivity extends BaseActivity {
 
                 } else {
                     reminder.setUpdate(true);
+                    Database.getReminderDb().add(reminder.toEntity());
                 }
             }
 
@@ -398,7 +398,7 @@ public class SettingActivity extends BaseActivity {
                     Database.getReminderDb().delete(reminder.getReminderId());
                 } else if (reminder.isUpdate()) {
                     reminder.setUpdate(false);
-                    Database.getReminderDb().saveReminder(reminder.toEntity());
+                    Database.getReminderDb().add(reminder.toEntity());
                 }
             }
 

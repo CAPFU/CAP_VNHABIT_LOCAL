@@ -90,7 +90,7 @@ public class ReminderDaoImpl extends MyDatabaseHelper implements ReminderDao, Re
     }
 
     @Override
-    public String saveReminder(ReminderEntity reminderEntity) {
+    public String add(ReminderEntity reminderEntity) {
         setContentValue(reminderEntity);
         try {
             boolean isInserted = super.replace(REMINDER_TABLE, getContentValue()) > 0;
